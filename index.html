@@ -2108,13 +2108,13 @@ A.addLesson=()=>{
     const title=$('l-t').value.trim();if(!title||!files.length){toast(!title?'Give it a title':'Choose at least one file');return}
     const stored=await C.addFiles(files);const l={id:uid(),subj,title,files:stored,status:'new',date:iso()};
     S.lessons.push(l);save.lessons();closeSheet();st.tab='lessons';go('lesson',l.id);
-    if(auto){if(needKey())transcribe(l.id)}
+    if(auto){if(needKey())transcribe(l.id,'ai')}
   };
   $('l-go').onclick=()=>fin(true);$('l-go2').onclick=()=>fin(false);
 };
 A.addLessonFiles=async id=>{const l=S.lessons.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;l.files=l.files.concat(await C.addFiles(fs));l.status='new';save.lessons();render()};
 A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
-A.transcribe=id=>{transcribe(id,'auto')};A.transcribeAI=id=>{if(needKey())transcribe(id,'ai')};A.transcribeText=id=>{transcribe(id,'text')};
+A.transcribe=id=>{if(needKey())transcribe(id,'ai')};A.transcribeAI=id=>{if(needKey())transcribe(id,'ai')};A.transcribeText=id=>{transcribe(id,'text')};
 /* mode: 'auto' (AI when a key exists, else text layer) | 'ai' | 'text' */
 async function transcribe(id,mode){
   mode=mode||'auto';
