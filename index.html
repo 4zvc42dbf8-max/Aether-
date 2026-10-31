@@ -1487,11 +1487,20 @@ async function aiGemini({system,content,max,model,onText}){
   const key=localStorage.getItem('p_gkey');
   if(!key)throw new AIError('Add your Gemini key first (Prépa → AI settings).');
   const parts=content.map(c=>c.type==='text'?{text:c.text}:{inlineData:{mimeType:c.source.media_type,data:c.source.data}});
-  let r;
-  try{
-    r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model||S.set.gmodel)+':streamGenerateContent?alt=sse',{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},
-      body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:[{role:'user',parts}],generationConfig:{maxOutputTokens:Math.min(max,60000),temperature:0.4}})});
-  }catch(e){throw new AIError('Cannot reach the AI service. Check your internet connection.')}
+  const GDEF='gemini-flash-latest',FALL=[GDEF,'gemini-2.5-flash','gemini-flash-lite-latest'];
+  const clean=m=>{m=String(m||'').trim().replace(/^models\//,'');return /^(gemini|gemma)[\w.\-]*$/i.test(m)?m:GDEF};
+  const tryOrder=[clean(model||S.set.gmodel)].concat(FALL).filter((m,i,a)=>a.indexOf(m)===i);
+  let r,used=null;
+  for(const m of tryOrder){
+    try{
+      r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(m)+':streamGenerateContent?alt=sse',{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},
+        body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:[{role:'user',parts}],generationConfig:{maxOutputTokens:Math.min(max,60000),temperature:0.4}})});
+    }catch(e){throw new AIError('Cannot reach the AI service. Check your internet connection.')}
+    if(r.status===404){continue}   // unknown model name: try the next one
+    used=m;break;
+  }
+  if(!used&&r&&r.status===404)throw new AIError('No Gemini model answered. In AI settings, set the model to gemini-flash-latest.');
+  if(used&&!model&&S.set.gmodel!==used){S.set.gmodel=used;put('p_set',S.set)}
   if(!r.ok){let j={};try{j=await r.json()}catch(e){}throw new AIError(gErr(r.status,j))}
   let text='',inT=0,outT=0,stop='',block='';
   await readSSE(r,ev=>{
@@ -2445,12 +2454,12 @@ function settings(){
   const draw=()=>{
     const g=S.set.prov==='gemini',has=C.hasKey();
     openSheet('<h2 class="sh">AI settings</h2><div class="field"><label>AI provider</label><div class="chips" id="s-p"><button class="chip '+(g?'on':'')+'" data-v="gemini">Gemini (free)</button><button class="chip '+(g?'':'on')+'" data-v="claude">Claude (paid)</button></div></div>'+
-    (g?'<div class="field"><label>Gemini API key</label><input id="s-k" type="password" autocomplete="off" autocapitalize="off" placeholder="'+(has?'Saved on this phone — paste to replace':'AIza…')+'"></div><div class="sub" style="margin:-4px 0 10px">Free: go to aistudio.google.com/apikey, sign in with a Google account, tap “Create API key”. No card needed. Free limits are small and can change, and on the free tier Google may use what you send to improve its products (your lessons and copies). The key stays on this phone only: not in backups, erased with “Forgot PIN”.</div><div class="field"><label>Model (you can type another id)</label><input id="s-m" list="s-ml" value="'+esc(S.set.gmodel)+'" autocapitalize="off"><datalist id="s-ml"><option value="gemini-flash-latest"><option value="gemini-flash-lite-latest"><option value="gemini-2.5-flash"><option value="gemini-2.5-pro"></datalist></div>'
+    (g?'<div class="field"><label>Gemini API key</label><input id="s-k" type="text" name="aether-gemini-key" style="-webkit-text-security:disc" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="'+(has?'Saved on this phone — paste to replace':'Paste your key')+'"></div><div class="sub" style="margin:-4px 0 10px">Free: go to aistudio.google.com/apikey, sign in with a Google account, tap “Create API key”. No card needed. Free limits are small and can change, and on the free tier Google may use what you send to improve its products (your lessons and copies). The key stays on this phone only: not in backups, erased with “Forgot PIN”.</div><div class="field"><label>Model (you can type another id)</label><input id="s-m" list="s-ml" name="aether-gemini-model" value="'+esc(/^(gemini|gemma)/i.test(S.set.gmodel)?S.set.gmodel:'gemini-flash-latest')+'" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><datalist id="s-ml"><option value="gemini-flash-latest"><option value="gemini-flash-lite-latest"><option value="gemini-2.5-flash"><option value="gemini-2.5-pro"></datalist></div>'
     :'<div class="field"><label>Anthropic API key</label><input id="s-k" type="password" autocomplete="off" autocapitalize="off" placeholder="'+(has?'Saved on this phone — paste to replace':'sk-ant-…')+'"></div><div class="sub" style="margin:-4px 0 10px">Create it at console.anthropic.com → API keys, and add credit (billed separately from a Claude subscription). The key stays on this phone only.</div><div class="field"><label>Model</label><select id="s-m"><option value="claude-sonnet-5-5">Sonnet 5.5 — balanced (recommended)</option><option value="claude-opus-5-5">Opus 5.5 — best quality, costs more</option><option value="claude-haiku-5-5">Haiku 5.5 — cheapest, simpler sheets</option></select></div>')+
     '<div class="field"><label>Meridian folder name</label><input id="s-n" value="'+esc(S.set.news)+'" autocapitalize="off"></div><button class="btn primary" id="s-s">Save</button><button class="btn" id="s-t">Test the key</button><div class="sub" id="s-r" style="margin-top:8px">Used so far: '+S.usage.n+' requests · '+S.usage.i.toLocaleString('en-GB')+' tokens in · '+S.usage.o.toLocaleString('en-GB')+' out</div><div class="sec2"><div class="lbl" style="margin:0">Calendar feed (iPhone)</div></div><div class="sub">Your colles and DS are already in Aether\'s calendar. To also get alerts from the iPhone Calendar app: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, then paste:</div><input id="s-u" readonly value="'+esc(icsUrl())+'" style="margin-top:8px"><button class="btn" id="s-c">Copy the link</button><button class="btn" id="s-re">Restore schedule events I deleted</button>'+(has?'<button class="btn danger" id="s-d">Remove my API key</button>':''));
     if(!g)$('s-m').value=S.set.model;
     const kn=g?'p_gkey':'p_key';
-    const store=()=>{const k=$('s-k').value.trim();if(k)localStorage.setItem(kn,k);if(g)S.set.gmodel=$('s-m').value.trim()||'gemini-flash-latest';else S.set.model=$('s-m').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
+    const store=()=>{const k=$('s-k').value.trim();if(k)localStorage.setItem(kn,k);if(g)S.set.gmodel=/^(gemini|gemma)/i.test($('s-m').value.trim())?$('s-m').value.trim():'gemini-flash-latest';else S.set.model=$('s-m').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
     bindChips('s-p',v=>{store();S.set.prov=v;save.set();draw()});
     $('s-s').onclick=()=>{store();closeSheet();toast('Saved');render()};
     $('s-t').onclick=async()=>{
