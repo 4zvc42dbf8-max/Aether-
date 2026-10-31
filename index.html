@@ -1358,6 +1358,8 @@ if(F.status==='run'&&fRemain()<=0)fFinish();
 /* ================= PRÉPA: core (storage, AI, rendering) ================= */
 (function(){
 'use strict';
+/* Safari cannot iterate streams with for-await: pdf.js needs it */
+if(typeof ReadableStream!=='undefined'&&!ReadableStream.prototype[Symbol.asyncIterator]){ReadableStream.prototype[Symbol.asyncIterator]=async function*(){const r=this.getReader();try{for(;;){const x=await r.read();if(x.done)return;yield x.value}}finally{try{r.releaseLock()}catch(e){}}};}
 const SUBJ={maths:{n:'Maths',c:0},phys:{n:'Physique',c:3},chim:{n:'Chimie',c:5},ang:{n:'Anglais',c:4},fr:{n:'Français',c:2},ipt:{n:'IPT / SI',c:1}};
 const LSUBJ=Object.keys(SUBJ);
 const sc=s=>COLORS[(SUBJ[s]||{c:0}).c];
@@ -1415,12 +1417,13 @@ const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024)
 
 /* ---------- libraries (embedded inside this very file: nothing else to upload) ---------- */
 const libUrl={};
-function embedded(id,type){
+const POLY="if(typeof ReadableStream!=='undefined'&&!ReadableStream.prototype[Symbol.asyncIterator]){ReadableStream.prototype[Symbol.asyncIterator]=async function*(){const r=this.getReader();try{for(;;){const x=await r.read();if(x.done)return;yield x.value}}finally{try{r.releaseLock()}catch(e){}}};}\n";
+function embedded(id,type,prefix){
   if(libUrl[id])return libUrl[id];
   const el=document.getElementById(id);if(!el)throw new Error('Missing embedded library '+id);
   const bin=atob(el.textContent.replace(/\s+/g,'')),u8=new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
-  return libUrl[id]=URL.createObjectURL(new Blob([u8],{type}));
+  return libUrl[id]=URL.createObjectURL(new Blob(prefix?[prefix,u8]:[u8],{type}));
 }
 let kp=null;
 function loadKatex(){
@@ -1436,7 +1439,7 @@ let pj=null;
 async function pdfjs(){
   if(pj)return pj;
   const m=await import(embedded('lib-pdfjs','text/javascript'));
-  m.GlobalWorkerOptions.workerSrc=embedded('lib-pdfworker','text/javascript');
+  m.GlobalWorkerOptions.workerSrc=embedded('lib-pdfworker','text/javascript',POLY);
   return pj=m;
 }
 async function openPdf(blob){
@@ -1831,7 +1834,7 @@ function vLessons(){
   let h='<button class="add" data-a="addLesson">+ Add a lesson (PDF or photos)</button>';
   if(!S.lessons.length)return h+'<div class="hidecorr">Upload your résumés here. The AI reads them once, and your exercise sheets are then built from <b>your</b> course.</div>';
   const un=unread();
-  if(un.length)h+='<div class="card" style="padding:14px"><div style="font-weight:700">'+un.length+' lesson'+(un.length>1?'s':'')+' not read yet</div><div class="sub" style="margin:4px 0 2px">Text PDFs are read instantly and for free. Scans use the AI.</div><button class="btn primary" data-a="readAll" data-i="">Read all now</button></div>';
+  if(un.length)h+='<div class="card" style="padding:14px"><div style="font-weight:700">'+un.length+' lesson'+(un.length>1?'s':'')+' not read yet</div><div class="sub" style="margin:4px 0 2px">The AI reads formulas best. If its free limit is reached, text PDFs fall back to a quick text read.</div><button class="btn primary" data-a="readAll" data-i="">Read all now</button></div>';
   C.LSUBJ.forEach(s=>{
     const ls=S.lessons.filter(l=>l.subj===s);if(!ls.length)return;
     h+='<div class="sec2"><div class="lbl" style="margin:0">'+SUBJ[s].n+'</div><span class="sub">'+ls.length+'</span></div>';
@@ -1848,7 +1851,7 @@ function vLesson(id){
   h+='<div class="slot" style="margin-top:14px"><div class="hd"><div class="lbl">Files</div><button class="addf" data-a="addLessonFiles" data-i="'+id+'">+ Add pages</button></div>'+fileRows(l.files,'lesson',id)+'</div>';
   h+=liveBox(k)+errBox(k);
   if(!live[k]){
-    h+=l.status==='done'?'<button class="btn" data-a="transcribeAI" data-i="'+id+'">'+(l.how==='text'?'Re-read with AI (better formulas)':'Read again with AI')+'</button>':'<button class="btn primary" data-a="transcribe" data-i="'+id+'">Read this lesson</button>';
+    h+=l.status==='done'?'<button class="btn" data-a="transcribeAI" data-i="'+id+'">'+(l.how==='text'?'Re-read with AI (better formulas)':'Read again with AI')+'</button>':'<button class="btn primary" data-a="transcribe" data-i="'+id+'">Read this lesson with AI</button><button class="btn" data-a="transcribeText" data-i="'+id+'">Quick read without AI (text PDFs)</button>';
     if(l.status==='done')h+='<button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
   }
   h+='</div>';
@@ -2111,19 +2114,20 @@ A.addLesson=()=>{
 };
 A.addLessonFiles=async id=>{const l=S.lessons.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;l.files=l.files.concat(await C.addFiles(fs));l.status='new';save.lessons();render()};
 A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
-A.transcribe=id=>{transcribe(id,false).then(()=>{})};A.transcribeAI=id=>{if(needKey())transcribe(id,true)};
-async function transcribe(id,forceAI){
+A.transcribe=id=>{transcribe(id,'auto')};A.transcribeAI=id=>{if(needKey())transcribe(id,'ai')};A.transcribeText=id=>{transcribe(id,'text')};
+/* mode: 'auto' (AI when a key exists, else text layer) | 'ai' | 'text' */
+async function transcribe(id,mode){
+  mode=mode||'auto';
   const l=S.lessons.find(x=>x.id===id),k='L'+id;
-  const ok=await run(k,'Preparing your pages…',async(lab,txt)=>{
-    // 1) text PDFs: read the text layer, no AI needed
-    if(!forceAI){
-      const recs=[];for(const f of l.files)recs.push(await C.dbGet('blobs',f.id));
-      if(recs.length&&recs.every(r=>r&&C.isPdf(r))){
-        const out=[];let tot=0,pg=0;
-        for(const r of recs){const x=await C.pdfText(r.blob,(i,n)=>lab('Reading the text · page '+i+'/'+n));out.push(x.text);tot+=x.avg*x.pages;pg+=x.pages}
-        if(pg&&tot/pg>=350){const full=out.join('\n\n');await C.setText(k,full);l.status='done';l.how='text';l.chars=full.length;save.lessons();return}
-      }
-    }
+  const allPdf=async()=>{const recs=[];for(const f of l.files)recs.push(await C.dbGet('blobs',f.id));return recs.length&&recs.every(r=>r&&C.isPdf(r))?recs:null};
+  const readText=async lab=>{
+    const recs=await allPdf();if(!recs)throw new C.AIError('The quick read only works on PDFs. Use the AI read for photos.');
+    const out=[];let tot=0;
+    for(const r of recs){const x=await C.pdfText(r.blob,(i,n)=>lab('Reading the text · page '+i+'/'+n));out.push(x.text);tot+=x.avg*x.pages}
+    if(tot<200)throw new C.AIError('This PDF has no text layer (it is a scan). Use the AI read.');
+    const full=out.join('\n\n');await C.setText(k,full);l.status='done';l.how='text';l.chars=full.length;save.lessons();
+  };
+  const readAI=async(lab,txt)=>{
     const parts=await C.filesToParts(l.files,lab),out=[];
     for(let i=0;i<parts.length;i++){
       lab('Reading '+(i+1)+'/'+parts.length+' · '+parts[i].label);
@@ -2131,6 +2135,18 @@ async function transcribe(id,forceAI){
       out.push(r.text.trim());if(r.stop==='max_tokens')out.push('\n\n*[Part truncated: split this PDF in smaller pieces and read again.]*');
     }
     const full=out.join('\n\n');await C.setText(k,full);l.status='done';l.how='ai';l.chars=full.length;save.lessons();
+  };
+  const ok=await run(k,'Preparing your pages…',async(lab,txt)=>{
+    if(mode==='text')return readText(lab);
+    if(mode==='auto'&&!C.hasKey()){if(await allPdf())return readText(lab);throw new C.AIError('Add your AI key first (⚙).')}
+    try{await readAI(lab,txt)}
+    catch(e){
+      // free quota used up: fall back to the text layer when the PDF has one
+      if(mode==='auto'&&/limit|quota|busy|too many/i.test(e.message||'')&&await allPdf()){
+        lab('AI limit reached · reading the text instead…');await readText(lab);toast('AI limit reached: quick text read used (formulas less accurate)');return;
+      }
+      throw e;
+    }
   });
   if(!ok){l.status='error';save.lessons();render()}else toast('Lesson read ✓');
   return ok;
@@ -2228,7 +2244,7 @@ A.parseProg=async id=>{if(!needKey())return;pipeline(id)};
 async function askUnread(id){
   const p=S.progs.find(x=>x.id===id),un=unread(p.subj);
   if(!un.length)return true;
-  const yes=await ask({title:un.length+' '+SUBJ[p.subj].n+' lesson'+(un.length>1?'s':'')+' not read yet',msg:'The sheet is built from lessons that have been read. Read them first? Text PDFs are instant and free; scans use the AI.',ok:'Read them first',cancel:'Skip'});
+  const yes=await ask({title:un.length+' '+SUBJ[p.subj].n+' lesson'+(un.length>1?'s':'')+' not read yet',msg:'The sheet is built from lessons that have been read. Read them first? This uses the AI (about a minute per lesson).',ok:'Read them first',cancel:'Skip'});
   if(yes){await readAll(p.subj)}
   return true;
 }
