@@ -464,9 +464,9 @@ textarea::placeholder{color:var(--dim)}
 .filerow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--inset);margin-bottom:7px;box-shadow:0 0 0 1px var(--line) inset;animation:popin .35s var(--spring) both}
 .filerow .n{flex:1;min-width:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .filerow .n small{display:block;color:var(--dim);font-size:11.5px}
-.mini{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;color:var(--muted);flex:none;font-size:16px;transition:transform .25s var(--spring)}
-.mini:active{transform:scale(.8)}
-.mini svg{width:17px;height:17px}
+.pmini{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;color:var(--muted);flex:none;font-size:16px;transition:transform .25s var(--spring)}
+.pmini:active{transform:scale(.8)}
+.pmini svg{width:17px;height:17px}
 .slot{margin-bottom:14px}
 .slot .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .slot .hd .lbl{margin:0}
@@ -548,7 +548,7 @@ textarea::placeholder{color:var(--dim)}
 .docseg button,.addf{background:transparent;border:0}
 .rate button{background:transparent}
 .pwk button{background:transparent}
-.mini{background:transparent}
+.pmini{background:transparent}
 /* ===== v2: transitions, overview, vocabulary swipe deck ===== */
 .pview.a-push>*{animation:pPush .5s var(--ease) both;animation-delay:calc(var(--i,0)*45ms)}
 .pview.a-pop>*{animation:pPop .5s var(--ease) both;animation-delay:calc(var(--i,0)*45ms)}
@@ -1796,7 +1796,7 @@ const hv=()=>{if(typeof vib==='function')vib(8)};
 const ico={trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"/></svg>',chev:'<span class="go">›</span>',x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',ck:'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>'};
 const subjChips=(sel,list,id)=>'<div class="chips" id="'+id+'">'+list.map(s=>'<button class="chip '+(s===sel?'on':'')+'" data-v="'+s+'">'+SUBJ[s].n+'</button>').join('')+'</div>';
 function bindChips(id,fn){const e=$(id);e.onclick=ev=>{const b=ev.target.closest('.chip');if(!b)return;[...e.children].forEach(c=>c.classList.toggle('on',c===b));hv();fn(b.dataset.v)}}
-const fileRows=(arr,slot,id)=>(arr||[]).map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+(C.isPdf(f)?' · PDF':' · photo')+'</small></span><button class="mini" data-a="view" data-i="'+f.id+'" aria-label="Open">'+ico.eye+'</button><button class="mini" data-a="rmfile" data-i="'+id+'|'+slot+'|'+f.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('');
+const fileRows=(arr,slot,id)=>(arr||[]).map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+(C.isPdf(f)?' · PDF':' · photo')+'</small></span><button class="pmini" data-a="view" data-i="'+f.id+'" aria-label="Open">'+ico.eye+'</button><button class="pmini" data-a="rmfile" data-i="'+id+'|'+slot+'|'+f.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('');
 
 /* ---------- running background jobs ---------- */
 function liveBox(key){
@@ -1925,7 +1925,7 @@ function lessonStatus(l){return live['L'+l.id]?'Reading…':l.status==='done'?'R
 function vLesson(id){
   const l=S.lessons.find(x=>x.id===id);if(!l){st.stack.pop();return vLessons()}
   const k='L'+id;
-  let h=backBar(l.title,'<button class="mini" data-a="delLesson" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  let h=backBar(l.title,'<button class="pmini" data-a="delLesson" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="card"><div class="pmeta"><span class="pill" style="color:'+C.sc(l.subj)+'">'+SUBJ[l.subj].n+'</span><span class="pill">'+lessonStatus(l)+'</span></div>';
   h+='<div class="slot" style="margin-top:14px"><div class="hd"><div class="lbl">Files</div><button class="addf" data-a="addLessonFiles" data-i="'+id+'">+ Add pages</button></div>'+fileRows(l.files,'lesson',id)+'</div>';
   h+=liveBox(k)+errBox(k);
@@ -2015,7 +2015,7 @@ function vRec(kind,id){
   h+='<div class="field"><label>Where did I lose points?</label><div class="tagrow" id="tags">'+C.TAGS.map(t=>'<button class="tg '+((r.tags||[]).includes(t)?'on':'')+'" data-a="tag" data-i="'+kind+'|'+id+'|'+esc(t)+'">'+esc(t)+'</button>').join('')+'</div></div>';
   h+='<div class="field"><label>What went wrong</label><textarea data-in="wrong" data-k="'+kind+'|'+id+'" placeholder="Be specific: exercise, step, reason…">'+esc(r.wrong||'')+'</textarea></div>';
   h+='<div class="field"><label>What to improve</label><textarea data-in="why" data-k="'+kind+'|'+id+'" placeholder="What will I do differently next time?">'+esc(r.why||'')+'</textarea></div>';
-  h+='<div class="lbl" style="margin-top:6px">To redo</div><div id="todos">'+(r.todo||[]).map(t=>'<div class="todo '+(t.done?'done':'')+'" data-a="todo" data-i="'+kind+'|'+id+'|'+t.id+'"><span class="cb">'+ico.ck+'</span><span class="tx">'+esc(t.t)+'</span><button class="mini" data-a="rmtodo" data-i="'+kind+'|'+id+'|'+t.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('')+'</div>';
+  h+='<div class="lbl" style="margin-top:6px">To redo</div><div id="todos">'+(r.todo||[]).map(t=>'<div class="todo '+(t.done?'done':'')+'" data-a="todo" data-i="'+kind+'|'+id+'|'+t.id+'"><span class="cb">'+ico.ck+'</span><span class="tx">'+esc(t.t)+'</span><button class="pmini" data-a="rmtodo" data-i="'+kind+'|'+id+'|'+t.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('')+'</div>';
   h+='<div class="two2" style="margin-top:8px"><input id="newtodo" placeholder="e.g. Redo exercise 2"><button class="btn sm" style="flex:none" data-a="addtodo" data-i="'+kind+'|'+id+'">Add</button></div><div class="sub" style="margin-top:6px">Each item also becomes an objective in Aether.</div></div>';
   if(r.copy&&r.copy.length||(isEx&&r.corr.length)){
     h+='<div class="card"><div class="lbl">AI review of my copy</div>'+liveBox(key)+errBox(key);
@@ -2031,7 +2031,7 @@ function vRec(kind,id){
 function vProg(id){
   const p=S.progs.find(x=>x.id===id);if(!p){st.stack.pop();return vColles()}
   const k='P'+id;
-  let h=backBar(p.title||SUBJ[p.subj].n+' programme','<button class="mini" data-a="delProg" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  let h=backBar(p.title||SUBJ[p.subj].n+' programme','<button class="pmini" data-a="delProg" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span></div>';
   h+=fileRows(p.files,'prog',id)+liveBox(k)+errBox(k)+(p.err&&!errs[k]?'<div class="warnbox">'+esc(p.err)+'</div>':'');
   if(!live[k]){
@@ -2057,7 +2057,7 @@ function vProg(id){
 }
 function vSheet(id){
   const p=S.progs.find(x=>x.id===id);if(!p){st.stack.pop();return ''}
-  return backBar('Prep sheet','<button class="mini" data-a="printSheet" data-i="'+id+'" aria-label="Print">⎙</button>')+
+  return backBar('Prep sheet','<button class="pmini" data-a="printSheet" data-i="'+id+'" aria-label="Print">⎙</button>')+
   '<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Exercises</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrections</button></div><div class="card"><div class="doc" id="sheetdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
 }
 function splitSheet(t){
@@ -2078,7 +2078,7 @@ function vCards(){
   h+='</div>';
   h+='<button class="add" data-a="addCard">+ Add a card by hand</button>';
   const by={};S.cards.forEach(c=>(by[c.subj]=by[c.subj]||[]).push(c));
-  h+=Object.keys(by).map(s=>'<div class="prow" style="--c:'+C.sc(s)+';cursor:default"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+by[s].length+' cards · '+by[s].filter(c=>c.due<=iso()).length+' due</div></span><button class="mini" data-a="delDeck" data-i="'+s+'" aria-label="Delete deck">'+ico.x+'</button></div>').join('');
+  h+=Object.keys(by).map(s=>'<div class="prow" style="--c:'+C.sc(s)+';cursor:default"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+by[s].length+' cards · '+by[s].filter(c=>c.due<=iso()).length+' due</div></span><button class="pmini" data-a="delDeck" data-i="'+s+'" aria-label="Delete deck">'+ico.x+'</button></div>').join('');
   if(!S.cards.length)h+='<div class="hidecorr">Open a lesson that the AI has read and tap “Create flashcards”.</div>';
   return h;
 }
@@ -2454,7 +2454,7 @@ function vocabHome(){
 function vList(id){
   const l=S.vocab.find(x=>x.id===id);if(!l){st.stack.pop();return vocabHome()}
   const k=vKnown(l),n=l.items.length,p=n?k/n:0;
-  let h=backBar(l.title,'<button class="mini" data-a="vdelList" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  let h=backBar(l.title,'<button class="pmini" data-a="vdelList" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="card"><div class="pcard-h"><div class="ring2"><svg viewBox="0 0 62 62"><circle class="tr" cx="31" cy="31" r="26"/><circle class="pg" cx="31" cy="31" r="26" stroke-dasharray="163.4" stroke-dashoffset="163.4" data-off="'+(163.4*(1-p)).toFixed(1)+'"/></svg><b>'+Math.round(p*100)+'%</b></div><div style="flex:1"><div style="font-weight:700;font-size:17px">'+k+' of '+n+' known</div><div class="sub">'+esc(l.la)+' ↔ '+esc(l.lb)+'</div></div></div>';
   h+='<div class="field" style="margin-top:14px"><label>Show first</label><div class="chips" id="v-dir"><button class="chip '+(vopt.dir==='ab'?'on':'')+'" data-v="ab">'+esc(l.la)+'</button><button class="chip '+(vopt.dir==='ba'?'on':'')+'" data-v="ba">'+esc(l.lb)+'</button><button class="chip '+(vopt.dir==='mix'?'on':'')+'" data-v="mix">Mixed</button></div></div>';
   h+='<button class="btn primary" data-a="vstart" data-i="'+id+'|all">Study all '+n+' words</button>';
@@ -2463,7 +2463,7 @@ function vList(id){
   if(l.fresh)h+='<div class="warnbox">The AI read this from your photo. Check the words below and fix or delete anything wrong.</div>';
   h+=liveBox('VOC')+errBox('VOC');
   h+='<div class="card"><div class="cardhead"><div class="lbl">Words</div><button class="addf" data-a="vaddPhoto" data-i="'+id+'">+ More photos</button></div><div class="vhead"><span>'+esc(l.la)+'</span><span>'+esc(l.lb)+'</span><span></span></div>';
-  h+=l.items.map(it=>'<div class="vrow'+(it.k>0?' ok':'')+'"><input data-vin="a" data-k="'+id+'|'+it.id+'" value="'+esc(it.a)+'" autocapitalize="off" autocomplete="off" spellcheck="false"><input data-vin="b" data-k="'+id+'|'+it.id+'" value="'+esc(it.b)+'" autocapitalize="off" autocomplete="off" spellcheck="false"><button class="mini" data-a="vdelItem" data-i="'+id+'|'+it.id+'" aria-label="Delete word">'+ico.x+'</button></div>').join('');
+  h+=l.items.map(it=>'<div class="vrow'+(it.k>0?' ok':'')+'"><input data-vin="a" data-k="'+id+'|'+it.id+'" value="'+esc(it.a)+'" autocapitalize="off" autocomplete="off" spellcheck="false"><input data-vin="b" data-k="'+id+'|'+it.id+'" value="'+esc(it.b)+'" autocapitalize="off" autocomplete="off" spellcheck="false"><button class="pmini" data-a="vdelItem" data-i="'+id+'|'+it.id+'" aria-label="Delete word">'+ico.x+'</button></div>').join('');
   h+='<button class="add" style="margin-top:10px" data-a="vaddItem" data-i="'+id+'">+ Add a word</button>';
   if(k)h+='<button class="btn" data-a="vreset" data-i="'+id+'">Mark everything as unknown</button>';
   return h+'</div>';
@@ -2483,7 +2483,7 @@ function vStudy(){
   const it=l.items.find(x=>x.id===v.q[0]);
   const rev=v.side==='b',front=rev?it.b:it.a,backT=rev?it.a:it.b,fl=rev?l.lb:l.la,bl=rev?l.la:l.lb;
   const nextIt=v.q[1]&&l.items.find(x=>x.id===v.q[1]);
-  return backBar(l.title,'<button class="mini" data-a="back" aria-label="Stop">'+ico.x+'</button>')+head+
+  return backBar(l.title,'<button class="pmini" data-a="back" aria-label="Stop">'+ico.x+'</button>')+head+
   '<div class="vdeck">'+(nextIt?'<div class="vcard behind"></div>':'')+'<div class="vcard top'+(v.fresh?' new':'')+'" id="vtop"><div class="vi'+(v.flip?' flip':'')+'"><div class="vf"><span class="tp">'+esc(fl)+'</span><div class="vt">'+esc(front)+'</div></div><div class="vb"><span class="tp">'+esc(bl)+'</span><div class="vt">'+esc(backT)+'</div></div></div><i class="vtag know">I know</i><i class="vtag learn">Learning</i></div></div>'+
   '<div class="vbtns"><button class="vbtn no" data-a="vno" aria-label="Still learning">'+svgNo+'</button><button class="vbtn sm" data-a="vundo" aria-label="Undo"'+(v.hist.length?'':' disabled')+'>'+svgUndo+'</button><button class="vbtn sm" data-a="vspeak" aria-label="Pronounce">'+svgSpk+'</button><button class="vbtn yes" data-a="vyes" aria-label="I know it">'+svgYes+'</button></div><div class="sub" style="text-align:center;margin-top:12px">Tap to flip · swipe right if you know it · left if not</div>';
 }
@@ -2632,7 +2632,7 @@ function rHomeCard(){
 /* ================= EVENTS (delegation) ================= */
 function wire(){
   const b=body();
-  b.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;if(e.target.closest('.mini')&&el!==e.target.closest('.mini')&&el.dataset.a!=='x'){}const f=A[el.dataset.a];if(f){hv();f(el.dataset.i,el,e)}});
+  b.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;if(e.target.closest(".pmini")&&el!==e.target.closest(".pmini")&&el.dataset.a!=='x'){}const f=A[el.dataset.a];if(f){hv();f(el.dataset.i,el,e)}});
   $('ptabs').addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(el){hv();A[el.dataset.a](el.dataset.i)}});
   b.addEventListener('input',e=>{
     const t=e.target;
