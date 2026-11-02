@@ -600,6 +600,13 @@ textarea::placeholder{color:var(--dim)}
 .vrow.ok input:first-child{border-color:rgba(91,230,138,.4)}
 .pev,.prow,.qa button,.btn{-webkit-tap-highlight-color:transparent}
 @media (prefers-reduced-motion:reduce){.pview>*{animation:none!important}.vi{transition:none}}
+.fold{display:flex;align-items:center;gap:6px;margin:14px 0 8px}
+.fold .ft{flex:1;display:flex;align-items:center;gap:8px;background:none;border:0;color:var(--text);font:inherit;font-weight:700;font-size:15px;padding:6px 2px;text-align:left;min-width:0}
+.fold .fn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fold .fch{display:inline-flex;transition:transform .25s var(--ease)}.fold .fch svg{width:16px;height:16px}
+.fold.open .fch{transform:rotate(90deg)}
+.fbody{margin:0 0 6px 10px;padding-left:10px;border-left:2px solid var(--line2)}
+.fpill{border:0;font:inherit;font-size:12px;cursor:pointer}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
@@ -1028,11 +1035,12 @@ function editTask(id,presetG){
   openSheet(`<h2>${t?'Edit objective':'New objective'}</h2>
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
     <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
-    <div class="field"><label>Reward</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div></div>
+    <div class="field"><label>Reward (1–100 XP)</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
     <div class="field"><label>Due date (optional)</label><div class="two"><input id="e-d" type="date" value="${t&&t.due||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-dc">Clear</button></div></div>
     <button class="btn primary" id="e-save">${t?'Save changes':'Add objective'}</button>
     ${t?'<button class="btn danger" id="e-del">Delete</button>':''}`);
-  $('e-xp').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sel=+b.dataset.v;[...$('e-xp').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
+  $('e-xp').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sel=+b.dataset.v;$('e-xc').value=sel;[...$('e-xp').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
+  $('e-xc').oninput=()=>{const n=Math.round(+$('e-xc').value);if(n>=1&&n<=100)sel=n;[...$('e-xp').children].forEach(c=>c.classList.toggle('on',+c.dataset.v===sel))};
   $('e-g').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;
     if(b.dataset.v==='+'){const txt=$('e-t').value;window._afterGoal=gid=>{setTimeout(()=>editTask(id,gid),340);window._keepTxt=txt};editGoal();return}
     selG=b.dataset.v;[...$('e-g').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
@@ -1041,7 +1049,7 @@ function editTask(id,presetG){
   $('e-save').onclick=()=>{
     const v=$('e-t').value.trim();
     if(!v){const f=$('f-t');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
-    const due=$('e-d').value||'';
+    const due=$('e-d').value||'';{const n=Math.round(+$('e-xc').value);if(!(n>=1&&n<=100)){const f=$('e-xc');f.focus();toast('XP must be between 1 and 100');return}sel=n}
     if(t){t.text=v;t.xp=sel;t.due=due;if(selG)t.gid=selG;else delete t.gid}else tasks.push({id:uid(),text:v,xp:sel,due,gid:selG||undefined});
     sv();closeSheet();vib(15);toast(t?'Saved':'Objective added');
     if(cur==='tasks')rTasks();if(cur==='home')rHomeTasks();
@@ -1815,6 +1823,36 @@ async function run(key,label,fn){
 const errBox=key=>errs[key]?'<div class="warnbox">'+esc(errs[key])+'</div>':'';
 const needKey=()=>{if(C.hasKey())return true;toast('Add your AI key first');settings();return false};
 
+/* ---------- folders ---------- */
+const gkOf=t=>t==='progs'?'colles':t;
+function fItems(gk){return gk==='lessons'?S.lessons:gk==='exams'?Object.values(S.exams):gk==='colles'?Object.values(S.colles).concat(S.progs):S.vocab}
+function fObj(type,id){
+  if(type==='lessons')return S.lessons.find(x=>x.id===id);
+  if(type==='progs')return S.progs.find(x=>x.id===id);
+  if(type==='vocab')return S.vocab.find(x=>x.id===id);
+  return S[type][id]||null;
+}
+const fGet=(type,id)=>{const o=fObj(type,id);return o&&o.folder||''};
+function fSet(type,id,name){
+  let o=fObj(type,id);
+  if(!o&&(type==='exams'||type==='colles')){const m=metaOf(type,id);if(m)o=recOf(type,id,m)}
+  if(!o)return;if(name)o.folder=name;else delete o.folder;
+  (save[type]||(()=>{}))();
+}
+const fNames=gk=>[...new Set(fItems(gk).map(o=>o.folder).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+function saveGk(gk){if(gk==='colles'){save.colles();save.progs()}else save[gk]()}
+const folderPill=(type,id)=>{const f=fGet(type,id);return '<button class="pill fpill" data-a="folder" data-i="'+type+'|'+id+'">📁 '+(f?esc(f):'No folder')+'</button>'};
+function inFolders(gk,items,fo,row){
+  st.fc=st.fc||{};
+  const loose=items.filter(x=>!fo(x)),names=[...new Set(items.map(fo).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  let h=loose.map(row).join('');
+  names.forEach(n=>{
+    const l=items.filter(x=>fo(x)===n),k=gk+'|'+n,open=!st.fc[k];
+    h+='<div class="fold'+(open?' open':'')+'"><button class="ft" data-a="fold" data-i="'+esc(k)+'"><span class="fch">'+ico.chev+'</span><span class="fn">📁 '+esc(n)+'</span><span class="sub">'+l.length+'</span></button><button class="pmini" data-a="foldren" data-i="'+esc(k)+'" aria-label="Rename folder">✎</button></div>'+(open?'<div class="fbody">'+l.map(row).join('')+'</div>':'');
+  });
+  return h;
+}
+
 /* ---------- records (exams / colles) ---------- */
 function recOf(kind,id,meta){
   const store=S[kind];
@@ -1917,24 +1955,25 @@ function vLessons(){
   C.LSUBJ.forEach(s=>{
     const ls=S.lessons.filter(l=>l.subj===s);if(!ls.length)return;
     h+='<div class="sec2"><div class="lbl" style="margin:0">'+SUBJ[s].n+'</div><span class="sub">'+ls.length+'</span></div>';
-    h+=ls.map(l=>'<button class="prow" style="--c:'+C.sc(s)+'" data-a="lesson" data-i="'+l.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(l.title)+'</div><div class="s">'+lessonStatus(l)+'</div></span>'+ico.chev+'</button>').join('');
+    h+=inFolders('lessons',ls,l=>l.folder||'',l=>'<button class="prow" style="--c:'+C.sc(s)+'" data-a="lesson" data-i="'+l.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(l.title)+'</div><div class="s">'+lessonStatus(l)+'</div></span>'+ico.chev+'</button>');
   });
   return h;
 }
-function lessonStatus(l){return live['L'+l.id]?'Reading…':l.status==='done'?'Ready · '+(l.how==='text'?'text PDF':'read by AI')+(l.chars?' · '+Math.round(l.chars/1000)+'k characters':''):l.status==='error'?'Reading failed — open to retry':'Not read yet'}
+function lessonStatus(l){return live['L'+l.id]?'Reading…':l.status==='done'?'Ready · '+(l.how==='text'?'text PDF':l.how==='upload'?'your read file':'read by AI')+(l.chars?' · '+Math.round(l.chars/1000)+'k characters':''):l.status==='error'?'Reading failed — open to retry':'Not read yet'}
 function vLesson(id){
   const l=S.lessons.find(x=>x.id===id);if(!l){st.stack.pop();return vLessons()}
   const k='L'+id;
   let h=backBar(l.title,'<button class="pmini" data-a="delLesson" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
-  h+='<div class="card"><div class="pmeta"><span class="pill" style="color:'+C.sc(l.subj)+'">'+SUBJ[l.subj].n+'</span><span class="pill">'+lessonStatus(l)+'</span></div>';
+  h+='<div class="card"><div class="pmeta"><span class="pill" style="color:'+C.sc(l.subj)+'">'+SUBJ[l.subj].n+'</span><span class="pill">'+lessonStatus(l)+'</span>'+folderPill('lessons',id)+'</div>';
   h+='<div class="slot" style="margin-top:14px"><div class="hd"><div class="lbl">Files</div><button class="addf" data-a="addLessonFiles" data-i="'+id+'">+ Add pages</button></div>'+fileRows(l.files,'lesson',id)+'</div>';
   h+=liveBox(k)+errBox(k);
+  if(!live[k]&&l.status!=='done')h+='<button class="btn" data-a="upText" data-i="'+id+'">⬆ I already have the read file (text PDF or .txt) — upload it</button>';
   if(!live[k]){
     h+=l.status==='done'?'<button class="btn" data-a="transcribeAI" data-i="'+id+'">'+(l.how==='text'?'Re-read with AI (better formulas)':'Read again with AI')+'</button>':'<button class="btn primary" data-a="transcribe" data-i="'+id+'">Read this lesson with AI</button><button class="btn" data-a="transcribeText" data-i="'+id+'">Quick read without AI (text PDFs)</button>';
-    if(l.status==='done')h+='<button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
+    if(l.status==='done')h+='<button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="printLesson" data-i="'+id+'">Save as a clean typed PDF</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
   }
   h+='</div>';
-  if(l.status==='done')h+='<div class="card"><div class="lbl">Text the AI will use</div><div class="doc" id="ltext"><div class="shimmer" style="height:120px;border-radius:14px"></div></div></div>';
+  if(l.status==='done')h+='<div class="card"><div class="cardhead"><div class="lbl">Text the AI will use</div><button class="addf" data-a="upText" data-i="'+id+'">⬆ Upload read file</button></div><div class="doc" id="ltext"><div class="shimmer" style="height:120px;border-radius:14px"></div></div></div>';
   return h;
 }
 
@@ -1965,7 +2004,7 @@ function gradeCard(){
 function vExams(){
   const td=iso(),all=examList(),past=all.filter(x=>x.date<=td||S.exams[x.id]),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
   let h=gradeCard()+mistakeCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
-  if(past.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Past exams</div></div>'+past.map(x=>exRow('exams',x)).join('')}
+  if(past.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Past exams</div></div>'+inFolders('exams',past,x=>(S.exams[x.id]||{}).folder||'',x=>exRow('exams',x))}
   if(up.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div><span class="sub">'+up.length+'</span></div>'+up.slice(0,4).map(x=>exRow('exams',x)).join('')}
   return h;
 }
@@ -1983,17 +2022,18 @@ function mistakeCard(){
 /* ----- COLLES ----- */
 function vColles(){
   let h='<div class="card"><div class="cardhead"><div class="lbl">Programmes de colles</div></div><div class="sub" style="margin:-4px 0 12px">Maths & physics: drop the weekly programme, get a prep sheet built from your lessons.</div>';
-  h+=S.progs.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(p=>{
+  h+=inFolders('colles',S.progs.slice().sort((a,b)=>b.date.localeCompare(a.date)),p=>p.folder||'',p=>{
     const r=p.chapters&&p.chapters.length?Math.round(100*p.chapters.filter(c=>c.ready).length/p.chapters.length):null;
     const stt=live['P'+p.id]?'Working…':p.sheetAt?'Sheet ready':p.chapters&&p.chapters.length?'Programme read':p.err?'Failed — open to retry':'Not read yet';
     return '<button class="prow" style="--c:'+C.sc(p.subj)+'" data-a="prog" data-i="'+p.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(p.title||SUBJ[p.subj].n+' programme')+'</div><div class="s">'+SUBJ[p.subj].n+' · '+fdl(p.date)+' · '+stt+'</div></span>'+(r!=null?'<span class="gpill '+(r>=70?'g-hi':r>=40?'g-mid':'g-lo')+'">'+r+'%</span>':'')+ico.chev+'</button>';
-  }).join('');
+  });
   h+='<button class="add" data-a="addProg">+ Add a programme de colles</button></div>';
   h+='<button class="prow" style="--c:'+C.sc('ang')+'" data-a="eng"><i class="dot"></i><span class="m"><div class="t">English colle prep</div><div class="s">2 topics picked from Meridian + vocabulary & questions</div></span>'+ico.chev+'</button>';
-  const td=iso(),cs=cal.filter(e=>e.kind==='colle').sort((a,b)=>b.date.localeCompare(a.date));
+  const td=iso(),cs=cal.filter(e=>e.kind==='colle').map(e=>({id:e.id,subj:e.subj,title:e.title,date:e.date}));
+  Object.values(S.colles).forEach(r=>{if(!cs.find(x=>x.id===r.id))cs.push({id:r.id,subj:r.subj,title:r.title,date:r.date})});cs.sort((a,b)=>b.date.localeCompare(a.date));
   const pastC=cs.filter(e=>e.date<=td||S.colles[e.id]),upC=cs.filter(e=>!pastC.includes(e)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
-  h+='<div class="sec2"><div class="lbl" style="margin:0">Colle debriefs</div></div>';
-  h+=pastC.length?pastC.map(e=>exRow('colles',e)).join(''):'<div class="hidecorr" style="padding:14px">After each colle, open it here: grade, what went wrong, what to redo.</div>';
+  h+='<div class="sec2"><div class="lbl" style="margin:0">Colle debriefs</div></div><button class="add" data-a="addColle">+ Add a colle by hand</button>';
+  h+=pastC.length?inFolders('colles',pastC,e=>(S.colles[e.id]||{}).folder||'',e=>exRow('colles',e)):'<div class="hidecorr" style="padding:14px">After each colle, open it here: grade, what went wrong, what to redo.</div>';
   if(upC.length)h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div></div>'+upC.map(e=>exRow('colles',e)).join('');
   return h;
 }
@@ -2003,8 +2043,8 @@ function vRec(kind,id){
   const meta=metaOf(kind,id);if(!meta){st.stack.pop();return ''}
   const r=S[kind][id]||{sujet:[],corr:[],copy:[],tags:[],wrong:'',why:'',todo:[],fb:'',grade:null,avg:null};
   const isEx=kind==='exams',key='R'+id,key2=r.fb?'':'';
-  let h=backBar(meta.title);
-  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(meta.subj)+'">'+SUBJ[meta.subj].n+'</span><span class="pill">'+fd(meta.date)+'</span></div>';
+  let h=backBar(meta.title,'<button class="pmini" data-a="recEdit" data-i="'+kind+'|'+id+'" aria-label="Edit">✎</button><button class="pmini" data-a="recDel" data-i="'+kind+'|'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(meta.subj)+'">'+SUBJ[meta.subj].n+'</span><span class="pill">'+fd(meta.date)+'</span>'+folderPill(kind,id)+'</div>';
   h+='<div class="'+(isEx?'two2':'')+'"><div class="field"><label>My grade /20</label><input inputmode="decimal" data-in="grade" data-k="'+kind+'|'+id+'" placeholder="e.g. 12.5" value="'+(r.grade==null?'':r.grade)+'"></div>'+(isEx?'<div class="field"><label>Class average</label><input inputmode="decimal" data-in="avg" data-k="'+kind+'|'+id+'" placeholder="optional" value="'+(r.avg==null?'':r.avg)+'"></div>':'')+'</div></div>';
   h+='<div class="card"><div class="lbl">Files</div>';
   const slot=(sl,label)=>'<div class="slot"><div class="hd"><div class="lbl">'+label+'</div><button class="addf" data-a="addRecFile" data-i="'+kind+'|'+id+'|'+sl+'">+ Add</button></div>'+(fileRows(r[sl],kind+'|'+sl,id)||'<div class="sub">Nothing yet</div>')+'</div>';
@@ -2032,7 +2072,7 @@ function vProg(id){
   const p=S.progs.find(x=>x.id===id);if(!p){st.stack.pop();return vColles()}
   const k='P'+id;
   let h=backBar(p.title||SUBJ[p.subj].n+' programme','<button class="pmini" data-a="delProg" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
-  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span></div>';
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span>'+folderPill('progs',id)+'</div>';
   h+=fileRows(p.files,'prog',id)+liveBox(k)+errBox(k)+(p.err&&!errs[k]?'<div class="warnbox">'+esc(p.err)+'</div>':'');
   if(!live[k]){
     if(!p.chapters||!p.chapters.length)h+='<button class="btn primary" data-a="parseProg" data-i="'+id+'">Read the programme and build my sheet</button>';
@@ -2279,9 +2319,77 @@ A.todo=i=>{const[kind,id,tid]=i.split('|'),r=S[kind][id],t=r.todo.find(x=>x.id==
 A.rmtodo=i=>{const[kind,id,tid]=i.split('|'),r=S[kind][id];r.todo=r.todo.filter(x=>x.id!==tid);save[kind]();render()};
 A.addExam=()=>{
   let subj='maths';
-  openSheet('<h2 class="sh">Add an exam</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" placeholder="e.g. DS 3 — Algèbre"></div><div class="field"><label>Date</label><input id="x-d" type="date" value="'+iso()+'"></div><button class="btn primary" id="x-go">Add</button>');
+  openSheet('<h2 class="sh">Add an exam</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" placeholder="e.g. DS 3 — Algèbre"></div><div class="field"><label>Date</label><input id="x-d" type="date" value="'+iso()+'"></div><div class="two"><div class="field"><label>Start (optional)</label><input id="x-s1" type="time"></div><div class="field"><label>End</label><input id="x-s2" type="time"></div></div><button class="btn primary" id="x-go">Add</button>');
   bindChips('x-s',v=>subj=v);
-  $('x-go').onclick=()=>{const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}const id='x-'+uid();recOf('exams',id,{subj,title:t,date:$('x-d').value||iso()});save.exams();closeSheet();go('rec','exams|'+id)};
+  $('x-go').onclick=()=>{const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}const id='x-'+uid();const d=$('x-d').value||iso();recOf('exams',id,{subj,title:t,date:d});addEv(id,'ds',subj,t,d,$('x-s1').value,$('x-s2').value);save.exams();closeSheet();go('rec','exams|'+id)};
+};
+function addEv(id,kind,subj,title,date,t1,t2){
+  if(cal.some(c=>c.id===id))return;
+  const col=C.SUBJ[subj]&&C.SUBJ[subj].c!=null?C.SUBJ[subj].c:undefined;
+  cal.push({id,title,date,time:t1||'',endTime:t1&&t2?t2:'',desc:'',color:col,kind,subj});sv();
+}
+A.recEdit=i=>{
+  const[kind,id]=i.split('|'),m=metaOf(kind,id);if(!m)return;
+  const ev=cal.find(c=>c.id===id);let subj=m.subj;
+  openSheet('<h2 class="sh">Edit '+(kind==='exams'?'exam':'colle')+'</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" value="'+esc(m.title)+'" maxlength="80"></div><div class="field"><label>Date</label><input id="x-d" type="date" value="'+m.date+'"></div><div class="two"><div class="field"><label>Start</label><input id="x-s1" type="time" value="'+(ev&&ev.time||'')+'"></div><div class="field"><label>End</label><input id="x-s2" type="time" value="'+(ev&&ev.endTime||'')+'"></div></div><button class="btn primary" id="x-go">Save changes</button><button class="btn danger" id="x-del">Delete</button>');
+  bindChips('x-s',v=>subj=v);
+  $('x-go').onclick=()=>{
+    const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}
+    const d=$('x-d').value||m.date,t1=$('x-s1').value,t2=$('x-s2').value;
+    if(t1&&t2&&t2<=t1){toast('End must be after the start');return}
+    const r=S[kind][id];if(r){r.title=t;r.subj=subj;r.date=d}
+    if(ev){ev.title=t;ev.subj=subj;ev.date=d;ev.time=t1;ev.endTime=t1?t2:''}
+    else if(!r)recOf(kind,id,{subj,title:t,date:d});
+    save[kind]();sv();closeSheet();render();toast('Saved');
+  };
+  $('x-del').onclick=()=>{closeSheet();A.recDel(i)};
+};
+A.recDel=async i=>{
+  const[kind,id]=i.split('|'),m=metaOf(kind,id);if(!m)return;
+  if(!await ask({title:'Delete this '+(kind==='exams'?'exam':'colle')+'?',msg:'Its notes, grade and files are deleted too, and it disappears from the calendar.',ok:'Delete',danger:1}))return;
+  const r=S[kind][id];
+  if(r){for(const sl of['sujet','corr','copy'])for(const f of (r[sl]||[]))try{await C.delFile(f.id)}catch(e){}delete S[kind][id];save[kind]()}
+  if(cal.some(c=>c.id===id)){
+    const k=cal.findIndex(c=>c.id===id);
+    if(String(id).startsWith('s-'))C.removed(id,true);
+    cal.splice(k,1);sv();
+  }
+  st.stack.pop();render('pop');toast('Deleted');
+};
+A.addColle=()=>{
+  let subj='maths';
+  openSheet('<h2 class="sh">Add a colle</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" placeholder="e.g. Colle 4 — Complexes"></div><div class="field"><label>Date</label><input id="x-d" type="date" value="'+iso()+'"></div><div class="two"><div class="field"><label>Start (optional)</label><input id="x-s1" type="time"></div><div class="field"><label>End</label><input id="x-s2" type="time"></div></div><button class="btn primary" id="x-go">Add</button>');
+  bindChips('x-s',v=>subj=v);
+  $('x-go').onclick=()=>{const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}const id='c-'+uid();const d=$('x-d').value||iso();recOf('colles',id,{subj,title:t,date:d});addEv(id,'colle',subj,t,d,$('x-s1').value,$('x-s2').value);save.colles();closeSheet();go('rec','colles|'+id)};
+};
+A.folder=i=>{
+  const k=i.indexOf('|'),type=i.slice(0,k),id=i.slice(k+1),gk=gkOf(type),cur=fGet(type,id),names=fNames(gk);let sel=cur;
+  openSheet('<h2 class="sh">Folder</h2><div class="chips" id="fo-c"><button class="chip '+(!cur?'on':'')+'" data-v="">No folder</button>'+names.map(n=>'<button class="chip '+(n===cur?'on':'')+'" data-v="'+esc(n)+'">📁 '+esc(n)+'</button>').join('')+'</div><div class="field" style="margin-top:14px"><label>Or create a new folder</label><input id="fo-n" placeholder="e.g. Chapter 1, Mécanique, Q1" maxlength="40"></div><button class="btn primary" id="fo-s">Move here</button>');
+  bindChips('fo-c',v=>{sel=v;$('fo-n').value=''});
+  $('fo-s').onclick=()=>{const n=$('fo-n').value.trim()||sel;fSet(type,id,n);closeSheet();render();toast(n?'Moved to '+n:'Removed from folder')};
+};
+A.fold=i=>{st.fc=st.fc||{};st.fc[i]=!st.fc[i];render()};
+A.foldren=i=>{
+  const k=i.indexOf('|'),gk=i.slice(0,k),name=i.slice(k+1);
+  openSheet('<h2 class="sh">Rename folder</h2><div class="field"><input id="fo-r" maxlength="40" value="'+esc(name)+'"></div><button class="btn primary" id="fo-rs">Save</button><button class="btn danger" id="fo-rd">Remove folder (keep the items)</button>');
+  const go2=nn=>{fItems(gk).forEach(o=>{if(o.folder===name){if(nn)o.folder=nn;else delete o.folder}});saveGk(gk);closeSheet();render()};
+  $('fo-rs').onclick=()=>{const v=$('fo-r').value.trim();if(v)go2(v)};$('fo-rd').onclick=()=>go2('');
+};
+A.upText=async id=>{
+  const l=S.lessons.find(x=>x.id===id);if(!l)return;
+  const fs=await C.pickFiles({accept:'application/pdf,text/plain,text/markdown,.txt,.md,.markdown'});if(!fs.length)return;
+  let txt='';
+  try{
+    toast('Reading the file…');
+    for(const f of fs){
+      const nm=(f.name||'').toLowerCase(),type=f.type||'';
+      if(/\.pdf$/.test(nm)||type==='application/pdf'){const x=await C.pdfText(f);if(x.avg*x.pages<150)throw new Error('This PDF has no text in it. Upload the typed (read) PDF, not the scan.');txt+=(txt?'\n\n':'')+x.text}
+      else if(/\.(txt|md|markdown)$/.test(nm)||/^text\//.test(type)){txt+=(txt?'\n\n':'')+await f.text()}
+      else throw new Error('Upload a text PDF or a .txt / .md file.');
+    }
+    txt=txt.trim();if(txt.length<20)throw new Error('The file is empty.');
+    await C.setText('L'+id,txt);l.status='done';l.how='upload';l.chars=txt.length;save.lessons();render();toast('Read file imported ✓ — no AI used');
+  }catch(e){toast(e.message||'Could not read that file')}
 };
 A.tagView=t=>{
   const rs=allRecs().filter(r=>(r.tags||[]).includes(t)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
@@ -2369,6 +2477,7 @@ A.mkSheet=async id=>{if(await askUnread(id)===false)return;if(needKey())mkSheet(
 A.ready=i=>{const[id,cid]=i.split('|'),p=S.progs.find(x=>x.id===id),c=p.chapters.find(x=>x.id===cid);c.ready=!c.ready;save.progs();render()};
 A.openSheet=id=>go('sheet',id);
 A.delProg=async id=>{if(!await ask({title:'Delete this programme?',msg:'The sheet is deleted too.',ok:'Delete',danger:1}))return;const p=S.progs.find(x=>x.id===id);for(const f of p.files)await C.delFile(f.id);await C.dbDel('texts','S'+id).catch(()=>{});S.progs=S.progs.filter(x=>x.id!==id);save.progs();back()};
+A.printLesson=async id=>{const l=S.lessons.find(x=>x.id===id),t=await C.getText('L'+id);if(!t){toast('Read the lesson first');return}await C.loadKatex();printHtml('<h1>'+esc(l.title)+'</h1>'+C.md(t));toast('Choose "Save to Files" / "Save as PDF" in the share sheet')};
 A.printSheet=async id=>{const sp=splitSheet((await C.getText('S'+id))||'');await C.loadKatex();printHtml(C.md(st.seg==='co'?sp.co:sp.ex))};
 
 /* --- cards --- */
@@ -2443,10 +2552,10 @@ function vocabHome(){
   let h='<button class="add" data-a="addVocab">+ New list from a photo of the book</button>';
   h+=liveBox('VOC')+errBox('VOC');
   if(!S.vocab.length)return h+'<div class="hidecorr">Take a photo of a vocabulary page (French on one side, English on the other). The AI turns it into cards you swipe: right if you know it, left if not.</div>';
-  h+=S.vocab.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(l=>{
+  h+=inFolders('vocab',S.vocab.slice().sort((a,b)=>b.date.localeCompare(a.date)),l=>l.folder||'',l=>{
     const k=vKnown(l),p=l.items.length?Math.round(100*k/l.items.length):0;
     return '<button class="prow" style="--c:'+C.sc('ang')+'" data-a="vlist" data-i="'+l.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(l.title)+'</div><div class="s">'+esc(l.la)+' ↔ '+esc(l.lb)+' · '+l.items.length+' words</div><div class="pbar" style="margin-top:7px"><i data-w="'+p+'"></i></div></span><span class="gpill '+(p>=80?'g-hi':p>=40?'g-mid':'todo')+'">'+p+'%</span>'+ico.chev+'</button>';
-  }).join('');
+  });
   return h;
 }
 
@@ -2455,6 +2564,7 @@ function vList(id){
   const l=S.vocab.find(x=>x.id===id);if(!l){st.stack.pop();return vocabHome()}
   const k=vKnown(l),n=l.items.length,p=n?k/n:0;
   let h=backBar(l.title,'<button class="pmini" data-a="vdelList" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  h+='<div class="pmeta" style="margin:0 0 12px">'+folderPill('vocab',id)+'</div>';
   h+='<div class="card"><div class="pcard-h"><div class="ring2"><svg viewBox="0 0 62 62"><circle class="tr" cx="31" cy="31" r="26"/><circle class="pg" cx="31" cy="31" r="26" stroke-dasharray="163.4" stroke-dashoffset="163.4" data-off="'+(163.4*(1-p)).toFixed(1)+'"/></svg><b>'+Math.round(p*100)+'%</b></div><div style="flex:1"><div style="font-weight:700;font-size:17px">'+k+' of '+n+' known</div><div class="sub">'+esc(l.la)+' ↔ '+esc(l.lb)+'</div></div></div>';
   h+='<div class="field" style="margin-top:14px"><label>Show first</label><div class="chips" id="v-dir"><button class="chip '+(vopt.dir==='ab'?'on':'')+'" data-v="ab">'+esc(l.la)+'</button><button class="chip '+(vopt.dir==='ba'?'on':'')+'" data-v="ba">'+esc(l.lb)+'</button><button class="chip '+(vopt.dir==='mix'?'on':'')+'" data-v="mix">Mixed</button></div></div>';
   h+='<button class="btn primary" data-a="vstart" data-i="'+id+'|all">Study all '+n+' words</button>';
