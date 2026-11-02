@@ -186,6 +186,27 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .task.mini{padding:10px 12px;margin-bottom:8px}
 .task.mini .chk{width:28px;height:28px}
 .orbempty{text-align:center;padding:10px 0 4px}
+.goal{display:flex;align-items:center;gap:14px;background:var(--surf2);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;transition:transform .25s var(--spring),border-color .3s;cursor:pointer}
+.gfresh{animation:rowin .6s var(--ease) both;animation-delay:calc(var(--i,0)*55ms)}
+.goal:active{transform:scale(.97)}
+.goal .gd{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:17px;flex:none;color:var(--ink);position:relative}
+.goal .gm{flex:1;min-width:0}.goal .gn{font-weight:650;font-size:17px;overflow-wrap:anywhere}
+.goal .gs{font-size:12.5px;color:var(--muted);margin:2px 0 7px}
+.goal .bar{height:6px}
+.gbadge{min-width:24px;height:24px;padding:0 7px;border-radius:99px;background:#ff3b30;color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;flex:none;box-shadow:0 0 0 3px var(--surf2),0 2px 10px rgba(255,59,48,.5);animation:gbp .5s var(--spring)}
+@keyframes gbp{from{transform:scale(0)}to{transform:none}}
+.ghead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ghead .ttl{flex:1;min-width:0;overflow-wrap:anywhere}
+.ghead .btn{flex:none;width:auto;padding:9px 14px}
+.cdot{width:14px;height:14px;border-radius:50%;display:inline-block;vertical-align:-1px;margin-right:6px}
+.chip .cdot{margin-right:6px}
+.pill.gl{background:rgba(255,255,255,.07);color:var(--muted)}
+.thead{cursor:pointer}.hero{cursor:pointer}
+.lvrow{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.lvrow .gd{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:var(--ink);flex:none}
+.lvrow .gm{flex:1;min-width:0}.lvrow .gn{font-weight:650;display:flex;justify-content:space-between;gap:8px}
+.lvrow .gn span:last-child{color:var(--muted);font-weight:500;font-size:13px}
+.lvrow .bar{height:7px;margin-top:6px}
 .orbempty p{margin-top:10px;font-size:15px;color:var(--muted)}
 
 /* ---------- calendar ---------- */
@@ -620,7 +641,7 @@ textarea::placeholder{color:var(--dim)}
 <div class="container">
 
 <section id="home" class="view">
-  <div class="card hero" id="hero"></div>
+  <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
@@ -646,12 +667,12 @@ textarea::placeholder{color:var(--dim)}
 
 <section id="tasks" class="view hidden">
   <div class="card">
-    <div class="thead"><div class="star" id="hli">⭐</div><div style="flex:1;min-width:0"><div class="ttl" style="font-size:19px">Level <span id="hl">1</span></div><div class="sub" id="hxp" style="margin:2px 0 8px">0 / 100 XP</div><div class="bar"><div class="bar-fill" id="hxf" style="width:0%"></div></div></div></div>
+    <div class="thead" data-act="lvls"><div class="star" id="hli">⭐</div><div style="flex:1;min-width:0"><div class="ttl" style="font-size:19px">Level <span id="hl">1</span></div><div class="sub" id="hxp" style="margin:2px 0 8px">0 / 100 XP</div><div class="bar"><div class="bar-fill" id="hxf" style="width:0%"></div></div></div></div>
   </div>
   <div class="card">
-    <div class="lbl">Objectives</div>
+    <div class="lbl" id="tlbl">Goals</div>
     <div id="tlst"></div>
-    <div class="hint" style="margin:6px 0 0">Tap to open · hold to edit</div>
+    <div class="hint" id="thint" style="margin:6px 0 0">Tap a goal to see its tasks · tap your level to see every goal's level</div>
   </div>
 </section>
 
@@ -735,6 +756,8 @@ const dayName=d=>d.toLocaleDateString('en-GB',{weekday:'long'});
 let xp=+localStorage.xp||0, lv=+localStorage.lv||1;
 let tasks=ld('tasks',[]), cal=ld('cal',[]), fhist=ld('fhist',[]), moods=ld('moods',{}), revs=ld('revs',{}), plans=ld('plans',{});
 let donelog=ld('donelog',[]), F=ld('ftimer',null);
+let goals=ld('goals',[]), tgoal=null;
+goals.forEach(g=>{if(!g.id)g.id=uid();g.xp=g.xp||0;g.lv=g.lv||1});
 tasks.forEach(t=>{if(!t.id)t.id=uid()});
 cal.forEach(c=>{if(!c.id)c.id=uid()});
 function sv(){try{
@@ -742,7 +765,7 @@ function sv(){try{
   localStorage.tasks=JSON.stringify(tasks);localStorage.cal=JSON.stringify(cal);
   localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);
   localStorage.revs=JSON.stringify(revs);localStorage.plans=JSON.stringify(plans);
-  localStorage.donelog=JSON.stringify(donelog);
+  localStorage.donelog=JSON.stringify(donelog);localStorage.goals=JSON.stringify(goals);
   if(F)localStorage.ftimer=JSON.stringify(F);
 }catch(e){}}
 const needed=l=>100+(l-1)*50;
@@ -860,7 +883,7 @@ function rHome(){
   const now=new Date(),hr=now.getHours();
   const g=hr<5?'Still up?':hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
   const st=streak(),need=needed(lv);
-  $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
+  $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
   rToday();rHomeTasks();rFocusBar();rMood();rRev();
@@ -911,12 +934,55 @@ function dueBadge(t){
   return '<span class="pill">'+esc(new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+'</span>';
 }
 function taskHTML(t,i,mini,fresh){
-  return `<div class="task ${mini?'mini':''} ${fresh?'fresh':''}" data-id="${t.id}" data-hold="task" style="--i:${i}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${esc(t.text)}</div><div class="tmeta"><span class="pill xp">+${t.xp||20} XP</span>${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
+  return `<div class="task ${mini?'mini':''} ${fresh?'fresh':''}" data-id="${t.id}" data-hold="task" style="--i:${i}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${esc(t.text)}</div><div class="tmeta"><span class="pill xp">+${t.xp||20} XP</span>${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
 }
+const goalOf=t=>t&&t.gid?goals.find(g=>g.id===t.gid):null;
+const gTasks=gid=>sortedTasks().filter(t=>gid==='_'?!goalOf(t):t.gid===gid);
 function rTasks(anim){
-  const l=sortedTasks();
-  $('tlst').innerHTML=l.map((t,i)=>taskHTML(t,i,false,anim)).join('')||`<div class="orbempty">${orb(86)}<p>Nothing on your plate.<br>Tap <b style="color:var(--lime)">+</b> to add an objective.</p></div>`;
+  if(tgoal&&tgoal!=='_'&&!goals.find(g=>g.id===tgoal))tgoal=null;
+  const el=$('tlst');
+  if(!tgoal){
+    $('tlbl').textContent='Goals';$('thint').textContent="Tap a goal to see its tasks · tap your level to see every goal's level";
+    const un=gTasks('_');
+    let h=goals.map((g,i)=>{
+      const n=tasks.filter(t=>t.gid===g.id).length,need=needed(g.lv);
+      return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="gopen" data-id="${g.id}"><div class="gd" style="background:${g.color}">${g.lv}</div><div class="gm"><div class="gn">${esc(g.name)}</div><div class="gs">Level ${g.lv} · ${g.xp}/${need} XP</div><div class="bar"><div class="bar-fill" style="width:${clamp(g.xp/need*100,0,100)}%;background:${g.color};box-shadow:none"></div></div></div>${n?`<div class="gbadge">${n}</div>`:''}</div>`}).join('');
+    if(un.length)h+=`<div class="goal" data-act="gopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No goal</div><div class="gs">Tasks not in a goal yet</div></div><div class="gbadge">${un.length}</div></div>`;
+    h+=`<button class="btn" data-act="gnew" style="margin-top:4px">+ New goal</button>`;
+    if(!goals.length&&!un.length)h=`<div class="orbempty">${orb(86)}<p>Create your first goal<br>(e.g. Maths, Physics, Sport),<br>then add tasks to it.</p></div>`+h;
+    el.innerHTML=h;
+  }else{
+    const g=tgoal==='_'?null:goals.find(x=>x.id===tgoal),l=gTasks(tgoal);
+    $('tlbl').textContent=g?'Goal':'No goal';$('thint').textContent='Tap a task to open it · hold to edit';
+    let h=`<div class="ghead"><button class="btn sm" style="flex:none;width:auto" data-act="gback">‹ Goals</button><div class="ttl" style="font-size:20px">${g?esc(g.name):'No goal'}</div>${g?'<button class="btn sm" data-act="gedit" data-id="'+g.id+'">Edit</button>':''}</div>`;
+    if(g){const need=needed(g.lv);h+=`<div class="sub" style="margin:0 0 6px">Level ${g.lv} · ${g.xp}/${need} XP</div><div class="bar" style="margin-bottom:16px"><div class="bar-fill" style="width:${clamp(g.xp/need*100,0,100)}%;background:${g.color};box-shadow:none"></div></div>`}
+    h+=l.map((t,i)=>taskHTML(t,i,false,anim)).join('')||`<div class="orbempty">${orb(70)}<p>No tasks here.<br>Tap <b style="color:var(--lime)">+</b> to add one.</p></div>`;
+    el.innerHTML=h;
+  }
   rLevel(anim);
+}
+function editGoal(id){
+  const g=id?goals.find(x=>x.id===id):null;let col=g?g.color:COLORS[goals.length%COLORS.length];
+  openSheet(`<h2>${g?'Edit goal':'New goal'}</h2>
+    <div class="field" id="g-f"><label>Name</label><input id="g-n" placeholder="e.g. Maths" maxlength="40" value="${esc(g?g.name:'')}"></div>
+    <div class="field"><label>Colour</label><div class="chips" id="g-c">${COLORS.map(c=>`<button class="chip ${c===col?'on':''}" data-v="${c}"><span class="cdot" style="background:${c};margin:0"></span></button>`).join('')}</div></div>
+    <button class="btn primary" id="g-save">${g?'Save changes':'Create goal'}</button>${g?'<button class="btn danger" id="g-del">Delete goal</button>':''}`);
+  $('g-c').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;col=b.dataset.v;[...$('g-c').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
+  $('g-save').onclick=()=>{
+    const v=$('g-n').value.trim();
+    if(!v){const f=$('g-f');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
+    if(g){g.name=v;g.color=col}else{const n={id:uid(),name:v,color:col,xp:0,lv:1};goals.push(n);if(window._afterGoal){window._afterGoal(n.id);window._afterGoal=null}}
+    sv();closeSheet();vib(15);toast(g?'Saved':'Goal created');rTasks();
+  };
+  if(g)$('g-del').onclick=()=>{
+    const n=tasks.filter(t=>t.gid===g.id).length;
+    goals.splice(goals.indexOf(g),1);tasks.forEach(t=>{if(t.gid===g.id)delete t.gid});tgoal=null;sv();closeSheet();toast('Goal deleted'+(n?' · its '+n+' task'+(n>1?'s':'')+' moved to "No goal"':''));rTasks();
+  };
+  setTimeout(()=>{if(!g)$('g-n').focus()},50);
+}
+function showLevels(){
+  const row=(name,lvl,x,col,lab)=>`<div class="lvrow"><div class="gd" style="background:${col}">${lvl}</div><div class="gm"><div class="gn"><span>${esc(name)}</span><span>Level ${lvl} · ${x}/${needed(lvl)} XP</span></div><div class="bar"><div class="bar-fill" style="width:${clamp(x/needed(lvl)*100,0,100)}%;background:${col};box-shadow:none"></div></div></div></div>`;
+  openSheet(`<h2>Levels</h2>${row('Overall',lv,xp,'var(--lime)')}<div class="lbl" style="margin:16px 0 10px">Goals</div>${goals.map(g=>row(g.name,g.lv,g.xp,g.color)).join('')||'<div class="hint">No goals yet. Create one in Tasks.</div>'}<div class="hint" style="margin-top:4px">Completing a task gives XP to your overall level and to its goal. Focus sessions only count for the overall level.</div><button class="btn" style="margin-top:12px" onclick="closeSheet()">Close</button>`);
 }
 function rLevel(anim){
   const need=needed(lv);
@@ -926,7 +992,9 @@ function rLevel(anim){
   if(anim){f.style.transition='none';f.style.width='0%';void f.offsetWidth;f.style.transition=''}
   requestAnimationFrame(()=>f.style.width=clamp(xp/need*100,0,100)+'%');
 }
-function gain(n,x,y){
+function gain(n,x,y,gid){
+  const g=gid&&goals.find(q=>q.id===gid);
+  if(g){g.xp+=n;const gb=g.lv;while(g.xp>=needed(g.lv)){g.xp-=needed(g.lv);g.lv++}if(g.lv>gb)setTimeout(()=>toast(g.name+' → level '+g.lv+' 🎉'),1800)}
   const before=lv;xp+=n;
   while(xp>=needed(lv)){xp-=needed(lv);lv++}
   if(x!=null)floatText(x,y,'+'+n+' XP');
@@ -947,28 +1015,34 @@ function completeTask(id,btn){
   const x=r.left+r.width/2,y=r.top+r.height/2;
   burst(x,y,18);
   tasks.splice(i,1);donelog.push({d:iso(),xp:t.xp||20,t:Date.now()});
-  gain(t.xp||20,x,y-10);sv();
+  gain(t.xp||20,x,y-10,t.gid);sv();
   const st=$('hli');st.classList.remove('pop');void st.offsetWidth;st.classList.add('pop');
   if(cur==='tasks')rLevel();
   setTimeout(()=>{row.style.maxHeight=row.offsetHeight+'px';void row.offsetHeight;row.classList.add('leaving')},650);
   setTimeout(()=>{if(cur==='tasks')rTasks();else if(cur==='home')rHomeTasks()},1150);
+  if(cur==='tasks'&&false)rTasks();
 }
-function editTask(id){
-  const t=id?tasks.find(x=>x.id===id):null;
+function editTask(id,presetG){
+  const t=id?tasks.find(x=>x.id===id):null;let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
   const xps=[10,25,50,100];let sel=t?(t.xp||20):25;if(!xps.includes(sel))xps.push(sel);xps.sort((a,b)=>a-b);
   openSheet(`<h2>${t?'Edit objective':'New objective'}</h2>
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
+    <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
     <div class="field"><label>Reward</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div></div>
     <div class="field"><label>Due date (optional)</label><div class="two"><input id="e-d" type="date" value="${t&&t.due||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-dc">Clear</button></div></div>
     <button class="btn primary" id="e-save">${t?'Save changes':'Add objective'}</button>
     ${t?'<button class="btn danger" id="e-del">Delete</button>':''}`);
   $('e-xp').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sel=+b.dataset.v;[...$('e-xp').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
+  $('e-g').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;
+    if(b.dataset.v==='+'){const txt=$('e-t').value;window._afterGoal=gid=>{setTimeout(()=>editTask(id,gid),340);window._keepTxt=txt};editGoal();return}
+    selG=b.dataset.v;[...$('e-g').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
+  if(window._keepTxt&&!t){$('e-t').value=window._keepTxt;window._keepTxt=null}
   $('e-dc').onclick=()=>$('e-d').value='';
   $('e-save').onclick=()=>{
     const v=$('e-t').value.trim();
     if(!v){const f=$('f-t');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
     const due=$('e-d').value||'';
-    if(t){t.text=v;t.xp=sel;t.due=due}else tasks.push({id:uid(),text:v,xp:sel,due});
+    if(t){t.text=v;t.xp=sel;t.due=due;if(selG)t.gid=selG;else delete t.gid}else tasks.push({id:uid(),text:v,xp:sel,due,gid:selG||undefined});
     sv();closeSheet();vib(15);toast(t?'Saved':'Objective added');
     if(cur==='tasks')rTasks();if(cur==='home')rHomeTasks();
   };
@@ -1138,6 +1212,11 @@ document.addEventListener('click',e=>{
   if(act==='done')completeTask(id,a);
   else if(act==='open'){const row=a.closest('.task');if(row.classList.contains('mini')){show('tasks');return}const o=row.classList.contains('open');document.querySelectorAll('.task.open').forEach(r=>r.classList.remove('open'));if(!o)row.classList.add('open');vib(8)}
   else if(act==='edit')editTask(id);
+  else if(act==='gopen'){tgoal=id;rTasks(true);window.scrollTo({top:0,behavior:'smooth'});vib(8)}
+  else if(act==='gback'){tgoal=null;rTasks(true)}
+  else if(act==='gnew')editGoal();
+  else if(act==='gedit')editGoal(id);
+  else if(act==='lvls')showLevels();
   else if(act==='del')delTask(id);
   else if(act==='fab'){if(cur==='tasks')editTask();else editEvent(null,{date:selD})}
   else if(act==='cd'){selD=a.dataset.d;if(a.dataset.go)cmode='day';rCal();vib(8)}
@@ -2595,7 +2674,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','revs','plans','chatHist','donelog','ftimer','p_lessons','p_exams','p_colles','p_progs','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','revs','plans','chatHist','donelog','goals','ftimer','p_lessons','p_exams','p_colles','p_progs','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
