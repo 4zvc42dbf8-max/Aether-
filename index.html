@@ -899,7 +899,7 @@ function rHome(){
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
-const EREP={daily:'Every day',weekdays:'Mon–Fri',weekly:'Every week',monthly:'Every month'};
+const EREP={daily:'Every day',weekdays:'Mon–Fri',weekly:'Every week',biweekly:'Every 2 weeks',monthly:'Every month'};
 function occurs(c,ds){
   if(ds<c.date)return false;if(ds===c.date)return !(c.skip&&c.skip.includes(ds));
   if(!c.rep||(c.until&&ds>c.until)||(c.skip&&c.skip.includes(ds)))return false;
@@ -907,6 +907,7 @@ function occurs(c,ds){
   if(c.rep==='daily')return true;
   if(c.rep==='weekdays'){const w=b.getDay();return w>0&&w<6}
   if(c.rep==='weekly')return Math.round((b-a)/864e5)%7===0;
+  if(c.rep==='biweekly')return Math.round((b-a)/864e5)%14===0;
   if(c.rep==='monthly'){const last=new Date(b.getFullYear(),b.getMonth()+1,0).getDate();return b.getDate()===Math.min(a.getDate(),last)}
   return false;
 }
@@ -949,14 +950,15 @@ function rRev(edit){
 }
 
 /* ================= TASKS ================= */
-const REPL={daily:'Every day',weekly:'Every week',monthly:'Every month'};
+const REPL={daily:'Every day',weekly:'Every week',biweekly:'Every 2 weeks',monthly:'Every month'};
 const mondayOf=d=>{const x=new Date(d+'T12:00:00');return shiftD(d,-((x.getDay()+6)%7))};
-const pkey=(rep,d)=>rep==='daily'?d:rep==='weekly'?mondayOf(d):d.slice(0,7);
-const pprev=(rep,d)=>{if(rep==='daily')return shiftD(d,-1);if(rep==='weekly')return shiftD(mondayOf(d),-7);const x=new Date(d.slice(0,7)+'-15T12:00:00');x.setMonth(x.getMonth()-1);return iso(x).slice(0,7)};
+const bkey=d=>'b'+Math.floor((new Date(mondayOf(d)+'T12:00:00')-new Date('2024-01-01T12:00:00'))/6048e5/2);
+const pkey=(rep,d)=>rep==='daily'?d:rep==='weekly'?mondayOf(d):rep==='biweekly'?bkey(d):d.slice(0,7);
+const pprev=(rep,d)=>{if(rep==='daily')return shiftD(d,-1);if(rep==='weekly')return shiftD(mondayOf(d),-7);if(rep==='biweekly')return bkey(shiftD(mondayOf(d),-14));const x=new Date(d.slice(0,7)+'-15T12:00:00');x.setMonth(x.getMonth()-1);return iso(x).slice(0,7)};
 const isDone=t=>!!(t.rep&&t.hk&&t.hk===pkey(t.rep,iso()));
 const isOpen=t=>!isDone(t);
 const streakOf=t=>{if(!t.rep||!t.hk)return 0;const c=pkey(t.rep,iso());return(t.hk===c||t.hk===pprev(t.rep,c))?(t.streak||0):0};
-const nextTxt=t=>t.rep==='daily'?'back tomorrow':t.rep==='weekly'?'back next Monday':'back next month';
+const nextTxt=t=>t.rep==='daily'?'back tomorrow':t.rep==='weekly'?'back next Monday':t.rep==='biweekly'?'back in 2 weeks':'back next month';
 /* overdue tasks pay less: -10% per day late, never below 30% of the reward (habits have no due date, so they are not affected) */
 function daysLate(t){if(t.rep||!t.due||t.due>=iso())return 0;return Math.round((new Date(iso()+'T12:00:00')-new Date(t.due+'T12:00:00'))/864e5)}
 function xpFor(t){const b=t.xp||20,d=daysLate(t);return d?Math.max(1,Math.round(b*Math.max(.3,1-.1*d))):b}
@@ -1080,7 +1082,7 @@ function editTask(id,presetG){
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
     <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
     <div class="field"><label>Reward (1–100 XP) · −10%/day when overdue</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
-    <div class="field"><label>Repeat</label><div class="chips" id="e-r">${[['','Once'],['daily','Every day'],['weekly','Every week'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRep?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="hint" style="margin:8px 0 0">A repeating task is a habit: tick it each period, it comes back on its own and builds a streak.</div></div>
+    <div class="field"><label>Repeat</label><div class="chips" id="e-r">${[['','Once'],['daily','Every day'],['weekly','Every week'],['biweekly','Every 2 weeks'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRep?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="hint" style="margin:8px 0 0">A repeating task is a habit: tick it each period, it comes back on its own and builds a streak.</div></div>
     <div class="field" id="f-due" style="${selRep?'display:none':''}"><label>Due date (optional)</label><div class="two"><input id="e-d" type="date" value="${t&&t.due||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-dc">Clear</button></div></div>
     <button class="btn primary" id="e-save">${t?'Save changes':'Add objective'}</button>
     ${t?'<button class="btn danger" id="e-del">Delete</button>':''}`);
@@ -1191,7 +1193,7 @@ function editEvent(id,def,occ){
     <div class="field" id="f-t"><label>Title</label><input id="e-t" placeholder="e.g. Maths exam" value="${esc(v.title||'')}" maxlength="80"></div>
     <div class="field"><label>Date</label><input id="e-d" type="date" value="${v.date||selD}"></div>
     <div class="two"><div class="field"><label>Start</label><input id="e-s" type="time" value="${v.time||''}"></div><div class="field"><label>End</label><input id="e-e" type="time" value="${v.endTime||''}"></div></div>
-    <div class="field"><label>Repeat</label><div class="chips" id="e-rp">${[['','Never'],['daily','Every day'],['weekdays','Mon–Fri'],['weekly','Every week'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRp?'on':''}" data-v="${v}">${l}</button>`).join('')}</div></div>
+    <div class="field"><label>Repeat</label><div class="chips" id="e-rp">${[['','Never'],['daily','Every day'],['weekdays','Mon–Fri'],['weekly','Every week'],['biweekly','Every 2 weeks'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRp?'on':''}" data-v="${v}">${l}</button>`).join('')}</div></div>
     <div class="field" id="f-un" style="${selRp?'':'display:none'}"><label>Repeat until (optional)</label><div class="two"><input id="e-un" type="date" value="${c&&c.until||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-unc">Clear</button></div></div>
     ${c&&c.rep?'<div class="hint" style="margin:-4px 0 12px">You are editing the whole series. Dates and times apply to every occurrence.</div>':''}
     <div class="field"><label>Colour</label><div class="swatches" id="e-c">${COLORS.map((x,i)=>`<button class="sw ${i===col?'on':''}" data-i="${i}" style="--c:${x}"></button>`).join('')}</div></div>
