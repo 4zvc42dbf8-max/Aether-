@@ -186,6 +186,8 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .task.mini{padding:10px 12px;margin-bottom:8px}
 .task.mini .chk{width:28px;height:28px}
 .orbempty{text-align:center;padding:10px 0 4px}
+.pill.hab{background:rgba(155,140,255,.14);color:#b9aeff}.pill.str{background:rgba(255,159,10,.14);color:#ff9f0a}
+.task.hdone .t-title{color:var(--dim);text-decoration:none}.task.hdone{opacity:.72}
 .goal{display:flex;align-items:center;gap:14px;background:var(--surf2);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;transition:transform .25s var(--spring),border-color .3s;cursor:pointer}
 .gfresh{animation:rowin .6s var(--ease) both;animation-delay:calc(var(--i,0)*55ms)}
 .goal:active{transform:scale(.97)}
@@ -908,7 +910,7 @@ function rToday(){
   }).join('')||`<div class="ghostline">Nothing planned today ✨<br><span style="font-size:12px;color:var(--dim)">Add something from the Calendar tab</span></div>`;
 }
 function rHomeTasks(){
-  const l=sortedTasks().slice(0,3);
+  const l=sortedTasks().filter(isOpen).slice(0,3);
   $('htasks').innerHTML=l.map((t,i)=>taskHTML(t,i,true)).join('')||`<div class="orbempty">${orb(64)}<p>All clear. Add an objective in Tasks.</p></div>`;
 }
 function rFocusBar(){
@@ -930,18 +932,31 @@ function rRev(edit){
 }
 
 /* ================= TASKS ================= */
+const REPL={daily:'Every day',weekly:'Every week',monthly:'Every month'};
+const mondayOf=d=>{const x=new Date(d+'T12:00:00');return shiftD(d,-((x.getDay()+6)%7))};
+const pkey=(rep,d)=>rep==='daily'?d:rep==='weekly'?mondayOf(d):d.slice(0,7);
+const pprev=(rep,d)=>{if(rep==='daily')return shiftD(d,-1);if(rep==='weekly')return shiftD(mondayOf(d),-7);const x=new Date(d.slice(0,7)+'-15T12:00:00');x.setMonth(x.getMonth()-1);return iso(x).slice(0,7)};
+const isDone=t=>!!(t.rep&&t.hk&&t.hk===pkey(t.rep,iso()));
+const isOpen=t=>!isDone(t);
+const streakOf=t=>{if(!t.rep||!t.hk)return 0;const c=pkey(t.rep,iso());return(t.hk===c||t.hk===pprev(t.rep,c))?(t.streak||0):0};
+const nextTxt=t=>t.rep==='daily'?'back tomorrow':t.rep==='weekly'?'back next Monday':'back next month';
+/* overdue tasks pay less: -10% per day late, never below 30% of the reward (habits have no due date, so they are not affected) */
+function daysLate(t){if(t.rep||!t.due||t.due>=iso())return 0;return Math.round((new Date(iso()+'T12:00:00')-new Date(t.due+'T12:00:00'))/864e5)}
+function xpFor(t){const b=t.xp||20,d=daysLate(t);return d?Math.max(1,Math.round(b*Math.max(.3,1-.1*d))):b}
+function xpPill(t){const e=xpFor(t),b=t.xp||20;return e<b?`<span class="pill xp" style="color:#ff9f0a;background:rgba(255,159,10,.14)">+${e} XP <s style="opacity:.6;margin-left:3px">${b}</s></span>`:`<span class="pill xp">+${b} XP</span>`}
 function sortedTasks(){
   const td=iso();
-  return [...tasks].sort((a,b)=>{const ao=a.due&&a.due<td?0:1,bo=b.due&&b.due<td?0:1;return ao-bo});
+  return [...tasks].sort((a,b)=>{const ad=isDone(a)?1:0,bd=isDone(b)?1:0;if(ad!==bd)return ad-bd;const ao=a.due&&a.due<td?0:1,bo=b.due&&b.due<td?0:1;return ao-bo});
 }
 function dueBadge(t){
+  if(t.rep){const s=streakOf(t);return `<span class="pill hab">↻ ${REPL[t.rep]}</span>${isDone(t)?`<span class="pill">Done · ${nextTxt(t)}</span>`:''}${s>1?`<span class="pill str">🔥 ${s}</span>`:''}`}
   if(!t.due)return '';const td=iso();
   if(t.due<td)return '<span class="pill over">Overdue</span>';
   if(t.due===td)return '<span class="pill today">Today</span>';
   return '<span class="pill">'+esc(new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+'</span>';
 }
 function taskHTML(t,i,mini,fresh){
-  return `<div class="task ${mini?'mini':''} ${fresh?'fresh':''}" data-id="${t.id}" data-hold="task" style="--i:${i}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${esc(t.text)}</div><div class="tmeta"><span class="pill xp">+${t.xp||20} XP</span>${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
+  return `<div class="task ${mini?'mini':''} ${fresh?'fresh':''} ${isDone(t)?'done hdone':''}" data-id="${t.id}" data-hold="task" style="--i:${i}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${esc(t.text)}</div><div class="tmeta">${xpPill(t)}${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
 }
 const goalOf=t=>t&&t.gid?goals.find(g=>g.id===t.gid):null;
 const gTasks=gid=>sortedTasks().filter(t=>gid==='_'?!goalOf(t):t.gid===gid);
@@ -952,9 +967,9 @@ function rTasks(anim){
     $('tlbl').textContent='Goals';$('thint').textContent="Tap a goal to see its tasks · tap your level to see every goal's level";
     const un=gTasks('_');
     let h=goals.map((g,i)=>{
-      const n=tasks.filter(t=>t.gid===g.id).length,need=needed(g.lv);
+      const n=tasks.filter(t=>t.gid===g.id&&isOpen(t)).length,need=needed(g.lv);
       return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="gopen" data-id="${g.id}"><div class="gd" style="background:${g.color}">${g.lv}</div><div class="gm"><div class="gn">${esc(g.name)}</div><div class="gs">Level ${g.lv} · ${g.xp}/${need} XP</div><div class="bar"><div class="bar-fill" style="width:${clamp(g.xp/need*100,0,100)}%;background:${g.color};box-shadow:none"></div></div></div>${n?`<div class="gbadge">${n}</div>`:''}</div>`}).join('');
-    if(un.length)h+=`<div class="goal" data-act="gopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No goal</div><div class="gs">Tasks not in a goal yet</div></div><div class="gbadge">${un.length}</div></div>`;
+    if(un.length)h+=`<div class="goal" data-act="gopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No goal</div><div class="gs">Tasks not in a goal yet</div></div>${un.filter(isOpen).length?`<div class="gbadge">${un.filter(isOpen).length}</div>`:''}</div>`;
     h+=`<button class="btn" data-act="gnew" style="margin-top:4px">+ New goal</button>`;
     if(!goals.length&&!un.length)h=`<div class="orbempty">${orb(86)}<p>Create your first goal<br>(e.g. Maths, Physics, Sport),<br>then add tasks to it.</p></div>`+h;
     el.innerHTML=h;
@@ -1018,11 +1033,23 @@ function levelUp(n){
 function completeTask(id,btn){
   const i=tasks.findIndex(t=>t.id===id);if(i<0)return;
   const t=tasks[i],row=btn.closest('.task'),r=btn.getBoundingClientRect();
+  if(t.rep){
+    if(isDone(t)){toast('Done for now · '+nextTxt(t));return}
+    const c=pkey(t.rep,iso());t.streak=(t.hk===pprev(t.rep,c))?(t.streak||0)+1:1;t.hk=c;
+    row.classList.add('done');vib(30);const x=r.left+r.width/2,y=r.top+r.height/2;burst(x,y,18);
+    donelog.push({d:iso(),xp:t.xp||20,t:Date.now()});gain(t.xp||20,x,y-10,t.gid);sv();
+    const st=$('hli');if(st){st.classList.remove('pop');void st.offsetWidth;st.classList.add('pop')}
+    if(cur==='tasks')rLevel();
+    setTimeout(()=>{if(cur==='tasks')rTasks();else if(cur==='home')rHomeTasks()},900);
+    return;
+  }
   row.classList.add('done');vib(30);
   const x=r.left+r.width/2,y=r.top+r.height/2;
   burst(x,y,18);
-  tasks.splice(i,1);donelog.push({d:iso(),xp:t.xp||20,t:Date.now()});
-  gain(t.xp||20,x,y-10,t.gid);sv();
+  const pay=xpFor(t),late=daysLate(t);
+  tasks.splice(i,1);donelog.push({d:iso(),xp:pay,t:Date.now()});
+  gain(pay,x,y-10,t.gid);sv();
+  if(late&&pay<(t.xp||20))toast('Late by '+late+' day'+(late>1?'s':'')+' · +'+pay+' XP instead of '+(t.xp||20));
   const st=$('hli');st.classList.remove('pop');void st.offsetWidth;st.classList.add('pop');
   if(cur==='tasks')rLevel();
   setTimeout(()=>{row.style.maxHeight=row.offsetHeight+'px';void row.offsetHeight;row.classList.add('leaving')},650);
@@ -1030,13 +1057,14 @@ function completeTask(id,btn){
   if(cur==='tasks'&&false)rTasks();
 }
 function editTask(id,presetG){
-  const t=id?tasks.find(x=>x.id===id):null;let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
+  const t=id?tasks.find(x=>x.id===id):null;let selRep=t?(t.rep||''):'';let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
   const xps=[10,25,50,100];let sel=t?(t.xp||20):25;if(!xps.includes(sel))xps.push(sel);xps.sort((a,b)=>a-b);
   openSheet(`<h2>${t?'Edit objective':'New objective'}</h2>
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
     <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
-    <div class="field"><label>Reward (1–100 XP)</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
-    <div class="field"><label>Due date (optional)</label><div class="two"><input id="e-d" type="date" value="${t&&t.due||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-dc">Clear</button></div></div>
+    <div class="field"><label>Reward (1–100 XP) · −10%/day when overdue</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
+    <div class="field"><label>Repeat</label><div class="chips" id="e-r">${[['','Once'],['daily','Every day'],['weekly','Every week'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRep?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="hint" style="margin:8px 0 0">A repeating task is a habit: tick it each period, it comes back on its own and builds a streak.</div></div>
+    <div class="field" id="f-due" style="${selRep?'display:none':''}"><label>Due date (optional)</label><div class="two"><input id="e-d" type="date" value="${t&&t.due||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-dc">Clear</button></div></div>
     <button class="btn primary" id="e-save">${t?'Save changes':'Add objective'}</button>
     ${t?'<button class="btn danger" id="e-del">Delete</button>':''}`);
   $('e-xp').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sel=+b.dataset.v;$('e-xc').value=sel;[...$('e-xp').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
@@ -1045,12 +1073,13 @@ function editTask(id,presetG){
     if(b.dataset.v==='+'){const txt=$('e-t').value;window._afterGoal=gid=>{setTimeout(()=>editTask(id,gid),340);window._keepTxt=txt};editGoal();return}
     selG=b.dataset.v;[...$('e-g').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   if(window._keepTxt&&!t){$('e-t').value=window._keepTxt;window._keepTxt=null}
+  $('e-r').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selRep=b.dataset.v;[...$('e-r').children].forEach(c=>c.classList.toggle('on',c===b));$('f-due').style.display=selRep?'none':'';vib(10)};
   $('e-dc').onclick=()=>$('e-d').value='';
   $('e-save').onclick=()=>{
     const v=$('e-t').value.trim();
     if(!v){const f=$('f-t');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
     const due=$('e-d').value||'';{const n=Math.round(+$('e-xc').value);if(!(n>=1&&n<=100)){const f=$('e-xc');f.focus();toast('XP must be between 1 and 100');return}sel=n}
-    if(t){t.text=v;t.xp=sel;t.due=due;if(selG)t.gid=selG;else delete t.gid}else tasks.push({id:uid(),text:v,xp:sel,due,gid:selG||undefined});
+    if(t){t.text=v;t.xp=sel;t.due=selRep?'':due;if(selG)t.gid=selG;else delete t.gid;if(selRep!==(t.rep||'')){if(selRep){t.rep=selRep}else{delete t.rep;delete t.hk;delete t.streak}}}else tasks.push({id:uid(),text:v,xp:sel,due:selRep?'':due,gid:selG||undefined,rep:selRep||undefined});
     sv();closeSheet();vib(15);toast(t?'Saved':'Objective added');
     if(cur==='tasks')rTasks();if(cur==='home')rHomeTasks();
   };
