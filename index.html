@@ -898,15 +898,32 @@ function rHome(){
   rToday();rHomeTasks();rFocusBar();rMood();rRev();
   if(window.P)P.rHomeCard();
 }
+/* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
+const EREP={daily:'Every day',weekdays:'Mon–Fri',weekly:'Every week',monthly:'Every month'};
+function occurs(c,ds){
+  if(ds<c.date)return false;if(ds===c.date)return !(c.skip&&c.skip.includes(ds));
+  if(!c.rep||(c.until&&ds>c.until)||(c.skip&&c.skip.includes(ds)))return false;
+  const a=new Date(c.date+'T12:00:00'),b=new Date(ds+'T12:00:00');
+  if(c.rep==='daily')return true;
+  if(c.rep==='weekdays'){const w=b.getDay();return w>0&&w<6}
+  if(c.rep==='weekly')return Math.round((b-a)/864e5)%7===0;
+  if(c.rep==='monthly'){const last=new Date(b.getFullYear(),b.getMonth()+1,0).getDate();return b.getDate()===Math.min(a.getDate(),last)}
+  return false;
+}
+function evOn(ds){
+  const out=[];
+  cal.forEach(c=>{if(c.rep){if(occurs(c,ds))out.push(ds===c.date?c:Object.assign({},c,{date:ds,_occ:1}))}else if(c.date===ds)out.push(c)});
+  return out;
+}
 function evSort(a,b){return (tmin(a.time)??-1)-(tmin(b.time)??-1)}
 function rToday(){
   const td=iso(),nowM=new Date().getHours()*60+new Date().getMinutes();
-  const list=cal.filter(c=>c.date===td).sort(evSort);
+  const list=evOn(td).sort(evSort);
   $('today').innerHTML=list.map((c,i)=>{
     const s=tmin(c.time),e=c.endTime?tmin(c.endTime):(s!=null?s+60:null);
     const live=s!=null&&nowM>=s&&nowM<e;
     const tm=s==null?'All day':c.time+(c.endTime?' – '+c.endTime:'');
-    return `<div class="evrow" data-kind="${c.kind||''}" data-hold="ev" data-id="${c.id}" style="--c:${colorOf(c)};animation:rowin .5s var(--ease) both;animation-delay:${i*60+150}ms"><div class="bar-c"></div><div><div class="et">${esc(c.title)}</div><div class="tm">${tm}</div></div>${live?'<span class="pill live now">Now</span>':''}</div>`;
+    return `<div class="evrow" data-kind="${c.kind||''}" data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)};animation:rowin .5s var(--ease) both;animation-delay:${i*60+150}ms"><div class="bar-c"></div><div><div class="et">${esc(c.title)}${c.rep?' <span style="opacity:.55">↻</span>':''}</div><div class="tm">${tm}</div></div>${live?'<span class="pill live now">Now</span>':''}</div>`;
   }).join('')||`<div class="ghostline">Nothing planned today ✨<br><span style="font-size:12px;color:var(--dim)">Add something from the Calendar tab</span></div>`;
 }
 function rHomeTasks(){
@@ -1108,9 +1125,9 @@ function renderStrip(){
   const el=$('dstrip');
   if(stripWeek!==ws){
     stripWeek=ws;const L=['MON','TUE','WED','THU','FRI','SAT','SUN'];
-    el.innerHTML='<div class="dind" id="dind"></div>'+L.map((n,i)=>{const ds=shiftD(ws,i),has=cal.some(c=>c.date===ds);return `<button class="dchip ${ds===today?'today':''}" data-act="cd" data-d="${ds}"><span>${n}</span><b>${+ds.slice(8)}</b><i class="${has?'dot':''}"></i></button>`}).join('');
+    el.innerHTML='<div class="dind" id="dind"></div>'+L.map((n,i)=>{const ds=shiftD(ws,i),has=evOn(ds).length>0;return `<button class="dchip ${ds===today?'today':''}" data-act="cd" data-d="${ds}"><span>${n}</span><b>${+ds.slice(8)}</b><i class="${has?'dot':''}"></i></button>`}).join('');
   }
-  el.querySelectorAll('.dchip').forEach((b,i)=>{b.classList.toggle('on',i===idx);const has=cal.some(c=>c.date===b.dataset.d);b.querySelector('i').className=has?'dot':''});
+  el.querySelectorAll('.dchip').forEach((b,i)=>{b.classList.toggle('on',i===idx);const has=evOn(b.dataset.d).length>0;b.querySelector('i').className=has?'dot':''});
   $('dind').style.setProperty('--k',idx);
   $('cmonth').textContent=new Date(selD+'T12:00:00').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
 }
@@ -1126,12 +1143,12 @@ function rCal(dir){
   if(tb){
     const s0=+tb.dataset.s0,nowM=new Date().getHours()*60+new Date().getMinutes();
     let focusM=nowM;
-    if(selD!==iso()){const ev=cal.filter(c=>c.date===selD&&evRange(c)).map(c=>evRange(c).s).sort((a,b)=>a-b);focusM=ev.length?ev[0]:8*60}
+    if(selD!==iso()){const ev=evOn(selD).filter(c=>evRange(c)).map(c=>evRange(c).s).sort((a,b)=>a-b);focusM=ev.length?ev[0]:8*60}
     tb.scrollTop=Math.max(0,(focusM-s0*60)/60*HH-110);
   }
 }
 function dayHTML(ds){
-  const evs=cal.filter(c=>c.date===ds);
+  const evs=evOn(ds);
   const timed=evs.map(c=>({c,r:evRange(c)})).filter(x=>x.r).sort((a,b)=>a.r.s-b.r.s||b.r.e-a.r.e);
   const all=evs.filter(c=>!evRange(c));
   let s0=7,e0=22;
@@ -1142,14 +1159,14 @@ function dayHTML(ds){
   const flush=()=>{const cols=[];cluster.forEach(x=>{let k=cols.findIndex(end=>end<=x.r.s);if(k<0){k=cols.length;cols.push(0)}cols[k]=x.r.e;x.col=k});cluster.forEach(x=>x.n=cols.length);place.push(...cluster);cluster=[]};
   timed.forEach(x=>{if(cluster.length&&x.r.s>=cEnd){flush();cEnd=0}cluster.push(x);cEnd=Math.max(cEnd,x.r.e)});flush();
   let h='';
-  if(all.length)h+='<div class="allday">'+all.map(c=>`<div class="evchip" data-hold="ev" data-id="${c.id}" style="--c:${colorOf(c)}"><i></i>${esc(c.title)}</div>`).join('')+'</div>';
+  if(all.length)h+='<div class="allday">'+all.map(c=>`<div class="evchip" data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)}"><i></i>${esc(c.title)}</div>`).join('')+'</div>';
   h+=`<div id="tlbox" data-s0="${s0}"><div class="tl" data-hold="slot" data-s0="${s0}" style="height:${(e0-s0)*HH+10}px">`;
   for(let x=s0;x<=e0;x++)h+=`<div class="hl" style="top:${(x-s0)*HH+10}px"><span>${x}</span></div>`;
   h+='<div class="evl" style="top:10px">';
   place.forEach((x,i)=>{
     const top=(x.r.s-s0*60)/60*HH,ht=Math.max((x.r.e-x.r.s)/60*HH-3,26),w=100/x.n;
     const tiny=ht<46;
-    h+=`<div class="ev ${tiny?'tiny':''}" data-kind="${x.c.kind||''}" data-hold="ev" data-id="${x.c.id}" style="--c:${colorOf(x.c)};--i:${i};top:${top}px;height:${ht}px;left:${x.col*w}%;width:calc(${w}% - 4px)"><div class="in"><b>${esc(x.c.title)}</b><span>${x.c.time} – ${fmt(x.r.e)}</span></div></div>`;
+    h+=`<div class="ev ${tiny?'tiny':''}" data-kind="${x.c.kind||''}" data-hold="ev" data-id="${x.c.id}" data-d="${x.c.date}" style="--c:${colorOf(x.c)};--i:${i};top:${top}px;height:${ht}px;left:${x.col*w}%;width:calc(${w}% - 4px)"><div class="in"><b>${esc(x.c.title)}</b><span>${x.c.time} – ${fmt(x.r.e)}</span></div></div>`;
   });
   h+='</div>';
   if(ds===iso()){const n=new Date(),m=n.getHours()*60+n.getMinutes();if(m>=s0*60&&m<=e0*60)h+=`<div class="nowl" style="top:${(m-s0*60)/60*HH+10}px"></div>`}
@@ -1159,46 +1176,68 @@ function dayHTML(ds){
 function weekHTML(){
   const ws=weekStart(selD),today=iso();let h='';
   for(let i=0;i<7;i++){
-    const ds=shiftD(ws,i),d=new Date(ds+'T12:00:00'),list=cal.filter(c=>c.date===ds).sort(evSort);
+    const ds=shiftD(ws,i),d=new Date(ds+'T12:00:00'),list=evOn(ds).sort(evSort);
     h+=`<div class="wday ${ds===today?'today':''}"><button class="wh" data-act="cd" data-d="${ds}" data-go="1"><b>${d.toLocaleDateString('en-GB',{weekday:'long'})}</b><span>${d.getDate()} ${d.toLocaleDateString('en-GB',{month:'short'})}</span></button>`;
-    h+=list.map(c=>{const r=evRange(c);return `<div class="evrow" data-kind="${c.kind||''}" data-hold="ev" data-id="${c.id}" style="--c:${colorOf(c)}"><div class="bar-c"></div><div><div class="et">${esc(c.title)}</div><div class="tm">${r?c.time+' – '+fmt(r.e):'All day'}</div></div></div>`}).join('')||'<div class="sub" style="padding-left:2px">Free</div>';
+    h+=list.map(c=>{const r=evRange(c);return `<div class="evrow" data-kind="${c.kind||''}" data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)}"><div class="bar-c"></div><div><div class="et">${esc(c.title)}${c.rep?' <span style="opacity:.55">↻</span>':''}</div><div class="tm">${r?c.time+' – '+fmt(r.e):'All day'}</div></div></div>`}).join('')||'<div class="sub" style="padding-left:2px">Free</div>';
     h+='</div>';
   }
   return h;
 }
-function editEvent(id,def){
-  const c=id?cal.find(x=>x.id===id):null;
+function editEvent(id,def,occ){
+  const c=id?cal.find(x=>x.id===id):null;let selRp=c&&c.rep||'';
   let col=c?(c.color!=null?c.color:COLORS.indexOf(colorOf(c))):(def&&def.color!=null?def.color:0);
   const v=c||def||{};
   openSheet(`<h2>${c?'Edit event':'New event'}</h2>
     <div class="field" id="f-t"><label>Title</label><input id="e-t" placeholder="e.g. Maths exam" value="${esc(v.title||'')}" maxlength="80"></div>
     <div class="field"><label>Date</label><input id="e-d" type="date" value="${v.date||selD}"></div>
     <div class="two"><div class="field"><label>Start</label><input id="e-s" type="time" value="${v.time||''}"></div><div class="field"><label>End</label><input id="e-e" type="time" value="${v.endTime||''}"></div></div>
+    <div class="field"><label>Repeat</label><div class="chips" id="e-rp">${[['','Never'],['daily','Every day'],['weekdays','Mon–Fri'],['weekly','Every week'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRp?'on':''}" data-v="${v}">${l}</button>`).join('')}</div></div>
+    <div class="field" id="f-un" style="${selRp?'':'display:none'}"><label>Repeat until (optional)</label><div class="two"><input id="e-un" type="date" value="${c&&c.until||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-unc">Clear</button></div></div>
+    ${c&&c.rep?'<div class="hint" style="margin:-4px 0 12px">You are editing the whole series. Dates and times apply to every occurrence.</div>':''}
     <div class="field"><label>Colour</label><div class="swatches" id="e-c">${COLORS.map((x,i)=>`<button class="sw ${i===col?'on':''}" data-i="${i}" style="--c:${x}"></button>`).join('')}</div></div>
     <button class="btn primary" id="e-save">${c?'Save changes':'Add event'}</button>
     ${c?'<button class="btn danger" id="e-del">Delete</button>':''}`);
+  $('e-rp').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selRp=b.dataset.v;[...$('e-rp').children].forEach(x=>x.classList.toggle('on',x===b));$('f-un').style.display=selRp?'':'none';vib(10)};
+  $('e-unc').onclick=()=>$('e-un').value='';
   $('e-c').onclick=e=>{const b=e.target.closest('.sw');if(!b)return;col=+b.dataset.i;[...$('e-c').children].forEach(x=>x.classList.toggle('on',x===b));vib(10)};
   $('e-save').onclick=()=>{
     const title=$('e-t').value.trim();
     if(!title){const f=$('f-t');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
     const date=$('e-d').value||selD,time=$('e-s').value,end=$('e-e').value;
     if(time&&end&&tmin(end)<=tmin(time)){toast('End must be after the start');return}
-    if(c){c.title=title;c.date=date;c.time=time;c.endTime=time?end:'';c.color=col}
-    else cal.push({id:uid(),title,date,time,endTime:time?end:'',desc:'',color:col});
+    const un=selRp?($('e-un').value||''):'';if(un&&un<date){toast('"Until" must be after the start');return}
+    if(c){c.title=title;c.date=date;c.time=time;c.endTime=time?end:'';c.color=col;if(selRp){c.rep=selRp;c.until=un;if(c.skip)c.skip=c.skip.filter(d=>d>=date)}else{delete c.rep;delete c.until;delete c.skip}}
+    else{const n={id:uid(),title,date,time,endTime:time?end:'',desc:'',color:col};if(selRp){n.rep=selRp;if(un)n.until=un}cal.push(n)}
     sv();closeSheet();vib(15);toast(c?'Event saved':'Event added');
     if(date!==selD){selD=date;stripWeek=''}
     if(cur==='calendar')rCal();if(cur==='home')rToday();
   };
-  if(c)$('e-del').onclick=()=>{closeSheet();delEvent(id)};
+  if(c)$('e-del').onclick=()=>{closeSheet();delEvent(id,occ)};
   if(!c)$('e-t').focus();
 }
-function delEvent(id){
+function delEvent(id,occ){
   const i=cal.findIndex(c=>c.id===id);if(i<0)return;
+  const c=cal[i];
+  if(c.rep){
+    const d=occ||c.date;
+    const snap=JSON.stringify(c);
+    const done=msg=>{sv();if(cur==='calendar')rCal();if(cur==='home')rToday();toast(msg,{label:'Undo',fn:()=>{const j=cal.findIndex(x=>x.id===id),o=JSON.parse(snap);if(j>=0)cal[j]=o;else cal.splice(Math.min(i,cal.length),0,o);sv();if(cur==='calendar')rCal();if(cur==='home')rToday()}})};
+    openSheet(`<h2>Delete repeating event</h2><div class="sub" style="margin-bottom:12px">${esc(c.title)} · ${esc(EREP[c.rep])}</div>
+      <button class="btn danger" id="dr-1">Only this day (${esc(new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))})</button>
+      <button class="btn danger" id="dr-2">This day and all following</button>
+      <button class="btn danger" id="dr-3">The whole series</button>
+      <button class="btn" onclick="closeSheet()">Cancel</button>`);
+    $('dr-1').onclick=()=>{closeSheet();if(d===c.date&&!c.until&&false){}c.skip=(c.skip||[]).concat(d);done('This day deleted')};
+    $('dr-2').onclick=()=>{closeSheet();if(d<=c.date){cal.splice(i,1)}else c.until=dAddDays(d,-1);done('Following events deleted')};
+    $('dr-3').onclick=()=>{closeSheet();cal.splice(i,1);done('Series deleted')};
+    return;
+  }
   if(String(id).startsWith('s-')&&window.P)P.removed(id,true);
-  const c=cal[i];cal.splice(i,1);sv();
+  cal.splice(i,1);sv();
   if(cur==='calendar')rCal();if(cur==='home')rToday();
   toast('Event deleted',{label:'Undo',fn:()=>{if(String(id).startsWith('s-')&&window.P)P.removed(id,false);cal.splice(Math.min(i,cal.length),0,c);sv();if(cur==='calendar')rCal();if(cur==='home')rToday()}});
 }
+function dAddDays(s,n){const d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return iso(d)}
 // swipe left/right on the calendar to change day
 (function(){
   let x0=null,y0=0;const el=$('calendar');
@@ -1223,7 +1262,7 @@ function delEvent(id){
       const t=el;if(!t)return;fired=true;t.classList.remove('holding');t.classList.add('held');setTimeout(()=>t.classList.remove('held'),380);vib(25);
       const a=t.dataset.hold;
       if(a==='task')editTask(t.dataset.id);
-      else if(a==='ev')editEvent(t.dataset.id);
+      else if(a==='ev')editEvent(t.dataset.id,null,t.dataset.d);
       else if(a==='slot'){
         const r=t.getBoundingClientRect(),y=Math.max(0,last.clientY-r.top-10);
         let m=Math.round((+t.dataset.s0*60+y/HH*60)/15)*15;m=clamp(m,0,23*60);
