@@ -186,6 +186,17 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .task.mini{padding:10px 12px;margin-bottom:8px}
 .task.mini .chk{width:28px;height:28px}
 .orbempty{text-align:center;padding:10px 0 4px}
+.swatches{flex-wrap:wrap}
+.sw.ghostsw{background:repeating-linear-gradient(45deg,transparent 0 4px,rgba(255,255,255,.2) 4px 5px);border:1px dashed rgba(255,255,255,.45)}
+.ev[data-ghost]{background:transparent;box-shadow:0 0 0 1px rgba(255,255,255,.13) inset;border:1px dashed rgba(255,255,255,.12)}
+.ev[data-ghost]::before{background:rgba(255,255,255,.22);box-shadow:none}
+.ev[data-ghost] b{color:var(--muted);font-weight:600}.ev[data-ghost] span{opacity:.55}
+.evrow[data-ghost]{background:transparent;box-shadow:0 0 0 1px var(--line) inset}
+.evrow[data-ghost] .bar-c{background:rgba(255,255,255,.22);box-shadow:none}.evrow[data-ghost] .et{color:var(--muted);font-weight:500}
+.evchip[data-ghost]{background:transparent;opacity:.7}.evchip[data-ghost] i{background:rgba(255,255,255,.3);box-shadow:none}
+.ftask{display:flex;align-items:center;gap:10px;width:100%;margin:12px 0 0;padding:12px 16px;border-radius:16px;border:1px dashed var(--line2);background:transparent;color:var(--muted);font:inherit;font-size:15px;text-align:left}
+.ftask b{color:var(--text);font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.ftask.lock{opacity:.8}
+.ftask .ar{margin-left:auto;color:var(--lime);font-size:13px;font-weight:700}
 .pill.hab{background:rgba(155,140,255,.14);color:#b9aeff}.pill.str{background:rgba(255,159,10,.14);color:#ff9f0a}
 .task.hdone .t-title{color:var(--dim);text-decoration:none}.task.hdone{opacity:.72}
 .goal{display:flex;align-items:center;gap:14px;background:var(--surf2);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;transition:transform .25s var(--spring),border-color .3s;cursor:pointer}
@@ -202,6 +213,14 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .ghead .btn{flex:none;width:auto;padding:9px 14px}
 .cdot{width:14px;height:14px;border-radius:50%;display:inline-block;vertical-align:-1px;margin-right:6px}
 .chip .cdot{margin-right:6px}
+.lazycard{transition:border-color .4s,background .4s}
+.lazycard.on{border-color:rgba(155,140,255,.4);background:linear-gradient(180deg,rgba(155,140,255,.10),transparent),var(--surf)}
+.lazycard.warn{border-color:rgba(255,159,10,.5);background:linear-gradient(180deg,rgba(255,159,10,.10),transparent),var(--surf)}
+.lazycard.bad{border-color:rgba(255,59,48,.55);background:linear-gradient(180deg,rgba(255,59,48,.10),transparent),var(--surf)}
+.ldots{display:flex;gap:5px;margin:12px 0 4px}
+.ldots i{flex:1;height:8px;border-radius:99px;background:var(--inset);box-shadow:0 0 0 1px var(--line) inset}
+.ldots i.l{background:#9b8cff;box-shadow:none}.ldots i.t{outline:2px solid var(--line2);outline-offset:1px}
+.lmsg{font-size:15px;line-height:1.45;margin:8px 0 12px}
 .pill.gl{background:rgba(255,255,255,.07);color:var(--muted)}
 .thead{cursor:pointer}.hero{cursor:pointer}
 .lvrow{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -652,6 +671,7 @@ textarea::placeholder{color:var(--dim)}
 <section id="home" class="view">
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
+  <div class="card lazycard" id="lazycard"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
   <div class="card"><div class="lbl">Focus today</div><div id="focus-bar"></div></div>
@@ -704,6 +724,7 @@ textarea::placeholder{color:var(--dim)}
   </div>
   <div class="modes" id="modes"></div>
   <div class="fmsg" id="fmsg"></div>
+  <button class="ftask" id="ftask" data-f="task"></button>
   <div id="fctl"></div>
   <div class="fchips" id="fchips"></div>
   <div class="lbl" id="fstats" style="margin:30px 4px 14px">Stats</div>
@@ -758,7 +779,11 @@ const fmt=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 function ld(k,def){try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v)}catch(e){return def}}
 function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms||18)}catch(e){}try{const h=$('hap');if(h)h.click()}catch(e){}}
 const COLORS=['#4fd1ff','#5eead4','#ff9f0a','#9b8cff','#ff6fb5','#30d158'];
-const colorOf=c=>COLORS[(c.color!=null?c.color:[...String(c.title)].reduce((a,ch)=>a+ch.charCodeAt(0),0))%COLORS.length];
+const EVC=COLORS.concat(['#ff5d5d','#ffd60a','#4d8dff','#7c6bff','#b6e24a','#d19a66','#ff7a59','#a0a8b8','ghost']);
+const GHOST=EVC.length-1;
+const isGhost=c=>c&&c.color===GHOST;
+const gh=c=>isGhost(c)?'data-ghost="1"':'';
+const colorOf=c=>c.color!=null&&EVC[c.color]?(EVC[c.color]==='ghost'?'#8b93a7':EVC[c.color]):COLORS[[...String(c.title)].reduce((a,ch)=>a+ch.charCodeAt(0),0)%COLORS.length];
 const dayName=d=>d.toLocaleDateString('en-GB',{weekday:'long'});
 
 /* ================= state ================= */
@@ -766,6 +791,7 @@ let xp=+localStorage.xp||0, lv=+localStorage.lv||1;
 let tasks=ld('tasks',[]), cal=ld('cal',[]), fhist=ld('fhist',[]), moods=ld('moods',{}), revs=ld('revs',{}), plans=ld('plans',{});
 let donelog=ld('donelog',[]), F=ld('ftimer',null);
 let goals=ld('goals',[]), tgoal=null;
+let lazy=ld('lazy',[]);
 goals.forEach(g=>{if(!g.id)g.id=uid();g.xp=g.xp||0;g.lv=g.lv||1});
 tasks.forEach(t=>{if(!t.id)t.id=uid()});
 cal.forEach(c=>{if(!c.id)c.id=uid()});
@@ -774,7 +800,7 @@ function sv(){try{
   localStorage.tasks=JSON.stringify(tasks);localStorage.cal=JSON.stringify(cal);
   localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);
   localStorage.revs=JSON.stringify(revs);localStorage.plans=JSON.stringify(plans);
-  localStorage.donelog=JSON.stringify(donelog);localStorage.goals=JSON.stringify(goals);
+  localStorage.donelog=JSON.stringify(donelog);localStorage.goals=JSON.stringify(goals);localStorage.lazy=JSON.stringify(lazy);
   if(F)localStorage.ftimer=JSON.stringify(F);
 }catch(e){}}
 const needed=l=>100+(l-1)*50;
@@ -895,7 +921,7 @@ function rHome(){
   $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
-  rToday();rHomeTasks();rFocusBar();rMood();rRev();
+  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
@@ -924,7 +950,7 @@ function rToday(){
     const s=tmin(c.time),e=c.endTime?tmin(c.endTime):(s!=null?s+60:null);
     const live=s!=null&&nowM>=s&&nowM<e;
     const tm=s==null?'All day':c.time+(c.endTime?' – '+c.endTime:'');
-    return `<div class="evrow" data-kind="${c.kind||''}" data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)};animation:rowin .5s var(--ease) both;animation-delay:${i*60+150}ms"><div class="bar-c"></div><div><div class="et">${esc(c.title)}${c.rep?' <span style="opacity:.55">↻</span>':''}</div><div class="tm">${tm}</div></div>${live?'<span class="pill live now">Now</span>':''}</div>`;
+    return `<div class="evrow" data-kind="${c.kind||''}" ${gh(c)} data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)};animation:rowin .5s var(--ease) both;animation-delay:${i*60+150}ms"><div class="bar-c"></div><div><div class="et">${esc(c.title)}${c.rep?' <span style="opacity:.55">↻</span>':''}</div><div class="tm">${tm}</div></div>${live?'<span class="pill live now">Now</span>':''}</div>`;
   }).join('')||`<div class="ghostline">Nothing planned today ✨<br><span style="font-size:12px;color:var(--dim)">Add something from the Calendar tab</span></div>`;
 }
 function rHomeTasks(){
@@ -1033,7 +1059,48 @@ function rLevel(anim){
   if(anim){f.style.transition='none';f.style.width='0%';void f.offsetWidth;f.style.transition=''}
   requestAnimationFrame(()=>f.style.width=clamp(xp/need*100,0,100)+'%');
 }
+
+/* ================= LAZY DAYS ================= */
+const isLazy=d=>lazy.includes(d||iso());
+function lazyStreak(){
+  let d=iso();if(!isLazy(d))d=dAddDays(d,-1);
+  let n=0;while(isLazy(d)){n++;d=dAddDays(d,-1)}return n;
+}
+function lazyBest(){const s=[...lazy].sort();let b=0,c=0,prev=null;s.forEach(d=>{c=prev&&dAddDays(prev,1)===d?c+1:1;prev=d;if(c>b)b=c});return b}
+function lazyMsg(n,today){
+  if(today){
+    if(n<=1)return['','Lazy day on. Rest is part of the plan, you can take it guilt-free. We restart tomorrow.'];
+    if(n===2)return['','Two lazy days in a row. Totally normal, but tomorrow do just one small thing to keep the chain from growing.'];
+    if(n===3)return['warn','Three in a row. This is where it starts to cost you. Tomorrow morning: one 10-minute task or focus session, nothing more.'];
+    return['bad',n+' lazy days in a row. Don\'t wait for motivation, it comes after you start. a short focus session now will break the chain.'];
+  }
+  if(n>=4)return['bad','You\'ve had '+n+' lazy days in a row. Today is the day to break it: start with just one short session.'];
+  if(n===3)return['warn','3 lazy days in a row. Don\'t let it become 4. One small task today.'];
+  if(n===2)return['warn','2 lazy days in a row. Do one small thing today and the streak ends here.'];
+  return null;
+}
+function rLazy(){
+  const el=$('lazycard');if(!el)return;
+  const td=iso(),on=isLazy(td),n=lazyStreak(),m=lazyMsg(n,on);
+  const last=[];for(let i=13;i>=0;i--)last.push(dAddDays(td,-i));
+  const c30=lazy.filter(d=>d>dAddDays(td,-30)&&d<=td).length;
+  el.className='card lazycard'+(on?' on':'')+(m&&m[0]?' '+m[0]:'');
+  let h=`<div class="cardhead"><div class="lbl">Lazy day</div><span class="sub">${n?n+' in a row':'none in a row'}</span></div>`;
+  if(m)h+=`<div class="lmsg">${on?'😴 ':''}${esc(m[1])}</div>`;
+  else if(!on)h+=`<div class="lmsg" style="color:var(--muted)">Not feeling it today? Taking a lazy day is fine now and then. Press the button and it will be counted.</div>`;
+  h+=on?`<button class="btn" data-act="lazyoff">Cancel · I'll work today</button>`:`<button class="btn" data-act="lazyon">😴 Take a lazy day</button>`;
+  if(on&&n>=3||!on&&n>=2)h+=`<button class="btn primary" data-act="lazygo">Start a short focus session</button>`;
+  h+=`<div class="ldots">${last.map(d=>`<i class="${isLazy(d)?'l':''} ${d===td?'t':''}"></i>`).join('')}</div><div class="hint" style="margin:4px 0 0">Last 14 days · ${c30} lazy day${c30===1?'':'s'} in the last 30 · longest streak ${lazyBest()}</div>`;
+  el.innerHTML=h;
+}
+function lazyToggle(on){
+  const td=iso(),was=isLazy(td);
+  if(on&&!was)lazy.push(td);else if(!on&&was)lazy=lazy.filter(d=>d!==td);
+  sv();rLazy();vib(on?20:12);
+  toast(on?'Lazy day on 😴':'Lazy day cancelled · let\'s go 💪',{label:'Undo',fn:()=>{if(on)lazy=lazy.filter(d=>d!==td);else if(!lazy.includes(td))lazy.push(td);sv();rLazy()}});
+}
 function gain(n,x,y,gid){
+  if(isLazy()){lazy=lazy.filter(d=>d!==iso());sv();setTimeout(()=>{toast('You got to work: lazy day cancelled 💪');if(cur==='home')rLazy()},900)}
   const g=gid&&goals.find(q=>q.id===gid);
   if(g){g.xp+=n;const gb=g.lv;while(g.xp>=needed(g.lv)){g.xp-=needed(g.lv);g.lv++}if(g.lv>gb)setTimeout(()=>toast(g.name+' → level '+g.lv+' 🎉'),1800)}
   const before=lv;xp+=n;
@@ -1161,14 +1228,14 @@ function dayHTML(ds){
   const flush=()=>{const cols=[];cluster.forEach(x=>{let k=cols.findIndex(end=>end<=x.r.s);if(k<0){k=cols.length;cols.push(0)}cols[k]=x.r.e;x.col=k});cluster.forEach(x=>x.n=cols.length);place.push(...cluster);cluster=[]};
   timed.forEach(x=>{if(cluster.length&&x.r.s>=cEnd){flush();cEnd=0}cluster.push(x);cEnd=Math.max(cEnd,x.r.e)});flush();
   let h='';
-  if(all.length)h+='<div class="allday">'+all.map(c=>`<div class="evchip" data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)}"><i></i>${esc(c.title)}</div>`).join('')+'</div>';
+  if(all.length)h+='<div class="allday">'+all.map(c=>`<div class="evchip" ${gh(c)} data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)}"><i></i>${esc(c.title)}</div>`).join('')+'</div>';
   h+=`<div id="tlbox" data-s0="${s0}"><div class="tl" data-hold="slot" data-s0="${s0}" style="height:${(e0-s0)*HH+10}px">`;
   for(let x=s0;x<=e0;x++)h+=`<div class="hl" style="top:${(x-s0)*HH+10}px"><span>${x}</span></div>`;
   h+='<div class="evl" style="top:10px">';
   place.forEach((x,i)=>{
     const top=(x.r.s-s0*60)/60*HH,ht=Math.max((x.r.e-x.r.s)/60*HH-3,26),w=100/x.n;
     const tiny=ht<46;
-    h+=`<div class="ev ${tiny?'tiny':''}" data-kind="${x.c.kind||''}" data-hold="ev" data-id="${x.c.id}" data-d="${x.c.date}" style="--c:${colorOf(x.c)};--i:${i};top:${top}px;height:${ht}px;left:${x.col*w}%;width:calc(${w}% - 4px)"><div class="in"><b>${esc(x.c.title)}</b><span>${x.c.time} – ${fmt(x.r.e)}</span></div></div>`;
+    h+=`<div class="ev ${tiny?'tiny':''}" data-kind="${x.c.kind||''}" ${gh(x.c)} data-hold="ev" data-id="${x.c.id}" data-d="${x.c.date}" style="--c:${colorOf(x.c)};--i:${i};top:${top}px;height:${ht}px;left:${x.col*w}%;width:calc(${w}% - 4px)"><div class="in"><b>${esc(x.c.title)}</b><span>${x.c.time} – ${fmt(x.r.e)}</span></div></div>`;
   });
   h+='</div>';
   if(ds===iso()){const n=new Date(),m=n.getHours()*60+n.getMinutes();if(m>=s0*60&&m<=e0*60)h+=`<div class="nowl" style="top:${(m-s0*60)/60*HH+10}px"></div>`}
@@ -1180,7 +1247,7 @@ function weekHTML(){
   for(let i=0;i<7;i++){
     const ds=shiftD(ws,i),d=new Date(ds+'T12:00:00'),list=evOn(ds).sort(evSort);
     h+=`<div class="wday ${ds===today?'today':''}"><button class="wh" data-act="cd" data-d="${ds}" data-go="1"><b>${d.toLocaleDateString('en-GB',{weekday:'long'})}</b><span>${d.getDate()} ${d.toLocaleDateString('en-GB',{month:'short'})}</span></button>`;
-    h+=list.map(c=>{const r=evRange(c);return `<div class="evrow" data-kind="${c.kind||''}" data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)}"><div class="bar-c"></div><div><div class="et">${esc(c.title)}${c.rep?' <span style="opacity:.55">↻</span>':''}</div><div class="tm">${r?c.time+' – '+fmt(r.e):'All day'}</div></div></div>`}).join('')||'<div class="sub" style="padding-left:2px">Free</div>';
+    h+=list.map(c=>{const r=evRange(c);return `<div class="evrow" data-kind="${c.kind||''}" ${gh(c)} data-hold="ev" data-id="${c.id}" data-d="${c.date}" style="--c:${colorOf(c)}"><div class="bar-c"></div><div><div class="et">${esc(c.title)}${c.rep?' <span style="opacity:.55">↻</span>':''}</div><div class="tm">${r?c.time+' – '+fmt(r.e):'All day'}</div></div></div>`}).join('')||'<div class="sub" style="padding-left:2px">Free</div>';
     h+='</div>';
   }
   return h;
@@ -1196,7 +1263,7 @@ function editEvent(id,def,occ){
     <div class="field"><label>Repeat</label><div class="chips" id="e-rp">${[['','Never'],['daily','Every day'],['weekdays','Mon–Fri'],['weekly','Every week'],['biweekly','Every 2 weeks'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRp?'on':''}" data-v="${v}">${l}</button>`).join('')}</div></div>
     <div class="field" id="f-un" style="${selRp?'':'display:none'}"><label>Repeat until (optional)</label><div class="two"><input id="e-un" type="date" value="${c&&c.until||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-unc">Clear</button></div></div>
     ${c&&c.rep?'<div class="hint" style="margin:-4px 0 12px">You are editing the whole series. Dates and times apply to every occurrence.</div>':''}
-    <div class="field"><label>Colour</label><div class="swatches" id="e-c">${COLORS.map((x,i)=>`<button class="sw ${i===col?'on':''}" data-i="${i}" style="--c:${x}"></button>`).join('')}</div></div>
+    <div class="field"><label>Colour</label><div class="swatches" id="e-c">${EVC.map((x,i)=>x==='ghost'?`<button class="sw ghostsw ${i===col?'on':''}" data-i="${i}" title="Transparent" aria-label="Transparent"></button>`:`<button class="sw ${i===col?'on':''}" data-i="${i}" style="--c:${x}"></button>`).join('')}</div></div>
     <button class="btn primary" id="e-save">${c?'Save changes':'Add event'}</button>
     ${c?'<button class="btn danger" id="e-del">Delete</button>':''}`);
   $('e-rp').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selRp=b.dataset.v;[...$('e-rp').children].forEach(x=>x.classList.toggle('on',x===b));$('f-un').style.display=selRp?'':'none';vib(10)};
@@ -1290,6 +1357,9 @@ document.addEventListener('click',e=>{
   if(act==='done')completeTask(id,a);
   else if(act==='open'){const row=a.closest('.task');if(row.classList.contains('mini')){show('tasks');return}const o=row.classList.contains('open');document.querySelectorAll('.task.open').forEach(r=>r.classList.remove('open'));if(!o)row.classList.add('open');vib(8)}
   else if(act==='edit')editTask(id);
+  else if(act==='lazyon')lazyToggle(true);
+  else if(act==='lazyoff')lazyToggle(false);
+  else if(act==='lazygo'){if(isLazy()){lazy=lazy.filter(d=>d!==iso());sv()}show('focus');toast('Pick a Short session and start')}
   else if(act==='gopen'){tgoal=id;rTasks(true);window.scrollTo({top:0,behavior:'smooth'});vib(8)}
   else if(act==='gback'){tgoal=null;rTasks(true)}
   else if(act==='gnew')editGoal();
@@ -1392,7 +1462,7 @@ function fRender(full,boot){
   if(full){
     drawSide(false);
     $('modes').innerHTML=Object.keys(MODES).map(k=>{const m=MODES[k];const dur=m.min>=60?Math.floor(m.min/60)+'h'+(m.min%60?pad(m.min%60):''):m.min+' min';return`<button class="mode ${F.mode===k?'on':''} ${F.status!=='idle'?'lock':''}" data-m="${k}" style="--mc:${m.c}"><i></i><b>${m.name}</b><span>${dur}</span></button>`}).join('');
-    fCtl();fChips();
+    fCtl();fChips();rFtask();
     fMsg(F.status==='idle'?'Pick a mode, then start when you are ready.':F.status==='pause'?'Paused. Take a breath.':F.status==='done'?'Session complete. Nice work.':MSGS[0]);
   }
   tickClock();
@@ -1410,16 +1480,51 @@ function fChips(){
   $('fchips').innerHTML=`<span class="pill">${td.length} session${td.length===1?'':'s'} today</span><span class="pill xp">${Math.floor(min/60)?Math.floor(min/60)+'h ':''}${min%60} min focused</span>`;
 }
 function tickClock(){const n=new Date();$('dclock').textContent=n.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()+' '+pad(n.getHours())+':'+pad(n.getMinutes())}
+const hm=ms=>{const d=new Date(ms);return pad(d.getHours())+':'+pad(d.getMinutes())};
+function rFtask(){
+  const b=$('ftask');if(!b)return;
+  b.classList.toggle('lock',F.status!=='idle');
+  b.innerHTML=F.kind==='break'?'<span>☕ Break time</span>':(F.task?`<span>Working on</span><b>${esc(F.task)}</b>${F.status==='idle'?'<span class="ar">Change</span>':''}`:`<span>＋ What are you working on?</span><span class="ar">${F.status==='idle'?'Choose':''}</span>`);
+}
+function fPickTask(){
+  if(F.status!=='idle'||F.kind==='break'){toast('Finish the session to change the task');return}
+  const open=sortedTasks().filter(isOpen).slice(0,12);
+  openSheet(`<h2>Working on…</h2><div class="sub" style="margin-bottom:12px">The session is saved to your calendar under this name.</div>
+    <div class="chips" id="ft-c">${open.map(t=>`<button class="chip ${F.taskId===t.id?'on':''}" data-id="${t.id}" data-v="${esc(t.text)}">${esc(t.text)}</button>`).join('')}</div>
+    <div class="field" style="margin-top:14px"><label>Or type anything</label><input id="ft-t" maxlength="60" placeholder="e.g. Maths · complexes exercises" value="${F.taskId?'':esc(F.task||'')}"></div>
+    <button class="btn primary" id="ft-s">Use this</button>${F.task?'<button class="btn" id="ft-n">No task</button>':''}`);
+  let id=F.taskId||'',txt=F.task||'';
+  $('ft-c').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;id=b.dataset.id;txt=b.dataset.v;$('ft-t').value='';[...$('ft-c').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
+  $('ft-t').oninput=()=>{id='';txt=$('ft-t').value;[...$('ft-c').children].forEach(c=>c.classList.remove('on'))};
+  $('ft-s').onclick=()=>{F.taskId=id;F.task=(txt||'').trim();if(!F.task)F.taskId='';sv();closeSheet();rFtask()};
+  if($('ft-n'))$('ft-n').onclick=()=>{F.task='';F.taskId='';sv();closeSheet();rFtask()};
+}
+/* save a focus block to the calendar (start = when it began, end = when it ended) */
+function fLog(endMs,mins){
+  const s=F.start||endMs-mins*60000,date=iso(new Date(s));
+  let t1=hm(s),t2=hm(endMs);
+  if(iso(new Date(endMs))!==date||tmin(t2)<=tmin(t1))t2=tmin(t1)>=23*60+59?'23:59':fmt(Math.min(24*60-1,tmin(t1)+Math.max(1,mins)));
+  cal.push({id:uid(),title:F.task||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:1,kind:'focus'});
+  fhist.push({task:F.task||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1});
+}
+function fPauseCheck(){
+  if(F.status!=='pause'||!F.pAt||Date.now()-F.pAt<=180000)return;
+  const m=Math.floor((fDur()-F.rem)/60);
+  if(F.kind==='focus'&&m>=1){F.start=F.start||F.pAt-m*60000;fLog(F.pAt,m);toast('Paused over 3 min · session saved to your calendar ('+m+' min)')}
+  else toast('Paused over 3 min · session ended');
+  F.status='idle';F.kind='focus';F.pAt=0;sv();if(cur==='focus'){fRender(true,true);rStats()}
+}
 function fStart(){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){window._ac=window._ac||new AC();window._ac.resume&&window._ac.resume()}}catch(e){}
-  F.dur=fDur();F.start=Date.now();F.end=Date.now()+F.dur*1000;F.status='run';sv();vib(30);
+  F.dur=fDur();F.start=Date.now();F.pAt=0;F.end=Date.now()+F.dur*1000;F.status='run';sv();vib(30);
   fRender(true,true);
 }
 function fElapsedMin(){return Math.floor((fDur()-fRemain())/60)}
 function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
   const M=MODES[F.mode];F.status='done';F.rem=0;
   if(F.kind==='focus'){
-    fhist.push({task:'Focus',min:M.min,date:fk(),ts:Date.now(),mode:F.mode});
+    fhist.push({task:F.task||'Focus',min:M.min,date:fk(),ts:Date.now(),mode:F.mode});
+    {const s=F.start||Date.now()-M.min*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+M.min));cal.push({id:uid(),title:F.task||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+M.min+' min',color:1,kind:'focus'})}
     sv();gain(M.xp);
   }else sv();
   sv();vib(80);chime();
@@ -1432,9 +1537,9 @@ function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
 }
 async function fStop(){
   const m=fElapsedMin();
-  const ok=await ask({title:'End session?',msg:F.kind==='focus'?(m>=1?m+' min will be logged.':'Nothing to log yet.'):'The break will end.',ok:'End session',cancel:'Keep going',danger:true});
+  const ok=await ask({title:'End session?',msg:F.kind==='focus'?(m>=1?m+' min will be logged and added to your calendar.':'Nothing to log yet.'):'The break will end.',ok:'End session',cancel:'Keep going',danger:true});
   if(!ok)return;
-  if(F.kind==='focus'&&m>=1){fhist.push({task:'Focus',min:m,date:fk(),ts:Date.now(),mode:F.mode,early:true});}
+  if(F.kind==='focus'&&m>=1){fLog(F.status==='pause'&&F.pAt?F.pAt:Date.now(),m)}
   F.status='idle';F.kind='focus';sv();fRender(true,true);
 }
 document.addEventListener('click',e=>{
@@ -1449,13 +1554,15 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('[data-f]');if(!b)return;
   const a=b.dataset.f;
   if(a==='start')fStart();
-  else if(a==='pause'){F.rem=fRemain();F.status='pause';sv();fRender(true);vib(15)}
-  else if(a==='resume'){F.end=Date.now()+F.rem*1000;F.status='run';sv();fRender(true);vib(15)}
+  else if(a==='task')fPickTask();
+  else if(a==='pause'){F.rem=fRemain();F.status='pause';F.pAt=Date.now();sv();fRender(true);vib(15)}
+  else if(a==='resume'){if(F.pAt&&Date.now()-F.pAt>180000){fPauseCheck();return}F.end=Date.now()+F.rem*1000;F.status='run';F.pAt=0;sv();fRender(true);vib(15)}
   else if(a==='stop')fStop();
   else if(a==='break'){F.kind='break';F.status='idle';sv();fRender(true,true);fStart()}
   else if(a==='reset'){F.kind='focus';F.status='idle';sv();fRender(true,true)}
 });
 setInterval(()=>{
+  fPauseCheck();
   if(F.status==='run'){
     const rem=fRemain();
     if(rem<=0){fFinish();return}
@@ -1468,7 +1575,7 @@ setInterval(()=>{
     }
   }
 },250);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(F.status==='run'&&fRemain()<=0)fFinish();else if(cur==='focus')fRender(false);if(cur==='home')rToday()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){fPauseCheck();if(F.status==='run'&&fRemain()<=0)fFinish();else if(cur==='focus')fRender(false);if(cur==='home')rToday()}});
 
 /* ================= STATS ================= */
 const minOn=d=>fhist.filter(h=>h.date===fk(d)).reduce((s,h)=>s+(h.min||0),0);
@@ -2854,7 +2961,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','revs','plans','chatHist','donelog','goals','ftimer','p_lessons','p_exams','p_colles','p_progs','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
