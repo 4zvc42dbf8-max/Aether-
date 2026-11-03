@@ -552,7 +552,7 @@ textarea::placeholder{color:var(--dim)}
 /* full-screen file viewer */
 #pview{position:fixed;inset:0;z-index:880;background:#050609;display:none;flex-direction:column}
 #pview.show{display:flex;animation:fadein .25s}
-#pview .vh{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;border-bottom:1px solid var(--line);background:rgba(10,11,15,.9)}
+#pview .vh{position:relative;z-index:2;display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;border-bottom:1px solid var(--line);background:rgba(10,11,15,.9)}
 #pview .vh .tt{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #pview .pvbody{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 0 40px;text-align:center}
 #pview canvas,#pview img{display:block;margin:0 auto 10px;max-width:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.6)}
@@ -771,7 +771,7 @@ textarea::placeholder{color:var(--dim)}
 <div id="sheet"><div class="sbox"><div class="grab" id="grab"></div><div id="sbody"></div></div></div>
 <div id="dlg"><div class="dbox" id="dbox"></div></div>
 <div id="toast"></div>
-<div id="pview"><div class="vh"><button class="mini" id="pvc" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="tt" id="pvt"></div><span class="sub" id="pvn"></span><button class="mini" id="pvz" aria-label="Zoom">＋</button></div><div class="pvbody" id="pvb"></div></div>
+<div id="pview"><div class="vh"><button class="pmini" id="pvc" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="tt" id="pvt"></div><span class="sub" id="pvn"></span><button class="pmini" id="pvz" aria-label="Zoom">＋</button></div><div class="pvbody" id="pvb"></div></div>
 <div id="printarea"></div>
 
 <div id="fx"></div>
@@ -3196,6 +3196,11 @@ function wire(){
     save[kind]();
   });
   $('pvc').onclick=closeView;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('pview').classList.contains('show'))closeView()});
+  (()=>{const v=$('pview');let y0=null,x0=0;
+    v.addEventListener('touchstart',e=>{const b=$('pvb');y0=(b.scrollTop<=0&&e.touches.length===1)?e.touches[0].clientY:null;x0=e.touches[0].clientX},{passive:true});
+    v.addEventListener('touchend',e=>{if(y0==null)return;const t=e.changedTouches[0];if(t.clientY-y0>140&&Math.abs(t.clientX-x0)<80)closeView();y0=null},{passive:true});
+  })();
 }
 const flushSoon=()=>{};
 
