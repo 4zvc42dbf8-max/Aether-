@@ -636,6 +636,10 @@ textarea::placeholder{color:var(--dim)}
 .fold.open .fch{transform:rotate(90deg)}
 .fbody{margin:0 0 6px 10px;padding-left:10px;border-left:2px solid var(--line2)}
 .fpill{border:0;font:inherit;font-size:12px;cursor:pointer}
+.colleur{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 0;padding:10px 14px;border-radius:14px;background:var(--inset);border:1px solid var(--line);cursor:pointer}
+.colleur span{font-size:12.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.colleur b{font-size:16px;font-weight:700;flex:1;min-width:0}.colleur b i{font-style:normal;color:var(--muted);font-weight:500}
+.colleur .rm{margin-left:auto;text-transform:none;letter-spacing:0;font-size:13.5px;color:var(--text)}.colleur .rm.noroom{color:var(--lime)}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
@@ -2293,7 +2297,7 @@ function vExams(){
 }
 function exRow(kind,x){
   const r=S[kind][x.id],n=r?(r.sujet.length+r.corr.length+r.copy.length):0;
-  return '<button class="prow" style="--c:'+C.sc(x.subj)+'" data-a="rec" data-i="'+kind+'|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.title)+'</div><div class="s">'+fd(x.date)+(n?' · '+n+' file'+(n>1?'s':''):'')+(r&&(r.wrong||r.why)?' · notes':'')+'</div></span>'+(r&&r.grade!=null?gp(r.grade):'')+ico.chev+'</button>';
+  return '<button class="prow" style="--c:'+C.sc(x.subj)+'" data-a="rec" data-i="'+kind+'|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.title)+'</div><div class="s">'+fd(x.date)+(kind==='colles'&&colleInfo(x.id).teacher?' · '+esc(colleInfo(x.id).teacher):'')+(n?' · '+n+' file'+(n>1?'s':''):'')+(r&&(r.wrong||r.why)?' · notes':'')+'</div></span>'+(r&&r.grade!=null?gp(r.grade):'')+ico.chev+'</button>';
 }
 function mistakeCard(){
   const rs=allRecs(),cnt={};rs.forEach(r=>(r.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
@@ -2327,7 +2331,7 @@ function vRec(kind,id){
   const r=S[kind][id]||{sujet:[],corr:[],copy:[],tags:[],wrong:'',why:'',todo:[],fb:'',grade:null,avg:null};
   const isEx=kind==='exams',key='R'+id,key2=r.fb?'':'';
   let h=backBar(meta.title,'<button class="pmini" data-a="recEdit" data-i="'+kind+'|'+id+'" aria-label="Edit">✎</button><button class="pmini" data-a="recDel" data-i="'+kind+'|'+id+'" aria-label="Delete">'+ico.trash+'</button>');
-  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(meta.subj)+'">'+SUBJ[meta.subj].n+'</span><span class="pill">'+fd(meta.date)+'</span>'+folderPill(kind,id)+'</div>';
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(meta.subj)+'">'+SUBJ[meta.subj].n+'</span><span class="pill">'+fd(meta.date)+'</span>'+folderPill(kind,id)+'</div>'+(kind==='colles'?(()=>{const ci=colleInfo(id);return '<div class="colleur" data-a="recEdit" data-i="colles|'+id+'"><span>👤 Colleur</span><b>'+(ci.teacher?esc(ci.teacher):'<i>add the name</i>')+'</b>'+(ci.room?'<span class="rm">📍 '+esc(ci.room)+'</span>':'<span class="rm noroom">＋ room</span>')+'</div>'})():'');
   h+='<div class="'+(isEx?'two2':'')+'"><div class="field"><label>My grade /20</label><input inputmode="decimal" data-in="grade" data-k="'+kind+'|'+id+'" placeholder="e.g. 12.5" value="'+(r.grade==null?'':r.grade)+'"></div>'+(isEx?'<div class="field"><label>Class average</label><input inputmode="decimal" data-in="avg" data-k="'+kind+'|'+id+'" placeholder="optional" value="'+(r.avg==null?'':r.avg)+'"></div>':'')+'</div></div>';
   h+='<div class="card"><div class="lbl">Files</div>';
   const slot=(sl,label)=>'<div class="slot"><div class="hd"><div class="lbl">'+label+'</div><button class="addf" data-a="addRecFile" data-i="'+kind+'|'+id+'|'+sl+'">+ Add</button></div>'+(fileRows(r[sl],kind+'|'+sl,id)||'<div class="sub">Nothing yet</div>')+'</div>';
@@ -2606,6 +2610,14 @@ A.addExam=()=>{
   bindChips('x-s',v=>subj=v);
   $('x-go').onclick=()=>{const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}const id='x-'+uid();const d=$('x-d').value||iso();recOf('exams',id,{subj,title:t,date:d});addEv(id,'ds',subj,t,d,$('x-s1').value,$('x-s2').value);save.exams();closeSheet();go('rec','exams|'+id)};
 };
+const colleTitle=(t,room)=>{const b=String(t||'').replace(/\s*\([^)]*\)\s*$/,'').trim();return room?b+' ('+room+')':b};
+const normT=s=>String(s||'').toLowerCase().replace(/[^a-z]/g,'');
+function colleInfo(id){
+  const ev=cal.find(c=>c.id===id),r=S.colles[id]||{};
+  const teacher=(r.teacher!=null?r.teacher:(ev?(ev.teacher!=null?ev.teacher:ev.desc):''))||'';
+  const room=(ev&&ev.room)||r.room||'';
+  return{teacher:String(teacher).trim(),room};
+}
 function addEv(id,kind,subj,title,date,t1,t2){
   if(cal.some(c=>c.id===id))return;
   const col=C.SUBJ[subj]&&C.SUBJ[subj].c!=null?C.SUBJ[subj].c:undefined;
@@ -2613,16 +2625,22 @@ function addEv(id,kind,subj,title,date,t1,t2){
 }
 A.recEdit=i=>{
   const[kind,id]=i.split('|'),m=metaOf(kind,id);if(!m)return;
-  const ev=cal.find(c=>c.id===id);let subj=m.subj;
-  openSheet('<h2 class="sh">Edit '+(kind==='exams'?'exam':'colle')+'</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" value="'+esc(m.title)+'" maxlength="80"></div><div class="field"><label>Date</label><input id="x-d" type="date" value="'+m.date+'"></div><div class="two"><div class="field"><label>Start</label><input id="x-s1" type="time" value="'+(ev&&ev.time||'')+'"></div><div class="field"><label>End</label><input id="x-s2" type="time" value="'+(ev&&ev.endTime||'')+'"></div></div><button class="btn primary" id="x-go">Save changes</button><button class="btn danger" id="x-del">Delete</button>');
+  const ev=cal.find(c=>c.id===id);let subj=m.subj,allT=false;const ci=kind==='colles'?colleInfo(id):{teacher:'',room:''};
+  openSheet('<h2 class="sh">Edit '+(kind==='exams'?'exam':'colle')+'</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" value="'+esc(m.title)+'" maxlength="80"></div>'+(kind==='colles'?'<div class="two"><div class="field"><label>Colleur</label><input id="x-te" value="'+esc(ci.teacher)+'" placeholder="e.g. N Bovetto"></div><div class="field"><label>Room</label><input id="x-ro" value="'+esc(ci.room)+'" placeholder="e.g. B308"></div></div><div class="chips" style="margin:-4px 0 14px"><button class="chip" id="x-all">Same room for all this colleur\'s colles</button></div>':'')+'<div class="field"><label>Date</label><input id="x-d" type="date" value="'+m.date+'"></div><div class="two"><div class="field"><label>Start</label><input id="x-s1" type="time" value="'+(ev&&ev.time||'')+'"></div><div class="field"><label>End</label><input id="x-s2" type="time" value="'+(ev&&ev.endTime||'')+'"></div></div><button class="btn primary" id="x-go">Save changes</button><button class="btn danger" id="x-del">Delete</button>');
   bindChips('x-s',v=>subj=v);
+  if($('x-all'))$('x-all').onclick=()=>{allT=!allT;$('x-all').classList.toggle('on',allT);hv()};
   $('x-go').onclick=()=>{
-    const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}
+    let t=$('x-t').value.trim();if(!t){toast('Give it a title');return}
+    let te='',ro='';if(kind==='colles'){te=$('x-te').value.trim();ro=$('x-ro').value.trim();t=colleTitle(t,ro)}
     const d=$('x-d').value||m.date,t1=$('x-s1').value,t2=$('x-s2').value;
     if(t1&&t2&&t2<=t1){toast('End must be after the start');return}
-    const r=S[kind][id];if(r){r.title=t;r.subj=subj;r.date=d}
+    let r=S[kind][id];if(r){r.title=t;r.subj=subj;r.date=d}
     if(ev){ev.title=t;ev.subj=subj;ev.date=d;ev.time=t1;ev.endTime=t1?t2:''}
-    else if(!r)recOf(kind,id,{subj,title:t,date:d});
+    else if(!r)r=recOf(kind,id,{subj,title:t,date:d});
+    if(kind==='colles'){
+      if(r){r.teacher=te;r.room=ro}if(ev){ev.teacher=te;ev.room=ro}
+      if(allT&&te){let n=0;cal.forEach(c=>{if(c.kind==='colle'&&c.id!==id&&normT(colleInfo(c.id).teacher)===normT(te)){c.room=ro;c.title=colleTitle(c.title,ro);const q=S.colles[c.id];if(q){q.room=ro;q.title=c.title}n++}});if(n)toast('Room set on '+n+' other colle'+(n>1?'s':''))}
+    }
     save[kind]();sv();closeSheet();render();toast('Saved');
   };
   $('x-del').onclick=()=>{closeSheet();A.recDel(i)};
@@ -2641,9 +2659,9 @@ A.recDel=async i=>{
 };
 A.addColle=()=>{
   let subj='maths';
-  openSheet('<h2 class="sh">Add a colle</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" placeholder="e.g. Colle 4 — Complexes"></div><div class="field"><label>Date</label><input id="x-d" type="date" value="'+iso()+'"></div><div class="two"><div class="field"><label>Start (optional)</label><input id="x-s1" type="time"></div><div class="field"><label>End</label><input id="x-s2" type="time"></div></div><button class="btn primary" id="x-go">Add</button>');
+  openSheet('<h2 class="sh">Add a colle</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ,'x-s')+'</div><div class="field"><label>Title</label><input id="x-t" placeholder="e.g. Colle Maths"></div><div class="two"><div class="field"><label>Colleur</label><input id="x-te" placeholder="e.g. N Bovetto"></div><div class="field"><label>Room</label><input id="x-ro" placeholder="e.g. B308"></div></div><div class="field"><label>Date</label><input id="x-d" type="date" value="'+iso()+'"></div><div class="two"><div class="field"><label>Start (optional)</label><input id="x-s1" type="time"></div><div class="field"><label>End</label><input id="x-s2" type="time"></div></div><button class="btn primary" id="x-go">Add</button>');
   bindChips('x-s',v=>subj=v);
-  $('x-go').onclick=()=>{const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}const id='c-'+uid();const d=$('x-d').value||iso();recOf('colles',id,{subj,title:t,date:d});addEv(id,'colle',subj,t,d,$('x-s1').value,$('x-s2').value);save.colles();closeSheet();go('rec','colles|'+id)};
+  $('x-go').onclick=()=>{const t=$('x-t').value.trim();if(!t){toast('Give it a title');return}const id='c-'+uid();const d=$('x-d').value||iso(),ro=$('x-ro').value.trim(),te=$('x-te').value.trim(),ti=colleTitle(t,ro);const rr=recOf('colles',id,{subj,title:ti,date:d});rr.teacher=te;rr.room=ro;addEv(id,'colle',subj,ti,d,$('x-s1').value,$('x-s2').value);{const ev=cal.find(c=>c.id===id);if(ev){ev.teacher=te;ev.room=ro}}sv();save.colles();closeSheet();go('rec','colles|'+id)};
 };
 A.folder=i=>{
   const k=i.indexOf('|'),type=i.slice(0,k),id=i.slice(k+1),gk=gkOf(type),cur=fGet(type,id),names=fNames(gk);let sel=cur;
