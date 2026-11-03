@@ -167,6 +167,10 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .star.pop{animation:starpop .8s var(--spring)}
 @keyframes starpop{30%{transform:scale(1.35) rotate(-14deg)}60%{transform:scale(.92) rotate(8deg)}100%{transform:none}}
 .task{background:var(--surf2);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:10px;transition:transform .3s var(--spring),max-height .45s var(--ease),opacity .35s,margin .45s var(--ease),padding .45s var(--ease),border-color .3s;overflow:hidden}
+.task.tcol{box-shadow:inset 4px 0 0 var(--tc)}
+.task.tcol.lift{box-shadow:inset 4px 0 0 var(--tc),0 18px 40px -10px rgba(0,0,0,.85),0 0 0 1.5px rgba(77,141,255,.6)!important}
+.colrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.colrow .sw{width:30px;height:30px}
+.colrow .auto{padding:7px 12px;font-size:13px}
 .task.fresh{animation:rowin .6s var(--ease) both;animation-delay:calc(var(--i,0)*55ms)}
 @keyframes rowin{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
 .task.open{border-color:rgba(77,141,255,.4);background:linear-gradient(180deg,rgba(77,141,255,.06),transparent),var(--surf2)}
@@ -785,6 +789,8 @@ function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms||18)}catch(e){}try{
 const COLORS=['#4fd1ff','#5eead4','#ff9f0a','#9b8cff','#ff6fb5','#30d158'];
 const EVC=COLORS.concat(['#ff5d5d','#ffd60a','#4d8dff','#7c6bff','#b6e24a','#d19a66','#ff7a59','#a0a8b8','ghost']);
 const GHOST=EVC.length-1;
+const PAL=EVC.filter(x=>x!=='ghost');
+const taskCol=t=>t.col||(t.gid&&goals.find(g=>g.id===t.gid)||{}).color||'';
 const isGhost=c=>c&&c.color===GHOST;
 const gh=c=>isGhost(c)?'data-ghost="1"':'';
 const colorOf=c=>c.color!=null&&EVC[c.color]?(EVC[c.color]==='ghost'?'#8b93a7':EVC[c.color]):COLORS[[...String(c.title)].reduce((a,ch)=>a+ch.charCodeAt(0),0)%COLORS.length];
@@ -1041,7 +1047,7 @@ function dueBadge(t){
   return '<span class="pill">'+esc(new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+'</span>';
 }
 function taskHTML(t,i,mini,fresh){
-  return `<div class="task ${mini?'mini':''} ${fresh?'fresh':''} ${isDone(t)?'done hdone':''}" data-id="${t.id}" data-hold="task" style="--i:${i}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${esc(t.text)}</div><div class="tmeta">${xpPill(t)}${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
+  return `<div class="task ${taskCol(t)?'tcol':''} ${mini?'mini':''} ${fresh?'fresh':''} ${isDone(t)?'done hdone':''}" data-id="${t.id}" data-hold="task" style="--i:${i}${taskCol(t)?';--tc:'+taskCol(t):''}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${esc(t.text)}</div><div class="tmeta">${xpPill(t)}${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
 }
 const goalOf=t=>t&&t.gid?goals.find(g=>g.id===t.gid):null;
 const gTasks=gid=>sortedTasks().filter(t=>gid==='_'?!goalOf(t):t.gid===gid);
@@ -1069,10 +1075,10 @@ function rTasks(anim){
   rLevel(anim);
 }
 function editGoal(id){
-  const g=id?goals.find(x=>x.id===id):null;let col=g?g.color:COLORS[goals.length%COLORS.length];
+  const g=id?goals.find(x=>x.id===id):null;let col=g?g.color:PAL[goals.length%PAL.length];
   openSheet(`<h2>${g?'Edit goal':'New goal'}</h2>
     <div class="field" id="g-f"><label>Name</label><input id="g-n" placeholder="e.g. Maths" maxlength="40" value="${esc(g?g.name:'')}"></div>
-    <div class="field"><label>Colour</label><div class="chips" id="g-c">${COLORS.map(c=>`<button class="chip ${c===col?'on':''}" data-v="${c}"><span class="cdot" style="background:${c};margin:0"></span></button>`).join('')}</div></div>
+    <div class="field"><label>Colour</label><div class="chips" id="g-c">${PAL.map(c=>`<button class="chip ${c===col?'on':''}" data-v="${c}"><span class="cdot" style="background:${c};margin:0"></span></button>`).join('')}</div></div>
     <button class="btn primary" id="g-save">${g?'Save changes':'Create goal'}</button>${g?'<button class="btn danger" id="g-del">Delete goal</button>':''}`);
   $('g-c').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;col=b.dataset.v;[...$('g-c').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   $('g-save').onclick=()=>{
@@ -1183,12 +1189,13 @@ function completeTask(id,btn){
   if(cur==='tasks'&&false)rTasks();
 }
 function editTask(id,presetG){
-  const t=id?tasks.find(x=>x.id===id):null;let selRep=t?(t.rep||''):'';let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
+  const t=id?tasks.find(x=>x.id===id):null;let selCol=t?(t.col||''):'';let selRep=t?(t.rep||''):'';let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
   const xps=[10,25,50,100];let sel=t?(t.xp||20):25;if(!xps.includes(sel))xps.push(sel);xps.sort((a,b)=>a-b);
   openSheet(`<h2>${t?'Edit objective':'New objective'}</h2>
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
     <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
     <div class="field"><label>Reward (1–100 XP) · −10%/day when overdue</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
+    <div class="field"><label>Colour</label><div class="colrow" id="e-col"><button class="chip auto ${!selCol?'on':''}" data-c="">Auto</button>${PAL.map(c=>`<button class="sw ${c===selCol?'on':''}" data-c="${c}" style="--c:${c}"></button>`).join('')}</div></div>
     <div class="field"><label>Repeat</label><div class="chips" id="e-r">${[['','Once'],['daily','Every day'],['weekly','Every week'],['biweekly','Every 2 weeks'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRep?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="hint" style="margin:8px 0 0">A repeating task is a habit: tick it each period, it comes back on its own and builds a streak.</div></div>
     <div class="field" id="f-due" style="${selRep?'display:none':''}"><label>Due date (optional)</label><div class="two"><input id="e-d" type="date" value="${t&&t.due||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-dc">Clear</button></div></div>
     <button class="btn primary" id="e-save">${t?'Save changes':'Add objective'}</button>
@@ -1199,13 +1206,14 @@ function editTask(id,presetG){
     if(b.dataset.v==='+'){const txt=$('e-t').value;window._afterGoal=gid=>{setTimeout(()=>editTask(id,gid),340);window._keepTxt=txt};editGoal();return}
     selG=b.dataset.v;[...$('e-g').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   if(window._keepTxt&&!t){$('e-t').value=window._keepTxt;window._keepTxt=null}
+  $('e-col').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;selCol=b.dataset.c;[...$('e-col').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   $('e-r').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selRep=b.dataset.v;[...$('e-r').children].forEach(c=>c.classList.toggle('on',c===b));$('f-due').style.display=selRep?'none':'';vib(10)};
   $('e-dc').onclick=()=>$('e-d').value='';
   $('e-save').onclick=()=>{
     const v=$('e-t').value.trim();
     if(!v){const f=$('f-t');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
     const due=$('e-d').value||'';{const n=Math.round(+$('e-xc').value);if(!(n>=1&&n<=100)){const f=$('e-xc');f.focus();toast('XP must be between 1 and 100');return}sel=n}
-    if(t){t.text=v;t.xp=sel;t.due=selRep?'':due;if(selG)t.gid=selG;else delete t.gid;if(selRep!==(t.rep||'')){if(selRep){t.rep=selRep}else{delete t.rep;delete t.hk;delete t.streak}}}else tasks.push({id:uid(),text:v,xp:sel,due:selRep?'':due,gid:selG||undefined,rep:selRep||undefined});
+    if(t){t.text=v;t.xp=sel;if(selCol)t.col=selCol;else delete t.col;t.due=selRep?'':due;if(selG)t.gid=selG;else delete t.gid;if(selRep!==(t.rep||'')){if(selRep){t.rep=selRep}else{delete t.rep;delete t.hk;delete t.streak}}}else tasks.push({id:uid(),text:v,xp:sel,due:selRep?'':due,gid:selG||undefined,rep:selRep||undefined,col:selCol||undefined});
     sv();closeSheet();vib(15);toast(t?'Saved':'Objective added');
     if(cur==='tasks')rTasks();if(cur==='home')rHomeTasks();
   };
