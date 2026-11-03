@@ -1745,11 +1745,11 @@ const SCHED=[{"id":"s-ds-20260907","kind":"ds","subj":"ang","title":"DS Anglais"
 /* ---------- state ---------- */
 const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Storage is full')}};
 const S={
-  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),
+  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),mocks:ld('p_mocks',[]),
   set:Object.assign({prov:'gemini',model:'claude-sonnet-5-5',gmodel:'gemini-flash-latest',news:'meridian-news'},ld('p_set',{})),
   removed:ld('p_removed',[]),usage:ld('p_usage',{i:0,o:0,n:0})
 };
-const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
+const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),mocks:()=>put('p_mocks',S.mocks),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
 
 /* ---------- IndexedDB (files + big texts) ---------- */
 let dbp=null;
@@ -1980,6 +1980,7 @@ async function filesToParts(files,onProg,per=6){
 
 const SYS_TRANSCRIBE="You are a meticulous transcriber of scanned handwritten or printed course notes from a French classe préparatoire (CPGE, first year). Convert the pages into clean Markdown, in the language of the notes (French unless the notes are in English). Rules: keep the original structure (chapter and section titles as #, ##, ###; definitions, théorèmes, propositions, propriétés, démonstrations, exemples, remarques, formulas). Write ALL mathematics, physics and chemistry formulas in LaTeX between $...$ (inline) or $$...$$ (display). Reproduce exactly what is written. Never add, correct or complete content, even if you think it is wrong. If something is illegible write [illisible]. Describe each figure in one short italic line like *(schéma : ...)*. Output only the Markdown, no comments.";
 const SYS_PROGRAMME="You read a 'programme de colles' given by a teacher in a French classe préparatoire. Extract the list of chapters/topics the student may be questioned on. Answer with ONLY a JSON object, no other text: {\"title\":\"short title\",\"chapters\":[{\"title\":\"chapter name\",\"detail\":\"precise content, notions, theorems or exercise types listed (one or two sentences)\"}],\"remarks\":\"any special instruction (or empty string)\"}. Keep the teacher's wording. Merge duplicated lines. Maximum 12 chapters.";
+const SYS_MOCK=(subj,dur,calc)=>"You are a teacher in a French classe préparatoire (MPSI, first year, lycée Aux Lazaristes) writing a 'devoir surveillé' (DS), i.e. a mock exam, in "+subj+". You receive: (1) MAIN LESSONS: the chapters the exam must be centred on; (2) COMPLEMENTARY LESSONS (optional): chapters that may appear in smaller parts or as prerequisites; (3) MODEL EXAMS (optional): real past papers from the student's teachers, only to copy their style, level, length, point scale and layout. Write the paper in French, in Markdown, with LaTeX between $...$ and $$...$$. Layout:\n\n# DS blanc — "+subj+"\nA line with: Durée : "+dur+" — Calculatrice : "+(calc?'AUTORISÉE':'NON autorisée')+".\nThen a short bullet list of instructions in the style of the model exams (soin / présentation, résultats encadrés, réponses non justifiées ou sans unité = 0 point, exercices indépendants and may be done in any order). Then 3 or 4 independent exercises (or problem parts), titled 'I. Title (n pts)', 'II. ...', with numbered questions (I.1), (I.2)... of increasing difficulty, the total being 20 points. Include data, constants or figure descriptions the questions need. The main lessons must carry about 75 to 85 percent of the points; complementary lessons the rest. Match the model exams' difficulty and typical question types (standard computations, proofs from the course, application, one harder final question). The length must fit the duration.\n\n<!--CORRECTIONS-->\n## Corrigé\nA complete, rigorous correction for every question, with the final results clearly stated, the point scale (barème) per question, and for each exercise a short remark on the classic trap or method. Double-check every calculation, unit and sign before writing; correctness matters more than length.\n\nRules: use only notations, definitions and results of the student's course (state any needed extra result as 'rappel'); never copy a question from the model exams, create new ones; no introduction or closing sentence outside this structure.";
 const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the student's COURSE (their own lesson notes, transcribed) as the reference, and the PROGRAMME the colle will cover. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\n6 short questions of the kind a colleur asks at the start (definitions, statements of theorems, quick proofs, standard formulas). Number them.\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes for the harder ones). For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\nFirst, short answers to the questions de cours (including the key idea of any proof). Then, for each exercise, a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nRules: stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Cover the programme's chapters evenly. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
 const SYS_CARDS="You make spaced-repetition flashcards from a student's course notes (French classe préparatoire). Output ONLY a JSON array, no other text: [{\"q\":\"...\",\"a\":\"...\"}]. 12 to 20 cards covering the most important definitions, theorem statements (with hypotheses), key formulas and standard methods of the course, in French (or English if the course is in English). Each question must be answerable on its own; keep answers short and precise. Use LaTeX between $...$ for math. Do not invent anything that is not in the course. Inside JSON strings, write every LaTeX backslash doubled (\\\\frac, \\\\ell) so the JSON stays valid.";
 const SYS_ENGLISH="You are an English teacher in a French classe préparatoire (CPGE). The student has an oral English 'colle' about current affairs and must present and discuss a topic. You receive 2 topics, each with 2 recent news items (headline, outlet, short summary only: you do NOT have the full articles, so never invent details that are not in the summaries). For each topic write, in English: 1) 'Why it matters' in 3 sentences; 2) 'Key vocabulary': 10 useful words or expressions with a short definition; 3) 'Questions you may be asked': 5 questions; 4) 'A 2-minute outline': introduction, three points, conclusion, with useful connectors. Use Markdown with ## for each topic and ### for sub-parts. Do not use the dollar sign for currencies.";
@@ -2072,7 +2073,7 @@ async function dump(){return{texts:await dbAll('texts')}}
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
 window.PC={SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
-  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_MOCK,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -2120,11 +2121,12 @@ const needKey=()=>{if(C.hasKey())return true;toast('Add your AI key first');sett
 
 /* ---------- folders ---------- */
 const gkOf=t=>t==='progs'?'colles':t;
-function fItems(gk){return gk==='lessons'?S.lessons:gk==='exams'?Object.values(S.exams):gk==='colles'?Object.values(S.colles).concat(S.progs):S.vocab}
+function fItems(gk){return gk==='lessons'?S.lessons:gk==='mocks'?S.mocks:gk==='exams'?Object.values(S.exams):gk==='colles'?Object.values(S.colles).concat(S.progs):S.vocab}
 function fObj(type,id){
   if(type==='lessons')return S.lessons.find(x=>x.id===id);
   if(type==='progs')return S.progs.find(x=>x.id===id);
   if(type==='vocab')return S.vocab.find(x=>x.id===id);
+  if(type==='mocks')return S.mocks.find(x=>x.id===id);
   return S[type][id]||null;
 }
 const fGet=(type,id)=>{const o=fObj(type,id);return o&&o.folder||''};
@@ -2298,7 +2300,7 @@ function gradeCard(){
 }
 function vExams(){
   const td=iso(),all=examList(),past=all.filter(x=>x.date<=td||S.exams[x.id]),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
-  let h=gradeCard()+mistakeCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
+  let h=gradeCard()+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
   if(past.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Past exams</div></div>'+inFolders('exams',past,x=>(S.exams[x.id]||{}).folder||'',x=>exRow('exams',x))}
   if(up.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div><span class="sub">'+up.length+'</span></div>'+up.slice(0,4).map(x=>exRow('exams',x)).join('')}
   return h;
@@ -2307,6 +2309,64 @@ function exRow(kind,x){
   const r=S[kind][x.id],n=r?(r.sujet.length+r.corr.length+r.copy.length):0;
   return '<button class="prow" style="--c:'+C.sc(x.subj)+'" data-a="rec" data-i="'+kind+'|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.title)+'</div><div class="s">'+fd(x.date)+(kind==='colles'&&colleInfo(x.id).teacher?' · '+esc(colleInfo(x.id).teacher):'')+(n?' · '+n+' file'+(n>1?'s':''):'')+(r&&(r.wrong||r.why)?' · notes':'')+'</div></span>'+(r&&r.grade!=null?gp(r.grade):'')+ico.chev+'</button>';
 }
+/* ----- MOCK EXAMS (devoirs blancs) ----- */
+function mockCard(){
+  const ms=S.mocks.slice().sort((a,b)=>(b.at||0)-(a.at||0));
+  let h='<div class="card"><div class="cardhead"><div class="lbl">Mock exams · devoirs blancs</div></div><div class="sub" style="margin:-4px 0 12px">Pick the main and complementary lessons: the AI writes a DS in the style of your real ones, with the corrigé.</div>';
+  h+=ms.length?inFolders('mocks',ms,m=>m.folder||'',m=>{
+    const stt=live['M'+m.id]?'Writing…':m.at?'Ready':m.err?'Failed — open to retry':'Not written yet';
+    return '<button class="prow" style="--c:'+C.sc(m.subj)+'" data-a="mock" data-i="'+m.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(m.title)+'</div><div class="s">'+SUBJ[m.subj].n+' · '+esc(m.dur)+' · '+m.main.length+' main'+(m.comp.length?' + '+m.comp.length+' compl.':'')+' · '+stt+'</div></span>'+ico.chev+'</button>'}):'';
+  return h+'<button class="add" data-a="newMock">+ Create a mock exam</button></div>';
+}
+function vMock(id){
+  const m=S.mocks.find(x=>x.id===id);if(!m){st.stack.pop();return ''}
+  const k='M'+id,names=ids=>ids.map(i=>{const l=S.lessons.find(x=>x.id===i);return l?esc(l.title):''}).filter(Boolean).join(' · ');
+  let h=backBar('Mock exam','<button class="pmini" data-a="printMock" data-i="'+id+'" aria-label="Print">⎙</button>');
+  h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(m.title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[m.subj].n+' · '+esc(m.dur)+' · calculator '+(m.calc?'allowed':'not allowed')+'<br><b>Main:</b> '+(names(m.main)||'—')+(m.comp.length?'<br><b>Complementary:</b> '+names(m.comp):'')+(m.styled?'<br><b>Style from:</b> '+esc(m.styled):'')+'</div>';
+  if(live[k])h+=liveBox(k);
+  else{
+    if(errs[k]||m.err)h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[k]||m.err)+'</div>';
+    h+='<div class="row2" style="margin-top:12px"><button class="btn '+(m.at?'':'primary')+'" data-a="mkMock" data-i="'+id+'">'+(m.at?'Write a new version':'Write the exam')+'</button><button class="btn danger" data-a="delMock" data-i="'+id+'">Delete</button></div>'+folderPill('mocks',id);
+  }
+  h+='</div>';
+  if(m.at&&!live[k])h+='<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Sujet</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrigé</button></div><div class="card"><div class="doc" id="mockdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  return h;
+}
+async function styleModels(subj){
+  const rs=Object.values(S.exams).filter(r=>r.subj===subj&&(r.sujet||[]).length).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  let txt='',used=[],budget=24000;
+  for(const r of rs){
+    for(const f of r.sujet){
+      if(budget<1500||!C.isPdf(f))continue;
+      try{const rec=await C.dbGet('blobs',f.id);if(!rec)continue;const p=await C.pdfText(rec.blob);if(p.avg<200)continue;
+        const t=p.text.slice(0,Math.min(8000,budget));txt+='\n\n=== MODEL EXAM: '+r.title+' ===\n'+t;budget-=t.length;used.push(r.title)}catch(e){}
+    }
+    if(used.length>=3)break;
+  }
+  return{txt,used};
+}
+async function lessonBlock(ids,cap){
+  let txt='',n=0;
+  for(const id of ids){const l=S.lessons.find(x=>x.id===id);if(!l||cap<2000)continue;const t=(await C.getText('L'+id))||'';if(!t)continue;
+    const per=Math.max(3000,Math.floor(cap/Math.max(1,ids.length-n)));const s=t.slice(0,per);txt+='\n\n=== LESSON: '+l.title+' ===\n'+s;cap-=s.length;n++}
+  return txt;
+}
+function mkMock(id){
+  const m=S.mocks.find(x=>x.id===id);if(!m)return;
+  return run('M'+id,'Writing your exam…',async(lab,txt)=>{
+    lab('Reading your lessons…');
+    const main=await lessonBlock(m.main,120000),comp=await lessonBlock(m.comp,50000);
+    if(!main)throw new C.AIError('The main lessons have no text yet. Read them first (Lessons tab).');
+    lab('Looking at your real exams for the style…');
+    const sm=await styleModels(m.subj);
+    lab('Writing the exam and the corrigé…');
+    const r=await C.ai({system:C.SYS_MOCK(SUBJ[m.subj].n,m.dur,m.calc),content:[{type:'text',text:'MAIN LESSONS:'+main+'\n\nCOMPLEMENTARY LESSONS:'+(comp||'\n(none)')+'\n\nMODEL EXAMS (style only):'+(sm.txt||'\n(none available: use the usual style of a French MPSI DS)')}],max:24000,onText:txt});
+    if(r.text.length<400)throw new C.AIError('The exam came out empty. Try again.');
+    await C.setText('M'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The exam was cut: write a new version.]*':''));
+    m.at=Date.now();m.err='';m.styled=sm.used.join(', ');save.mocks();toast('Mock exam ready ✓');
+  });
+}
+
 function mistakeCard(){
   const rs=allRecs(),cnt={};rs.forEach(r=>(r.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
   const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);if(!ks.length)return '';
@@ -2467,7 +2527,7 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
   }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
@@ -2485,6 +2545,7 @@ async function post(top){
   try{
     if(top&&top.v==='lesson'){const l=S.lessons.find(x=>x.id===top.id);if(l&&l.status==='done')into('ltext',(await C.getText('L'+l.id))||'*(empty)*')}
     if(top&&top.v==='sheet'){const p=S.progs.find(x=>x.id===top.id),tx=(await C.getText('S'+top.id))||'',sp=splitSheet(tx);into('sheetdoc',st.seg==='co'?(sp.co||'*No corrections found.*'):sp.ex)}
+    if(top&&top.v==='mock'){const tx=(await C.getText('M'+top.id))||'',sp=splitSheet(tx);if($('mockdoc'))into('mockdoc',st.seg==='co'?(sp.co||'*No corrigé found.*'):sp.ex)}
     if(top&&top.v==='rec'){const[k,id]=top.id.split('|'),r=S[k][id];if(r&&r.fb)into('fbtext',r.fb)}
     if(top&&top.v==='eng'&&eng&&eng.text)into('engdoc',eng.text);
     if(!top&&st.tab==='cards'&&st.rev){const c=S.cards.find(x=>x.id===st.rev.q[0]);if(c){into('cq',c.q);into('ca',c.a)}}
@@ -2789,6 +2850,35 @@ A.openSheet=id=>go('sheet',id);
 A.delProg=async id=>{if(!await ask({title:'Delete this programme?',msg:'The sheet is deleted too.',ok:'Delete',danger:1}))return;const p=S.progs.find(x=>x.id===id);for(const f of p.files)await C.delFile(f.id);await C.dbDel('texts','S'+id).catch(()=>{});S.progs=S.progs.filter(x=>x.id!==id);save.progs();back()};
 A.printLesson=async id=>{const l=S.lessons.find(x=>x.id===id),t=await C.getText('L'+id);if(!t){toast('Read the lesson first');return}await C.loadKatex();printHtml('<h1>'+esc(l.title)+'</h1>'+C.md(t));toast('Choose "Save to Files" / "Save as PDF" in the share sheet')};
 A.printSheet=async id=>{const sp=splitSheet((await C.getText('S'+id))||'');await C.loadKatex();printHtml(C.md(st.seg==='co'?sp.co:sp.ex))};
+A.mkMock=async id=>{if(needKey())mkMock(id)};
+A.mock=id=>{st.seg='ex';go('mock',id)};
+A.delMock=async id=>{if(!await ask({title:'Delete this mock exam?',msg:'The text is deleted too.',ok:'Delete',danger:1}))return;await C.dbDel('texts','M'+id).catch(()=>{});S.mocks=S.mocks.filter(x=>x.id!==id);save.mocks();back()};
+A.printMock=async id=>{const sp=splitSheet((await C.getText('M'+id))||'');await C.loadKatex();printHtml(C.md(st.seg==='co'?sp.co:sp.ex))};
+A.newMock=()=>{
+  let subj='maths',main=[],comp=[],dur='2 h',calc=false,title='';
+  const ls=()=>S.lessons.filter(l=>l.subj===subj&&l.status==='done');
+  const draw=()=>{
+    const L=ls(),row=(l,set)=>'<button class="prow mrow'+(set.includes(l.id)?' on':'')+'" style="--c:'+C.sc(subj)+'" data-id="'+l.id+'"><i class="dot"></i><span class="m"><div class="t" style="font-size:14.5px">'+esc(l.title)+'</div></span><b>'+(set.includes(l.id)?'✓':'')+'</b></button>';
+    $('sbody').innerHTML='<h2 class="sh">Create a mock exam</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ.filter(s=>s!=='ang'),'m-s')+'</div>'+
+    '<div class="field"><label>Main lessons (the exam is centred on these)</label>'+(L.length?'<div id="m-main">'+L.map(l=>row(l,main)).join('')+'</div>':'<div class="hidecorr">No read '+SUBJ[subj].n+' lesson yet. Read one in the Lessons tab first.</div>')+'</div>'+
+    (L.length>1?'<div class="field"><label>Complementary lessons (optional)</label><div id="m-comp">'+L.map(l=>row(l,comp)).join('')+'</div></div>':'')+
+    '<div class="field"><label>Duration</label><div class="chips" id="m-d">'+['1 h','2 h','3 h','4 h'].map(d=>'<button class="chip '+(d===dur?'on':'')+'" data-v="'+d+'">'+d+'</button>').join('')+'</div></div>'+
+    '<div class="field"><label>Calculator</label><div class="chips" id="m-c"><button class="chip '+(calc?'':'on')+'" data-v="0">Not allowed</button><button class="chip '+(calc?'on':'')+'" data-v="1">Allowed</button></div></div>'+
+    '<div class="field"><label>Title (optional)</label><input id="m-t" value="'+esc(title)+'" maxlength="80" placeholder="e.g. DS blanc — Complexes"></div><button class="btn primary" id="m-go">Write the exam</button>';
+    bindChips('m-s',v=>{subj=v;main=[];comp=[];title=$('m-t').value;draw()});
+    bindChips('m-d',v=>dur=v);bindChips('m-c',v=>calc=v==='1');
+    $('m-t').oninput=e=>title=e.target.value;
+    const tog=(boxId,set,other)=>{const e=$(boxId);if(!e)return;e.onclick=ev=>{const b=ev.target.closest('.mrow');if(!b)return;const i=b.dataset.id,at=set.indexOf(i);if(at>=0)set.splice(at,1);else{set.push(i);const o=other.indexOf(i);if(o>=0)other.splice(o,1)}hv();title=$('m-t').value;draw()}};
+    tog('m-main',main,comp);tog('m-comp',comp,main);
+    $('m-go').onclick=async()=>{
+      if(!main.length){toast('Pick at least one main lesson');return}
+      if(!needKey())return;
+      const id='m-'+uid(),t=$('m-t').value.trim()||('DS blanc — '+(S.lessons.find(x=>x.id===main[0])||{title:SUBJ[subj].n}).title+(main.length>1?' +'+(main.length-1):''));
+      S.mocks.push({id,subj,title:t,main:main.slice(),comp:comp.slice(),dur,calc,at:0});save.mocks();closeSheet();st.seg='ex';go('mock',id);mkMock(id);
+    };
+  };
+  openSheet('');draw();
+};
 
 /* --- cards --- */
 A.review=()=>{const q=dueCards().map(c=>c.id).sort(()=>Math.random()-.5);st.rev={q,total:q.length,done:0,n:0,flip:false};render()};
@@ -3094,7 +3184,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
