@@ -155,6 +155,19 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .stepper{display:flex;align-items:center;gap:10px;margin-top:6px}
 .stepper button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:transparent;color:var(--text);font-size:20px;transition:transform .25s var(--spring)}
 .stepper button:active{transform:scale(.8)}
+.pinned{font-size:.85em}
+.motiv .pg.done{stroke:#34c759}.motiv .big{font-size:15px;color:var(--muted)}.motiv .big b{font-size:30px;color:var(--text);font-variant-numeric:tabular-nums}
+.whyrow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin:14px 0 10px;padding:12px 14px;border-radius:16px;background:var(--inset);border:1px solid var(--line);color:var(--text);flex-wrap:wrap}
+.whyrow .wl{flex:0 0 100%;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:700}
+.whyrow .wt{flex:1;min-width:0;font-size:15.5px;font-weight:600;line-height:1.3}.whyrow.empty .wt{font-weight:500;color:var(--muted)}
+.whyrow .wd{font-weight:800;font-size:15px;color:#ff9f0a;background:rgba(255,159,10,.14);padding:4px 10px;border-radius:99px}
+.rvg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.rvt{background:var(--inset);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.rvt b{display:block;font-size:20px}.rvt span{font-size:12px;color:var(--muted)}.rvn{margin-top:10px;font-size:13.5px;line-height:1.45;color:var(--muted)}
+.hrs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.hr{text-align:center}.hl2{font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.hs{display:flex;align-items:center;justify-content:center;gap:2px}.hs b{min-width:34px;text-align:center;font-size:17px}.hs b small{font-size:11px;color:var(--dim);margin-left:1px}
+.hs button{flex:none;width:28px;height:28px;min-height:0;border-radius:50%;border:1px solid var(--line2);background:var(--inset);color:var(--text);font-size:18px;line-height:1;padding:0;display:grid;place-items:center}.hs button:active{transform:scale(.85)}
+.hrn{grid-column:1/-1;text-align:center;line-height:1.5}
 .moods{display:flex;justify-content:space-between}
 .moods button{background:none;border:none;font-size:34px;padding:4px 8px;opacity:.35;filter:grayscale(.7);transition:all .4s var(--spring)}
 .moods button.on{opacity:1;filter:none;transform:scale(1.35) translateY(-3px)}
@@ -642,6 +655,13 @@ textarea::placeholder{color:var(--dim)}
 .colleur .rm{margin-left:auto;text-transform:none;letter-spacing:0;font-size:13.5px;color:var(--text)}.colleur .rm.noroom{color:var(--lime)}
 .colleur .rh{flex-basis:100%;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--muted);margin-top:-4px;text-align:right}
 
+.filerow.miss{box-shadow:0 0 0 1px rgba(255,159,10,.55) inset}.filerow.miss .n small{color:#ff9f0a}
+
+.sat{display:flex;justify-content:space-between;gap:4px}.sat button{flex:1;background:var(--inset);border:1px solid var(--line);border-radius:14px;font-size:27px;padding:9px 0;opacity:.45;filter:grayscale(.7);transition:all .3s var(--spring)}
+.sat button.on{opacity:1;filter:none;transform:scale(1.08);border-color:rgba(255,255,255,.25)}.sat button:active{transform:scale(.9)}
+.gh{margin:12px 0 6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em}.gc{flex-wrap:wrap}
+.gch .gl{stroke:var(--line);stroke-width:1}.gch .gt{fill:var(--dim,#8a8f9c);font-size:10px}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
@@ -664,6 +684,9 @@ textarea::placeholder{color:var(--dim)}
 </div>
 <div id="pv-sheet">
   <div class="pv-box">
+    <div class="pv-h">AI & calendar</div>
+    <div class="pv-note" id="pv-aistate">Gemini / Claude keys, backup model and the iPhone calendar feed.</div>
+    <button class="pv-btn" id="pv-ai">AI settings & calendar feed</button>
     <div class="pv-h">PIN lock</div>
     <div class="pv-note" id="pv-pinstate"></div>
     <button class="pv-btn" id="pv-setpin">Set PIN</button>
@@ -684,13 +707,15 @@ textarea::placeholder{color:var(--dim)}
 <section id="home" class="view">
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
+  <div class="card motiv" id="motiv"></div>
   <div class="card lazycard" id="lazycard"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
   <div class="card"><div class="lbl">Focus today</div><div id="focus-bar"></div></div>
   <div class="card"><div class="lbl">How was your day?</div>
     <div class="moods" id="moods"><button data-act="mood" data-n="1">😞</button><button data-act="mood" data-n="2">😐</button><button data-act="mood" data-n="3">🙂</button><button data-act="mood" data-n="4">😊</button><button data-act="mood" data-n="5">🤩</button></div>
-    <div class="sub" id="moodt" style="text-align:center;margin-top:10px"></div></div>
+    <div class="sub" id="moodt" style="text-align:center;margin-top:10px"></div>
+    <div class="hrs" id="hrs"></div></div>
   <div class="card"><div class="lbl">Daily review</div><div id="rev"></div></div>
   <div class="card tap" onclick="showJournal()"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Journal</div><div class="sub">Last 14 days</div></div><span class="chev">›</span></div></div>
   <div class="card tap" onclick="show('stats')"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Stats</div><div class="sub">Streak, focus time, mood</div></div><span class="chev">›</span></div></div>
@@ -803,7 +828,8 @@ const dayName=d=>d.toLocaleDateString('en-GB',{weekday:'long'});
 
 /* ================= state ================= */
 let xp=+localStorage.xp||0, lv=+localStorage.lv||1;
-let tasks=ld('tasks',[]), cal=ld('cal',[]), fhist=ld('fhist',[]), moods=ld('moods',{}), revs=ld('revs',{}), plans=ld('plans',{});
+let tasks=ld('tasks',[]), cal=ld('cal',[]), fhist=ld('fhist',[]), moods=ld('moods',{}), revs=ld('revs',{}), plans=ld('plans',{}), dayh=ld('dayh',{}), xpd=ld('xpd',null), wgoal=ld('wgoal',300), why=ld('why',{}), wrev=ld('wrev',{});
+if(!xpd){xpd={};ld('donelog',[]).forEach(x=>{if(x&&x.d)xpd[x.d]=(xpd[x.d]||0)+(x.xp||0)})}
 let donelog=ld('donelog',[]), F=ld('ftimer',null);
 let goals=ld('goals',[]), tgoal=null;
 let lazy=ld('lazy',[]);
@@ -813,7 +839,7 @@ cal.forEach(c=>{if(!c.id)c.id=uid()});
 function sv(){try{
   localStorage.xp=xp;localStorage.lv=lv;
   localStorage.tasks=JSON.stringify(tasks);localStorage.cal=JSON.stringify(cal);
-  localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);
+  localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);localStorage.dayh=JSON.stringify(dayh);localStorage.xpd=JSON.stringify(xpd);localStorage.wgoal=JSON.stringify(wgoal);localStorage.why=JSON.stringify(why);localStorage.wrev=JSON.stringify(wrev);
   localStorage.revs=JSON.stringify(revs);localStorage.plans=JSON.stringify(plans);
   localStorage.donelog=JSON.stringify(donelog);localStorage.goals=JSON.stringify(goals);localStorage.lazy=JSON.stringify(lazy);
   if(F)localStorage.ftimer=JSON.stringify(F);
@@ -972,7 +998,7 @@ function rHome(){
   $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
-  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();
+  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rHrs();rMotiv();
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
@@ -1015,6 +1041,79 @@ function rFocusBar(){
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const p=$('fpg');if(p)p.style.strokeDashoffset=C*(1-clamp(min/plan,0,1))}));
   countTo($('fmn'),Math.round(clamp(min/plan,0,9.99)*100),900,v=>Math.round(v)+'%');
 }
+const HRS=[['s','😴','Slept'],['c','🛋️','Chilled'],['w','📚','Worked']];
+function rHrs(){
+  const d=dayh[iso()]||{},el=$('hrs');if(!el)return;
+  const tot=HRS.reduce((a,x)=>a+(+d[x[0]]||0),0);
+  let avg='';{const n={s:0,c:0,w:0},c={s:0,c:0,w:0};for(let i=0;i<7;i++){const x=dayh[iso(new Date(Date.now()-i*864e5))];if(x)HRS.forEach(([k])=>{if(x[k]!=null){n[k]+=+x[k];c[k]++}})}
+    if(HRS.some(([k])=>c[k]>1))avg='7-day average: '+HRS.filter(([k])=>c[k]).map(([k,e])=>e+' '+(n[k]/c[k]).toFixed(1)+'h').join(' · ')}
+  const fm=typeof minOn==='function'?Math.round(minOn(new Date())):0;
+  el.innerHTML=HRS.map(([k,e,l])=>`<div class="hr"><div class="hl2">${e} ${l}</div><div class="hs"><button data-act="hr" data-k="${k}" data-d="-0.5" aria-label="Less">−</button><b>${d[k]==null?'–':(+d[k]).toFixed(1)}<small>h</small></b><button data-act="hr" data-k="${k}" data-d="0.5" aria-label="More">+</button></div></div>`).join('')+
+  `<div class="sub hrn">${tot>24?'That adds up to more than 24 h 🙂':''}${!d.w&&fm?`Focus timer logged ${(fm/60).toFixed(1)} h today.`:''}${avg?(tot>24||(!d.w&&fm)?'<br>':'')+avg:''}</div>`;
+}
+
+/* ================= MOTIVATION: weekly XP ring, "why", weekly review ================= */
+const weekDays=(d0)=>{const m=mondayOf(d0||iso());return Array.from({length:7},(_,i)=>shiftD(m,i))};
+const weekXP=()=>weekDays().reduce((a,d)=>a+(xpd[d]||0),0);
+function whyLeft(){if(!why.d)return null;return Math.round((new Date(why.d+'T12:00:00')-new Date(iso()+'T12:00:00'))/864e5)}
+function rMotiv(){
+  const el=$('motiv');if(!el)return;
+  const w=weekXP(),g=Math.max(1,wgoal),p=clamp(w/g,0,1),C=2*Math.PI*37,left=7-((new Date().getDay()+6)%7),need=Math.max(0,g-w);
+  const dl=whyLeft(),sun=new Date().getDay()===0,has=Object.keys(wrev).some(k=>k>=mondayOf(iso()));
+  el.innerHTML=`<div class="cardhead"><div class="lbl">This week</div><button class="lnk" data-act="wgoalset">Goal ${g} XP</button></div>
+  <div class="fring"><div class="rg"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="37"/><circle class="pg ${w>=g?'done':''}" id="wpg" cx="42" cy="42" r="37" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rn"><span>${Math.round(p*100)}%</span></div></div>
+  <div style="flex:1;min-width:0"><div class="big"><b>${w}</b> <span>/ ${g} XP</span></div><div class="sub" style="margin-top:4px">${w>=g?'Goal reached 🎉 Everything now is a bonus.':`${need} XP to go · about ${Math.ceil(need/left)} a day for ${left} day${left>1?'s':''}`}</div></div></div>
+  <button class="whyrow ${why.t?'':'empty'}" data-act="whyedit"><span class="wl">Why I'm doing this</span><span class="wt">${why.t?esc(why.t):'＋ Add your goal: the school, the grade, the reason'}</span>${dl!=null?`<span class="wd">${dl>0?'D−'+dl:dl===0?'Today!':'Done'}</span>`:''}</button>
+  <button class="btn ${sun&&!has?'primary':''}" data-act="wreview">${sun&&!has?'📋 Your weekly review is ready':'📋 Weekly review'}</button>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const e=$('wpg');if(e)e.style.strokeDashoffset=C*(1-p)}));
+}
+function whyEdit(){
+  openSheet(`<h2>Why I'm doing this</h2><div class="field"><label>My goal in one line</label><input id="y-t" maxlength="90" placeholder="e.g. Intégrer une grande école d'ingénieurs" value="${esc(why.t||'')}"></div>
+  <div class="field"><label>Date to count down to (optional)</label><div class="two"><input id="y-d" type="date" value="${why.d||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="y-c">Clear</button></div><div class="hint" style="text-align:left;margin-top:6px">For example the first concours or the end-of-year exams.</div></div>
+  <button class="btn primary" id="y-s">Save</button>`);
+  $('y-c').onclick=()=>$('y-d').value='';
+  $('y-s').onclick=()=>{why={t:$('y-t').value.trim(),d:$('y-d').value||''};sv();closeSheet();rMotiv();toast('Saved')};
+}
+function wgoalEdit(){
+  openSheet(`<h2>Weekly XP goal</h2><div class="field"><label>XP to earn each week (Mon–Sun)</label><input id="w-g" type="number" inputmode="numeric" min="50" max="5000" step="10" value="${wgoal}"></div>
+  <div class="hint" style="text-align:left">Last weeks: ${[0,1,2,3].map(i=>weekDays(shiftD(iso(),-7*i)).reduce((a,d)=>a+(xpd[d]||0),0)).join(' · ')} XP (this week first). A good goal is slightly above your usual week.</div><button class="btn primary" id="w-s">Save</button>`);
+  $('w-s').onclick=()=>{const n=Math.round(+$('w-g').value);if(!(n>=50&&n<=5000)){toast('Between 50 and 5000');return}wgoal=n;sv();closeSheet();rMotiv()};
+}
+function weekStats(){
+  const days=Array.from({length:7},(_,i)=>shiftD(iso(),i-6));
+  const sum=f=>days.reduce((a,d)=>a+f(d),0);
+  const xpW=sum(d=>xpd[d]||0),done=donelog.filter(x=>x.d>=days[0]).length,foc=sum(d=>fhist.filter(h=>h.date===d).reduce((a,h)=>a+(h.min||0),0));
+  const hv=k=>{const v=days.map(d=>dayh[d]&&dayh[d][k]).filter(x=>x!=null);return v.length?v.reduce((a,b)=>a+ +b,0)/v.length:null};
+  const mo=days.map(d=>moods[d]).filter(Boolean),lz=days.filter(d=>lazy.includes(d)).length,act=days.filter(d=>fhist.some(h=>h.date===d&&h.min>0)||donelog.some(x=>x.d===d)).length;
+  let recs=[];try{const S=PC.S;['exams','colles'].forEach(k=>Object.values(S[k]).forEach(r=>{if(r.date>=days[0]&&r.date<=iso())recs.push(Object.assign({kind:k},r))}))}catch(e){}
+  const gr=recs.filter(r=>r.grade!=null&&r.grade!==''),sat=recs.filter(r=>r.sat);
+  const next=cal.filter(c=>(c.kind==='ds'||c.kind==='colle')&&c.date>iso()&&c.date<=shiftD(iso(),7)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  return{days,xpW,done,foc,sleep:hv('s'),chill:hv('c'),work:hv('w'),mood:mo.length?mo.reduce((a,b)=>a+b,0)/mo.length:null,lz,act,gr,sat,next};
+}
+const f1=v=>v==null?'–':(Math.round(v*10)/10).toString();
+function weekReview(){
+  const k=weekStats(),key=iso(),saved=wrev[key]&&wrev[key].text;
+  const tile=(n,l)=>`<div class="rvt"><b>${n}</b><span>${l}</span></div>`;
+  openSheet(`<h2>Weekly review</h2><div class="sub" style="margin:-6px 0 12px">The last 7 days, up to today.</div>
+  <div class="rvg">${tile(k.xpW+' XP','earned (goal '+wgoal+'/week)')}${tile(k.done,'tasks done')}${tile(f1(k.foc/60)+' h','focus time')}${tile(k.act+'/7','active days')}${tile(f1(k.sleep)+' h','sleep / day')}${tile(f1(k.work)+' h','worked / day')}${tile(f1(k.chill)+' h','chilled / day')}${tile(k.mood==null?'–':['😞','😐','🙂','😊','🤩'][Math.round(k.mood)-1],'average mood')}</div>
+  ${k.lz?`<div class="rvn">🛋️ ${k.lz} lazy day${k.lz>1?'s':''} this week.</div>`:''}
+  ${k.gr.length?`<div class="rvn">📝 ${k.gr.map(r=>esc(r.title)+' '+r.grade+'/20'+(r.sat?' '+['😞','😕','😐','🙂','😄'][r.sat-1]:'')).join(' · ')}</div>`:''}
+  ${k.next.length?`<div class="rvn">📅 Coming up: ${k.next.map(c=>esc(c.title)+' ('+new Date(c.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric'})+')').join(' · ')}</div>`:''}
+  ${why.t?`<div class="rvn">🎯 ${esc(why.t)}${whyLeft()>0?' · D−'+whyLeft():''}</div>`:''}
+  <div class="lbl" style="margin-top:14px">Advice for next week</div><div class="revtxt" id="rv-ai" style="white-space:pre-wrap;${saved?'':'display:none'}">${saved?esc(saved):''}</div>
+  <button class="btn primary" id="rv-go">${saved?'Ask again':'Ask the AI for next week\'s plan'}</button><div class="hint" id="rv-h" style="margin-top:6px">Short request, a few cents at most.</div>`);
+  $('rv-go').onclick=async()=>{
+    if(!window.PC||!PC.hasKey()){toast('Add your AI key first');closeSheet();setTimeout(()=>{try{P._A.settings()}catch(e){}},300);return}
+    const b=$('rv-go');b.disabled=true;b.textContent='Thinking…';
+    const facts=`Last 7 days: ${k.xpW} XP (weekly goal ${wgoal}); ${k.done} tasks done; focus ${f1(k.foc/60)} h; active days ${k.act}/7; sleep ${f1(k.sleep)} h/day, worked ${f1(k.work)} h/day, chilled ${f1(k.chill)} h/day; average mood ${f1(k.mood)}/5; lazy days ${k.lz}. `+
+      (k.gr.length?'Grades: '+k.gr.map(r=>r.title+' '+r.grade+'/20'+(r.sat?' (satisfaction '+r.sat+'/5)':'')).join(', ')+'. ':'')+(k.next.length?'Coming up: '+k.next.map(c=>c.title+' on '+c.date).join(', ')+'. ':'')+(why.t?'His/her goal: '+why.t+(why.d?' on '+why.d:'')+'. ':'');
+    try{
+      const r=await PC.ai({system:"You write a short weekly review for a French classe préparatoire (MPSI) student, as a kind, honest coach. In English, plain text without Markdown, at most 130 words: one line on what went well, one on what to watch (sleep, balance, lazy days, grades), then exactly 3 concrete actions for next week, one per line starting with '→'. Use only the facts given, never invent numbers.",content:[{type:'text',text:facts}],max:600});
+      wrev[key]={text:r.text.trim(),at:Date.now()};sv();const e=$('rv-ai');e.style.display='';e.textContent=wrev[key].text;b.textContent='Ask again';rMotiv();
+    }catch(e){$('rv-h').textContent=(e&&e.message)||'The AI did not answer.';b.textContent='Try again'}
+    b.disabled=false;
+  };
+}
 function rMood(){
   const m=moods[iso()];
   document.querySelectorAll('#moods button').forEach((b,i)=>b.classList.toggle('on',i+1===m));
@@ -1042,7 +1141,7 @@ function xpFor(t){const b=t.xp||20,d=daysLate(t);return d?Math.max(1,Math.round(
 function xpPill(t){const e=xpFor(t),b=t.xp||20;return e<b?`<span class="pill xp" style="color:#ff9f0a;background:rgba(255,159,10,.14)">+${e} XP <s style="opacity:.6;margin-left:3px">${b}</s></span>`:`<span class="pill xp">+${b} XP</span>`}
 function sortedTasks(){
   const td=iso();
-  return [...tasks].sort((a,b)=>(isDone(a)?1:0)-(isDone(b)?1:0));
+  return [...tasks].sort((a,b)=>(isDone(a)?1:0)-(isDone(b)?1:0)||(isDone(a)?0:(b.pin?1:0)-(a.pin?1:0)));
 }
 function dueBadge(t){
   if(t.rep){const s=streakOf(t);return `<span class="pill hab">↻ ${REPL[t.rep]}</span>${isDone(t)?`<span class="pill">Done · ${nextTxt(t)}</span>`:''}${s>1?`<span class="pill str">🔥 ${s}</span>`:''}`}
@@ -1052,7 +1151,7 @@ function dueBadge(t){
   return '<span class="pill">'+esc(new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+'</span>';
 }
 function taskHTML(t,i,mini,fresh){
-  return `<div class="task ${taskCol(t)?'tcol':''} ${mini?'mini':''} ${fresh?'fresh':''} ${isDone(t)?'done hdone':''}" data-id="${t.id}" data-hold="task" style="--i:${i}${taskCol(t)?';--tc:'+taskCol(t):''}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${esc(t.text)}</div><div class="tmeta">${xpPill(t)}${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
+  return `<div class="task ${taskCol(t)?'tcol':''} ${mini?'mini':''} ${fresh?'fresh':''} ${isDone(t)?'done hdone':''}" data-id="${t.id}" data-hold="task" style="--i:${i}${taskCol(t)?';--tc:'+taskCol(t):''}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${t.pin?'<span class="pinned" aria-label="Pinned">📌</span> ':''}${esc(t.text)}</div><div class="tmeta">${xpPill(t)}${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
 }
 const goalOf=t=>t&&t.gid?goals.find(g=>g.id===t.gid):null;
 const gTasks=gid=>sortedTasks().filter(t=>gid==='_'?!goalOf(t):t.gid===gid);
@@ -1154,6 +1253,7 @@ function gain(n,x,y,gid){
   if(isLazy()){lazy=lazy.filter(d=>d!==iso());sv();setTimeout(()=>{toast('You got to work: lazy day cancelled 💪');if(cur==='home')rLazy()},900)}
   const g=gid&&goals.find(q=>q.id===gid);
   if(g){g.xp+=n;const gb=g.lv;while(g.xp>=needed(g.lv)){g.xp-=needed(g.lv);g.lv++}if(g.lv>gb)setTimeout(()=>toast(g.name+' → level '+g.lv+' 🎉'),1800)}
+  const wk0=weekXP();xpd[iso()]=(xpd[iso()]||0)+n;if(wk0<wgoal&&wk0+n>=wgoal)setTimeout(()=>{toast('Weekly XP goal reached 🎉');if(cur==='home')rMotiv()},1200);
   const before=lv;xp+=n;
   while(xp>=needed(lv)){xp-=needed(lv);lv++}
   if(x!=null)floatText(x,y,'+'+n+' XP');
@@ -1194,13 +1294,14 @@ function completeTask(id,btn){
   if(cur==='tasks'&&false)rTasks();
 }
 function editTask(id,presetG){
-  const t=id?tasks.find(x=>x.id===id):null;let selCol=t?(t.col||''):'';let selRep=t?(t.rep||''):'';let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
+  const t=id?tasks.find(x=>x.id===id):null;let selPin=!!(t&&t.pin);let selCol=t?(t.col||''):'';let selRep=t?(t.rep||''):'';let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
   const xps=[10,25,50,100];let sel=t?(t.xp||20):25;if(!xps.includes(sel))xps.push(sel);xps.sort((a,b)=>a-b);
   openSheet(`<h2>${t?'Edit objective':'New objective'}</h2>
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
     <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
     <div class="field"><label>Reward (1–100 XP) · −10%/day when overdue</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
     <div class="field"><label>Colour</label><div class="colrow" id="e-col"><button class="chip auto ${!selCol?'on':''}" data-c="">Auto</button>${PAL.map(c=>`<button class="sw ${c===selCol?'on':''}" data-c="${c}" style="--c:${c}"></button>`).join('')}</div></div>
+    <div class="field"><label>Pin</label><div class="chips" id="e-pin"><button class="chip ${selPin?'on':''}" data-v="1">📌 Pinned: always first on Home</button></div></div>
     <div class="field"><label>Repeat</label><div class="chips" id="e-r">${[['','Once'],['daily','Every day'],['weekly','Every week'],['biweekly','Every 2 weeks'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRep?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="hint" style="margin:8px 0 0">A repeating task is a habit: tick it each period, it comes back on its own and builds a streak.</div></div>
     <div class="field" id="f-due" style="${selRep?'display:none':''}"><label>Due date (optional)</label><div class="two"><input id="e-d" type="date" value="${t&&t.due||''}"><button class="btn sm" style="flex:none;align-self:stretch" id="e-dc">Clear</button></div></div>
     <button class="btn primary" id="e-save">${t?'Save changes':'Add objective'}</button>
@@ -1213,12 +1314,13 @@ function editTask(id,presetG){
   if(window._keepTxt&&!t){$('e-t').value=window._keepTxt;window._keepTxt=null}
   $('e-col').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;selCol=b.dataset.c;[...$('e-col').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   $('e-r').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selRep=b.dataset.v;[...$('e-r').children].forEach(c=>c.classList.toggle('on',c===b));$('f-due').style.display=selRep?'none':'';vib(10)};
+  $('e-pin').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selPin=!selPin;b.classList.toggle('on',selPin);vib(10)};
   $('e-dc').onclick=()=>$('e-d').value='';
   $('e-save').onclick=()=>{
     const v=$('e-t').value.trim();
     if(!v){const f=$('f-t');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
     const due=$('e-d').value||'';{const n=Math.round(+$('e-xc').value);if(!(n>=1&&n<=100)){const f=$('e-xc');f.focus();toast('XP must be between 1 and 100');return}sel=n}
-    if(t){t.text=v;t.xp=sel;if(selCol)t.col=selCol;else delete t.col;t.due=selRep?'':due;if(selG)t.gid=selG;else delete t.gid;if(selRep!==(t.rep||'')){if(selRep){t.rep=selRep}else{delete t.rep;delete t.hk;delete t.streak}}}else tasks.push({id:uid(),text:v,xp:sel,due:selRep?'':due,gid:selG||undefined,rep:selRep||undefined,col:selCol||undefined});
+    if(t){t.text=v;t.xp=sel;if(selPin)t.pin=true;else delete t.pin;if(selCol)t.col=selCol;else delete t.col;t.due=selRep?'':due;if(selG)t.gid=selG;else delete t.gid;if(selRep!==(t.rep||'')){if(selRep){t.rep=selRep}else{delete t.rep;delete t.hk;delete t.streak}}}else tasks.push({id:uid(),text:v,xp:sel,due:selRep?'':due,gid:selG||undefined,rep:selRep||undefined,col:selCol||undefined,pin:selPin||undefined});
     sv();closeSheet();vib(15);toast(t?'Saved':'Objective added');
     if(cur==='tasks')rTasks();if(cur==='home')rHomeTasks();
   };
@@ -1481,6 +1583,10 @@ document.addEventListener('click',e=>{
   else if(act==='cd'){selD=a.dataset.d;if(a.dataset.go)cmode='day';rCal();vib(8)}
   else if(act==='cprev'||act==='cnext'){const n=act==='cnext'?1:-1;selD=shiftD(selD,7*n);rCal(n)}
   else if(act==='cview'){cmode=a.dataset.v;rCal();vib(8)}
+  else if(act==='wgoalset')wgoalEdit();
+  else if(act==='whyedit')whyEdit();
+  else if(act==='wreview')weekReview();
+  else if(act==='hr'){const d=dayh[iso()]=dayh[iso()]||{},k=a.dataset.k,dl=+a.dataset.d;d[k]=Math.max(0,Math.min(24,Math.round(((d[k]==null?(dl>0?0:0):+d[k])+dl)*2)/2));sv();rHrs();vib(8)}
   else if(act==='mood'){const n=+a.dataset.n;moods[iso()]=n;sv();rMood();const r=a.getBoundingClientRect();burst(r.left+r.width/2,r.top+10,10,['#ffd23f','#ff9f0a','#fff']);vib(15)}
   else if(act==='revsave'){const v=$('ri').value.trim();if(v){revs[iso()]=v;sv();rRev();toast('Saved')}}
   else if(act==='revedit')rRev(true);
@@ -1753,6 +1859,7 @@ const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exa
 
 /* ---------- IndexedDB (files + big texts) ---------- */
 let dbp=null;
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 function db(){return dbp||(dbp=new Promise((res,rej)=>{
   if(!window.indexedDB){rej(new Error('No local storage available'));return}
   const r=indexedDB.open('aether-prepa',1);
@@ -1764,18 +1871,27 @@ function idb(store,mode,fn){return db().then(d=>new Promise((res,rej)=>{
   t.oncomplete=()=>res(rq&&rq.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error);
 }))}
 const dbPut=(st,v)=>idb(st,'readwrite',s=>s.put(v));
-const dbGet=(st,id)=>idb(st,'readonly',s=>s.get(id));
+const dbGet=(st,id)=>idb(st,'readonly',s=>s.get(id)).then(r=>{if(st==='blobs'&&r&&!r.blob&&r.buf)r.blob=new Blob([r.buf],{type:r.type});return r});
 const dbDel=(st,id)=>idb(st,'readwrite',s=>s.delete(id));
 const dbAll=st=>idb(st,'readonly',s=>s.getAll());
 const getText=async id=>{const r=await dbGet('texts',id);return r?r.text:''};
 const setText=(id,text)=>dbPut('texts',{id,text});
+/* Files are stored as raw bytes (ArrayBuffer), the most reliable thing iOS Safari can keep in IndexedDB,
+   and read back to check the copy is complete before the upload counts as saved. */
+async function storeFile(id,f){
+  const type=f.type||(/\.pdf$/i.test(f.name)?'application/pdf':'image/jpeg');
+  let buf;try{buf=await f.arrayBuffer()}catch(e){throw new AIError('Could not read "'+(f.name||'the file')+'". Pick it again.')}
+  try{await dbPut('blobs',{id,buf,name:f.name||'file',type,size:buf.byteLength})}
+  catch(e){throw new AIError('This phone could not save "'+(f.name||'the file')+'" (storage full?). Free some space and try again.')}
+  const back=await idb('blobs','readonly',s=>s.get(id));
+  if(!back||!back.buf||back.buf.byteLength!==buf.byteLength){try{await dbDel('blobs',id)}catch(e){}throw new AIError('The copy of "'+(f.name||'the file')+'" could not be verified. Try again.')}
+  return{id,name:f.name||'file',type,size:buf.byteLength};
+}
+const dbKeys=st=>idb(st,'readonly',s=>s.getAllKeys());
+async function putFile(id,f){await storeFile(id,f)}
 async function addFiles(files){
   const out=[];
-  for(const f of files){
-    const id=uid()+uid(),type=f.type||(/\.pdf$/i.test(f.name)?'application/pdf':'image/jpeg');
-    await dbPut('blobs',{id,blob:f,name:f.name||'file',type,size:f.size});
-    out.push({id,name:f.name||'file',type,size:f.size});
-  }
+  for(const f of files)out.push(await storeFile(uid()+uid(),f));
   return out;
 }
 async function delFile(id){try{await dbDel('blobs',id)}catch(e){}}
@@ -1898,9 +2014,10 @@ async function aiGemini({system,content,max,model,onText}){
 /* Auto mode: Gemini first (free). If it fails or the quota is hit and a Claude key exists, the same request goes to Claude:
    Haiku for reading jobs (scans, programmes, cards), Sonnet for writing jobs (exams, sheets, feedback). */
 const READ_JOBS=()=>[SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_CARDS];
+const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s);
 async function aiAuto(o){
   const gk=localStorage.getItem('p_gkey'),ck=localStorage.getItem('p_key');
-  const claude=()=>aiClaude(Object.assign({},o,{model:READ_JOBS().includes(o.system)||/^Reply with the single word/.test(o.system)?S.set.mread:S.set.mwrite}));
+  const claude=()=>aiClaude(Object.assign({},o,{model:isRead(o.system)?S.set.mread:S.set.mwrite}));
   if(!gk&&ck)return claude();
   try{return await aiGemini(Object.assign({},o,{model:undefined}))}
   catch(e){
@@ -1921,7 +2038,7 @@ async function aiClaude({system,content,max=4096,model,onText}){
   let r;
   try{
     r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:model||S.set.model,max_tokens:max,stream:true,system,messages:[{role:'user',content}]})});
+      body:JSON.stringify({model:model||S.set.model,max_tokens:max,stream:true,system:[{type:'text',text:system,cache_control:{type:'ephemeral'}}],messages:[{role:'user',content:content.map(b=>{if(!b.cache)return b;const x=Object.assign({},b);delete x.cache;x.cache_control={type:'ephemeral'};return x})}]})});
   }catch(e){throw new AIError('Cannot reach the AI service. Check your internet connection.')}
   if(!r.ok){let j={};try{j=await r.json()}catch(e){}throw new AIError(errText(r.status,j))}
   let text='',inT=0,outT=0,stop='';
@@ -1997,6 +2114,7 @@ async function filesToParts(files,onProg,per=6){
 const SYS_TRANSCRIBE="You are a meticulous transcriber of scanned handwritten or printed course notes from a French classe préparatoire (CPGE, first year). Convert the pages into clean Markdown, in the language of the notes (French unless the notes are in English). Rules: keep the original structure (chapter and section titles as #, ##, ###; definitions, théorèmes, propositions, propriétés, démonstrations, exemples, remarques, formulas). Write ALL mathematics, physics and chemistry formulas in LaTeX between $...$ (inline) or $$...$$ (display). Reproduce exactly what is written. Never add, correct or complete content, even if you think it is wrong. If something is illegible write [illisible]. Describe each figure in one short italic line like *(schéma : ...)*. Output only the Markdown, no comments.";
 const SYS_PROGRAMME="You read a 'programme de colles' given by a teacher in a French classe préparatoire. Extract the list of chapters/topics the student may be questioned on. Answer with ONLY a JSON object, no other text: {\"title\":\"short title\",\"chapters\":[{\"title\":\"chapter name\",\"detail\":\"precise content, notions, theorems or exercise types listed (one or two sentences)\"}],\"remarks\":\"any special instruction (or empty string)\"}. Keep the teacher's wording. Merge duplicated lines. Maximum 12 chapters.";
 const SYS_MOCK=(subj,dur,calc)=>"You are a teacher in a French classe préparatoire (MPSI, first year, lycée Aux Lazaristes) writing a 'devoir surveillé' (DS), i.e. a mock exam, in "+subj+". You receive: (1) MAIN LESSONS: the chapters the exam must be centred on; (2) COMPLEMENTARY LESSONS (optional): chapters that may appear in smaller parts or as prerequisites; (3) MODEL EXAMS (optional): real past papers from the student's teachers, only to copy their style, level, length, point scale and layout. Write the paper in French, in Markdown, with LaTeX between $...$ and $$...$$. Layout:\n\n# DS blanc — "+subj+"\nA line with: Durée : "+dur+" — Calculatrice : "+(calc?'AUTORISÉE':'NON autorisée')+".\nThen a short bullet list of instructions in the style of the model exams (soin / présentation, résultats encadrés, réponses non justifiées ou sans unité = 0 point, exercices indépendants and may be done in any order). Then 3 or 4 independent exercises (or problem parts), titled 'I. Title (n pts)', 'II. ...', with numbered questions (I.1), (I.2)... of increasing difficulty, the total being 20 points. Include data, constants or figure descriptions the questions need. The main lessons must carry about 75 to 85 percent of the points; complementary lessons the rest. Match the model exams' difficulty and typical question types (standard computations, proofs from the course, application, one harder final question). The length must fit the duration.\n\n<!--CORRECTIONS-->\n## Corrigé\nA complete, rigorous correction for every question, with the final results clearly stated, the point scale (barème) per question, and for each exercise a short remark on the classic trap or method. Double-check every calculation, unit and sign before writing; correctness matters more than length.\n\nRules: use only notations, definitions and results of the student's course (state any needed extra result as 'rappel'); never copy a question from the model exams, create new ones; no introduction or closing sentence outside this structure.";
+const SYS_DIGEST=(others)=>"You build a compact MEMORY NOTE of one lesson from a French classe préparatoire student, to be reused later instead of the full text (it saves tokens). Write in French, Markdown, with LaTeX $...$ for formulas, at most 350 words, exactly with these sections:\n**Mots-clés:** 8 to 12 key terms separated by commas.\n**À retenir:** the definitions, theorems, formulas and standard methods of the lesson as terse bullets (statement + conditions). Keep the student's notation.\n**Pièges:** 2 or 3 classic mistakes.\n**Liens:** which of the OTHER LESSONS below it uses or prepares, as 'Titre exact — relation courte' (only genuine links, at most 5; write 'aucun' if none).\nOTHER LESSONS:\n"+(others||'(none)')+"\nNo introduction or closing sentence.";
 const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the student's COURSE (their own lesson notes, transcribed) as the reference, and the PROGRAMME the colle will cover. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\n6 short questions of the kind a colleur asks at the start (definitions, statements of theorems, quick proofs, standard formulas). Number them.\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes for the harder ones). For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\nFirst, short answers to the questions de cours (including the key idea of any proof). Then, for each exercise, a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nRules: stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Cover the programme's chapters evenly. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
 const SYS_CARDS="You make spaced-repetition flashcards from a student's course notes (French classe préparatoire). Output ONLY a JSON array, no other text: [{\"q\":\"...\",\"a\":\"...\"}]. 12 to 20 cards covering the most important definitions, theorem statements (with hypotheses), key formulas and standard methods of the course, in French (or English if the course is in English). Each question must be answerable on its own; keep answers short and precise. Use LaTeX between $...$ for math. Do not invent anything that is not in the course. Inside JSON strings, write every LaTeX backslash doubled (\\\\frac, \\\\ell) so the JSON stays valid.";
 const SYS_ENGLISH="You are an English teacher in a French classe préparatoire (CPGE). The student has an oral English 'colle' about current affairs and must present and discuss a topic. You receive 2 topics, each with 2 recent news items (headline, outlet, short summary only: you do NOT have the full articles, so never invent details that are not in the summaries). For each topic write, in English: 1) 'Why it matters' in 3 sentences; 2) 'Key vocabulary': 10 useful words or expressions with a short definition; 3) 'Questions you may be asked': 5 questions; 4) 'A 2-minute outline': introduction, three points, conclusion, with useful connectors. Use Markdown with ## for each topic and ### for sub-parts. Do not use the dollar sign for currencies.";
@@ -2088,8 +2206,8 @@ function removed(id,gone){
 async function dump(){return{texts:await dbAll('texts')}}
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
-window.PC={SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
-  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_MOCK,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+window.PC={SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
+  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_MOCK,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -2116,7 +2234,7 @@ const hv=()=>{if(typeof vib==='function')vib(8)};
 const ico={trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"/></svg>',chev:'<span class="go">›</span>',x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',ck:'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>'};
 const subjChips=(sel,list,id)=>'<div class="chips" id="'+id+'">'+list.map(s=>'<button class="chip '+(s===sel?'on':'')+'" data-v="'+s+'">'+SUBJ[s].n+'</button>').join('')+'</div>';
 function bindChips(id,fn){const e=$(id);e.onclick=ev=>{const b=ev.target.closest('.chip');if(!b)return;[...e.children].forEach(c=>c.classList.toggle('on',c===b));hv();fn(b.dataset.v)}}
-const fileRows=(arr,slot,id)=>(arr||[]).map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+(C.isPdf(f)?' · PDF':' · photo')+'</small></span><button class="pmini" data-a="view" data-i="'+f.id+'" aria-label="Open">'+ico.eye+'</button><button class="pmini" data-a="rmfile" data-i="'+id+'|'+slot+'|'+f.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('');
+const fileRows=(arr,slot,id)=>(arr||[]).map(f=>'<div class="filerow" data-fid="'+f.id+'" data-fn="'+esc(f.name)+'"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+(C.isPdf(f)?' · PDF':' · photo')+'</small></span><button class="pmini" data-a="view" data-i="'+f.id+'" aria-label="Open">'+ico.eye+'</button><button class="pmini" data-a="rmfile" data-i="'+id+'|'+slot+'|'+f.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('');
 
 /* ---------- running background jobs ---------- */
 function liveBox(key){
@@ -2186,8 +2304,22 @@ function readiness(subj,date){
 }
 
 /* ---------- file viewer + print ---------- */
+/* a file record can exist without its stored copy (restored from a backup, or the phone cleared the storage) */
+async function reattach(fid){
+  const row=document.querySelector('.filerow[data-fid="'+fid+'"]'),name=row?row.dataset.fn:'this file';
+  if(!await ask({title:'File not stored on this phone',msg:'"'+name+'" is not stored here any more (backups keep your lessons\' text, not the original files). Pick the file again to re-attach it. Nothing else changes.',ok:'Pick the file',cancel:'Not now'}))return;
+  const fs=await C.pickFiles({multiple:false});if(!fs.length)return;
+  await C.putFile(fid,fs[0]);toast('File re-attached ✓');render();
+}
+async function markMissing(){
+  let have;try{have=new Set(await C.dbKeys('blobs'))}catch(e){return}
+  document.querySelectorAll('.filerow[data-fid]').forEach(r=>{
+    if(have.has(r.dataset.fid))return;
+    r.classList.add('miss');const s=r.querySelector('.n small');if(s&&!/missing/.test(s.textContent))s.textContent+=' · missing — tap 👁 to re-attach';
+  });
+}
 async function view(fid){
-  const rec=await C.dbGet('blobs',fid);if(!rec){toast('File not found on this phone');return}
+  const rec=await C.dbGet('blobs',fid);if(!rec){await reattach(fid);return}
   const v=$('pview'),vb=$('pvb');$('pvt').textContent=rec.name;$('pvn').textContent='';vb.innerHTML='<div class="sub" style="padding:40px"><span class="spin2"></span> Opening…</div>';v.classList.add('show');
   let zoom=1;
   const apply=()=>vb.querySelectorAll('canvas,img').forEach(c=>c.style.width=(100*zoom)+'%');
@@ -2224,7 +2356,7 @@ function back(){st.stack.pop();render('pop');window.scrollTo(0,0)}
 function tab(t){st.tab=t;st.stack=[];render('tab');window.scrollTo(0,0)}
 
 /* ================= SCREENS ================= */
-const TABS=[['home','Overview'],['lessons','Lessons'],['exams','Exams'],['colles','Colles'],['cards','Cards']];
+const TABS=[['home','Overview'],['lessons','Lessons'],['exams','Exams'],['colles','Colles'],['grades','Grades'],['cards','Cards']];
 function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px"><button data-a="back" aria-label="Back">‹</button><b style="font-size:19px;flex:1;text-align:center;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(title)+'</b>'+(right||'<span style="width:36px"></span>')+'</div>'}
 
 /* ----- OVERVIEW (the calendar itself lives in the Calendar tab) ----- */
@@ -2247,7 +2379,6 @@ function vOver(){
   h+='<div class="qa"><button data-a="qaLesson"><b>+</b>Lesson</button><button data-a="qaProg"><b>+</b>Programme</button><button data-a="qaVocab"><b>+</b>Vocab photo</button></div>';
   const due=dueCards().length,vk=S.vocab.length;
   h+='<button class="prow" data-a="tab" data-i="cards" style="--c:var(--lime)"><i class="dot"></i><span class="m"><div class="t">Flashcards & vocabulary</div><div class="s">'+(due?due+' course cards due today':S.cards.length||vk?'All caught up':'Create cards from a lesson or a book photo')+'</div></span>'+ico.chev+'</button>';
-  h+='<button class="prow" data-a="settings" style="--c:#9b8cff"><i class="dot"></i><span class="m"><div class="t">AI settings & calendar feed</div><div class="s">'+(C.hasKey()?(S.set.prov==='gemini'?'Gemini':S.set.prov==='auto'?'Gemini + Claude backup':'Claude')+' key saved on this phone':'Add a free Gemini key to enable the AI features')+'</div></span>'+ico.chev+'</button>';
   return h;
 }
 function evBtn(e,past){
@@ -2260,11 +2391,22 @@ function evBtn(e,past){
 }
 
 /* ----- LESSONS ----- */
+
+function memCard(){
+  const done=S.lessons.filter(l=>l.status==='done'),have=done.filter(l=>l.dg).length;
+  if(!done.length)return '';
+  let h='<div class="card"><div class="cardhead"><div class="lbl">AI memory</div><div class="gpill '+(memOn()?'g-hi':'g-lo')+'" data-a="memTog" style="cursor:pointer">'+(memOn()?'On':'Off')+'</div></div>';
+  h+='<div class="sub" style="margin:-2px 0 10px">'+have+' of '+done.length+' read lessons have a memory note: a short summary with the links between your lessons. The AI reuses it instead of re-reading whole lessons, and it also knows your grades and recurring mistakes, so exams and prep sheets cost fewer tokens and aim at your weak points.</div>';
+  if(live.MEM)h+=liveBox('MEM');
+  else{if(errs.MEM)h+='<div class="hidecorr">'+esc(errs.MEM)+'</div>';if(have<done.length)h+='<button class="btn" data-a="buildMem">Build the missing notes ('+(done.length-have)+')</button>'}
+  return h+'</div>';
+}
 function vLessons(){
   let h='<button class="add" data-a="addLesson">+ Add a lesson (PDF or photos)</button>';
   if(!S.lessons.length)return h+'<div class="hidecorr">Upload your résumés here. The AI reads them once, and your exercise sheets are then built from <b>your</b> course.</div>';
   const un=unread();
   if(un.length)h+='<div class="card" style="padding:14px"><div style="font-weight:700">'+un.length+' lesson'+(un.length>1?'s':'')+' not read yet</div><div class="sub" style="margin:4px 0 2px">The AI reads formulas best. If its free limit is reached, text PDFs fall back to a quick text read.</div><button class="btn primary" data-a="readAll" data-i="">Read all now</button></div>';
+  h+=memCard();
   C.LSUBJ.forEach(s=>{
     const ls=S.lessons.filter(l=>l.subj===s);if(!ls.length)return;
     h+='<div class="sec2"><div class="lbl" style="margin:0">'+SUBJ[s].n+'</div><span class="sub">'+ls.length+'</span></div>';
@@ -2325,6 +2467,53 @@ function exRow(kind,x){
   const r=S[kind][x.id],n=r?(r.sujet.length+r.corr.length+r.copy.length):0;
   return '<button class="prow" style="--c:'+C.sc(x.subj)+'" data-a="rec" data-i="'+kind+'|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.title)+'</div><div class="s">'+fd(x.date)+(kind==='colles'&&colleInfo(x.id).teacher?' · '+esc(colleInfo(x.id).teacher):'')+(n?' · '+n+' file'+(n>1?'s':''):'')+(r&&(r.wrong||r.why)?' · notes':'')+'</div></span>'+(r&&r.grade!=null?gp(r.grade):'')+ico.chev+'</button>';
 }
+/* ----- satisfaction (5 faces) and the Grades tab ----- */
+const SAT=['😞','😕','😐','🙂','😄'],SATT=['Very unhappy','Unhappy','Okay','Happy','Very happy'];
+const satRow=(kind,id,v)=>'<div class="field" style="margin-top:2px"><label>How satisfied am I with it?</label><div class="sat" data-k="'+kind+'|'+id+'">'+SAT.map((e,i)=>'<button class="'+(v===i+1?'on':'')+'" data-a="sat" data-i="'+kind+'|'+id+'|'+(i+1)+'" aria-label="'+SATT[i]+'">'+e+'</button>').join('')+'</div><div class="sub satt" style="text-align:center;margin-top:6px">'+(v?SATT[v-1]:'Tap a face')+'</div></div>';
+const gcfg=()=>Object.assign({subj:'all',type:'all',per:'all',met:'grade'},S.set.gcfg||{});
+function gData(){
+  const c=gcfg(),lim=c.per==='all'?'':iso(new Date(Date.now()-(c.per==='30'?30:c.per==='90'?90:180)*864e5));
+  return allRecs().filter(r=>{
+    const v=c.met==='sat'?r.sat:(r.grade!=null&&r.grade!==''?+r.grade:null);
+    return v!=null&&!isNaN(v)&&(c.subj==='all'||r.subj===c.subj)&&(c.type==='all'||r.kind===c.type)&&(!lim||(r.date||'')>=lim);
+  }).map(r=>Object.assign({},r,{v:c.met==='sat'?r.sat:+r.grade})).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+}
+function gChart(rs,c){
+  const W=330,H=190,L=30,R=10,T=10,B=22,sat=c.met==='sat',mx=sat?5:20,mn=sat?1:0;
+  if(!rs.length)return '<div class="hidecorr" style="padding:18px">No data for these filters yet. Add grades in your exams and colles.</div>';
+  const ds=rs.map(r=>new Date(r.date+'T12:00:00').getTime()),t0=Math.min(...ds),t1=Math.max(...ds);
+  const X=d=>t1===t0?(L+W-R)/2:L+(d-t0)/(t1-t0)*(W-L-R),Y=v=>T+(1-(v-mn)/(mx-mn))*(H-T-B);
+  let s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" class="gch">';
+  (sat?[1,2,3,4,5]:[0,5,10,15,20]).forEach(v=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" class="gl"/><text x="'+(L-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" class="gt">'+(sat?SAT[v-1]:v)+'</text>'});
+  const groups={};rs.forEach((r,i)=>{(groups[c.subj==='all'?r.subj:'_'+r.type]=groups[c.subj==='all'?r.subj:'_'+r.type]||[]).push({r,x:X(ds[i]),y:Y(r.v)})});
+  Object.keys(groups).forEach(k=>{
+    const g=groups[k],col=k[0]==='_'?(c.type==='colles'?'#ff9f0a':c.type==='exams'?'#4d8dff':C.sc(c.subj)):C.sc(k);
+    if(g.length>1)s+='<path d="'+g.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+    g.forEach(p=>{s+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="'+(p.r.kind==='colles'?4.2:5)+'" fill="'+(p.r.kind==='colles'?'var(--surf,#14161c)':col)+'" stroke="'+col+'" stroke-width="2.2"/>'});
+  });
+  const fm=d=>new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  s+='<text x="'+L+'" y="'+(H-5)+'" class="gt">'+fm(t0)+'</text>'+(t1>t0?'<text x="'+(W-R)+'" y="'+(H-5)+'" text-anchor="end" class="gt">'+fm(t1)+'</text>':'')+'</svg>';
+  return s;
+}
+function vGrades(){
+  const c=gcfg(),rs=gData(),sat=c.met==='sat';
+  const chips=(k,opts)=>'<div class="chips gc">'+opts.map(o=>'<button class="chip '+(c[k]===o[0]?'on':'')+'" data-a="gcfg" data-i="'+k+'|'+o[0]+'">'+o[1]+'</button>').join('')+'</div>';
+  let h='<div class="card"><div class="cardhead"><div class="lbl">Evolution</div>'+(rs.length?'<div class="gpill '+(sat?'g-mid':gcls(avgOf(rs.map(r=>({grade:r.v}))))) +'">avg '+(rs.reduce((a,r)=>a+r.v,0)/rs.length).toFixed(1)+(sat?'/5':'/20')+'</div>':'')+'</div>';
+  h+='<div class="sub gh">Measure</div>'+chips('met',[['grade','Grades /20'],['sat','Satisfaction']]);
+  h+='<div class="sub gh">Subject</div>'+chips('subj',[['all','All']].concat(C.LSUBJ.map(s=>[s,SUBJ[s].n])));
+  h+='<div class="sub gh">Type</div>'+chips('type',[['all','Exams + colles'],['exams','Exams only'],['colles','Colles only']]);
+  h+='<div class="sub gh">Period</div>'+chips('per',[['all','All time'],['180','6 months'],['90','3 months'],['30','30 days']]);
+  h+='<div style="margin-top:14px">'+gChart(rs,c)+'</div>';
+  if(c.subj==='all'&&rs.length)h+='<div class="legend" style="flex-wrap:wrap;gap:10px;margin-top:8px">'+C.LSUBJ.filter(s=>rs.some(r=>r.subj===s)).map(s=>'<span><i class="dot" style="background:'+C.sc(s)+';display:inline-block;width:9px;height:9px;border-radius:50%"></i> '+SUBJ[s].n+'</span>').join('')+'</div>';
+  h+='<div class="sub" style="margin-top:8px">● exam · ○ colle</div></div>';
+  // per-subject summary with trend
+  const sub=C.LSUBJ.map(s=>{const x=rs.filter(r=>r.subj===s);if(!x.length)return '';const a=x.reduce((p,r)=>p+r.v,0)/x.length,k=Math.min(3,Math.floor(x.length/2)),tr=k?(x.slice(-k).reduce((p,r)=>p+r.v,0)/k-x.slice(0,k).reduce((p,r)=>p+r.v,0)/k):null;
+    return '<div class="prow" style="--c:'+C.sc(s)+';cursor:default"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+x.length+' · avg '+a.toFixed(1)+(tr==null?'':' · '+(tr>0.05?'▲ +':tr<-0.05?'▼ ':'= ')+(Math.abs(tr)>0.05?tr.toFixed(1):'steady'))+'</div></span>'+spark(x.map(r=>r.v),C.sc(s))+'</div>'}).join('');
+  if(sub)h+='<div class="card"><div class="lbl">By subject</div>'+sub+'</div>';
+  if(rs.length)h+='<div class="card"><div class="lbl">All entries</div>'+rs.slice().reverse().map(r=>'<button class="prow" style="--c:'+C.sc(r.subj)+'" data-a="rec" data-i="'+r.kind+'|'+r.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(r.title)+'</div><div class="s">'+(r.kind==='exams'?'Exam':'Colle')+' · '+fd(r.date)+(r.sat?' · '+SAT[r.sat-1]:'')+'</div></span><span class="gpill '+(sat?'g-mid':gcls(r.v))+'">'+(sat?SAT[r.v-1]:r.v)+'</span>'+ico.chev+'</button>').join('')+'</div>';
+  return h;
+}
+
 /* ----- MOCK EXAMS (devoirs blancs) ----- */
 function mockCard(){
   const ms=S.mocks.slice().sort((a,b)=>(b.at||0)-(a.at||0));
@@ -2361,6 +2550,37 @@ async function styleModels(subj){
   }
   return{txt,used};
 }
+
+/* ----- AI memory: one compact, linked digest per lesson, reused instead of the full text ----- */
+const memOn=()=>S.set.mem!==false;
+async function digestOf(l,make){
+  let d=await C.getText('D'+l.id);if(d||!make)return d||'';
+  const t=(await C.getText('L'+l.id))||'';if(t.length<300)return '';
+  const others=S.lessons.filter(x=>x.id!==l.id&&x.subj===l.subj&&x.status==='done').map(x=>'- '+x.title).join('\n');
+  const r=await C.ai({system:C.SYS_DIGEST(others),content:[{type:'text',text:'LESSON: '+l.title+' ('+SUBJ[l.subj].n+')\n\n'+t.slice(0,90000)}],max:1800});
+  d=r.text.trim();if(d.length>80){await C.setText('D'+l.id,d);l.dg=Date.now();save.lessons()}
+  return d;
+}
+function linkedOf(l,digest){
+  const m=/\*\*Liens:?\*\*:?([\s\S]*)$/i.exec(digest||'');if(!m)return [];
+  const body=normT(m[1]);
+  return S.lessons.filter(x=>x.id!==l.id&&x.subj===l.subj&&x.status==='done'&&normT(x.title).length>3&&body.includes(normT(x.title)));
+}
+function profileFor(subj){
+  const rs=allRecs().filter(r=>r.subj===subj);if(!rs.length)return '';
+  const g=rs.filter(r=>r.grade!=null&&r.grade!==''&&!isNaN(+r.grade)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const cnt={};rs.forEach(r=>(r.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
+  const tg=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]).slice(0,4);
+  const todo=rs.flatMap(r=>(r.todo||[]).filter(t=>!t.done).map(t=>t.t)).slice(0,4);
+  const wr=rs.map(r=>r.wrong).filter(Boolean).slice(-2).map(x=>x.slice(0,160));
+  const sat=rs.filter(r=>r.sat),L=[];
+  if(g.length)L.push('Grades /20 (oldest to newest): '+g.slice(-6).map(r=>r.grade).join(', ')+' (average '+(g.reduce((a,r)=>a+ +r.grade,0)/g.length).toFixed(1)+')');
+  if(tg.length)L.push('Recurring ways of losing points: '+tg.join(', '));
+  if(wr.length)L.push('Own notes on mistakes: '+wr.join(' | '));
+  if(todo.length)L.push('Still to redo: '+todo.join('; '));
+  if(sat.length)L.push('Average satisfaction with own work: '+(sat.reduce((a,r)=>a+r.sat,0)/sat.length).toFixed(1)+'/5');
+  return L.length?'\n\nSTUDENT PROFILE (use it to aim the questions at weak points, do not mention it):\n'+L.join('\n'):'';
+}
 async function lessonBlock(ids,cap){
   let txt='',n=0;
   for(const id of ids){const l=S.lessons.find(x=>x.id===id);if(!l||cap<2000)continue;const t=(await C.getText('L'+id))||'';if(!t)continue;
@@ -2371,15 +2591,27 @@ function mkMock(id){
   const m=S.mocks.find(x=>x.id===id);if(!m)return;
   return run('M'+id,'Writing your exam…',async(lab,txt)=>{
     lab('Reading your lessons…');
-    const main=await lessonBlock(m.main,120000),comp=await lessonBlock(m.comp,50000);
+    const main=await lessonBlock(m.main,120000);
     if(!main)throw new C.AIError('The main lessons have no text yet. Read them first (Lessons tab).');
+    /* complementary and linked lessons: short memory notes instead of the full text (saves tokens) */
+    let comp='',linked=[];
+    const ids=new Set(m.main.concat(m.comp));
+    if(memOn()){
+      lab('Using your lesson memory…');
+      for(const lid of m.comp){const l=S.lessons.find(x=>x.id===lid);if(!l)continue;let d='';try{d=await digestOf(l,true)}catch(e){}
+        comp+='\n\n=== LESSON NOTE: '+l.title+' ===\n'+(d||((await C.getText('L'+lid))||'').slice(0,4000))}
+      for(const lid of m.main){const l=S.lessons.find(x=>x.id===lid);if(!l)continue;const d=await digestOf(l,false);
+        for(const x of linkedOf(l,d)){if(ids.has(x.id)||linked.length>=4)continue;ids.add(x.id);const dx=await digestOf(x,false);if(dx){linked.push(x.title);comp+='\n\n=== LINKED LESSON NOTE: '+x.title+' ===\n'+dx}}}
+    }else comp=await lessonBlock(m.comp,50000);
     lab('Looking at your real exams for the style…');
     const sm=await styleModels(m.subj);
     lab('Writing the exam and the corrigé…');
-    const r=await C.ai({system:C.SYS_MOCK(SUBJ[m.subj].n,m.dur,m.calc),content:[{type:'text',text:'MAIN LESSONS:'+main+'\n\nCOMPLEMENTARY LESSONS:'+(comp||'\n(none)')+'\n\nMODEL EXAMS (style only):'+(sm.txt||'\n(none available: use the usual style of a French MPSI DS)')}],max:24000,onText:txt});
+    const r=await C.ai({system:C.SYS_MOCK(SUBJ[m.subj].n,m.dur,m.calc),content:[
+      {type:'text',text:'MAIN LESSONS:'+main,cache:true},
+      {type:'text',text:'COMPLEMENTARY LESSONS (memory notes):'+(comp||'\n(none)')+'\n\nMODEL EXAMS (style only):'+(sm.txt||'\n(none available: use the usual style of a French MPSI DS)')+profileFor(m.subj)}],max:24000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The exam came out empty. Try again.');
     await C.setText('M'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The exam was cut: write a new version.]*':''));
-    m.at=Date.now();m.err='';m.styled=sm.used.join(', ');save.mocks();toast('Mock exam ready ✓');
+    m.at=Date.now();m.err='';m.styled=sm.used.join(', ');m.linked=linked.join(', ');save.mocks();toast('Mock exam ready ✓');
   });
 }
 
@@ -2416,7 +2648,7 @@ function vRec(kind,id){
   const isEx=kind==='exams',key='R'+id,key2=r.fb?'':'';
   let h=backBar(meta.title,'<button class="pmini" data-a="recEdit" data-i="'+kind+'|'+id+'" aria-label="Edit">✎</button><button class="pmini" data-a="recDel" data-i="'+kind+'|'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(meta.subj)+'">'+SUBJ[meta.subj].n+'</span><span class="pill">'+fd(meta.date)+'</span>'+folderPill(kind,id)+'</div>'+(kind==='colles'?(()=>{const ci=colleInfo(id);return '<div class="colleur" data-a="recEdit" data-i="colles|'+id+'"><span>👤 Colleur</span><b>'+(ci.teacher?esc(ci.teacher):'<i>add the name</i>')+'</b>'+(ci.room?'<span class="rm">📍 '+esc(ci.room)+'</span><small class="rh">'+esc(roomHint(ci.room))+'</small>':'<span class="rm noroom">＋ room</span>')+'</div>'})():'');
-  h+='<div class="'+(isEx?'two2':'')+'"><div class="field"><label>My grade /20</label><input inputmode="decimal" data-in="grade" data-k="'+kind+'|'+id+'" placeholder="e.g. 12.5" value="'+(r.grade==null?'':r.grade)+'"></div>'+(isEx?'<div class="field"><label>Class average</label><input inputmode="decimal" data-in="avg" data-k="'+kind+'|'+id+'" placeholder="optional" value="'+(r.avg==null?'':r.avg)+'"></div>':'')+'</div></div>';
+  h+='<div class="'+(isEx?'two2':'')+'"><div class="field"><label>My grade /20</label><input inputmode="decimal" data-in="grade" data-k="'+kind+'|'+id+'" placeholder="e.g. 12.5" value="'+(r.grade==null?'':r.grade)+'"></div>'+(isEx?'<div class="field"><label>Class average</label><input inputmode="decimal" data-in="avg" data-k="'+kind+'|'+id+'" placeholder="optional" value="'+(r.avg==null?'':r.avg)+'"></div>':'')+'</div>'+satRow(kind,id,r.sat)+'</div>';
   h+='<div class="card"><div class="lbl">Files</div>';
   const slot=(sl,label)=>'<div class="slot"><div class="hd"><div class="lbl">'+label+'</div><button class="addf" data-a="addRecFile" data-i="'+kind+'|'+id+'|'+sl+'">+ Add</button></div>'+(fileRows(r[sl],kind+'|'+sl,id)||'<div class="sub">Nothing yet</div>')+'</div>';
   if(isEx)h+=slot('sujet','Sujet (exam paper)')+slot('corr','Correction')+slot('copy','My graded copy');
@@ -2544,7 +2776,7 @@ function render(kind){
   if(top){
     const v=top.v;
     h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
-  }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():vCards();
+  }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():st.tab==='grades'?vGrades():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
   post(top);
@@ -2557,6 +2789,7 @@ function render(kind){
 }
 async function post(top){
   const t=++rtok;
+  markMissing();
   const into=async(id,text)=>{const e=$(id);if(!e)return;const html=await C.mdAsync(text);if(t===rtok&&$(id))$(id).innerHTML=html};
   try{
     if(top&&top.v==='lesson'){const l=S.lessons.find(x=>x.id===top.id);if(l&&l.status==='done')into('ltext',(await C.getText('L'+l.id))||'*(empty)*')}
@@ -2604,7 +2837,7 @@ A.addLesson=()=>{
   $('l-go').onclick=()=>fin(true);$('l-go2').onclick=()=>fin(false);
 };
 A.addLessonFiles=async id=>{const l=S.lessons.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;l.files=l.files.concat(await C.addFiles(fs));l.status='new';save.lessons();render()};
-A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
+A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});await C.dbDel('texts','D'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
 A.transcribe=id=>{if(needKey())transcribe(id,'ai')};A.transcribeAI=id=>{if(needKey())transcribe(id,'ai')};A.transcribeText=id=>{transcribe(id,'text')};
 /* mode: 'auto' (AI when a key exists, else text layer) | 'ai' | 'text' */
 async function transcribe(id,mode){
@@ -2844,8 +3077,13 @@ async function courseFor(p){
   const items=[];
   for(const l of ls){const t=await C.getText('L'+l.id);const w=new Set(words(l.title+' '+t.slice(0,3000)));let hit=0;key.forEach(k=>{if(w.has(k))hit++});items.push({l,t,score:hit+(words(l.title).filter(x=>key.has(x)).length*4)})}
   items.sort((a,b)=>b.score-a.score);
-  let budget=170000,used=[],txt='';
-  for(const it of items){if(budget<4000)break;const t=it.t.slice(0,Math.min(it.t.length,budget));txt+='\n\n=== LESSON: '+it.l.title+' ===\n'+t;budget-=t.length;used.push(it.l.title)}
+  let budget=memOn()?110000:170000,used=[],txt='',n=0;
+  for(const it of items){
+    if(budget<2000)break;
+    if(memOn()&&n>=3){ /* weaker matches: the lesson's memory note (or a short extract) */
+      const d=await digestOf(it.l,false),t=d||it.t.slice(0,2500);txt+='\n\n=== LESSON NOTE: '+it.l.title+' ===\n'+t;budget-=t.length;used.push(it.l.title+' (note)');n++;continue}
+    const t=it.t.slice(0,Math.min(it.t.length,budget));txt+='\n\n=== LESSON: '+it.l.title+' ===\n'+t;budget-=t.length;used.push(it.l.title);n++;
+  }
   return{txt,used};
 }
 function mkSheet(id,n){
@@ -2854,7 +3092,7 @@ function mkSheet(id,n){
     lab('Collecting your lessons…');const c=await courseFor(p);
     const prog=p.chapters.map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n');
     lab('Writing exercises and corrections…');
-    const r=await C.ai({system:C.SYS_SHEET(SUBJ[p.subj].n,n||6),content:[{type:'text',text:'PROGRAMME DE COLLES ('+SUBJ[p.subj].n+'):\n'+prog+(p.remarks?'\nTeacher note: '+p.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject. Use the standard French prépa programme and say so in a short note at the top.)')}],max:24000,onText:txt});
+    const r=await C.ai({system:C.SYS_SHEET(SUBJ[p.subj].n,n||6),content:[{type:'text',text:'PROGRAMME DE COLLES ('+SUBJ[p.subj].n+'):\n'+prog+(p.remarks?'\nTeacher note: '+p.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject. Use the standard French prépa programme and say so in a short note at the top.)'),cache:true},{type:'text',text:profileFor(p.subj)||'(no profile yet)'}],max:24000,onText:txt});
     if(r.text.length<200)throw new C.AIError('The sheet came out empty. Try again.');
     await C.setText('S'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The sheet was cut: generate again for a shorter one.]*':''));
     p.sheetAt=Date.now();p.used=c.used;p.noCourse=!c.used.length;save.progs();toast('Prep sheet ready ✓');
@@ -2870,6 +3108,16 @@ A.mkMock=async id=>{if(needKey())mkMock(id)};
 A.mock=id=>{st.seg='ex';go('mock',id)};
 A.delMock=async id=>{if(!await ask({title:'Delete this mock exam?',msg:'The text is deleted too.',ok:'Delete',danger:1}))return;await C.dbDel('texts','M'+id).catch(()=>{});S.mocks=S.mocks.filter(x=>x.id!==id);save.mocks();back()};
 A.printMock=async id=>{const sp=splitSheet((await C.getText('M'+id))||'');await C.loadKatex();printHtml(C.md(st.seg==='co'?sp.co:sp.ex))};
+A.memTog=()=>{S.set.mem=!memOn();save.set();render('card')};
+A.buildMem=()=>{if(!needKey())return;
+  return run('MEM','Building memory notes…',async(lab)=>{
+    const todo=S.lessons.filter(l=>l.status==='done'&&!l.dg);let i=0;
+    for(const l of todo){lab('Memory note '+(++i)+' of '+todo.length+': '+l.title);try{await digestOf(l,true)}catch(e){if(i===1)throw e}}
+    toast('Memory updated ✓');
+  });
+};
+A.sat=i=>{const[kind,id,n]=i.split('|'),meta=metaOf(kind,id);if(!meta)return;const r=recOf(kind,id,meta),v=+n;r.sat=r.sat===v?null:v;save[kind]();const box=document.querySelector('.sat[data-k="'+CSS.escape(kind+'|'+id)+'"]');if(box){[...box.children].forEach((b,j)=>b.classList.toggle('on',r.sat===j+1));const t=box.parentNode.querySelector('.satt');if(t)t.textContent=r.sat?SATT[r.sat-1]:'Tap a face'}};
+A.gcfg=i=>{const[k,v]=i.split('|');S.set.gcfg=Object.assign(gcfg(),{[k]:v});save.set();render('card')};
 A.newMock=()=>{
   let subj='maths',main=[],comp=[],dur='2 h',calc=false,title='';
   const ls=()=>S.lessons.filter(l=>l.subj===subj&&l.status==='done');
@@ -3183,7 +3431,7 @@ function rHomeCard(){
 /* ================= EVENTS (delegation) ================= */
 function wire(){
   const b=body();
-  b.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;if(e.target.closest(".pmini")&&el!==e.target.closest(".pmini")&&el.dataset.a!=='x'){}const f=A[el.dataset.a];if(f){hv();f(el.dataset.i,el,e)}});
+  b.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;if(e.target.closest(".pmini")&&el!==e.target.closest(".pmini")&&el.dataset.a!=='x'){}const f=A[el.dataset.a];if(f){hv();try{const r=f(el.dataset.i,el,e);if(r&&r.catch)r.catch(er=>toast((er&&er.message)||'Something went wrong'))}catch(er){toast((er&&er.message)||'Something went wrong')}}});
   $('ptabs').addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(el){hv();A[el.dataset.a](el.dataset.i)}});
   b.addEventListener('input',e=>{
     const t=e.target;
@@ -3230,7 +3478,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
@@ -3337,6 +3585,7 @@ P.boot();
   rmB.addEventListener('click',function(){verifyThen(function(){ask({title:'Remove the PIN lock?',ok:'Remove',danger:true}).then(function(ok){if(ok)removePin();});});});
   $('pv-gear').addEventListener('click',function(){refresh();sheet.classList.add('show');});
   $('pv-close').addEventListener('click',function(){sheet.classList.remove('show');});
+  $('pv-ai').addEventListener('click',function(){sheet.classList.remove('show');setTimeout(function(){try{window.P&&P._A.settings&&P._A.settings()}catch(e){}},120)});
   sheet.addEventListener('click',function(e){if(e.target===sheet)sheet.classList.remove('show');});
 
   /* ---------- backup ---------- */
