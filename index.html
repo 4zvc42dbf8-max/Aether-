@@ -240,6 +240,58 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .chip .cdot{margin-right:6px}
 .hhc.on{border-color:rgba(255,159,10,.55);background:linear-gradient(180deg,rgba(255,159,10,.16),transparent),var(--card,#14171f)}
 .hhc:not(.on){padding-top:10px;padding-bottom:10px}
+.rwhero{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;padding:16px;margin:10px 0 14px;border-radius:20px;border:1px solid rgba(255,214,10,.28);background:radial-gradient(120% 140% at 0% 0%,rgba(255,214,10,.20),transparent 60%),linear-gradient(135deg,rgba(255,159,10,.12),rgba(155,140,255,.10))}
+.rwc{font-size:40px;flex:none;animation:coinspin 3.2s var(--ease,ease) infinite;filter:drop-shadow(0 4px 10px rgba(255,190,0,.45))}
+.rwn{font-family:var(--serif,inherit);font-size:34px;font-weight:800;line-height:1}
+.rws{font-size:12px;color:var(--muted);margin-top:4px}
+.rwhero .st{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe27a;opacity:0;animation:twink 3s ease-in-out infinite}
+.rwhero .s1{left:58%;top:18%}.rwhero .s2{left:84%;top:62%;animation-delay:.8s}.rwhero .s3{left:70%;top:80%;animation-delay:1.6s;width:3px;height:3px}.rwhero .s4{left:92%;top:20%;animation-delay:2.3s;width:3px;height:3px}
+.rwhero:after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);transform:translateX(-120%);animation:shine 5s ease-in-out infinite;pointer-events:none}
+.goal.rw{position:relative;overflow:hidden}
+.goal.rw .gd{font-size:22px;color:#fff;box-shadow:0 6px 16px -6px var(--rc)}
+.goal.rw.rlock .gd{filter:saturate(.45);opacity:.85}
+.goal.rw.rok{border-color:color-mix(in srgb,var(--rc) 45%,var(--line));animation:rowin .6s var(--ease) both,rglow 2.8s ease-in-out infinite;animation-delay:calc(var(--i,0)*55ms),calc(var(--i,0)*55ms+600ms)}
+.goal.rw.rok:after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.10) 50%,transparent 58%);transform:translateX(-120%);animation:shine 4.5s ease-in-out infinite;animation-delay:calc(var(--i,0)*400ms);pointer-events:none}
+.goal.rw:not(.lift){animation-fill-mode:both}
+.goal.rw.rlock{animation:rowin .6s var(--ease) both;animation-delay:calc(var(--i,0)*55ms)}
+.rwtag{flex:none;font-size:12.5px;font-weight:750;padding:6px 12px;border-radius:999px;background:var(--line2,#2a2f3a);color:var(--muted)}
+.rok .rwtag{background:var(--rc);color:#fff;animation:tagpulse 1.8s ease-in-out infinite}
+.rwfill{transition:width 1s var(--ease,cubic-bezier(.2,.8,.2,1))}
+.goal.rw.shake{animation:shk .4s}
+.goal.rw.bought{animation:bought .6s var(--ease) forwards}
+.goal.rw.lift{box-shadow:0 18px 36px -12px rgba(0,0,0,.6),0 0 0 2px var(--rc);z-index:5}
+.coinfx{position:fixed;z-index:9999;font-size:20px;pointer-events:none;animation:coinfly 1s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes coinspin{0%,60%,100%{transform:rotateY(0)}80%{transform:rotateY(360deg) scale(1.08)}}
+@keyframes twink{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.95;transform:scale(1.4)}}
+@keyframes shine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@keyframes rglow{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 22px -6px var(--rc)}}
+@keyframes tagpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes bought{0%{transform:scale(1)}40%{transform:scale(1.06);filter:brightness(1.4)}100%{transform:scale(.9);opacity:0}}
+@keyframes coinfly{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}70%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy) + 90px)) scale(1) rotate(260deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.rwc,.rwhero:after,.goal.rw:after,.rwhero .st,.goal.rw.rok,.rok .rwtag{animation:none!important}}
+#hhglow{position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:0;transition:opacity .8s;border-radius:0}
+#hhglow.on{opacity:1;animation:hhpulse 2.6s ease-in-out infinite}
+#hhglow:before{content:'';position:absolute;inset:0;padding:3px;border-radius:inherit;background:conic-gradient(from var(--hha,0deg),#ff9f0a,#ffd60a,#ff6b2b,#ff9f0a);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:hhspin 5s linear infinite}
+@property --hha{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes hhspin{to{--hha:360deg}}
+@keyframes hhpulse{0%,100%{box-shadow:inset 0 0 18px 2px rgba(255,159,10,.35)}50%{box-shadow:inset 0 0 34px 6px rgba(255,159,10,.6)}}
+.xpb{display:inline-flex;gap:5px;align-items:baseline}
+.xpb s,.pill.hhp s{position:relative;opacity:.55;text-decoration:none}
+.xpb s:after,.pill.hhp s:after{content:'';position:absolute;left:-1px;right:-1px;top:52%;height:1.6px;background:currentColor;transform-origin:left;animation:strike .55s .15s both}
+.xpb b,.pill.hhp b{color:#ffb020;font-weight:800;animation:xpup .7s var(--spring,cubic-bezier(.3,1.6,.5,1)) both}
+.pill.hhp{background:rgba(255,159,10,.16);color:#ffb020;gap:4px}
+.pill.hhp b{margin-left:3px}
+.mode .mxp{display:block;font-style:normal;font-size:11px;opacity:.8;margin-top:2px}
+@keyframes strike{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes xpup{0%{transform:scale(.4) translateY(6px);opacity:0}60%{transform:scale(1.35)}100%{transform:scale(1);opacity:1}}
+.goal.rw.tier1{border-left:3px solid #4fd1ff}
+.goal.rw.tier2{border-left:3px solid #ff9f0a}
+.goal.rw.tier3{border:1px solid #ffd60a;background:linear-gradient(135deg,rgba(255,214,10,.12),var(--surf2) 55%);box-shadow:0 0 24px -8px rgba(255,214,10,.6)}
+.goal.rw.tier3 .gd{box-shadow:0 0 18px rgba(255,214,10,.7)}
+.goal.rw.tier3:before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;background:conic-gradient(from var(--hha,0deg),#ffd60a,#fff3b0,#ff9f0a,#ffd60a);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:hhspin 6s linear infinite;pointer-events:none}
+.goal.rw .gs{line-height:1.45}
+details.rwrules summary{cursor:pointer;list-style:none}
 .lazycard{transition:border-color .4s,background .4s}
 .lazycard.on{border-color:rgba(155,140,255,.4);background:linear-gradient(180deg,rgba(155,140,255,.10),transparent),var(--surf)}
 .lazycard.warn{border-color:rgba(255,159,10,.5);background:linear-gradient(180deg,rgba(255,159,10,.10),transparent),var(--surf)}
@@ -719,6 +771,9 @@ textarea::placeholder{color:var(--dim)}
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
   <div class="card hhc" id="hhcard"></div>
+  <div class="card" id="rtcard" style="display:none"></div>
+  <div class="card" id="rescue" style="display:none"></div>
+  <div class="card" id="svcard" style="display:none"></div>
   <div class="card motiv" id="motiv"></div>
   <div class="card lazycard" id="lazycard"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
@@ -855,7 +910,7 @@ function sv(){try{
   localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);localStorage.dayh=JSON.stringify(dayh);localStorage.xpd=JSON.stringify(xpd);localStorage.wgoal=JSON.stringify(wgoal);localStorage.why=JSON.stringify(why);localStorage.wrev=JSON.stringify(wrev);
   localStorage.revs=JSON.stringify(revs);localStorage.plans=JSON.stringify(plans);
   localStorage.donelog=JSON.stringify(donelog);localStorage.goals=JSON.stringify(goals);localStorage.lazy=JSON.stringify(lazy);
-  localStorage.hh=JSON.stringify(hh);localStorage.hols=JSON.stringify(hols);localStorage.spent=JSON.stringify(spent);localStorage.rwd=JSON.stringify(rwd);localStorage.rcat=JSON.stringify(rcat);localStorage.rlog=JSON.stringify(rlog);localStorage.mil=JSON.stringify(mil);localStorage.wch=JSON.stringify(wch);
+  localStorage.hh=JSON.stringify(hh);localStorage.hols=JSON.stringify(hols);localStorage.spent=JSON.stringify(spent);localStorage.rwd=JSON.stringify(rwd);localStorage.rcat=JSON.stringify(rcat);localStorage.shs=JSON.stringify(shs);localStorage.commits=JSON.stringify(commits);localStorage.rtimer=JSON.stringify(rtimer);localStorage.rsave=JSON.stringify(rsave);localStorage.bnd=JSON.stringify(bnd);localStorage.alw=JSON.stringify(alw);localStorage.rlog=JSON.stringify(rlog);localStorage.mil=JSON.stringify(mil);localStorage.wch=JSON.stringify(wch);
   if(F)localStorage.ftimer=JSON.stringify(F);
 }catch(e){}}
 const needed=l=>100+(l-1)*50;
@@ -1012,7 +1067,7 @@ function rHome(){
   $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
-  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rHH();rMotiv();
+  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rHH();rtRender();svRender();rRescue();rMotiv();
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
@@ -1120,6 +1175,7 @@ function weekReview(){
   const tile=(n,l)=>`<div class="rvt"><b>${n}</b><span>${l}</span></div>`;
   openSheet(`<h2>Weekly review</h2><div class="sub" style="margin:-6px 0 12px">The last 7 days, up to today.</div>
   <div class="rvg">${tile(k.xpW+' XP','earned (goal '+wgoal+'/week)')}${tile(k.done,'tasks done')}${tile(f1(k.foc/60)+' h','focus time')}${tile(k.act+'/7','active days')}${tile(f1(k.sleep)+' h','sleep / day')}${tile(f1(k.work)+' h','worked / day')}${tile(f1(k.chill)+' h','chilled / day')}${tile(k.mood==null?'–':['😞','😐','🙂','😊','🤩'][Math.round(k.mood)-1],'average mood')}</div>
+  ${(()=>{const w0=mondayOf(iso()),bs=rlog.filter(x=>iso(new Date(x.t))>=w0);return bs.length?`<div class="rvn">🛍 Bought this week: ${bs.map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')} · balance ${balance()} XP</div>`:''})()}
   ${k.lz?`<div class="rvn">🛋️ ${k.lz} lazy day${k.lz>1?'s':''} this week.</div>`:''}
   ${k.gr.length?`<div class="rvn">📝 ${k.gr.map(r=>esc(r.title)+' '+r.grade+'/20'+(r.sat?' '+['😞','😕','😐','🙂','😄'][r.sat-1]:'')).join(' · ')}</div>`:''}
   ${k.next.length?`<div class="rvn">📅 Coming up: ${k.next.map(c=>esc(c.title)+' ('+new Date(c.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric'})+')').join(' · ')}</div>`:''}
@@ -1163,7 +1219,7 @@ const nextTxt=t=>t.rep==='daily'?'back tomorrow':t.rep==='weekly'?'back next Mon
 /* overdue tasks pay less: -10% per day late, never below 30% of the reward (habits have no due date, so they are not affected) */
 function daysLate(t){if(t.rep||!t.due||t.due>=iso())return 0;return Math.round((new Date(iso()+'T12:00:00')-new Date(t.due+'T12:00:00'))/864e5)}
 function xpFor(t){const b=t.xp||20,d=daysLate(t);return d?Math.max(1,Math.round(b*Math.max(.3,1-.1*d))):b}
-function xpPill(t){const e=xpFor(t),b=t.xp||20;return e<b?`<span class="pill xp" style="color:#ff9f0a;background:rgba(255,159,10,.14)">+${e} XP <s style="opacity:.6;margin-left:3px">${b}</s></span>`:`<span class="pill xp">+${b} XP</span>`}
+function xpPill(t){const e=xpFor(t),b=t.xp||20,m=hhMult();if(m>1)return `<span class="pill xp hhp">+<s>${e}</s><b>${Math.round(e*m)}</b> XP</span>`;return e<b?`<span class="pill xp" style="color:#ff9f0a;background:rgba(255,159,10,.14)">+${e} XP <s style="opacity:.6;margin-left:3px">${b}</s></span>`:`<span class="pill xp">+${b} XP</span>`}
 function sortedTasks(){
   const td=iso();
   return [...visTasks()].sort((a,b)=>(isDone(a)?1:0)-(isDone(b)?1:0)||(isDone(a)?0:(b.pin?1:0)-(a.pin?1:0)));
@@ -1280,6 +1336,8 @@ let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:
 let hols=ld('hols',null)||HOL0.map(x=>({...x}));
 let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
 let rcat=ld('rcat',['🍕 Food','🎮 Games','📺 Leisure','🛍 Other']),rcf='',rsub=null;
+let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
+let commits=ld('commits',[]),rtimer=ld('rtimer',null),rsave=ld('rsave',''),bnd=ld('bnd',{g:null,p:[],s:[]}),alw=ld('alw',{wk:'',left:0}),cmSel={tid:'',stake:50,due:''};
 let hhome=ld('hhome',null),homeNow=null;
 const curHol=(d=iso())=>hols.find(h=>h.s<=d&&d<=h.e)||null;
 const hpaused=()=>!!(hh.pause&&curHol());
@@ -1294,6 +1352,19 @@ function hhState(){
 }
 function hhStart(){const n=nowMin(),td=iso();if(!hh.aft||n<tmin(hh.a1)||n>=tmin(hh.a2)||(hh.ses&&hh.ses.d===td))return false;hh.ses={d:td,t:Date.now()};sv();return true}
 const hhMult=()=>{const s=hhState();return s?s.m:1};
+const xpn=n=>Math.round(n*hhMult());
+const xpv=n=>{const m=hhMult();return m>1?`<span class="xpb"><s>${n}</s><b>${Math.round(n*m)}</b></span>`:String(n)};
+window.xpv=xpv;window.xpn=xpn;
+let hhLast=null;(function(){const g=document.createElement('div');g.id='hhglow';document.body.appendChild(g)})();
+function hhTick(first){
+  const s=hhState(),k=s?s.k:'';
+  const g=$('hhglow');if(g)g.classList.toggle('on',!!s);
+  if(hhLast===null){hhLast=k;return}
+  if(k===hhLast)return;
+  hhLast=k;
+  if(k){toast('🎉 Happy Hour ×'+s.m+' · all XP boosted');vib(30)}else toast('Happy Hour ended');
+  try{rHH();if(cur==='home')rHomeTasks();else if(cur==='tasks')rTasks();else if(cur==='focus')fRender(true,true);else if(cur==='prepa'&&window.P&&P.render)P.render()}catch(e){}
+}
 function hhNext(){
   const n=nowMin(),td=iso(),a=[];
   if(hh.lunch&&schoolDay(td)&&n<tmin(hh.l1))a.push([tmin(hh.l1),'Lunch '+hh.l1]);
@@ -1305,7 +1376,7 @@ function hhLoc(force){
   if(!hhome||!hh.aft||!navigator.geolocation)return;
   const n=nowMin();if(!force&&(n<tmin(hh.a1)||n>=tmin(hh.a2)))return;
   if(!force&&homeNow&&Date.now()-homeNow.t<12e4)return;
-  navigator.geolocation.getCurrentPosition(p=>{homeNow={t:Date.now(),in:distM(p.coords.latitude,p.coords.longitude,hhome.lat,hhome.lng)<200};if(homeNow.in&&hhStart())toast('Happy Hour: 1 hour of ×'+hh.mult+' XP 🎉');rHH()},()=>{},{maximumAge:6e4,timeout:8000});
+  navigator.geolocation.getCurrentPosition(p=>{homeNow={t:Date.now(),in:distM(p.coords.latitude,p.coords.longitude,hhome.lat,hhome.lng)<200};if(homeNow.in&&hhStart()){toast('Happy Hour: 1 hour of ×'+hh.mult+' XP 🎉');setTimeout(arrivePrompt,1200)}rHH()},()=>{},{maximumAge:6e4,timeout:8000});
 }
 function rHH(){
   const el=$('hhcard');if(!el)return;
@@ -1357,42 +1428,178 @@ function badges(){
   const hs=Math.max(0,...tasks.map(t=>t.streak||0)),fm=fhist.reduce((a,h)=>a+(h.min||0),0),L=lifeXP();
   return[['🌱','First 500 XP',L>=500],['🔥','2 000 XP',L>=2000],['⚡','5 000 XP',L>=5000],['👑','10 000 XP',L>=1e4],['🔁','7-day habit streak',hs>=7],['⏱','10 hours of focus',fm>=600],['🧠','50 hours of focus',fm>=3000],['🎯','Weekly goal reached',Object.keys(xpd||{}).length&&weekXP()>=wgoal||wch.cl.length>=3],['🏆','3 challenges in a week',wch.cl.length>=3],['🛍','First reward bought',rlog.length>0]];
 }
+
+const TIERS=[['🌱','Small treat'],['✨','Nice treat'],['🔥','Big treat'],['👑','Jackpot']];
+const tierOf=c=>c<shs.t1?0:c<shs.t2?1:c<shs.t3?2:3;
+const worthTxt=c=>{const m=Math.round(c/30*60);return m<60?m+' min':Math.floor(m/60)+'h'+(m%60?pad(m%60):'')};
+const fdm=d=>new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+function allowLeft(){if(!shs.al)return Infinity;const wk=mondayOf(iso());if(alw.wk!==wk){const prev=alw.wk?Math.max(0,alw.left):0;alw={wk,left:shs.amt+Math.floor(prev*shs.roll/100)};sv()}return alw.left}
+function recsRecent(){try{const lim=shiftD(iso(),-21);return(P.recs()||[]).filter(r=>(r.date||'')>=lim&&r.grade!=null&&r.grade!=='')}catch(e){return[]}}
+const focusToday=()=>fhist.filter(h=>h.date===fk()).reduce((a,h)=>a+(h.min||0),0);
+function rcheck(r){
+  const td=iso(),wk=mondayOf(td),buys=rlog.filter(x=>x.id===r.id);
+  if(r.from&&td<r.from)return'Opens '+fdm(r.from);if(r.to&&td>r.to)return'Season over';
+  if(r.minLv&&lv<r.minLv)return'Reach level '+r.minLv;
+  if(r.fm&&focusToday()<r.fm)return'Focus '+(r.fm-focusToday())+' more min today';
+  if(r.gr&&!recsRecent().some(x=>+x.grade>=r.gr))return'Needs a grade ≥ '+r.gr+' (last 3 weeks)';
+  if(r.lim&&buys.filter(x=>iso(new Date(x.t))>=wk).length>=r.lim)return'Weekly limit reached';
+  if(r.cd&&buys.length){const d=(Date.now()-buys[buys.length-1].t)/864e5;if(d<r.cd)return'Back in '+Math.ceil(r.cd-d)+' d'}
+  if(shs.al&&r.c>allowLeft())return'Allowance: '+allowLeft()+' XP left this week';
+  return'';
+}
+/* commitments: stake XP on finishing a task before a date */
+function commitSweep(){let ch=0;commits.forEach(c=>{if(c.st==='open'&&c.due<iso()){c.st='lost';ch=1;setTimeout(()=>toast('Commitment missed: "'+c.text+'" · '+c.stake+' XP lost'),1500)}});if(ch)sv()}
+function commitWin(tid){const c=commits.find(x=>x.st==='open'&&x.tid===tid&&iso()<=x.due);if(!c)return;c.st='won';const b=Math.round(c.stake*c.bonus/100);spent=Math.max(0,spent-c.stake);sv();setTimeout(()=>{gain(b,innerWidth/2,innerHeight*.4);toast('Commitment kept 🤝 · stake back + '+b+' XP')},1100)}
+/* bonuses (grades, prep, sleep) */
+function bonusSweep(){
+  let ch=0;const aw=(n,m)=>{if(n>0){gain(n,innerWidth/2,innerHeight*.35);setTimeout(()=>toast(m+' +'+n+' XP'),500)}ch=1};
+  try{
+    const rs=(P.recs()||[]).filter(r=>r.grade!=null&&r.grade!==''),key=r=>r.id||r.eid||(r.title+'|'+r.date);
+    if(bnd.g===null){bnd.g=rs.map(key);ch=1}else rs.forEach(r=>{if(!bnd.g.includes(key(r))){bnd.g.push(key(r));if(+r.grade>=shs.gthr)aw(shs.gxp,'🎓 Great grade ('+r.grade+'/20)');else ch=1}});
+    (P.progs()||[]).forEach(p=>{if(p.chapters&&p.chapters.length&&p.chapters.every(c=>c.ready)&&(p.date||'')>=iso()&&!bnd.p.includes(p.id)){bnd.p.push(p.id);aw(shs.pxp,'📘 Fully prepared')}});
+  }catch(e){}
+  const d=dayh[iso()];if(d&&+d.s>=shs.sth&&!bnd.s.includes(iso())){bnd.s.push(iso());aw(shs.sxp,'😴 Good night')}
+  if(ch)sv();
+}
+/* timed rewards */
+function rtRender(){
+  const el=$('rtcard');if(!el)return;
+  if(!rtimer){el.style.display='none';return}
+  const left=Math.max(0,rtimer.end-Date.now());el.style.display='';
+  const m=Math.floor(left/6e4),s=Math.floor(left%6e4/1e3);
+  el.innerHTML=`<div class="cardhead"><div class="lbl">⏳ ${esc(rtimer.n)}</div><span class="sub">${m}:${pad(s)}</span></div><div class="bar"><div class="bar-fill" style="width:${100-left/(rtimer.mins*6e4)*100}%;background:#ff9f0a;box-shadow:none"></div></div><button class="btn sm" data-act="rtstop" style="margin-top:8px">Stop now · refund ${shs.ref}% of the unused time</button>`;
+  if(left<=0){const n=rtimer.n;rtimer=null;sv();rtRender();toast('⏰ Time is up: '+n+'. Back to it!');vib(80);chime()}
+}
+function rtStop(){if(!rtimer)return;const f=Math.max(0,(rtimer.end-Date.now())/(rtimer.mins*6e4)),back=Math.floor(rtimer.c*f*shs.ref/100);spent=Math.max(0,spent-back);const n=rtimer.n;rtimer=null;sv();rtRender();rMotiv();toast('Stopped '+n+(back?' · +'+back+' XP refunded':''))}
+/* savings goal */
+function svRender(){
+  const el=$('svcard');if(!el)return;const r=rwd.find(x=>x.id===rsave);
+  if(!r){el.style.display='none';return}
+  el.style.display='';const bal=balance(),p=Math.min(100,bal/r.c*100),days14=Object.entries(xpd||{}).filter(([d])=>d>shiftD(iso(),-14)).reduce((a,[,v])=>a+v,0)/14;
+  const est=bal>=r.c?'Ready to buy 🎉':days14>0?'About '+Math.ceil((r.c-bal)/days14)+' days at your pace':'Earn some XP to get started';
+  el.innerHTML=`<div class="cardhead"><div class="lbl">${esc(r.ico||'🎁')} Saving for</div><button class="lnk" data-act="rewards">Open shop</button></div><div class="big" style="font-size:19px"><b>${esc(r.n)}</b></div><div class="bar" style="margin:8px 0"><div class="bar-fill" style="width:${p}%;background:${bal>=r.c?'#30d158':'var(--acc,#4fd1ff)'};box-shadow:none"></div></div><div class="sub">${bal} / ${r.c} XP · ${est}</div>`;
+}
+/* arrival prompt */
+function arrivePrompt(){
+  if(!shs.arr||!hh.ses||hh.ses.asked)return;hh.ses.asked=true;sv();
+  openSheet(`<h2>Welcome home 🏠</h2><div class="sub" style="margin:-6px 0 12px">Happy Hour is on for one hour. What is the one thing to finish before dinner?</div><div class="field"><input id="ar-t" maxlength="90" placeholder="e.g. Colle 5 exercises 1 and 2"></div><button class="btn primary" id="ar-go">Add it and start a session</button><button class="btn" id="ar-add">Just add it</button><button class="btn" id="ar-no">Not now</button>`);
+  const mk=()=>{const t=$('ar-t').value.trim();if(!t){toast('Write it first');return null}tasks.unshift({id:uid(),text:t,xp:25,due:iso(),pin:true,gid:''});sv();return t};
+  $('ar-add').onclick=()=>{if(mk()){closeSheet();rHomeTasks();toast('Pinned on Home 📌')}};
+  $('ar-go').onclick=()=>{const t=mk();if(!t)return;closeSheet();F.mode='short';F.kind='focus';F.task=t;F.status='idle';show('focus');setTimeout(fStart,350)};
+  $('ar-no').onclick=closeSheet;
+}
+/* rescue */
+const noWorkToday=()=>!focusToday()&&!donelog.some(x=>x.d===iso());
+function rRescue(){
+  const el=$('rescue');if(!el)return;
+  if(!(shs.resc&&nowMin()>=1080&&noWorkToday()&&!isLazy())){el.style.display='none';return}
+  el.style.display='';el.innerHTML=`<div class="cardhead"><div class="lbl">🛟 Smallest win</div></div><div class="lmsg">Nothing done today yet. No need for a big session: one short block and the day counts. +15 XP bonus.</div><button class="btn primary" data-act="rescuego">Start a short session</button>`;
+}
+/* share my week */
+async function shareWeek(){
+  const k=weekStats(),cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const x=cv.getContext('2d');
+  const g=x.createLinearGradient(0,0,1080,1350);g.addColorStop(0,'#0b1020');g.addColorStop(1,'#2a1740');x.fillStyle=g;x.fillRect(0,0,1080,1350);
+  x.fillStyle='#ffb020';x.font='700 44px system-ui';x.fillText('MY WEEK · AETHER',80,130);
+  x.fillStyle='#fff';x.font='800 150px system-ui';x.fillText(k.xpW+' XP',80,330);
+  x.fillStyle='#9aa6bf';x.font='500 40px system-ui';x.fillText('earned this week · level '+lv,80,395);
+  const T=[[f1(k.foc/60)+' h','focus time'],[String(k.done),'tasks done'],[k.act+'/7','active days'],[String(wch.cl.length),'challenges won']];
+  T.forEach((t,i)=>{const cx=80+(i%2)*470,cy=520+Math.floor(i/2)*260;x.fillStyle='rgba(255,255,255,.07)';x.beginPath();x.roundRect(cx,cy,440,220,36);x.fill();x.fillStyle='#fff';x.font='800 84px system-ui';x.fillText(t[0],cx+36,cy+110);x.fillStyle='#9aa6bf';x.font='500 36px system-ui';x.fillText(t[1],cx+36,cy+170)});
+  if(why.t){x.fillStyle='#ffd60a';x.font='italic 500 44px system-ui';x.fillText('🎯 '+why.t.slice(0,40),80,1170)}
+  x.fillStyle='#6b7690';x.font='500 32px system-ui';x.fillText(new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),80,1260);
+  cv.toBlob(async b=>{const f=new File([b],'my-week.png',{type:'image/png'});try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'My week'});return}}catch(e){if(e&&e.name==='AbortError')return}const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='my-week.png';a.click();toast('Image saved')});
+}
+async function rbuy(id,el){
+  const r=rwd.find(x=>x.id===id);if(!r)return;
+  const why=rcheck(r),shake=()=>{if(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}if(shs.hap)vib(15)};
+  if(why){shake();toast(why);return}
+  if(balance()<r.c){shake();toast(r.c-balance()+' XP to go for "'+r.n+'"');return}
+  if(!await ask({title:'Buy "'+r.n+'"?',msg:'−'+r.c+' XP from your balance'+(r.mins?' · starts a '+r.mins+' min timer':'')+'. Your level stays the same.',ok:'Buy',cancel:'Cancel'}))return;
+  spent+=r.c;rlog.push({id:r.id,n:r.n,c:r.c,t:Date.now()});if(shs.al){allowLeft();alw.left=Math.max(0,alw.left-r.c)}
+  if(r.mins)rtimer={n:r.n,c:r.c,mins:r.mins,end:Date.now()+r.mins*6e4};
+  sv();if(shs.hap)vib(30);
+  const bx=(el&&el.getBoundingClientRect())||{left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+  burst(bx.left+bx.width/2,bx.top+bx.height/2,tierOf(r.c)>=2?60:34);coinRain(bx.left+bx.width/2,bx.top+bx.height/2);
+  if(el)el.classList.add('bought');
+  toast('Enjoy: '+r.n+' 🎉');if(shs.snd)chime();
+  setTimeout(()=>{rwSheet();rMotiv();rtRender();svRender()},650);
+}
+function coinRain(x,y){
+  for(let k=0;k<12;k++){const c=document.createElement('div');c.className='coinfx';c.textContent=k%3?'🪙':'✨';const a=Math.random()*Math.PI*2,d=60+Math.random()*90;
+    c.style.cssText+=`left:${x}px;top:${y}px;--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d-70}px;animation-delay:${k*25}ms`;document.body.appendChild(c);setTimeout(()=>c.remove(),1300)}
+}
+function rwAnim(){
+  const n=document.getElementById('rw-bal');
+  if(n){const v=+n.dataset.v,t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/700),e=1-Math.pow(1-p,3);n.textContent=Math.round(v*e);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.rwfill').forEach((b,i)=>{b.style.transitionDelay=(i*70+150)+'ms';b.style.width=b.dataset.w+'%'})));
+}
+function rwSettings(){
+  const N=(id,l,v,st)=>`<div><label class="hint">${l}</label><input id="${id}" type="number" inputmode="decimal" value="${v}" ${st||''}></div>`;
+  const T=(id,l,on)=>`<button class="chip ${on?'on':''}" id="${id}">${l}</button>`;
+  openSheet(`<h2>Shop settings</h2><button class="btn sm" data-sb="1">‹ Back</button>
+  <div class="lbl" style="margin-top:12px">Weekly allowance</div><div class="chips">${T('ss-al','Limit how much XP I can spend each week',shs.al)}</div>
+  <div class="two" style="margin:8px 0">${N('ss-amt','XP per week',shs.amt)}<div><label class="hint">Unspent carried over</label><div class="chips" id="ss-roll">${[0,50,100].map(v=>`<button class="chip ${shs.roll===v?'on':''}" data-v="${v}">${v}%</button>`).join('')}</div></div></div>
+  <div class="lbl" style="margin-top:12px">Treat sizes (by cost)</div><div class="two">${N('ss-t1','🌱→✨ from',shs.t1)}${N('ss-t2','✨→🔥 from',shs.t2)}${N('ss-t3','🔥→👑 from',shs.t3)}</div>
+  <div class="lbl" style="margin-top:12px">Commitments and timers</div><div class="two">${N('ss-cb','Bonus when kept (%)',shs.cb)}${N('ss-ref','Timer refund (%)',shs.ref)}</div>
+  <div class="lbl" style="margin-top:12px">Bonus XP (0 = off)</div><div class="two">${N('ss-gthr','Grade ≥ /20',shs.gthr)}${N('ss-gxp','gives XP',shs.gxp)}</div><div class="two" style="margin-top:6px">${N('ss-pxp','Fully prepared for a colle',shs.pxp)}${N('ss-sxp','Slept ≥ h gives XP',shs.sxp)}</div><div class="two" style="margin-top:6px">${N('ss-sth','Sleep threshold (h)',shs.sth)}<div></div></div>
+  <div class="lbl" style="margin-top:12px">Behaviour</div><div class="chips">${T('ss-arr','Ask what to do when I get home',shs.arr)}${T('ss-resc','Evening "smallest win" nudge',shs.resc)}${T('ss-snd','Sounds',shs.snd)}${T('ss-hap','Vibrations',shs.hap)}</div>
+  <button class="btn primary" id="ss-save" style="margin-top:14px">Save</button>`);
+  const B=$('sbody');
+  B.onclick=e=>{const c=e.target.closest('.chip');if(c){if(c.parentElement.id==='ss-roll'){[...c.parentElement.children].forEach(x=>x.classList.toggle('on',x===c))}else c.classList.toggle('on')}if(e.target.closest('[data-sb]')){rsub=null;rwSheet()}};
+  $('ss-save').onclick=()=>{const g=i=>+$(i).value||0,on=i=>$(i).classList.contains('on');const old=shs.al?shs.amt:0;
+    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
+    if(shs.al&&shs.amt!==old)alw.wk='';sv();rsub=null;rwSheet();rRescue();toast('Saved')};
+}
 let rtab='shop';
 function rwSheet(tab){
   if(tab){rtab=tab;if(tab!=='shop')rsub=null}
-  const tabs=[['shop','🛍 Shop'],['chal','🎯 Challenges'],['mil','🏅 Milestones'],['bad','🎖 Badges']];
+  if(rsub&&rsub.m==='set'&&rtab==='shop'){return rwSettings()}
+  const tabs=[['shop','🛍 Shop'],['com','🤝 Commit'],['chal','🎯 Challenges'],['mil','🏅 Milestones'],['bad','🎖 Badges']];
   let b='';
   if(rtab==='shop'){
     if(rsub&&rsub.m==='cats'){
       b=`<button class="btn sm" data-sb="1">‹ Back</button><div class="hint" style="text-align:left">Categories: rename or remove them. Rewards of a removed category go to “No category”.</div>`+rcat.map((c,i)=>`<div class="two" style="margin:6px 0"><input data-ci="${i}" value="${esc(c)}" maxlength="24"><button class="btn sm danger" data-cd="${i}" style="flex:none">✕</button></div>`).join('')+`<div class="two" style="margin-top:8px"><input id="ca-n" placeholder="🎁 New category" maxlength="24"><button class="btn sm primary" id="ca-b" style="flex:none">Add</button></div>`;
     }else if(rsub&&rsub.m==='edit'){
       const r=rsub.id?rwd.find(x=>x.id===rsub.id):null,d=r||{n:'',c:50,ico:'🎁',cat:rcf};
-      b=`<button class="btn sm" data-sb="1">‹ Back</button><div class="field"><label>Reward</label><div class="two"><input id="re-i" value="${esc(d.ico||'🎁')}" maxlength="4" style="max-width:62px;text-align:center;font-size:22px"><input id="re-n" value="${esc(d.n)}" placeholder="e.g. Cinema evening" maxlength="50"></div></div><div class="field"><label>Cost (XP) · you have ${balance()}</label><input id="re-c" type="number" inputmode="numeric" value="${d.c}"></div><div class="field"><label>Category</label><div class="chips" id="re-k"><button class="chip ${!d.cat?'on':''}" data-v="">No category</button>${rcat.map(c=>`<button class="chip ${c===d.cat?'on':''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div></div><button class="btn primary" id="re-s">${r?'Save':'Add reward'}</button>${r?'<button class="btn danger" id="re-d">Delete</button>':''}`;
+      b=`<button class="btn sm" data-sb="1">‹ Back</button><div class="field"><label>Reward</label><div class="two"><input id="re-i" value="${esc(d.ico||'🎁')}" maxlength="4" style="max-width:62px;text-align:center;font-size:22px"><input id="re-n" value="${esc(d.n)}" placeholder="e.g. Cinema evening" maxlength="50"></div></div><div class="field"><label>Cost (XP) · you have ${balance()}</label><input id="re-c" type="number" inputmode="numeric" value="${d.c}"></div><div class="field"><label>Category</label><div class="chips" id="re-k"><button class="chip ${!d.cat?'on':''}" data-v="">No category</button>${rcat.map(c=>`<button class="chip ${c===d.cat?'on':''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div></div><details class="rwrules" style="margin:6px 0 10px"${(d.lim||d.cd||d.minLv||d.fm||d.gr||d.mins||d.from||d.to)?' open':''}><summary class="btn sm" style="display:inline-block">⚙ Rules (all optional)</summary><div class="hint" style="text-align:left">Leave empty or 0 for no rule.</div>
+<div class="two" style="margin:6px 0"><div><label class="hint">Max per week</label><input id="re-lim" type="number" inputmode="numeric" value="${d.lim||''}"></div><div><label class="hint">Cooldown (days)</label><input id="re-cd" type="number" inputmode="numeric" value="${d.cd||''}"></div></div>
+<div class="two" style="margin:6px 0"><div><label class="hint">Min. level</label><input id="re-lv" type="number" inputmode="numeric" value="${d.minLv||''}"></div><div><label class="hint">Focus min today first</label><input id="re-fm" type="number" inputmode="numeric" value="${d.fm||''}"></div></div>
+<div class="two" style="margin:6px 0"><div><label class="hint">Needs a grade ≥ /20</label><input id="re-gr" type="number" inputmode="decimal" value="${d.gr||''}"></div><div><label class="hint">Timer (minutes)</label><input id="re-mn" type="number" inputmode="numeric" value="${d.mins||''}"></div></div>
+<div class="two" style="margin:6px 0"><div><label class="hint">Available from</label><input id="re-fr" type="date" value="${d.from||''}"></div><div><label class="hint">Until</label><input id="re-to" type="date" value="${d.to||''}"></div></div></details>
+<div class="chips" style="margin-bottom:10px"><button class="chip ${rsub.id&&rsave===rsub.id?'on':''}" id="re-sv">📌 Save for this (shown on Home)</button></div><button class="btn primary" id="re-s">${r?'Save':'Add reward'}</button>${r?'<button class="btn danger" id="re-d">Delete</button>':''}`;
     }else{
-      const list=rwd.filter(r=>!rcf||(rcf==='-'?!r.cat||!rcat.includes(r.cat):r.cat===rcf));
-      b=`<div class="chips" style="margin:8px 0"><button class="chip ${!rcf?'on':''}" data-f="">All</button>${rcat.map(c=>`<button class="chip ${rcf===c?'on':''}" data-f="${esc(c)}">${esc(c)}</button>`).join('')}<button class="chip" data-sc="1">✎</button></div>`+(list.length?list.map(r=>{const pr=Math.min(100,balance()/r.c*100),ok=balance()>=r.c,i=rwd.indexOf(r);return`<div class="card" style="padding:12px;margin:8px 0"><div class="two" style="align-items:center;gap:10px"><div style="font-size:26px;flex:none">${esc(r.ico||'🎁')}</div><div style="flex:1;min-width:0"><b>${esc(r.n)}</b><div class="hint" style="text-align:left;margin:0">${r.c} XP${ok?'':' · '+(r.c-balance())+' to go'}</div></div><div style="display:flex;flex-direction:column;gap:2px;flex:none"><button class="btn sm" data-u="${r.id}" style="padding:2px 8px;min-height:0" ${i===0?'disabled':''}>▲</button><button class="btn sm" data-dn="${r.id}" style="padding:2px 8px;min-height:0" ${i===rwd.length-1?'disabled':''}>▼</button></div></div><div style="height:5px;border-radius:3px;background:var(--line,#2a2f3a);margin:8px 0"><div style="height:5px;border-radius:3px;background:${ok?'#30d158':'var(--acc,#4fd1ff)'};width:${pr}%"></div></div><div class="two"><button class="btn sm ${ok?'primary':''}" data-b="${r.id}">${ok?'Buy':'🔒 Buy'}</button><button class="btn sm" data-ed="${r.id}" style="flex:none">✎ Edit</button></div></div>`}).join(''):'<div class="hint">Nothing here yet.</div>')+`<button class="btn" data-new="1">＋ New reward</button>`+(rlog.length?`<div class="hint" style="text-align:left;margin-top:10px">Recent: ${rlog.slice(-3).reverse().map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')}</div>`:'');
+      const list=rwd.filter(r=>!rcf||(rcf==='-'?!r.cat||!rcat.includes(r.cat):r.cat===rcf)),bal=balance();
+      b=`<div class="rwhero"><i class="st s1"></i><i class="st s2"></i><i class="st s3"></i><i class="st s4"></i><div class="rwc">🪙</div><div class="rwb"><div class="rwn" id="rw-bal" data-v="${bal}">0</div><div class="rws">XP to spend · hold a reward to edit or move it${shs.al?`<br>Weekly allowance: <b>${allowLeft()}</b> XP left`:''}</div></div></div>
+      <div class="chips" style="margin:2px 0 12px"><button class="chip ${!rcf?'on':''}" data-f="">All</button>${rcat.map(c=>`<button class="chip ${rcf===c?'on':''}" data-f="${esc(c)}">${esc(c)}</button>`).join('')}<button class="chip" data-sc="1">✎</button><button class="chip" data-ss="1">⚙</button></div><div id="rw-list">`+(list.length?list.map((r,i)=>{const pr=Math.min(100,bal/r.c*100),why=rcheck(r),ok=bal>=r.c&&!why,ci=Math.max(0,rcat.indexOf(r.cat)),col=COLORS[ci%COLORS.length],tr=tierOf(r.c);return`<div class="goal rw tier${tr} ${ok?'rok':'rlock'}" style="--i:${i};--rc:${col}" data-act="rbuy" data-hold="rwd" data-id="${r.id}"><div class="gd" style="background:${col}">${esc(r.ico||'🎁')}</div><div class="gm"><div class="gn">${esc(r.n)}</div><div class="gs">${r.c} XP · ${TIERS[tr][0]} ${TIERS[tr][1]} · ≈ ${worthTxt(r.c)} of focus${why?'<br>🔒 '+esc(why):ok?' · tap to buy':' · '+(r.c-bal)+' to go'}${r.mins?' · ⏳ '+r.mins+' min':''}${r.to?' · until '+fdm(r.to):''}</div><div class="bar"><div class="bar-fill rwfill" data-w="${pr}" style="width:0;background:${ok?'#30d158':col};box-shadow:none"></div></div></div><div class="rwtag">${rsave===r.id?'📌':ok?'Buy':'🔒'}</div></div>`}).join(''):'<div class="hint">Nothing here yet. Add your first reward.</div>')+`</div><button class="btn" data-new="1" style="margin-top:4px">＋ New reward</button>`+(rlog.length?`<div class="hint" style="text-align:left;margin-top:10px">Recent: ${rlog.slice(-3).reverse().map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')}</div>`:'');
     }
+  }else if(rtab==='com'){
+    const open=tasks.filter(t=>!t.rep&&!commits.some(c=>c.st==='open'&&c.tid===t.id)).slice(0,10);if(!cmSel.due)cmSel.due=shiftD(iso(),1);
+    b=`<div class="hint" style="text-align:left">Stake XP on finishing a task before a date. Done in time: your stake back + ${shs.cb}% bonus. Missed: the stake is lost.</div>`+
+    (open.length?`<div class="field"><label>Task</label><div class="chips" id="cm-t">${open.map(t=>`<button class="chip ${cmSel.tid===t.id?'on':''}" data-v="${t.id}">${esc(t.text.slice(0,28))}</button>`).join('')}</div></div><div class="two"><div><label class="hint">Stake (XP)</label><input id="cm-s" type="number" inputmode="numeric" value="${cmSel.stake}"></div><div><label class="hint">Done before (included)</label><input id="cm-d" type="date" value="${cmSel.due}" min="${iso()}"></div></div><button class="btn primary" id="cm-go" style="margin-top:10px">Make the commitment</button>`:'<div class="hint">No open task to commit to. Add a task first.</div>')+
+    '<div class="lbl" style="margin-top:16px">Your commitments</div>'+(commits.length?commits.slice().reverse().slice(0,10).map(c=>`<div class="two" style="margin:6px 0;align-items:center"><div style="flex:1;min-width:0"><b>${esc(c.text)}</b><div class="hint" style="text-align:left;margin:0">${c.stake} XP · before ${fdm(c.due)}</div></div><span class="gpill ${c.st==='won'?'':'todo'}">${c.st==='won'?'Kept ✓':c.st==='lost'?'Missed':'Open'}</span></div>`).join(''):'<div class="hint">None yet.</div>');
   }else if(rtab==='chal'){
     b=`<div class="hint" style="text-align:left">New challenges every Monday. Bonus XP when you claim them.</div>`+chals().map(c=>{const ok=c.v>=c.g,cl=wch.cl.includes(c.id);return`<div style="margin:10px 0"><div class="two" style="align-items:center"><div style="flex:1"><b>${c.t}</b><div class="hint" style="text-align:left;margin:0">${Math.min(c.v,c.g)}/${c.g}${c.u} · +${c.b} XP</div></div><button class="btn sm ${ok&&!cl?'primary':''}" data-c="${c.id}" style="flex:none" ${ok&&!cl?'':'disabled'}>${cl?'Claimed ✓':'Claim'}</button></div><div style="height:6px;border-radius:3px;background:var(--line,#2a2f3a);margin-top:6px"><div style="height:6px;border-radius:3px;background:var(--acc,#4fd1ff);width:${Math.min(100,c.v/c.g*100)}%"></div></div></div>`}).join('');
   }else if(rtab==='mil'){
     b=`<div class="hint" style="text-align:left">Choose your own reward for each level. Tap to edit it, claim it once you reach the level (current level ${lv}).</div>`+MILE.map(L=>{const m=mil[L]||{t:'',c:false},ok=lv>=L;return`<div class="two" style="margin:6px 0;align-items:center"><div style="flex:1;min-width:0"><b>Level ${L}</b><div class="hint" style="text-align:left;margin:0;cursor:pointer" data-e="${L}">${esc(m.t||'＋ Choose a reward')}</div></div><button class="btn sm ${ok&&!m.c&&m.t?'primary':''}" data-m="${L}" style="flex:none" ${ok&&!m.c&&m.t?'':'disabled'}>${m.c?'Claimed ✓':ok?'Claim':'🔒'}</button></div>`}).join('');
-  }else b=`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">`+badges().map(([i,n,ok])=>`<div class="card" style="padding:12px;text-align:center;opacity:${ok?1:.35}"><div style="font-size:26px">${i}</div><div class="hint" style="margin:4px 0 0">${n}</div></div>`).join('')+`</div>`;
+  }else b=`<button class="btn" data-share="1" style="margin-bottom:10px">📤 Share my week</button><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">`+badges().map(([i,n,ok])=>`<div class="card" style="padding:12px;text-align:center;opacity:${ok?1:.35}"><div style="font-size:26px">${i}</div><div class="hint" style="margin:4px 0 0">${n}</div></div>`).join('')+`</div>`;
   openSheet(`<h2>Rewards · ${balance()} XP to spend</h2><div class="chips" id="rw-t">${tabs.map(([k,l])=>`<button class="chip ${k===rtab?'on':''}" data-k="${k}">${l}</button>`).join('')}</div>${b}`);
+  rwAnim();
   const B=$('sbody');
   B.onchange=e=>{const i=e.target.dataset.ci;if(i==null)return;const o=rcat[+i],v=e.target.value.trim();if(!v||rcat.includes(v)){e.target.value=o;return}rcat[+i]=v;rwd.forEach(r=>{if(r.cat===o)r.cat=v});if(rcf===o)rcf=v;sv()};
   B.onclick=async e=>{
     const t=e.target.closest('[data-k]');if(t){rwSheet(t.dataset.k);return}
-    const by=e.target.closest('[data-b]');if(by){const r=rwd.find(x=>x.id===by.dataset.b);if(!r)return;if(balance()<r.c){toast('Not enough XP · you have '+balance());return}if(!await ask({title:'Buy "'+r.n+'"?',msg:'−'+r.c+' XP from your balance. Your level stays the same.',ok:'Buy',cancel:'Cancel'}))return;spent+=r.c;rlog.push({n:r.n,c:r.c,t:Date.now()});sv();vib(30);burst(innerWidth/2,innerHeight/2,30);toast('Enjoy: '+r.n+' 🎉');rwSheet();rMotiv();return}
     const sh=(f)=>{f();sv();rwSheet()};
     let q;
+    if(e.target.closest('[data-share]')){shareWeek();return}
+    if(q=e.target.closest('#cm-t .chip')){cmSel.stake=+($('cm-s')||{}).value||cmSel.stake;cmSel.due=($('cm-d')||{}).value||cmSel.due;cmSel.tid=q.dataset.v;rwSheet();return}
+    if(e.target.closest('#cm-go')){const t=tasks.find(x=>x.id===cmSel.tid),st=Math.round(+$('cm-s').value),du=$('cm-d').value;if(!t){toast('Pick a task');return}if(!(st>=10)){toast('Stake at least 10 XP');return}if(st>balance()){toast('Not enough XP · you have '+balance());return}if(!du||du<iso()){toast('Pick a date');return}spent+=st;commits.push({id:uid(),tid:t.id,text:t.text,due:du,stake:st,bonus:shs.cb,st:'open'});cmSel={tid:'',stake:50,due:''};sv();if(shs.hap)vib(25);toast('Commitment made 🤝');rwSheet();rMotiv();return}
     if(e.target.closest('[data-sb]')){rsub=null;rwSheet();return}
     if(q=e.target.closest('[data-f]')){rcf=q.dataset.f;rwSheet();return}
     if(e.target.closest('[data-sc]')){rsub={m:'cats'};rwSheet();return}
+    if(e.target.closest('[data-ss]')){rsub={m:'set'};rwSheet();return}
     if(e.target.closest('[data-new]')){rsub={m:'edit',id:''};rwSheet();return}
-    if(q=e.target.closest('[data-ed]')){rsub={m:'edit',id:q.dataset.ed};rwSheet();return}
-    if(q=e.target.closest('[data-u],[data-dn]')){const id=q.dataset.u||q.dataset.dn,i=rwd.findIndex(r=>r.id===id),j=q.dataset.u?i-1:i+1;if(j>=0&&j<rwd.length)sh(()=>{[rwd[i],rwd[j]]=[rwd[j],rwd[i]]});return}
+    if(e.target.closest('#re-sv')){e.target.closest('#re-sv').classList.toggle('on');return}
     if(q=e.target.closest('#re-k .chip')){[...$('re-k').children].forEach(c=>c.classList.toggle('on',c===q));return}
-    if(e.target.closest('#re-s')){const n=$('re-n').value.trim(),c=Math.round(+$('re-c').value),k=$('re-k').querySelector('.on'),cat=k?k.dataset.v:'';if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}const ico=$('re-i').value.trim()||'🎁';if(rsub.id){Object.assign(rwd.find(r=>r.id===rsub.id),{n,c,ico,cat})}else rwd.push({id:uid(),n,c,ico,cat});rsub=null;sv();rwSheet();return}
+    if(e.target.closest('#re-s')){const n=$('re-n').value.trim(),c=Math.round(+$('re-c').value),k=$('re-k').querySelector('.on'),cat=k?k.dataset.v:'';if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}const ico=$('re-i').value.trim()||'🎁',nv=i=>Math.max(0,+$(i).value||0),ex={lim:nv('re-lim'),cd:nv('re-cd'),minLv:nv('re-lv'),fm:nv('re-fm'),gr:nv('re-gr'),mins:nv('re-mn'),from:$('re-fr').value,to:$('re-to').value},sv1=$('re-sv').classList.contains('on');let rid=rsub.id;if(rid){Object.assign(rwd.find(r=>r.id===rid),{n,c,ico,cat},ex)}else{rid=uid();rwd.push(Object.assign({id:rid,n,c,ico,cat},ex))}if(sv1)rsave=rid;else if(rsave===rid)rsave='';rsub=null;sv();rwSheet();return}
     if(e.target.closest('#re-d')){if(await ask({title:'Delete this reward?',ok:'Delete',cancel:'Keep',danger:true})){rwd=rwd.filter(r=>r.id!==rsub.id);rsub=null;sv();rwSheet()}return}
     if(q=e.target.closest('[data-cd]')){const i=+q.dataset.cd,old=rcat[i];rcat.splice(i,1);rwd.forEach(r=>{if(r.cat===old)r.cat=''});if(rcf===old)rcf='';sv();rwSheet();return}
     if(e.target.closest('#ca-b')){const v=$('ca-n').value.trim();if(v&&!rcat.includes(v))rcat.push(v);sv();rwSheet();return}
@@ -1409,7 +1616,7 @@ function gain(n,x,y,gid){
   const wk0=weekXP();xpd[iso()]=(xpd[iso()]||0)+n;if(wk0<wgoal&&wk0+n>=wgoal)setTimeout(()=>{toast('Weekly XP goal reached 🎉');if(cur==='home')rMotiv()},1200);
   const before=lv;xp+=n;
   while(xp>=needed(lv)){xp-=needed(lv);lv++}
-  if(x!=null)floatText(x,y,'+'+n+' XP');
+  if(x!=null)floatText(x,y,(hhMult()>1?'🔥 ':'')+'+'+n+' XP');
   if(lv>before)setTimeout(()=>levelUp(lv),700);
   return lv>before;
 }
@@ -1438,7 +1645,7 @@ function completeTask(id,btn){
   burst(x,y,18);
   let pay=xpFor(t);const late=daysLate(t);if(t.due&&t.due>iso()){pay=Math.round(pay*1.2);setTimeout(()=>toast('Done early: +20% XP ⚡'),900)}
   tasks.splice(i,1);donelog.push({d:iso(),xp:pay,t:Date.now()});
-  gain(pay,x,y-10,t.gid);sv();
+  gain(pay,x,y-10,t.gid);sv();commitWin(t.id);
   if(late&&pay<(t.xp||20))toast('Late by '+late+' day'+(late>1?'s':'')+' · +'+pay+' XP instead of '+(t.xp||20));
   const st=$('hli');st.classList.remove('pop');void st.offsetWidth;st.classList.add('pop');
   if(cur==='tasks')rLevel();
@@ -1632,7 +1839,7 @@ function liftStart(t,kind,e){
   if(t.classList.contains('mini')){if(kind==='task')editTask(t.dataset.id);return}
   const box=t.parentElement;
   const rows=[...box.children].filter(x=>x.dataset.hold===kind&&x.dataset.id!=='_');
-  const i0=rows.indexOf(t);if(i0<0){kind==='goal'?editGoal(t.dataset.id):editTask(t.dataset.id);return}
+  const i0=rows.indexOf(t);if(i0<0){kind==='goal'?editGoal(t.dataset.id):kind==='rwd'?(rsub={m:'edit',id:t.dataset.id},rwSheet()):editTask(t.dataset.id);return}
   const sc=window.scrollY,rc=rows.map(r=>r.getBoundingClientRect());
   const gap=rows.length>1?Math.max(0,rc[1].top-rc[0].bottom):10;
   LIFT={el:t,kind,id:t.dataset.id,rows,i0,ni:i0,moved:false,sy:e.clientY,y:e.clientY,sc0:sc,tops:rc.map(r=>r.top+sc),hs:rc.map(r=>r.height),gap};
@@ -1655,18 +1862,19 @@ function liftMove(){
 }
 function liftEnd(cancelled){
   const L=LIFT;if(!L)return;LIFT=null;cancelAnimationFrame(LIFTRAF);
-  if(!L.moved){L.el.classList.remove('lift');if(!cancelled){L.kind==='goal'?editGoal(L.id):editTask(L.id)}return}
+  if(!L.moved){L.el.classList.remove('lift');if(!cancelled){L.kind==='goal'?editGoal(L.id):L.kind==='rwd'?(rsub={m:'edit',id:L.id},rwSheet()):editTask(L.id)}return}
   const slot=L.slot&&L.slot[L.i0]!=null?L.slot[L.i0]:L.tops[L.i0];
   L.el.style.transition='transform .2s var(--ease),box-shadow .2s';L.el.style.transform='translateY('+(slot-L.tops[L.i0])+'px)';
   setTimeout(()=>{
     L.rows.forEach(r=>{r.classList.remove('lift','shift');r.style.transform='';r.style.transition=''});
     if(!cancelled&&L.ni!==L.i0){
       const ids=L.rows.map(r=>r.dataset.id);ids.splice(L.i0,1);ids.splice(L.ni,0,L.id);
-      if(L.kind==='goal'){const by=Object.fromEntries(goals.map(g=>[g.id,g]));const rest=goals.filter(g=>!ids.includes(g.id));goals=ids.map(i=>by[i]).filter(Boolean).concat(rest)}
+      if(L.kind==='rwd'){const set=new Set(ids),slots=[];rwd.forEach((t,i)=>{if(set.has(t.id))slots.push(i)});const by=Object.fromEntries(rwd.map(t=>[t.id,t]));ids.forEach((id,k)=>{rwd[slots[k]]=by[id]})}
+      else if(L.kind==='goal'){const by=Object.fromEntries(goals.map(g=>[g.id,g]));const rest=goals.filter(g=>!ids.includes(g.id));goals=ids.map(i=>by[i]).filter(Boolean).concat(rest)}
       else{const set=new Set(ids),slots=[];tasks.forEach((t,i)=>{if(set.has(t.id))slots.push(i)});const by=Object.fromEntries(tasks.map(t=>[t.id,t]));ids.forEach((id,k)=>{tasks[slots[k]]=by[id]})}
       sv();vib(15);
     }
-    if(cur==='tasks')rTasks();else if(cur==='home')rHomeTasks();
+    if(L.kind==='rwd')rwSheet();else if(cur==='tasks')rTasks();else if(cur==='home')rHomeTasks();
   },210);
 }
 function liftScroll(){
@@ -1696,7 +1904,7 @@ document.addEventListener('touchmove',e=>{if(LIFT&&e.cancelable)e.preventDefault
     tm=setTimeout(()=>{
       const t=el;if(!t)return;fired=true;t.classList.remove('holding');t.classList.add('held');setTimeout(()=>t.classList.remove('held'),380);vib(25);
       const a=t.dataset.hold;
-      if(a==='task'||a==='goal'){liftStart(t,a,last)}
+      if(a==='task'||a==='goal'||a==='rwd'){liftStart(t,a,last)}
       else if(a==='ev')editEvent(t.dataset.id,null,t.dataset.d);
       else if(a==='slot'){
         const r=t.getBoundingClientRect(),y=Math.max(0,last.clientY-r.top-10);
@@ -1739,10 +1947,13 @@ document.addEventListener('click',e=>{
   else if(act==='dgo')dGoDay(+a.dataset.n);
   else if(act==='wgoalset')wgoalEdit();
   else if(act==='rewards'){rsub=null;rwSheet()}
+  else if(act==='rbuy')rbuy(a.dataset.id,a)
+  else if(act==='rtstop')rtStop()
+  else if(act==='rescuego'){F.mode='short';F.kind='focus';F.task='Smallest win';F.status='idle';show('focus');setTimeout(fStart,350)}
   else if(act==='hhset')hhSheet();
   else if(act==='hhgo'){show('focus')}
   else if(act==='hhhere'){hhSheet()}
-  else if(act==='hhman'){if(hhStart())toast('Happy Hour: 1 hour of ×'+hh.mult+' XP 🎉');else toast('Already used today');rHH()}
+  else if(act==='hhman'){if(hhStart()){toast('Happy Hour: 1 hour of ×'+hh.mult+' XP 🎉');setTimeout(arrivePrompt,1200)}else toast('Already used today');rHH()}
   else if(act==='whyedit')whyEdit();
   else if(act==='wreview')weekReview();
   else if(act==='hr'){const d=dayh[rd()]=dayh[rd()]||{},k=a.dataset.k,dl=+a.dataset.d;d[k]=Math.max(0,Math.min(24,Math.round(((d[k]==null?(dl>0?0:0):+d[k])+dl)*2)/2));sv();rHrs();vib(8)}
@@ -1837,7 +2048,7 @@ function fRender(full,boot){
   drawTime(rem);drawRing(rem,boot);lastSec=rem;
   if(full){
     drawSide(false);
-    $('modes').innerHTML=Object.keys(MODES).map(k=>{const m=MODES[k];const dur=m.min>=60?Math.floor(m.min/60)+'h'+(m.min%60?pad(m.min%60):''):m.min+' min';return`<button class="mode ${F.mode===k?'on':''} ${F.status!=='idle'?'lock':''}" data-m="${k}" style="--mc:${m.c}"><i></i><b>${m.name}</b><span>${dur}</span></button>`}).join('');
+    $('modes').innerHTML=Object.keys(MODES).map(k=>{const m=MODES[k];const dur=m.min>=60?Math.floor(m.min/60)+'h'+(m.min%60?pad(m.min%60):''):m.min+' min';return`<button class="mode ${F.mode===k?'on':''} ${F.status!=='idle'?'lock':''}" data-m="${k}" style="--mc:${m.c}"><i></i><b>${m.name}</b><span>${dur}</span><em class="mxp">+${xpv(m.xp)} XP</em></button>`}).join('');
     fCtl();fChips();rFtask();
     fMsg(F.status==='idle'?'Pick a mode, then start when you are ready.':F.status==='pause'?'Paused. Take a breath.':F.status==='done'?'Session complete. Nice work.':MSGS[0]);
   }
@@ -1919,17 +2130,18 @@ function fStart(){
 function fElapsedMin(){return Math.floor((fDur()-fRemain())/60)}
 function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
   const M=MODES[F.mode];F.status='done';F.rem=0;
+  let resc=false;if(F.kind==='focus'){resc=shs.resc&&nowMin()>=1080&&noWorkToday()}
   if(F.kind==='focus'){
     fhist.push({task:F.task||'Focus',min:M.min,date:fk(),ts:Date.now(),mode:F.mode});
     if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,M.min);
     {const s=F.start||Date.now()-M.min*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+M.min));cal.push({id:uid(),title:F.task||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+M.min+' min',color:1,kind:'focus'})}
-    sv();gain(F.mode==='intense'?Math.round(M.xp*1.25):M.xp);if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);
+    sv();gain(F.mode==='intense'?Math.round(M.xp*1.25):M.xp);if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);if(resc)setTimeout(()=>{gain(15,innerWidth/2,innerHeight*.4);toast('🛟 Smallest win: +15 XP')},1500);
   }else sv();
   sv();vib(80);chime();
-  if(cur!=='focus')toast(F.kind==='focus'?'Focus session complete · +'+M.xp+' XP':'Break is over');
+  if(cur!=='focus')toast(F.kind==='focus'?'Focus session complete · +'+xpn(F.mode==='intense'?Math.round(M.xp*1.25):M.xp)+' XP':'Break is over');
   if(cur==='focus'){
     const r=$('device').getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,50);
-    if(F.kind==='focus')floatText(r.left+r.width/2,r.top+r.height/2,'+'+M.xp+' XP');
+    if(F.kind==='focus')floatText(r.left+r.width/2,r.top+r.height/2,'+'+xpn(F.mode==='intense'?Math.round(M.xp*1.25):M.xp)+' XP');
     fRender(true,true);
   }
 }
@@ -1960,6 +2172,8 @@ document.addEventListener('click',e=>{
   else if(a==='reset'){F.kind='focus';F.status='idle';sv();fRender(true,true)}
 });
 setInterval(()=>{try{if(cur==='home'){hhLoc();rHH()}}catch(e){}},60000);
+setInterval(()=>{try{hhTick();bonusSweep();commitSweep()}catch(e){}},8000);setInterval(()=>{try{if(rtimer)rtRender()}catch(e){}},1000);setTimeout(()=>{try{bonusSweep();commitSweep();rtRender();svRender();rRescue()}catch(e){}},1500);setTimeout(()=>{try{hhTick()}catch(e){}},600);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{hhLoc(true);hhTick()}catch(e){}}});
 setInterval(()=>{
   fPauseCheck();
   if(F.status==='run'){
@@ -2295,17 +2509,17 @@ async function filesToParts(files,onProg,per=6){
 }
 
 const SYS_TRANSCRIBE="You are a meticulous transcriber of scanned handwritten or printed course notes from a French classe préparatoire (CPGE, first year). Convert the pages into clean Markdown, in the language of the notes (French unless the notes are in English). Rules: keep the original structure (chapter and section titles as #, ##, ###; definitions, théorèmes, propositions, propriétés, démonstrations, exemples, remarques, formulas). Write ALL mathematics, physics and chemistry formulas in LaTeX between $...$ (inline) or $$...$$ (display). Reproduce exactly what is written. Never add, correct or complete content, even if you think it is wrong. If something is illegible write [illisible]. Describe each figure in one short italic line like *(schéma : ...)*. Output only the Markdown, no comments.";
-const SYS_PROGRAMME="You read a 'programme de colles' given by a teacher in a French classe préparatoire. Extract the list of chapters/topics the student may be questioned on. Answer with ONLY a JSON object, no other text: {\"title\":\"short title\",\"chapters\":[{\"title\":\"chapter name\",\"detail\":\"precise content, notions, theorems or exercise types listed (one or two sentences)\"}],\"remarks\":\"any special instruction (or empty string)\"}. Keep the teacher's wording. Merge duplicated lines. Maximum 12 chapters.";
+const SYS_PROGRAMME="You read a 'programme de colles' given by a teacher in a French classe préparatoire. Answer with ONLY a JSON object, no other text: {\"title\":\"short title\",\"chapters\":[{\"title\":\"chapter name\",\"detail\":\"precise content, notions, theorems or exercise types listed (one or two sentences)\"}],\"cours\":[\"each QUESTION DE COURS item of the document, copied word for word, in the document's order, without the leading number\"],\"theme\":\"the teacher's text about the exercises (theme of the exercises, chapters they cover), copied word for word, or empty\",\"excluded\":\"anything the teacher says is NOT asked or not yet allowed in exercises (e.g. 'pas encore d'exercice avec ln et exp'), or empty\",\"remarks\":\"any other special instruction (or empty string)\"}. 'cours' must contain EVERY numbered question de cours of the programme and nothing else: do not add, merge, reorder, drop or reword any item. If the document has no list of questions de cours, use an empty array. 'chapters' lists the topics the student may be questioned on (course questions AND exercise theme), at most 12, in the teacher's wording.";
 const SYS_MOCK=(subj,dur,calc)=>"You are a teacher in a French classe préparatoire (MPSI, first year, lycée Aux Lazaristes) writing a 'devoir surveillé' (DS), i.e. a mock exam, in "+subj+". You receive: (1) MAIN LESSONS: the chapters the exam must be centred on; (2) COMPLEMENTARY LESSONS (optional): chapters that may appear in smaller parts or as prerequisites; (3) MODEL EXAMS (optional): real past papers from the student's teachers, only to copy their style, level, length, point scale and layout. Write the paper in French, in Markdown, with LaTeX between $...$ and $$...$$. Layout:\n\n# DS blanc — "+subj+"\nA line with: Durée : "+dur+" — Calculatrice : "+(calc?'AUTORISÉE':'NON autorisée')+".\nThen a short bullet list of instructions in the style of the model exams (soin / présentation, résultats encadrés, réponses non justifiées ou sans unité = 0 point, exercices indépendants and may be done in any order). Then 3 or 4 independent exercises (or problem parts), titled 'I. Title (n pts)', 'II. ...', with numbered questions (I.1), (I.2)... of increasing difficulty, the total being 20 points. Include data, constants or figure descriptions the questions need. The main lessons must carry about 75 to 85 percent of the points; complementary lessons the rest. Match the model exams' difficulty and typical question types (standard computations, proofs from the course, application, one harder final question). The length must fit the duration.\n\n<!--CORRECTIONS-->\n## Corrigé\nA complete, rigorous correction for every question, with the final results clearly stated, the point scale (barème) per question, and for each exercise a short remark on the classic trap or method. Double-check every calculation, unit and sign before writing; correctness matters more than length.\n\nRules: use only notations, definitions and results of the student's course (state any needed extra result as 'rappel'); never copy a question from the model exams, create new ones; no introduction or closing sentence outside this structure.";
 const SYS_DIGEST=(others)=>"You build a compact MEMORY NOTE of one lesson from a French classe préparatoire student, to be reused later instead of the full text (it saves tokens). Write in French, Markdown, with LaTeX $...$ for formulas, at most 350 words, exactly with these sections:\n**Mots-clés:** 8 to 12 key terms separated by commas.\n**À retenir:** the definitions, theorems, formulas and standard methods of the lesson as terse bullets (statement + conditions). Keep the student's notation.\n**Pièges:** 2 or 3 classic mistakes.\n**Liens:** which of the OTHER LESSONS below it uses or prepares, as 'Titre exact — relation courte' (only genuine links, at most 5; write 'aucun' if none).\nOTHER LESSONS:\n"+(others||'(none)')+"\nNo introduction or closing sentence.";
-const SYS_RESUME=(what,subj)=>"You are an excellent teacher in a French classe préparatoire (first year, "+subj+"). Write the student's REVISION RÉSUMÉ for "+what+": everything he or she needs to know and be able to do to get the best possible result, built ONLY from the student's own course below (their notations and results) and, for the order and emphasis, from the PROGRAMME or the list of main lessons. Write in French, Markdown, LaTeX between $...$ and $$...$$. Dense, scannable, no filler: at most about 1400 words. Structure:\n\n## Les priorités\nThe 5 to 8 things that earn the most points (what examiners always ask), ordered by importance.\n\n## Chapitre par chapitre\nFor each chapter or lesson (as a ### heading): **À savoir par cœur** (definitions, theorems with their hypotheses, key formulas), **Méthodes types** (how to attack the standard exercises, in 2 to 4 steps), **Pièges** (classic mistakes, units, signs, conditions forgotten).\n\n## Liens entre les chapitres\nHow chapters feed each other (a few bullets).\n\n## Check-list de dernière minute\nA short list of 8 to 12 checkboxes (- [ ]) the student can tick before the test.\n\nIf a STUDENT PROFILE is given, add a short '⚠️ Mes points faibles' section at the top aiming at his or her recurring mistakes, without quoting the profile. Never invent results absent from the course: if something essential is missing from the course, list it under '## À compléter' as 'rappel' with the standard statement. Do not reveal or reuse any exam or exercise sheet text. No introduction or closing sentence.";
+const SYS_RESUME=(what,subj)=>"You are an excellent teacher in a French classe préparatoire (first year, "+subj+"). Write the student's REVISION RÉSUMÉ for "+what+": everything he or she needs to know and be able to do to get the best possible result, built ONLY from the student's own course below (their notations and results) and, for the order and emphasis, from the PROGRAMME or the list of main lessons. Write in French, Markdown, LaTeX between $...$ and $$...$$. Dense, scannable, no filler: at most about 1400 words. Structure:\n\n## Les priorités\nThe 5 to 8 things that earn the most points (what examiners always ask), ordered by importance.\n\n## Chapitre par chapitre\nFor each chapter or lesson (as a ### heading): **À savoir par cœur** (definitions, theorems with their hypotheses, key formulas), **Méthodes types** (how to attack the standard exercises, in 2 to 4 steps), **Pièges** (classic mistakes, units, signs, conditions forgotten).\n\n## Liens entre les chapitres\nHow chapters feed each other (a few bullets).\n\n## Check-list de dernière minute\nA short list of 8 to 12 checkboxes (- [ ]) the student can tick before the test.\n\nIf a STUDENT PROFILE is given, add a short '⚠️ Mes points faibles' section at the top aiming at his or her recurring mistakes, without quoting the profile. If the PROGRAMME gives an exact list of questions de cours, the priorities and chapters must follow that list and its exercise theme, and nothing outside it. Never invent results absent from the course: if something essential is missing from the course, list it under '## À compléter' as 'rappel' with the standard statement. Do not reveal or reuse any exam or exercise sheet text. No introduction or closing sentence.";
 const SYS_VOCAB_TEXT="You read the text of a vocabulary file for a French student (for example general vocabulary, linking words such as connectors, useful expressions, word lists with or without translations). Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list\",\"langA\":\"language of the entries, e.g. French\",\"langB\":\"the other language, e.g. English\",\"pairs\":[{\"a\":\"word or expression\",\"b\":\"translation or short meaning\"}]}. Rules: extract EVERY entry in reading order and keep spelling and accents exactly; if the file already gives a translation or definition, keep it as b; if it only lists words or expressions in one language, write b yourself as the short, natural equivalent in the other language (French <-> English by default; for a connector give the connector, e.g. 'néanmoins' -> 'nevertheless / however'); if an entry has several meanings join them with ' / '; ignore page numbers, headings and decoration; skip anything unclear. Inside JSON strings escape backslashes and double quotes.";
 const METH_FMT="For EVERY method use exactly this layout (Markdown, French, LaTeX between $...$ and $$...$$):\n\n### Nom de la méthode\n**Quand l'utiliser :** the typical statements or situations where it applies (recognise it from the wording).\n**Pourquoi ça marche :** the idea in one or two sentences.\n**Rédaction :** the model write-up exactly as it should appear on a graded copy (full sentences, the standard phrases and connectors a teacher expects, every step in order: for example for a proof by induction the statement P(n), initialisation, hérédité with the hypothesis written out, conclusion). THIS IS THE MOST IMPORTANT PART: write it completely, with blanks like $\\dots$ only where the content depends on the problem.\n**Exemple :** a short concrete example, fully written up with that rédaction.\n**Piège :** the classic mistake to avoid (one line).\n\n";
 const SYS_METHODS=(subj,title)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). From the student's lesson '"+title+"' below, write the sheet of KEY METHODS of this chapter: every technique the student must master to solve the standard exercises and prove the standard results of this chapter (typically 6 to 14 methods, ordered as in the lesson). Include the general proof or reasoning techniques that this chapter's exercises call for (for example double inclusion, équivalence par chaînes, récurrence, raisonnement par l'absurde, contraposée, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, majoration/encadrement, changement de variable...) when they genuinely apply, marked '(méthode transversale)'. Prefer examples and notation taken from the student's lesson; otherwise use a standard example of the chapter. "+METH_FMT+"Start with a one-line '## Méthodes du chapitre : "+title+"'. Rules: stay faithful to the student's notation and to results stated in the lesson; every write-up must be mathematically/physically correct and complete; double-check each example. No introduction or closing sentence.";
 const SYS_METHODS_T=(subj)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). Write the sheet of CROSS-CHAPTER METHODS (méthodes transversales) of "+subj+" that a first-year student must master: "+(/math/i.test(subj)?"all the standard reasoning and proof techniques: double inclusion, équivalence (chaîne d'équivalences), implication directe / réciproque, contraposée, raisonnement par l'absurde, récurrence simple, double, forte, récurrence avec hérédité à plusieurs rangs, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, unicité (par l'absurde ou par différence), existence (construction, théorème des valeurs intermédiaires), contre-exemple, négation de quantificateurs, majoration/minoration, encadrement, passage aux inégalités, changement de variable, intégration par parties, symétrie/parité, raisonnement par analyse des cas limites, utilisation de la conjugaison/factorisation de l'angle moitié, etc.":"the standard reasoning habits of the subject: how to set up a problem, justify results, check homogeneity and orders of magnitude, approximations, structure of a clean answer, units and significant figures, and the typical solving methods of the year")+". Order them from the most frequent to the least. "+METH_FMT+"Start with '## Méthodes transversales : "+subj+"'. Every write-up must be correct and complete. No introduction or closing sentence.";
 const SYS_TD="You read a TD sheet (travaux dirigés: a series of exercises) given by a teacher in a French classe préparatoire. Answer with ONLY a JSON object, no other text: {\"title\":\"short title, e.g. TD 4 — Suites\",\"exercises\":[{\"title\":\"short name of the exercise, e.g. Exercice 3 — Suite de Fibonacci\",\"diff\":3,\"summary\":\"one short sentence on what it asks\"}],\"skills\":[{\"title\":\"a skill or thing to know or do to be able to solve this TD\",\"detail\":\"one short sentence\"}]}. Rules: list EVERY exercise in order (maximum 40); 'diff' is an integer from 1 (direct application of the course) to 5 (hard, multi-step or non-standard) judged from the statement and any star marks, 'ex: * or **' in the sheet, which raise the difficulty; 'skills' are 5 to 10 checkable items of the form 'Savoir démontrer ...', 'Maîtriser ...', 'Connaître ...' that a student ticks to say 'I am ready for this TD'. Keep the teacher's wording and language. Inside JSON strings escape backslashes and double quotes.";
 const SYS_TDCORR=(subj)=>"You are an experienced, rigorous teacher in a French classe préparatoire (first year, "+subj+"). You are given a TD sheet (the exercises, as text or pictures) and the student's COURSE as the reference. Write the full corrigé in French, Markdown, LaTeX between $...$ and $$...$$. For each exercise, in order, use a '## Exercice n' heading (use the sheet's own numbering) then: **Idée / méthode** (one or two lines naming the method, e.g. 'récurrence double', 'double inclusion'), then the complete, rigorous solution written exactly as a student should write it on a copy (hypotheses stated, each step justified, quantifiers and conclusions explicit), then **Résultat** clearly stated and, if relevant, **Piège** (a classic mistake). Stay faithful to the notations, definitions and results of the student's course, and cite which result is used ('d'après le théorème de ... du cours'); if a needed result is not in the course, state it as 'rappel'. Double-check every calculation before writing; correctness matters more than length. If a picture or part is unreadable, say so for that exercise instead of guessing. No introduction or closing sentence.";
-const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the student's COURSE (their own lesson notes, transcribed) as the reference, and the PROGRAMME the colle will cover. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\n6 short questions of the kind a colleur asks at the start (definitions, statements of theorems, quick proofs, standard formulas). Number them.\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes for the harder ones). For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\nFirst, short answers to the questions de cours (including the key idea of any proof). Then, for each exercise, a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nRules: stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Cover the programme's chapters evenly. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
+const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the PROGRAMME de colles (the teacher's own list: QUESTIONS DE COURS, THEME OF THE EXERCISES, EXCLUDED) and the student's COURSE (their own lesson notes, transcribed) as the reference. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\nOne question per item of the programme's QUESTIONS DE COURS list: same number, same order, same count, same topic. NEVER invent a question that is not in the list and NEVER skip one. Word each as the colleur would ask it, following the programme's own instructions (for example 'énoncer ces points et en démontrer un'). If the list is '(none)', write 6 short questions from the programme's chapters instead. Number them 1, 2, 3...\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes for the harder ones). They must follow the programme's THEME OF THE EXERCISES exactly: only the topics named there, none of the EXCLUDED ones, and only tools already seen in the course (nothing from later chapters). Spread them over the themes named. For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\n### Corrections des questions de cours\nFor EACH question, a heading '#### Question N : <the programme item>' with the same N as above, then the precise statement(s) and the key proof(s) the colleur expects, taken from the student's course. Cover every question. Then '### Corrections des exercices': for each exercise, a heading '#### Exercice N', a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nRules: stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
 const SYS_CARDS="You make spaced-repetition flashcards from a student's course notes (French classe préparatoire). Output ONLY a JSON array, no other text: [{\"q\":\"...\",\"a\":\"...\"}]. 12 to 20 cards covering the most important definitions, theorem statements (with hypotheses), key formulas and standard methods of the course, in French (or English if the course is in English). Each question must be answerable on its own; keep answers short and precise. Use LaTeX between $...$ for math. Do not invent anything that is not in the course. Inside JSON strings, write every LaTeX backslash doubled (\\\\frac, \\\\ell) so the JSON stays valid.";
 const SYS_ENGLISH="You are an English teacher in a French classe préparatoire (CPGE). The student has an oral English 'colle' about current affairs and must present and discuss a topic. You receive 2 topics, each with 2 recent news items (headline, outlet, short summary only: you do NOT have the full articles, so never invent details that are not in the summaries). For each topic write, in English: 1) 'Why it matters' in 3 sentences; 2) 'Key vocabulary': 10 useful words or expressions with a short definition; 3) 'Questions you may be asked': 5 questions; 4) 'A 2-minute outline': introduction, three points, conclusion, with useful connectors. Use Markdown with ## for each topic and ### for sub-parts. Do not use the dollar sign for currencies.";
 const SYS_VOCAB="You read photos of a vocabulary list from a language textbook (pairs of words or expressions in two languages, for example French and English). Extract EVERY pair in reading order. Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list or unit\",\"langA\":\"first language name in English, e.g. French\",\"langB\":\"second language name, e.g. English\",\"pairs\":[{\"a\":\"text in langA\",\"b\":\"text in langB\"}]}. Rules: keep spelling and accents exactly as printed; keep articles, 'to' before verbs and short qualifiers as printed; if a word has several translations join them with ' / '; ignore page numbers, headings, phonetic transcriptions and example sentences; if two columns are not clearly translations of each other, pair the words that are on the same line; skip anything illegible. Inside JSON strings escape backslashes and double quotes.";
@@ -2771,7 +2985,7 @@ function mockCard(){
   h+=ms.length?inFolders('mocks',ms,m=>m.folder||'',m=>{
     const stt=live['M'+m.id]?'Writing…':m.at?'Ready':m.err?'Failed — open to retry':'Not written yet';
     return '<button class="prow" style="--c:'+C.sc(m.subj)+'" data-a="mock" data-i="'+m.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(m.title)+'</div><div class="s">'+SUBJ[m.subj].n+' · '+esc(m.dur)+' · '+m.main.length+' main'+(m.comp.length?' + '+m.comp.length+' compl.':'')+' · '+stt+'</div></span>'+ico.chev+'</button>'}):'';
-  return h+'<button class="add" data-a="newMock">+ Create a mock exam</button></div>';
+  return h+'<button class="add" data-a="newMock">+ Create a mock exam</button><button class="add" data-a="impMock">⬆ Import a mock exam made elsewhere</button><button class="add" data-a="promptMock">📋 Prompt for a new Claude session</button></div>';
 }
 function vMock(id){
   const m=S.mocks.find(x=>x.id===id);if(!m){st.stack.pop();return ''}
@@ -2887,7 +3101,7 @@ function mkFiche(id){
     if(k==='p'){
       lab('Collecting your lessons…');const c=await courseFor(o);
       const prog=o.chapters.map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n');
-      body='PROGRAMME ('+SUBJ[o.subj].n+'):\n'+prog+(o.remarks?'\nTeacher note: '+o.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject: use the standard French prépa programme and say so at the top.)');used=(c.used||[]).join(', ');
+      body='PROGRAMME ('+SUBJ[o.subj].n+'):\n'+((o.cours||[]).length?'Questions de cours (exact list):\n'+o.cours.map((x,i)=>(i+1)+'. '+x).join('\n')+'\n'+(o.theme?'Theme of the exercises: '+o.theme+'\n':'')+(o.excl?'Excluded: '+o.excl+'\n':'')+'Chapters:\n':'')+prog+(o.remarks?'\nTeacher note: '+o.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject: use the standard French prépa programme and say so at the top.)');used=(c.used||[]).join(', ');
     }else{
       const x=await mockCtx(o,lab);
       body='MAIN LESSONS (the exam is centred on these):'+x.main+'\n\nCOMPLEMENTARY / LINKED LESSONS (memory notes):'+(x.comp||'\n(none)');used=o.main.map(i=>(S.lessons.find(l=>l.id===i)||{}).title).filter(Boolean).join(', ');
@@ -2928,7 +3142,7 @@ function vTDpage(id){
     const tot=t.exos.reduce((a,e)=>a+XPD[e.diff||3],0),got=t.exos.filter(e=>e.got).reduce((a,e)=>a+XPD[e.diff||3],0);
     h+='<div class="card"><div class="cardhead"><div class="lbl">Exercises</div><span class="gpill todo">'+dn+'/'+nx+'</span></div><div class="pbar" style="margin-bottom:8px"><i style="width:'+Math.round(100*dn/nx)+'%"></i></div>';
     h+='<div class="sub" style="margin:0 0 8px">Tick an exercise when it is done: you earn XP by difficulty (tap the stars to change it). '+got+' / '+tot+' XP earned.</div>';
-    h+=t.exos.map(e=>'<div class="todo tdex '+(e.done?'done':'')+'" data-a="tdEx" data-i="'+id+'|'+e.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(e.title)+'</b>'+(e.summary?'<div class="sub">'+esc(e.summary)+'</div>':'')+'</span><span class="dpill" data-a="tdDiff" data-i="'+id+'|'+e.id+'" title="Change difficulty">'+'★'.repeat(e.diff||3)+'<small>+'+XPD[e.diff||3]+(e.got?' ✓':'')+'</small></span></div>').join('');
+    h+=t.exos.map(e=>'<div class="todo tdex '+(e.done?'done':'')+'" data-a="tdEx" data-i="'+id+'|'+e.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(e.title)+'</b>'+(e.summary?'<div class="sub">'+esc(e.summary)+'</div>':'')+'</span><span class="dpill" data-a="tdDiff" data-i="'+id+'|'+e.id+'" title="Change difficulty">'+'★'.repeat(e.diff||3)+'<small>+'+(window.xpv&&!e.got?xpv(XPD[e.diff||3]):XPD[e.diff||3])+(e.got?' ✓':'')+'</small></span></div>').join('');
     h+='<div class="two2" style="margin-top:10px"><input id="td-new" placeholder="Add an exercise, e.g. Exercice 7"><button class="btn sm" style="flex:none" data-a="tdAddEx" data-i="'+id+'">Add</button></div></div>';
   }
   if((t.skills||[]).length){
@@ -3066,6 +3280,7 @@ function vProg(id){
       h+='<button class="btn primary" data-a="openSheet" data-i="'+id+'">Open exercises & corrections</button>';
     }
     if(!live[k])h+='<button class="btn '+(p.sheetAt?'':'primary')+'" data-a="mkSheet" data-i="'+id+'">'+(p.sheetAt?'Generate a new sheet':'Generate the sheet')+'</button>';
+    h+='<div class="row2" style="margin-top:8px"><button class="btn" data-a="impSheet" data-i="'+id+'">⬆ Import a sheet</button><button class="btn" data-a="promptSheet" data-i="'+id+'">📋 Prompt for Claude</button></div>';
     h+='</div>';
     h+='<div class="card"><div class="lbl">Revision résumé</div><div class="sub" style="margin-bottom:10px">Everything to know for this programme, built from your lessons: priorities, definitions and formulas, methods, traps, and a last-minute checklist.</div>'+liveBox('F'+id)+errBox('F'+id)+(live['F'+id]?'':'<button class="btn '+(p.fiAt?'':'primary')+'" data-a="fiche" data-i="p|'+id+'">'+(p.fiAt?'Open the résumé':'Generate the résumé')+'</button>')+'</div>';
   }
@@ -3443,9 +3658,9 @@ async function parseProg(id){
   const p=S.progs.find(x=>x.id===id);
   return run('P'+id,'Reading the programme…',async(lab,txt)=>{
     const parts=(await C.filesToParts(p.files,lab)).slice(0,3),blocks=[];parts.forEach(x=>x.blocks.forEach(b=>blocks.push(b)));
-    const r=await C.ai({system:C.SYS_PROGRAMME,content:blocks.concat([{type:'text',text:'Subject: '+SUBJ[p.subj].n+'. Extract the programme.'}]),max:3000,onText:txt});
+    const r=await C.ai({system:C.SYS_PROGRAMME,content:blocks.concat([{type:'text',text:'Subject: '+SUBJ[p.subj].n+'. Extract the programme.'}]),max:4000,onText:txt});
     const j=C.parseJson(r.text);if(!j.chapters||!j.chapters.length)throw new C.AIError('I could not find chapters in this file. Try a sharper photo.');
-    p.title=j.title||'';p.remarks=j.remarks||'';p.chapters=j.chapters.slice(0,12).map(c=>({id:uid(),title:String(c.title||''),detail:String(c.detail||''),ready:false}));p.err='';save.progs();
+    const was=p.chapters||[];p.title=j.title||'';p.remarks=j.remarks||'';p.cours=(Array.isArray(j.cours)?j.cours:[]).map(x=>String(x).trim()).filter(Boolean).slice(0,15);p.theme=String(j.theme||'');p.excl=String(j.excluded||'');p.chapters=j.chapters.slice(0,12).map(c=>({id:uid(),title:String(c.title||''),detail:String(c.detail||''),ready:!!(was.find(w=>w.title===String(c.title||''))||{}).ready}));p.err='';save.progs();
   }).then(ok=>{if(!ok){p.err='';save.progs()}return ok});
 }
 const words=t=>(String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').match(/[a-z]{5,}/g)||[]);
@@ -3464,11 +3679,12 @@ async function courseFor(p){
   }
   return{txt,used};
 }
-function mkSheet(id,n){
+async function mkSheet(id,n){
   const p=S.progs.find(x=>x.id===id);if(!p)return;
+  if(p.cours===undefined&&p.files&&p.files.length){await parseProg(id);if(p.cours===undefined){p.cours=[];save.progs()}}
   return run('P'+id,'Writing your exercises…',async(lab,txt)=>{
     lab('Collecting your lessons…');const c=await courseFor(p);
-    const prog=p.chapters.map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n');
+    const prog='QUESTIONS DE COURS (the programme\'s own list, copy this list):\n'+((p.cours||[]).length?p.cours.map((x,i)=>(i+1)+'. '+x).join('\n'):'(none)')+'\n\nTHEME OF THE EXERCISES:\n'+(p.theme||'(not specified: use the chapters below)')+'\n\nEXCLUDED:\n'+(p.excl||'(none)')+'\n\nCHAPTERS:\n'+p.chapters.map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n');
     lab('Writing exercises and corrections…');
     const r=await C.ai({system:C.SYS_SHEET(SUBJ[p.subj].n,n||6),content:[{type:'text',text:'PROGRAMME DE COLLES ('+SUBJ[p.subj].n+'):\n'+prog+(p.remarks?'\nTeacher note: '+p.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject. Use the standard French prépa programme and say so in a short note at the top.)'),cache:true},{type:'text',text:profileFor(p.subj)||'(no profile yet)'}],max:24000,onText:txt});
     if(r.text.length<200)throw new C.AIError('The sheet came out empty. Try again.');
@@ -3504,7 +3720,7 @@ A.tdAddFile=async i=>{const[id,sl]=i.split('|'),t=S.tds.find(x=>x.id===id),fs=aw
 A.tdEx=(i,el,e)=>{
   const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;
   x.done=!x.done;let msg='';
-  if(x.done&&!x.got){x.got=true;const n=XPD[x.diff||3];if(window.gain){gain(n,e&&e.clientX||200,e&&e.clientY||300);if(window.sv)sv();msg='+'+n+' XP'}}
+  if(x.done&&!x.got){x.got=true;const n=XPD[x.diff||3];if(window.gain){gain(n,e&&e.clientX||200,e&&e.clientY||300);if(window.sv)sv();msg='+'+(window.xpn?xpn(n):n)+' XP'}}
   save.tds();render('card');if(msg)toast(msg+' · '+x.title);
 };
 A.tdDiff=(i,el,e)=>{if(e)e.stopPropagation();const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;if(x.got){toast('XP already earned for this exercise');return}x.diff=(x.diff||3)%5+1;save.tds();render('card')};
@@ -3548,6 +3764,39 @@ A.buildMem=()=>{if(!needKey())return;
 };
 A.sat=i=>{const[kind,id,n]=i.split('|'),meta=metaOf(kind,id);if(!meta)return;const r=recOf(kind,id,meta),v=+n;r.sat=r.sat===v?null:v;save[kind]();const box=document.querySelector('.sat[data-k="'+CSS.escape(kind+'|'+id)+'"]');if(box){[...box.children].forEach((b,j)=>b.classList.toggle('on',r.sat===j+1));const t=box.parentNode.querySelector('.satt');if(t)t.textContent=r.sat?SATT[r.sat-1]:'Tap a face'}};
 A.gcfg=i=>{const[k,v]=i.split('|');S.set.gcfg=Object.assign(gcfg(),{[k]:v});save.set();render('card')};
+
+/* ----- import a sheet / mock made elsewhere, and a prompt to make one in a new Claude session ----- */
+function pickFile(accept,cb){const i=document.createElement('input');i.type='file';i.accept=accept;i.style.display='none';document.body.appendChild(i);i.onchange=()=>{const f=i.files[0];i.remove();if(f)cb(f)};i.click();setTimeout(()=>{if(!i.files.length)i.remove()},60000)}
+async function impText(f){
+  if(C.isPdf(f)){const r=await C.pdfText(f);if(r.avg<150)throw new Error('This PDF looks scanned (no text). Export it as text or Markdown, or as a PDF with selectable text.');return r.text.replace(/^## Page \d+\s*$/gm,'').trim()}
+  if(/^text\//.test(f.type)||/\.(txt|md|markdown)$/i.test(f.name||''))return(await f.text()).trim();
+  throw new Error('Use a PDF with text, a .md or a .txt file.');
+}
+const IMP_ACC='application/pdf,.md,.markdown,.txt,text/plain';
+A.impSheet=id=>pickFile(IMP_ACC,async f=>{
+  try{const t=await impText(f);if(t.length<200)throw new Error('The file is almost empty.');
+    await C.setText('S'+id,t);const p=S.progs.find(x=>x.id===id);p.sheetAt=Date.now();p.noCourse=false;p.used=['imported: '+f.name];save.progs();toast('Sheet imported ✓');render()}catch(e){toast(e.message||'Import failed')}});
+A.impMock=()=>{
+  let subj='maths',title='';
+  const draw=()=>{$('sbody').innerHTML='<h2 class="sh">Import a mock exam</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ.filter(s=>s!=='ang'),'im-s')+'</div><div class="field"><label>Title</label><input id="im-t" value="'+esc(title)+'" maxlength="80" placeholder="e.g. DS blanc — Complexes"></div><div class="hint" style="text-align:left">A PDF with text, .md or .txt. If the file has a corrigé (a “Corrections” heading), it is hidden until you ask for it.</div><button class="btn primary" id="im-go">Choose the file</button>';
+    bindChips('im-s',v=>{subj=v;title=$('im-t').value;draw()});$('im-t').oninput=e=>title=e.target.value;
+    $('im-go').onclick=()=>pickFile(IMP_ACC,async f=>{try{const t=await impText(f);if(t.length<200)throw new Error('The file is almost empty.');const id='m-'+uid();S.mocks.push({id,subj,title:$('im-t').value.trim()||f.name.replace(/\.[a-z0-9]+$/i,''),main:[],comp:[],dur:'—',calc:false,at:Date.now(),imported:true});save.mocks();await C.setText('M'+id,t);closeSheet();st.seg='ex';go('mock',id);toast('Mock exam imported ✓')}catch(e){toast(e.message||'Import failed')}});
+  };
+  openSheet('');draw();
+};
+const PR_FMT="Output ONE Markdown document and nothing else (no introduction, no closing sentence), with LaTeX between $...$ and $$...$$. Use exactly this structure: '## Questions de cours', then '## Exercices' (Exercice 1, 2, ... each with a statement and a one-line 'Indication'), then the line <!--CORRECTIONS--> alone, then '## Corrections' with a complete, rigorous correction of every question de cours (heading '#### Question N') and every exercise (heading '#### Exercice N'). Double-check every calculation.";
+function copyPrompt(title,text){
+  openSheet('<h2>'+esc(title)+'</h2><div class="hint" style="text-align:left">Open a NEW conversation with Claude, attach your lesson PDFs'+'(and your real exams for the style), paste this prompt, then import the result in Aether.</div><textarea id="cp-t" readonly style="width:100%;height:240px;font-size:12px;border-radius:12px;padding:10px;background:var(--surf2);color:var(--text);border:1px solid var(--line)">'+esc(text)+'</textarea><button class="btn primary" id="cp-b">Copy the prompt</button>');
+  $('cp-b').onclick=async()=>{try{await navigator.clipboard.writeText(text)}catch(e){$('cp-t').select();document.execCommand('copy')}toast('Prompt copied ✓');vib(15)};
+}
+A.promptSheet=id=>{
+  const p=S.progs.find(x=>x.id===id);if(!p)return;
+  const prog='QUESTIONS DE COURS (exact list from the teacher):\n'+((p.cours||[]).length?p.cours.map((x,i)=>(i+1)+'. '+x).join('\n'):'(none given: write 6 short questions)')+'\n\nTHEME OF THE EXERCISES:\n'+(p.theme||'(see chapters)')+'\n\nEXCLUDED:\n'+(p.excl||'(none)')+'\n\nCHAPTERS:\n'+(p.chapters||[]).map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n')+(p.remarks?'\n\nTeacher note: '+p.remarks:'');
+  copyPrompt('Prompt: prep sheet',"You are an experienced, demanding teacher in a French classe préparatoire (first year, "+SUBJ[p.subj].n+") preparing me for a 'colle'. My lessons are attached: they are the reference for notations, definitions and results.\n\n"+prog+"\n\nWrite my prep sheet in French. One question de cours per item of the list above: same number, same order, same count, never invent or skip one. Then 6 exercises of increasing difficulty that follow the theme exactly, none of the excluded topics, and only tools seen in my lessons. "+PR_FMT);
+};
+A.promptMock=()=>{
+  copyPrompt('Prompt: mock exam',"You are a teacher in a French classe préparatoire (first year, lycée Aux Lazaristes) writing a 'devoir surveillé' (DS blanc). Attached: my MAIN LESSONS (the exam is centred on these: 75–85% of the points), optionally COMPLEMENTARY LESSONS (smaller parts), and my teachers' real past exams (copy their style, level, length, point scale and layout). Subject: [subject]. Duration: [2 h]. Calculator: [not allowed].\n\nWrite in French, Markdown, LaTeX between $...$ and $$...$$: '# DS blanc — [subject]', a line 'Durée : … — Calculatrice : …', short instructions like the model exams, then 3 or 4 independent exercises titled 'I. Title (n pts)' with numbered questions (I.1), (I.2)… of increasing difficulty, total 20 points. Then the line <!--CORRECTIONS--> alone and '## Corrigé' with a complete, rigorous correction of every question and a point scale. Double-check every calculation. No introduction or closing sentence.");
+};
 A.newMock=()=>{
   let subj='maths',main=[],comp=[],dur='2 h',calc=false,title='';
   const ls=()=>S.lessons.filter(l=>l.subj===subj&&l.status==='done');
@@ -3940,14 +4189,14 @@ function calHint(){
   el.onclick=()=>{selD=nx.date;stripWeek='';rCal(1)};
 }
 function openEvent(id){A.evOpen(id);show('prepa')}
-window.P={addTime:(ref,m)=>{try{const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o){o.min=(o.min||0)+m;(ref.k==='td'?save.tds:save.progs)()}}catch(e){}},focusItems:k=>(k==='td'?S.tds.map(t=>({id:t.id,title:t.title||SUBJ[t.subj].n+' TD',sub:SUBJ[t.subj].n+' · '+fdl(t.date),folder:t.folder||'',subj:t.subj})):S.progs.map(p=>({id:p.id,title:p.title||SUBJ[p.subj].n+' programme',sub:SUBJ[p.subj].n+' · '+fdl(p.date),folder:p.folder||'',subj:p.subj}))).sort((a,b)=>a.folder.localeCompare(b.folder)||a.title.localeCompare(b.title)),render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
+window.P={recs:()=>allRecs(),progs:()=>S.progs,addTime:(ref,m)=>{try{const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o){o.min=(o.min||0)+m;(ref.k==='td'?save.tds:save.progs)()}}catch(e){}},focusItems:k=>(k==='td'?S.tds.map(t=>({id:t.id,title:t.title||SUBJ[t.subj].n+' TD',sub:SUBJ[t.subj].n+' · '+fdl(t.date),folder:t.folder||'',subj:t.subj})):S.progs.map(p=>({id:p.id,title:p.title||SUBJ[p.subj].n+' programme',sub:SUBJ[p.subj].n+' · '+fdl(p.date),folder:p.folder||'',subj:p.subj}))).sort((a,b)=>a.folder.localeCompare(b.folder)||a.title.localeCompare(b.title)),render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
 })();
 
 P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','rlog','mil','wch','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
