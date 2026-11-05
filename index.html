@@ -2348,7 +2348,8 @@ function errText(status,j){
   return m||('The AI service returned error '+status+'.');
 }
 const keyName=()=>S.set.prov==='gemini'?'p_gkey':'p_key';
-const hasKey=()=>S.set.prov==='auto'?!!(localStorage.getItem('p_gkey')||localStorage.getItem('p_key')):!!localStorage.getItem(keyName());
+const freeOn=()=>!!(localStorage.getItem('p_fbase')&&S.set.fon!==false);
+const hasKey=()=>S.set.prov==='auto'?!!(freeOn()||localStorage.getItem('p_gkey')||localStorage.getItem('p_key')):!!localStorage.getItem(keyName());
 function gErr(status,j){
   const m=(j&&j.error&&j.error.message)||'';
   if(status===400&&/api key/i.test(m))return 'The Gemini key was refused. Check it in AI settings.';
@@ -2409,21 +2410,69 @@ async function aiGemini({system,content,max,model,onText}){
   S.usage.i+=inT;S.usage.o+=outT;S.usage.n++;put('p_usage',S.usage);
   return{text,stop,inT,outT};
 }
+/* Free router (FreeLLMAPI, OpenAI-compatible, self-hosted): tried first, text-only jobs. */
+function fbase(){let u=(localStorage.getItem('p_fbase')||'').trim().replace(/\/+$/,'');if(u&&!/\/v1$/.test(u))u+='/v1';return u}
+function fErr(status,j){
+  const m=(j&&j.error&&(j.error.message||j.error))||'';
+  if(status===401||status===403)return 'The free router refused the key. Check it in AI settings.';
+  if(status===404)return 'The free router address looks wrong (no /v1/chat/completions there).';
+  if(status===429)return 'The free router is out of free quota right now.';
+  if(status===422||status===400)return 'The free router cannot do this request'+(typeof m==='string'&&m?' ('+m.slice(0,120)+')':'')+'.';
+  if(status>=500)return 'The free router is busy or its providers failed.';
+  return (typeof m==='string'&&m)||('The free router returned error '+status+'.');
+}
+async function aiFree({system,content,max=4096,onText}){
+  const base=fbase();if(!base)throw new AIError('Free router: no address set.');
+  const text=content.map(c=>c.text).join('\n\n');
+  const key=(localStorage.getItem('p_fkey')||'').trim(),ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),S.set.fto*1000||30000);
+  const headers={'content-type':'application/json'};if(key)headers.authorization='Bearer '+key;
+  let r;
+  try{r=await fetch(base+'/chat/completions',{method:'POST',headers,signal:ctl.signal,body:JSON.stringify({model:S.set.fmodel||'auto',stream:true,max_tokens:Math.min(max,16000),temperature:0.4,messages:[{role:'system',content:system},{role:'user',content:text}]})})}
+  catch(e){clearTimeout(to);throw new AIError(e&&e.name==='AbortError'?'The free router did not answer in time.':'Cannot reach the free router. It must run with an https:// address that your phone can open, and allow this website (CORS).')}
+  clearTimeout(to);
+  if(!r.ok){let j={};try{j=await r.json()}catch(e){}throw new AIError(fErr(r.status,j))}
+  let out='',stop='',inT=0,outT=0;
+  const via=r.headers.get('x-routed-via')||'';
+  if(/json/.test(r.headers.get('content-type')||'')&&!/event-stream/.test(r.headers.get('content-type')||'')){
+    const j=await r.json();const c=j.choices&&j.choices[0];out=(c&&c.message&&c.message.content)||'';stop=c&&c.finish_reason==='length'?'max_tokens':'';if(j.usage){inT=j.usage.prompt_tokens||0;outT=j.usage.completion_tokens||0}if(onText&&out)onText(out);
+  }else await readSSE(r,ev=>{
+    if(ev.error)throw new AIError(fErr(500,ev));
+    const c=ev.choices&&ev.choices[0];
+    if(c){const d=c.delta&&c.delta.content;if(d){out+=d;if(onText)onText(out)}if(c.finish_reason)stop=c.finish_reason==='length'?'max_tokens':c.finish_reason}
+    if(ev.usage){inT=ev.usage.prompt_tokens||inT;outT=ev.usage.completion_tokens||outT}
+  });
+  out=out.replace(/<think>[\s\S]*?<\/think>/g,'').trim();
+  if(out.length<20)throw new AIError('The free router returned almost nothing.');
+  S.usage.f=(S.usage.f||0)+1;S.usage.via=via||'free router';put('p_usage',S.usage);
+  return{text:out,stop,inT,outT,via:'free'};
+}
 /* Auto mode: Gemini first (free). If it fails or the quota is hit and a Claude key exists, the same request goes to Claude:
    Haiku for reading jobs (scans, programmes, cards), Sonnet for writing jobs (exams, sheets, feedback). */
 const READ_JOBS=()=>[SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_CARDS];
 const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s)||/^You read a TD sheet/.test(s);
+const freeOk=o=>freeOn()&&(o.content||[]).every(c=>c.type==='text')&&(S.set.fuse!=='read'||isRead(o.system));
 async function aiAuto(o){
   const gk=localStorage.getItem('p_gkey'),ck=localStorage.getItem('p_key');
-  const claude=()=>aiClaude(Object.assign({},o,{model:isRead(o.system)?S.set.mread:S.set.mwrite}));
-  if(!gk&&ck)return claude();
-  try{return await aiGemini(Object.assign({},o,{model:undefined}))}
-  catch(e){
-    if(!ck||!(e instanceof AIError))throw e;
-    if(o.onText)o.onText('');
-    try{const r=await claude();r.fallback=true;S.usage.fb=(S.usage.fb||0)+1;put('p_usage',S.usage);return r}
-    catch(e2){throw new AIError('Gemini: '+e.message+' Claude: '+e2.message)}
+  const chain=[];
+  if(freeOk(o))chain.push(['Free router',()=>aiFree(o)]);
+  if(gk)chain.push(['Gemini',()=>aiGemini(Object.assign({},o,{model:undefined}))]);
+  if(ck)chain.push(['Claude',()=>aiClaude(Object.assign({},o,{model:isRead(o.system)?S.set.mread:S.set.mwrite}))]);
+  if(!chain.length)throw new AIError(gk||ck||freeOn()?'This job needs Gemini or Claude (the free router only handles text). Add a Gemini or Claude key in AI settings.':'Add an AI key first (Prépa → AI settings).');
+  const errs=[];let cut=null;
+  for(let i=0;i<chain.length;i++){
+    try{
+      if(i>0&&o.onText)o.onText('');
+      const r=await chain[i][1]();
+      if(r.stop==='max_tokens'&&i<chain.length-1){cut=r;errs.push(chain[i][0]+': the answer was cut short.');continue}
+      if(i>0){r.fallback=true;r.from=chain[0][0];S.usage.fb=(S.usage.fb||0)+1;put('p_usage',S.usage)}
+      return r;
+    }catch(e){
+      if(!(e instanceof AIError))throw e;
+      errs.push(chain[i][0]+': '+e.message);
+    }
   }
+  if(cut)return cut;
+  throw new AIError(chain.length===1?errs[0].replace(/^[^:]+: /,''):errs.join(' '));
 }
 async function ai(o){
   if(S.set.prov==='auto')return aiAuto(o);
@@ -4087,8 +4136,12 @@ function settings(){
   const g=S.set.prov==='gemini';
   function drawAuto(){
     const has=C.hasKey(),gk=!!localStorage.getItem('p_gkey'),ck=!!localStorage.getItem('p_key');
-    openSheet('<h2 class="sh">AI settings</h2><div class="field"><label>AI provider</label><div class="chips" id="s-p"><button class="chip on" data-v="auto">Gemini + Claude backup</button><button class="chip" data-v="gemini">Gemini only</button><button class="chip" data-v="claude">Claude only</button></div></div>'+
-    '<div class="sub" style="margin:-4px 0 10px">Gemini (free) is always tried first. If it is out of quota, busy or fails, the same job is sent to Claude automatically, so you are never stuck. Reading jobs (scans, programmes, cards) use the cheap model; writing jobs (exams, prep sheets, feedback) use the stronger one.</div>'+
+    openSheet('<h2 class="sh">AI settings</h2><div class="field"><label>AI provider</label><div class="chips" id="s-p"><button class="chip on" data-v="auto">Auto: Free router → Gemini → Claude</button><button class="chip" data-v="gemini">Gemini only</button><button class="chip" data-v="claude">Claude only</button></div></div>'+
+    '<div class="sub" style="margin:-4px 0 10px">Your free router (if set) is tried first, then Gemini (free), then Claude. If one is out of quota, busy or fails, the same job moves to the next automatically, so you are never stuck. Jobs with photos or PDFs skip the router (text only). Reading jobs (scans, programmes, cards) use the cheap model; writing jobs (exams, prep sheets, feedback) use the stronger one.</div>'+
+    '<div class="field"><label>Free router address (FreeLLMAPI)</label><input id="s-fb" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://your-router.example.com" value="'+esc(localStorage.getItem('p_fbase')||'')+'"></div>'+
+    '<div class="field"><label>Free router key</label><input id="s-fk" type="password" autocomplete="off" autocapitalize="off" placeholder="'+(localStorage.getItem('p_fkey')?'Saved on this phone — paste to replace':'freellmapi-…')+'"></div>'+
+    '<div class="field"><label>Free router model</label><input id="s-fm" autocomplete="off" autocapitalize="off" value="'+esc(S.set.fmodel||'auto')+'" placeholder="auto"><div class="chips" id="s-fu" style="margin-top:8px"><button class="chip '+(S.set.fuse!=='read'?'on':'')+'" data-v="all">Use it for everything</button><button class="chip '+(S.set.fuse==='read'?'on':'')+'" data-v="read">Reading jobs only</button><button class="chip '+(S.set.fon===false?'on':'')+'" data-v="off">Paused</button></div></div>'+
+    '<div class="sub" style="margin:-4px 0 10px">FreeLLMAPI runs on your own computer or server, so the address must be an https:// link your phone can open (for example through a Cloudflare Tunnel or Tailscale Funnel) and it must allow this website. “auto”, “auto:fast” and “auto:smart” let it choose the model. Free models are weaker than Claude for long exams: use “Reading jobs only” if you notice it.</div>'+
     '<div class="field"><label>Gemini API key (free)</label><input id="s-gk" type="text" name="aether-gemini-key" style="-webkit-text-security:disc" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="'+(gk?'Saved on this phone — paste to replace':'aistudio.google.com/apikey')+'"></div>'+
     '<div class="field"><label>Anthropic API key (backup, paid)</label><input id="s-ck" type="password" autocomplete="off" autocapitalize="off" placeholder="'+(ck?'Saved on this phone — paste to replace':'sk-ant-…')+'"></div>'+
     '<div class="sub" style="margin:-4px 0 10px">Anthropic: console.anthropic.com → API keys, add a little credit and set a monthly spending limit there. Keys stay on this phone only: not in backups, erased with “Forgot PIN”. Free Gemini may use what you send to improve Google products.</div>'+
@@ -4097,18 +4150,19 @@ function settings(){
     '<div class="field"><label>Claude for writing jobs</label><select id="s-mw"><option value="claude-sonnet-5-5">Sonnet 5.5 — balanced (recommended)</option><option value="claude-haiku-5-5">Haiku 5.5 — cheaper</option><option value="claude-opus-5-5">Opus 5.5 — best, costs more</option></select></div>'+
     '<div class="field"><label>Meridian folder name</label><input id="s-n" value="'+esc(S.set.news)+'" autocapitalize="off"></div><button class="btn primary" id="s-s">Save</button><button class="btn" id="s-t">Test the key</button><div class="sub" id="s-r" style="margin-top:8px">Used so far: '+S.usage.n+' requests · '+S.usage.i.toLocaleString('en-GB')+' tokens in · '+S.usage.o.toLocaleString('en-GB')+' out</div><div class="sec2"><div class="lbl" style="margin:0">Calendar feed (iPhone)</div></div><div class="sub">Your colles and DS are already in Aether\'s calendar. To also get alerts from the iPhone Calendar app: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, then paste:</div><input id="s-u" readonly value="'+esc(icsUrl())+'" style="margin-top:8px"><button class="btn" id="s-c">Copy the link</button><button class="btn" id="s-re">Restore schedule events I deleted</button>'+(has?'<button class="btn danger" id="s-d">Remove my API key</button>':''));
     $('s-mr').value=S.set.mread;$('s-mw').value=S.set.mwrite;
-    const store=()=>{const a=$('s-gk').value.replace(/\s+/g,''),b=$('s-ck').value.replace(/\s+/g,'');if(b&&!/^sk-ant-/.test(b))toast('That does not look like an Anthropic key (it starts with sk-ant-)');if(a)localStorage.setItem('p_gkey',a);if(b)localStorage.setItem('p_key',b);S.set.ws=$('s-ws').value.replace(/\s+/g,'');S.set.mread=$('s-mr').value;S.set.mwrite=$('s-mw').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
+    const store=()=>{const a=$('s-gk').value.replace(/\s+/g,''),b=$('s-ck').value.replace(/\s+/g,'');{const u=$('s-fb').value.trim(),k=$('s-fk').value.trim();if(u&&!/^https?:\/\//i.test(u))toast('The address must start with https://');if(u)localStorage.setItem('p_fbase',u);else localStorage.removeItem('p_fbase');if(k)localStorage.setItem('p_fkey',k);S.set.fmodel=$('s-fm').value.trim()||'auto';const fu=document.querySelector('#s-fu .on');S.set.fuse=fu&&fu.dataset.v==='read'?'read':'all';S.set.fon=!(fu&&fu.dataset.v==='off')}if(b&&!/^sk-ant-/.test(b))toast('That does not look like an Anthropic key (it starts with sk-ant-)');if(a)localStorage.setItem('p_gkey',a);if(b)localStorage.setItem('p_key',b);S.set.ws=$('s-ws').value.replace(/\s+/g,'');S.set.mread=$('s-mr').value;S.set.mwrite=$('s-mw').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
+    bindChips('s-fu',()=>{});
     bindChips('s-p',v=>{store();S.set.prov=v;save.set();draw()});
     $('s-s').onclick=()=>{store();closeSheet();toast('Saved');render()};
     $('s-t').onclick=async()=>{
       store();const r=$('s-r');
-      if(!C.hasKey()){r.textContent='Paste at least one key first.';return}
+      if(!C.hasKey()){r.textContent='Add the free router address or a key first.';return}
       r.textContent='Testing…';
-      try{const x=await C.ai({system:'Reply with the single word OK.',content:[{type:'text',text:'ping'}],max:20});r.textContent='Works ✓ ('+(x.fallback?'Claude took over: Gemini failed':'Gemini')+')'}catch(e){r.textContent=e.message}
+      try{const x=await C.ai({system:'Reply with the single word OK.',content:[{type:'text',text:'ping'}],max:20});r.textContent='Works ✓ ('+(x.via==='free'?'free router answered':x.fallback?'backup answered: the first one failed':'Gemini answered')+')'}catch(e){r.textContent=e.message}
     };
     $('s-c').onclick=async()=>{try{await navigator.clipboard.writeText(icsUrl());toast('Link copied')}catch(e){$('s-u').select();toast('Select and copy the link')}};
     $('s-re').onclick=()=>{S.removed.length=0;save.removed();const n=C.syncSched();closeSheet();toast(n?n+' events restored':'Nothing to restore');if(cur==='calendar')rCal();render()};
-    if(has)$('s-d').onclick=async()=>{if(await ask({title:'Remove both keys?',ok:'Remove',danger:1})){localStorage.removeItem('p_gkey');localStorage.removeItem('p_key');closeSheet();render()}};
+    if(has)$('s-d').onclick=async()=>{if(await ask({title:'Remove all keys and the router address?',ok:'Remove',danger:1})){localStorage.removeItem('p_gkey');localStorage.removeItem('p_key');localStorage.removeItem('p_fkey');localStorage.removeItem('p_fbase');closeSheet();render()}};
   }
   const draw=()=>{
     if(S.set.prov==='auto')return drawAuto();
@@ -4269,7 +4323,7 @@ P.boot();
   forgotB.addEventListener('click',function(){
     ask({title:'Forgot your PIN?',msg:'The only way back in is to erase this app\'s data on this phone. You can then restore it from a backup file.',ok:'Erase everything',danger:true}).then(function(ok){
       if(!ok)return;
-      KEYS.forEach(del);del('hhome');del('p_key');del('p_gkey');try{indexedDB.deleteDatabase('aether-prepa');}catch(e){}
+      KEYS.forEach(del);del('hhome');del('p_key');del('p_gkey');del('p_fkey');del('p_fbase');try{indexedDB.deleteDatabase('aether-prepa');}catch(e){}
       ['hash','salt','fails','until'].forEach(function(s){del(K+s);});
       location.reload();
     });
