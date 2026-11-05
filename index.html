@@ -1288,14 +1288,15 @@ const nowMin=()=>{const n=new Date();return n.getHours()*60+n.getMinutes()};
 function hhState(){
   const n=nowMin(),td=iso();
   if(hh.lunch&&schoolDay(td)&&n>=tmin(hh.l1)&&n<tmin(hh.l2))return{k:'lunch',end:hh.l2,m:hh.mult};
-  if(hh.aft&&n>=tmin(hh.a1)&&n<tmin(hh.a2)&&(hh.man===td||(homeNow&&Date.now()-homeNow.t<6e5&&homeNow.in)))return{k:'home',end:hh.a2,m:hh.mult};
+  if(hh.aft&&hh.ses&&hh.ses.d===td&&Date.now()>=hh.ses.t&&Date.now()<hh.ses.t+36e5)return{k:'home',end:hm(hh.ses.t+36e5),m:hh.mult};
   return null;
 }
+function hhStart(){const n=nowMin(),td=iso();if(!hh.aft||n<tmin(hh.a1)||n>=tmin(hh.a2)||(hh.ses&&hh.ses.d===td))return false;hh.ses={d:td,t:Date.now()};sv();return true}
 const hhMult=()=>{const s=hhState();return s?s.m:1};
 function hhNext(){
   const n=nowMin(),td=iso(),a=[];
   if(hh.lunch&&schoolDay(td)&&n<tmin(hh.l1))a.push([tmin(hh.l1),'Lunch '+hh.l1]);
-  if(hh.aft&&n<tmin(hh.a1))a.push([tmin(hh.a1),'Afternoon '+hh.a1+' (at home)']);
+  if(hh.aft&&n<tmin(hh.a1))a.push([tmin(hh.a1),'Afternoon, 1 hour once you are home after '+hh.a1]);
   a.sort((x,y)=>x[0]-y[0]);return a[0]?a[0][1]:null;
 }
 const distM=(a,b,c,d)=>{const R=6371e3,r=x=>x*Math.PI/180,dl=r(c-a),dn=r(d-b),h=Math.sin(dl/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
@@ -1303,7 +1304,7 @@ function hhLoc(force){
   if(!hhome||!hh.aft||!navigator.geolocation)return;
   const n=nowMin();if(!force&&(n<tmin(hh.a1)||n>=tmin(hh.a2)))return;
   if(!force&&homeNow&&Date.now()-homeNow.t<12e4)return;
-  navigator.geolocation.getCurrentPosition(p=>{homeNow={t:Date.now(),in:distM(p.coords.latitude,p.coords.longitude,hhome.lat,hhome.lng)<200};rHH()},()=>{},{maximumAge:6e4,timeout:8000});
+  navigator.geolocation.getCurrentPosition(p=>{homeNow={t:Date.now(),in:distM(p.coords.latitude,p.coords.longitude,hhome.lat,hhome.lng)<200};if(homeNow.in&&hhStart())toast('Happy Hour: 1 hour of ×'+hh.mult+' XP 🎉');rHH()},()=>{},{maximumAge:6e4,timeout:8000});
 }
 function rHH(){
   const el=$('hhcard');if(!el)return;
@@ -1311,7 +1312,7 @@ function rHH(){
   el.className='card hhc'+(s?' on':'');
   let t;
   if(s)t=`<div class="cardhead"><div class="lbl">🎉 Happy Hour · ×${s.m}</div><span class="sub">until ${s.end}</span></div><div class="lmsg">${s.k==='lunch'?'You are home for lunch: everything you complete now earns ×'+s.m+' XP.':'You are home: everything you complete now earns ×'+s.m+' XP. Start now, even 20 minutes counts.'}</div><button class="btn primary" data-act="hhgo">Start a focus session</button>`;
-  else t=`<div class="cardhead"><div class="lbl">Happy Hour</div><button class="lnk" data-act="hhset">Settings</button></div><div class="hint" style="text-align:left;margin:0">${h?'Holidays · '+esc(h.n)+' · habits are paused until '+new Date(dAddDays(h.e,1)+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'.':nx?'Next: '+nx+' · ×'+hh.mult+' XP':'No more Happy Hour today.'}</div>${hh.aft&&!hhome?'<button class="btn sm" data-act="hhhere">📍 Set my home location</button>':''}${hh.aft&&hh.man!==iso()&&nowMin()>=tmin(hh.a1)&&nowMin()<tmin(hh.a2)?'<button class="btn sm" data-act="hhman">🏠 I\'m home now</button>':''}`;
+  else t=`<div class="cardhead"><div class="lbl">Happy Hour</div><button class="lnk" data-act="hhset">Settings</button></div><div class="hint" style="text-align:left;margin:0">${h?'Holidays · '+esc(h.n)+' · habits are paused until '+new Date(dAddDays(h.e,1)+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'.':nx?'Next: '+nx+' · ×'+hh.mult+' XP':'No more Happy Hour today.'}</div>${hh.aft&&!hhome?'<button class="btn sm" data-act="hhhere">📍 Set my home location</button>':''}${hh.aft&&!(hh.ses&&hh.ses.d===iso())&&nowMin()>=tmin(hh.a1)&&nowMin()<tmin(hh.a2)?'<button class="btn sm" data-act="hhman">🏠 I\'m home now</button>':''}`;
   el.innerHTML=t;
 }
 function hhSheet(){
@@ -1319,7 +1320,7 @@ function hhSheet(){
   openSheet(`<h2>Happy Hour</h2>
   <div class="field"><label>When</label><div class="chips">${T('lunch','🍽 Lunch (school days)')}${T('aft','🏠 Afternoon (when home)')}</div></div>
   <div class="field"><label>Lunch window</label><div class="two"><input id="h-l1" type="time" value="${hh.l1}"><input id="h-l2" type="time" value="${hh.l2}"></div></div>
-  <div class="field"><label>Afternoon window</label><div class="two"><input id="h-a1" type="time" value="${hh.a1}"><input id="h-a2" type="time" value="${hh.a2}"></div></div>
+  <div class="field"><label>Afternoon: starts when you get home in this window, lasts 1 hour</label><div class="two"><input id="h-a1" type="time" value="${hh.a1}"><input id="h-a2" type="time" value="${hh.a2}"></div></div>
   <div class="field"><label>XP multiplier</label><div class="chips" id="h-m">${[1.25,1.5,2].map(v=>`<button class="chip ${v===hh.mult?'on':''}" data-v="${v}">×${v}</button>`).join('')}</div></div>
   <div class="field"><label>Home location</label><button class="btn sm" id="h-here">📍 ${hhome?'Update: I am home now':'Set: I am home now'}</button>${hhome?'<button class="btn sm danger" id="h-noloc">Forget location</button>':''}<div class="hint" style="text-align:left;margin-top:6px">Stays on this phone only, never in a backup. Checked only while Aether is open (the web app cannot run in the background). Without a location, use the “I'm home now” button.</div></div>
   <div class="field"><label>School holidays (lunch Happy Hour is off, habits paused)</label><div class="chips"><button class="chip ${hh.pause?'on':''}" data-t="pause">Pause recurring tasks during holidays</button></div><div id="h-hols"></div><button class="btn sm" id="h-add">＋ Add a holiday</button><button class="btn sm" id="h-reset">Reset to Lyon 2026-27</button></div>
@@ -1720,7 +1721,7 @@ document.addEventListener('click',e=>{
   else if(act==='hhset')hhSheet();
   else if(act==='hhgo'){show('focus')}
   else if(act==='hhhere'){hhSheet()}
-  else if(act==='hhman'){hh.man=iso();sv();rHH();toast('Happy Hour on 🎉')}
+  else if(act==='hhman'){if(hhStart())toast('Happy Hour: 1 hour of ×'+hh.mult+' XP 🎉');else toast('Already used today');rHH()}
   else if(act==='whyedit')whyEdit();
   else if(act==='wreview')weekReview();
   else if(act==='hr'){const d=dayh[rd()]=dayh[rd()]||{},k=a.dataset.k,dl=+a.dataset.d;d[k]=Math.max(0,Math.min(24,Math.round(((d[k]==null?(dl>0?0:0):+d[k])+dl)*2)/2));sv();rHrs();vib(8)}
