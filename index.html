@@ -1336,7 +1336,7 @@ let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:
 let hols=ld('hols',null)||HOL0.map(x=>({...x}));
 let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
 let rcat=ld('rcat',['🍕 Food','🎮 Games','📺 Leisure','🛍 Other']),rcf='',rsub=null;
-let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
+let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
 let commits=ld('commits',[]),rtimer=ld('rtimer',null),rsave=ld('rsave',''),bnd=ld('bnd',{g:null,p:[],s:[]}),alw=ld('alw',{wk:'',left:0}),cmSel={tid:'',stake:50,due:''};
 let hhome=ld('hhome',null),homeNow=null;
 const curHol=(d=iso())=>hols.find(h=>h.s<=d&&d<=h.e)||null;
@@ -1434,14 +1434,14 @@ const tierOf=c=>c<shs.t1?0:c<shs.t2?1:c<shs.t3?2:3;
 const worthTxt=c=>{const m=Math.round(c/30*60);return m<60?m+' min':Math.floor(m/60)+'h'+(m%60?pad(m%60):'')};
 const fdm=d=>new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 function allowLeft(){if(!shs.al)return Infinity;const wk=mondayOf(iso());if(alw.wk!==wk){const prev=alw.wk?Math.max(0,alw.left):0;alw={wk,left:shs.amt+Math.floor(prev*shs.roll/100)};sv()}return alw.left}
-function recsRecent(){try{const lim=shiftD(iso(),-21);return(P.recs()||[]).filter(r=>(r.date||'')>=lim&&r.grade!=null&&r.grade!=='')}catch(e){return[]}}
+function recsRecent(k){try{const lim=shiftD(iso(),-21);return(P.recs()||[]).filter(r=>(r.date||'')>=lim&&r.grade!=null&&r.grade!==''&&(!k||r.kind===k))}catch(e){return[]}}
 const focusToday=()=>fhist.filter(h=>h.date===fk()).reduce((a,h)=>a+(h.min||0),0);
 function rcheck(r){
   const td=iso(),wk=mondayOf(td),buys=rlog.filter(x=>x.id===r.id);
   if(r.from&&td<r.from)return'Opens '+fdm(r.from);if(r.to&&td>r.to)return'Season over';
   if(r.minLv&&lv<r.minLv)return'Reach level '+r.minLv;
   if(r.fm&&focusToday()<r.fm)return'Focus '+(r.fm-focusToday())+' more min today';
-  if(r.gr&&!recsRecent().some(x=>+x.grade>=r.gr))return'Needs a grade ≥ '+r.gr+' (last 3 weeks)';
+  if(r.gr&&!recsRecent(r.grk).some(x=>+x.grade>=r.gr))return'Needs '+(r.grk==='colles'?'a colle':r.grk==='exams'?'an exam':'a')+' grade ≥ '+r.gr+' (last 3 weeks)';
   if(r.lim&&buys.filter(x=>iso(new Date(x.t))>=wk).length>=r.lim)return'Weekly limit reached';
   if(r.cd&&buys.length){const d=(Date.now()-buys[buys.length-1].t)/864e5;if(d<r.cd)return'Back in '+Math.ceil(r.cd-d)+' d'}
   if(shs.al&&r.c>allowLeft())return'Allowance: '+allowLeft()+' XP left this week';
@@ -1455,7 +1455,7 @@ function bonusSweep(){
   let ch=0;const aw=(n,m)=>{if(n>0){gain(n,innerWidth/2,innerHeight*.35);setTimeout(()=>toast(m+' +'+n+' XP'),500)}ch=1};
   try{
     const rs=(P.recs()||[]).filter(r=>r.grade!=null&&r.grade!==''),key=r=>r.id||r.eid||(r.title+'|'+r.date);
-    if(bnd.g===null){bnd.g=rs.map(key);ch=1}else rs.forEach(r=>{if(!bnd.g.includes(key(r))){bnd.g.push(key(r));if(+r.grade>=shs.gthr)aw(shs.gxp,'🎓 Great grade ('+r.grade+'/20)');else ch=1}});
+    if(bnd.g===null){bnd.g=rs.map(key);ch=1}else rs.forEach(r=>{if(!bnd.g.includes(key(r))){bnd.g.push(key(r));{const col=r.kind==='colles',th=col?shs.cthr:shs.gthr,x=col?shs.cxp:shs.gxp;if(+r.grade>=th)aw(x,(col?'🗣 Great colle':'🎓 Great exam')+' ('+r.grade+'/20)');else ch=1}}});
     (P.progs()||[]).forEach(p=>{if(p.chapters&&p.chapters.length&&p.chapters.every(c=>c.ready)&&(p.date||'')>=iso()&&!bnd.p.includes(p.id)){bnd.p.push(p.id);aw(shs.pxp,'📘 Fully prepared')}});
   }catch(e){}
   const d=dayh[iso()];if(d&&+d.s>=shs.sth&&!bnd.s.includes(iso())){bnd.s.push(iso());aw(shs.sxp,'😴 Good night')}
@@ -1540,13 +1540,13 @@ function rwSettings(){
   <div class="two" style="margin:8px 0">${N('ss-amt','XP per week',shs.amt)}<div><label class="hint">Unspent carried over</label><div class="chips" id="ss-roll">${[0,50,100].map(v=>`<button class="chip ${shs.roll===v?'on':''}" data-v="${v}">${v}%</button>`).join('')}</div></div></div>
   <div class="lbl" style="margin-top:12px">Treat sizes (by cost)</div><div class="two">${N('ss-t1','🌱→✨ from',shs.t1)}${N('ss-t2','✨→🔥 from',shs.t2)}${N('ss-t3','🔥→👑 from',shs.t3)}</div>
   <div class="lbl" style="margin-top:12px">Commitments and timers</div><div class="two">${N('ss-cb','Bonus when kept (%)',shs.cb)}${N('ss-ref','Timer refund (%)',shs.ref)}</div>
-  <div class="lbl" style="margin-top:12px">Bonus XP (0 = off)</div><div class="two">${N('ss-gthr','Grade ≥ /20',shs.gthr)}${N('ss-gxp','gives XP',shs.gxp)}</div><div class="two" style="margin-top:6px">${N('ss-pxp','Fully prepared for a colle',shs.pxp)}${N('ss-sxp','Slept ≥ h gives XP',shs.sxp)}</div><div class="two" style="margin-top:6px">${N('ss-sth','Sleep threshold (h)',shs.sth)}<div></div></div>
+  <div class="lbl" style="margin-top:12px">Bonus XP (0 = off)</div><div class="hint" style="text-align:left">Exams and DS</div><div class="two">${N('ss-gthr','Grade ≥ /20',shs.gthr)}${N('ss-gxp','gives XP',shs.gxp)}</div><div class="hint" style="text-align:left;margin-top:6px">Colles</div><div class="two">${N('ss-cthr','Grade ≥ /20',shs.cthr)}${N('ss-cxp','gives XP',shs.cxp)}</div><div class="two" style="margin-top:6px">${N('ss-pxp','Fully prepared for a colle',shs.pxp)}${N('ss-sxp','Slept ≥ h gives XP',shs.sxp)}</div><div class="two" style="margin-top:6px">${N('ss-sth','Sleep threshold (h)',shs.sth)}<div></div></div>
   <div class="lbl" style="margin-top:12px">Behaviour</div><div class="chips">${T('ss-arr','Ask what to do when I get home',shs.arr)}${T('ss-resc','Evening "smallest win" nudge',shs.resc)}${T('ss-snd','Sounds',shs.snd)}${T('ss-hap','Vibrations',shs.hap)}</div>
   <button class="btn primary" id="ss-save" style="margin-top:14px">Save</button>`);
   const B=$('sbody');
   B.onclick=e=>{const c=e.target.closest('.chip');if(c){if(c.parentElement.id==='ss-roll'){[...c.parentElement.children].forEach(x=>x.classList.toggle('on',x===c))}else c.classList.toggle('on')}if(e.target.closest('[data-sb]')){rsub=null;rwSheet()}};
   $('ss-save').onclick=()=>{const g=i=>+$(i).value||0,on=i=>$(i).classList.contains('on');const old=shs.al?shs.amt:0;
-    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
+    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),cthr:g('ss-cthr')||14,cxp:g('ss-cxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
     if(shs.al&&shs.amt!==old)alw.wk='';sv();rsub=null;rwSheet();rRescue();toast('Saved')};
 }
 let rtab='shop';
@@ -1563,7 +1563,7 @@ function rwSheet(tab){
       b=`<button class="btn sm" data-sb="1">‹ Back</button><div class="field"><label>Reward</label><div class="two"><input id="re-i" value="${esc(d.ico||'🎁')}" maxlength="4" style="max-width:62px;text-align:center;font-size:22px"><input id="re-n" value="${esc(d.n)}" placeholder="e.g. Cinema evening" maxlength="50"></div></div><div class="field"><label>Cost (XP) · you have ${balance()}</label><input id="re-c" type="number" inputmode="numeric" value="${d.c}"></div><div class="field"><label>Category</label><div class="chips" id="re-k"><button class="chip ${!d.cat?'on':''}" data-v="">No category</button>${rcat.map(c=>`<button class="chip ${c===d.cat?'on':''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div></div><details class="rwrules" style="margin:6px 0 10px"${(d.lim||d.cd||d.minLv||d.fm||d.gr||d.mins||d.from||d.to)?' open':''}><summary class="btn sm" style="display:inline-block">⚙ Rules (all optional)</summary><div class="hint" style="text-align:left">Leave empty or 0 for no rule.</div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Max per week</label><input id="re-lim" type="number" inputmode="numeric" value="${d.lim||''}"></div><div><label class="hint">Cooldown (days)</label><input id="re-cd" type="number" inputmode="numeric" value="${d.cd||''}"></div></div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Min. level</label><input id="re-lv" type="number" inputmode="numeric" value="${d.minLv||''}"></div><div><label class="hint">Focus min today first</label><input id="re-fm" type="number" inputmode="numeric" value="${d.fm||''}"></div></div>
-<div class="two" style="margin:6px 0"><div><label class="hint">Needs a grade ≥ /20</label><input id="re-gr" type="number" inputmode="decimal" value="${d.gr||''}"></div><div><label class="hint">Timer (minutes)</label><input id="re-mn" type="number" inputmode="numeric" value="${d.mins||''}"></div></div>
+<div class="two" style="margin:6px 0"><div><label class="hint">Needs a grade ≥ /20</label><input id="re-gr" type="number" inputmode="decimal" value="${d.gr||''}"></div><div><label class="hint">Timer (minutes)</label><input id="re-mn" type="number" inputmode="numeric" value="${d.mins||''}"></div></div><div class="chips" id="re-gk" style="margin:4px 0">${[['','Any grade'],['exams','Exam / DS only'],['colles','Colle only']].map(([v,l])=>`<button class="chip ${(d.grk||'')===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Available from</label><input id="re-fr" type="date" value="${d.from||''}"></div><div><label class="hint">Until</label><input id="re-to" type="date" value="${d.to||''}"></div></div></details>
 <div class="chips" style="margin-bottom:10px"><button class="chip ${rsub.id&&rsave===rsub.id?'on':''}" id="re-sv">📌 Save for this (shown on Home)</button></div><button class="btn primary" id="re-s">${r?'Save':'Add reward'}</button>${r?'<button class="btn danger" id="re-d">Delete</button>':''}`;
     }else{
@@ -1597,9 +1597,10 @@ function rwSheet(tab){
     if(e.target.closest('[data-sc]')){rsub={m:'cats'};rwSheet();return}
     if(e.target.closest('[data-ss]')){rsub={m:'set'};rwSheet();return}
     if(e.target.closest('[data-new]')){rsub={m:'edit',id:''};rwSheet();return}
+    if(q=e.target.closest('#re-gk .chip')){[...$('re-gk').children].forEach(c=>c.classList.toggle('on',c===q));return}
     if(e.target.closest('#re-sv')){e.target.closest('#re-sv').classList.toggle('on');return}
     if(q=e.target.closest('#re-k .chip')){[...$('re-k').children].forEach(c=>c.classList.toggle('on',c===q));return}
-    if(e.target.closest('#re-s')){const n=$('re-n').value.trim(),c=Math.round(+$('re-c').value),k=$('re-k').querySelector('.on'),cat=k?k.dataset.v:'';if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}const ico=$('re-i').value.trim()||'🎁',nv=i=>Math.max(0,+$(i).value||0),ex={lim:nv('re-lim'),cd:nv('re-cd'),minLv:nv('re-lv'),fm:nv('re-fm'),gr:nv('re-gr'),mins:nv('re-mn'),from:$('re-fr').value,to:$('re-to').value},sv1=$('re-sv').classList.contains('on');let rid=rsub.id;if(rid){Object.assign(rwd.find(r=>r.id===rid),{n,c,ico,cat},ex)}else{rid=uid();rwd.push(Object.assign({id:rid,n,c,ico,cat},ex))}if(sv1)rsave=rid;else if(rsave===rid)rsave='';rsub=null;sv();rwSheet();return}
+    if(e.target.closest('#re-s')){const n=$('re-n').value.trim(),c=Math.round(+$('re-c').value),k=$('re-k').querySelector('.on'),cat=k?k.dataset.v:'';if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}const ico=$('re-i').value.trim()||'🎁',nv=i=>Math.max(0,+$(i).value||0),ex={lim:nv('re-lim'),cd:nv('re-cd'),minLv:nv('re-lv'),fm:nv('re-fm'),gr:nv('re-gr'),mins:nv('re-mn'),from:$('re-fr').value,to:$('re-to').value,grk:($('re-gk').querySelector('.on')||{dataset:{v:''}}).dataset.v},sv1=$('re-sv').classList.contains('on');let rid=rsub.id;if(rid){Object.assign(rwd.find(r=>r.id===rid),{n,c,ico,cat},ex)}else{rid=uid();rwd.push(Object.assign({id:rid,n,c,ico,cat},ex))}if(sv1)rsave=rid;else if(rsave===rid)rsave='';rsub=null;sv();rwSheet();return}
     if(e.target.closest('#re-d')){if(await ask({title:'Delete this reward?',ok:'Delete',cancel:'Keep',danger:true})){rwd=rwd.filter(r=>r.id!==rsub.id);rsub=null;sv();rwSheet()}return}
     if(q=e.target.closest('[data-cd]')){const i=+q.dataset.cd,old=rcat[i];rcat.splice(i,1);rwd.forEach(r=>{if(r.cat===old)r.cat=''});if(rcf===old)rcf='';sv();rwSheet();return}
     if(e.target.closest('#ca-b')){const v=$('ca-n').value.trim();if(v&&!rcat.includes(v))rcat.push(v);sv();rwSheet();return}
