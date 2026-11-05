@@ -855,7 +855,7 @@ function sv(){try{
   localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);localStorage.dayh=JSON.stringify(dayh);localStorage.xpd=JSON.stringify(xpd);localStorage.wgoal=JSON.stringify(wgoal);localStorage.why=JSON.stringify(why);localStorage.wrev=JSON.stringify(wrev);
   localStorage.revs=JSON.stringify(revs);localStorage.plans=JSON.stringify(plans);
   localStorage.donelog=JSON.stringify(donelog);localStorage.goals=JSON.stringify(goals);localStorage.lazy=JSON.stringify(lazy);
-  localStorage.hh=JSON.stringify(hh);localStorage.hols=JSON.stringify(hols);localStorage.spent=JSON.stringify(spent);localStorage.rwd=JSON.stringify(rwd);localStorage.rlog=JSON.stringify(rlog);localStorage.mil=JSON.stringify(mil);localStorage.wch=JSON.stringify(wch);
+  localStorage.hh=JSON.stringify(hh);localStorage.hols=JSON.stringify(hols);localStorage.spent=JSON.stringify(spent);localStorage.rwd=JSON.stringify(rwd);localStorage.rcat=JSON.stringify(rcat);localStorage.rlog=JSON.stringify(rlog);localStorage.mil=JSON.stringify(mil);localStorage.wch=JSON.stringify(wch);
   if(F)localStorage.ftimer=JSON.stringify(F);
 }catch(e){}}
 const needed=l=>100+(l-1)*50;
@@ -1279,6 +1279,7 @@ const HOL0=[{n:'Toussaint',s:'2026-10-17',e:'2026-11-01'},{n:'Noël',s:'2026-12-
 let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:00',a2:'21:00',pause:true,man:''},ld('hh',{}));
 let hols=ld('hols',null)||HOL0.map(x=>({...x}));
 let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
+let rcat=ld('rcat',['🍕 Food','🎮 Games','📺 Leisure','🛍 Other']),rcf='',rsub=null;
 let hhome=ld('hhome',null),homeNow=null;
 const curHol=(d=iso())=>hols.find(h=>h.s<=d&&d<=h.e)||null;
 const hpaused=()=>!!(hh.pause&&curHol());
@@ -1358,11 +1359,19 @@ function badges(){
 }
 let rtab='shop';
 function rwSheet(tab){
-  if(tab)rtab=tab;
+  if(tab){rtab=tab;if(tab!=='shop')rsub=null}
   const tabs=[['shop','🛍 Shop'],['chal','🎯 Challenges'],['mil','🏅 Milestones'],['bad','🎖 Badges']];
   let b='';
   if(rtab==='shop'){
-    b=`<div class="hint" style="text-align:left">Spend XP on rewards you choose. Your level and weekly goal are not affected.</div>`+rwd.map(r=>`<div class="two" style="margin:6px 0;align-items:center"><div style="flex:1"><b>${esc(r.n)}</b><div class="hint" style="text-align:left;margin:0">${r.c} XP</div></div><button class="btn sm ${balance()>=r.c?'primary':''}" data-b="${r.id}" style="flex:none">Buy</button><button class="btn sm" data-x="${r.id}" style="flex:none">✕</button></div>`).join('')+`<div class="two" style="margin-top:10px"><input id="rw-n" placeholder="New reward" maxlength="50"><input id="rw-c" type="number" inputmode="numeric" placeholder="XP" style="max-width:80px"></div><button class="btn sm" id="rw-a">＋ Add reward</button>`+(rlog.length?`<div class="hint" style="text-align:left;margin-top:10px">Recent: ${rlog.slice(-3).reverse().map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')}</div>`:'');
+    if(rsub&&rsub.m==='cats'){
+      b=`<button class="btn sm" data-sb="1">‹ Back</button><div class="hint" style="text-align:left">Categories: rename or remove them. Rewards of a removed category go to “No category”.</div>`+rcat.map((c,i)=>`<div class="two" style="margin:6px 0"><input data-ci="${i}" value="${esc(c)}" maxlength="24"><button class="btn sm danger" data-cd="${i}" style="flex:none">✕</button></div>`).join('')+`<div class="two" style="margin-top:8px"><input id="ca-n" placeholder="🎁 New category" maxlength="24"><button class="btn sm primary" id="ca-b" style="flex:none">Add</button></div>`;
+    }else if(rsub&&rsub.m==='edit'){
+      const r=rsub.id?rwd.find(x=>x.id===rsub.id):null,d=r||{n:'',c:50,ico:'🎁',cat:rcf};
+      b=`<button class="btn sm" data-sb="1">‹ Back</button><div class="field"><label>Reward</label><div class="two"><input id="re-i" value="${esc(d.ico||'🎁')}" maxlength="4" style="max-width:62px;text-align:center;font-size:22px"><input id="re-n" value="${esc(d.n)}" placeholder="e.g. Cinema evening" maxlength="50"></div></div><div class="field"><label>Cost (XP) · you have ${balance()}</label><input id="re-c" type="number" inputmode="numeric" value="${d.c}"></div><div class="field"><label>Category</label><div class="chips" id="re-k"><button class="chip ${!d.cat?'on':''}" data-v="">No category</button>${rcat.map(c=>`<button class="chip ${c===d.cat?'on':''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div></div><button class="btn primary" id="re-s">${r?'Save':'Add reward'}</button>${r?'<button class="btn danger" id="re-d">Delete</button>':''}`;
+    }else{
+      const list=rwd.filter(r=>!rcf||(rcf==='-'?!r.cat||!rcat.includes(r.cat):r.cat===rcf));
+      b=`<div class="chips" style="margin:8px 0"><button class="chip ${!rcf?'on':''}" data-f="">All</button>${rcat.map(c=>`<button class="chip ${rcf===c?'on':''}" data-f="${esc(c)}">${esc(c)}</button>`).join('')}<button class="chip" data-sc="1">✎</button></div>`+(list.length?list.map(r=>{const pr=Math.min(100,balance()/r.c*100),ok=balance()>=r.c,i=rwd.indexOf(r);return`<div class="card" style="padding:12px;margin:8px 0"><div class="two" style="align-items:center;gap:10px"><div style="font-size:26px;flex:none">${esc(r.ico||'🎁')}</div><div style="flex:1;min-width:0"><b>${esc(r.n)}</b><div class="hint" style="text-align:left;margin:0">${r.c} XP${ok?'':' · '+(r.c-balance())+' to go'}</div></div><div style="display:flex;flex-direction:column;gap:2px;flex:none"><button class="btn sm" data-u="${r.id}" style="padding:2px 8px;min-height:0" ${i===0?'disabled':''}>▲</button><button class="btn sm" data-dn="${r.id}" style="padding:2px 8px;min-height:0" ${i===rwd.length-1?'disabled':''}>▼</button></div></div><div style="height:5px;border-radius:3px;background:var(--line,#2a2f3a);margin:8px 0"><div style="height:5px;border-radius:3px;background:${ok?'#30d158':'var(--acc,#4fd1ff)'};width:${pr}%"></div></div><div class="two"><button class="btn sm ${ok?'primary':''}" data-b="${r.id}">${ok?'Buy':'🔒 Buy'}</button><button class="btn sm" data-ed="${r.id}" style="flex:none">✎ Edit</button></div></div>`}).join(''):'<div class="hint">Nothing here yet.</div>')+`<button class="btn" data-new="1">＋ New reward</button>`+(rlog.length?`<div class="hint" style="text-align:left;margin-top:10px">Recent: ${rlog.slice(-3).reverse().map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')}</div>`:'');
+    }
   }else if(rtab==='chal'){
     b=`<div class="hint" style="text-align:left">New challenges every Monday. Bonus XP when you claim them.</div>`+chals().map(c=>{const ok=c.v>=c.g,cl=wch.cl.includes(c.id);return`<div style="margin:10px 0"><div class="two" style="align-items:center"><div style="flex:1"><b>${c.t}</b><div class="hint" style="text-align:left;margin:0">${Math.min(c.v,c.g)}/${c.g}${c.u} · +${c.b} XP</div></div><button class="btn sm ${ok&&!cl?'primary':''}" data-c="${c.id}" style="flex:none" ${ok&&!cl?'':'disabled'}>${cl?'Claimed ✓':'Claim'}</button></div><div style="height:6px;border-radius:3px;background:var(--line,#2a2f3a);margin-top:6px"><div style="height:6px;border-radius:3px;background:var(--acc,#4fd1ff);width:${Math.min(100,c.v/c.g*100)}%"></div></div></div>`}).join('');
   }else if(rtab==='mil'){
@@ -1370,11 +1379,23 @@ function rwSheet(tab){
   }else b=`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">`+badges().map(([i,n,ok])=>`<div class="card" style="padding:12px;text-align:center;opacity:${ok?1:.35}"><div style="font-size:26px">${i}</div><div class="hint" style="margin:4px 0 0">${n}</div></div>`).join('')+`</div>`;
   openSheet(`<h2>Rewards · ${balance()} XP to spend</h2><div class="chips" id="rw-t">${tabs.map(([k,l])=>`<button class="chip ${k===rtab?'on':''}" data-k="${k}">${l}</button>`).join('')}</div>${b}`);
   const B=$('sbody');
+  B.onchange=e=>{const i=e.target.dataset.ci;if(i==null)return;const o=rcat[+i],v=e.target.value.trim();if(!v||rcat.includes(v)){e.target.value=o;return}rcat[+i]=v;rwd.forEach(r=>{if(r.cat===o)r.cat=v});if(rcf===o)rcf=v;sv()};
   B.onclick=async e=>{
     const t=e.target.closest('[data-k]');if(t){rwSheet(t.dataset.k);return}
     const by=e.target.closest('[data-b]');if(by){const r=rwd.find(x=>x.id===by.dataset.b);if(!r)return;if(balance()<r.c){toast('Not enough XP · you have '+balance());return}if(!await ask({title:'Buy "'+r.n+'"?',msg:'−'+r.c+' XP from your balance. Your level stays the same.',ok:'Buy',cancel:'Cancel'}))return;spent+=r.c;rlog.push({n:r.n,c:r.c,t:Date.now()});sv();vib(30);burst(innerWidth/2,innerHeight/2,30);toast('Enjoy: '+r.n+' 🎉');rwSheet();rMotiv();return}
-    const x=e.target.closest('[data-x]');if(x){rwd=rwd.filter(r=>r.id!==x.dataset.x);sv();rwSheet();return}
-    if(e.target.closest('#rw-a')){const n=$('rw-n').value.trim(),c=Math.round(+$('rw-c').value);if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}rwd.push({id:uid(),n,c});sv();rwSheet();return}
+    const sh=(f)=>{f();sv();rwSheet()};
+    let q;
+    if(e.target.closest('[data-sb]')){rsub=null;rwSheet();return}
+    if(q=e.target.closest('[data-f]')){rcf=q.dataset.f;rwSheet();return}
+    if(e.target.closest('[data-sc]')){rsub={m:'cats'};rwSheet();return}
+    if(e.target.closest('[data-new]')){rsub={m:'edit',id:''};rwSheet();return}
+    if(q=e.target.closest('[data-ed]')){rsub={m:'edit',id:q.dataset.ed};rwSheet();return}
+    if(q=e.target.closest('[data-u],[data-dn]')){const id=q.dataset.u||q.dataset.dn,i=rwd.findIndex(r=>r.id===id),j=q.dataset.u?i-1:i+1;if(j>=0&&j<rwd.length)sh(()=>{[rwd[i],rwd[j]]=[rwd[j],rwd[i]]});return}
+    if(q=e.target.closest('#re-k .chip')){[...$('re-k').children].forEach(c=>c.classList.toggle('on',c===q));return}
+    if(e.target.closest('#re-s')){const n=$('re-n').value.trim(),c=Math.round(+$('re-c').value),k=$('re-k').querySelector('.on'),cat=k?k.dataset.v:'';if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}const ico=$('re-i').value.trim()||'🎁';if(rsub.id){Object.assign(rwd.find(r=>r.id===rsub.id),{n,c,ico,cat})}else rwd.push({id:uid(),n,c,ico,cat});rsub=null;sv();rwSheet();return}
+    if(e.target.closest('#re-d')){if(await ask({title:'Delete this reward?',ok:'Delete',cancel:'Keep',danger:true})){rwd=rwd.filter(r=>r.id!==rsub.id);rsub=null;sv();rwSheet()}return}
+    if(q=e.target.closest('[data-cd]')){const i=+q.dataset.cd,old=rcat[i];rcat.splice(i,1);rwd.forEach(r=>{if(r.cat===old)r.cat=''});if(rcf===old)rcf='';sv();rwSheet();return}
+    if(e.target.closest('#ca-b')){const v=$('ca-n').value.trim();if(v&&!rcat.includes(v))rcat.push(v);sv();rwSheet();return}
     const c=e.target.closest('[data-c]');if(c&&!c.disabled){const q=chals().find(z=>z.id===c.dataset.c);if(q&&q.v>=q.g&&!wch.cl.includes(q.id)){wch.cl.push(q.id);sv();gain(q.b,innerWidth/2,innerHeight/2);toast('Challenge done +'+q.b+' XP 🎯');rwSheet();rMotiv()}return}
     const ed=e.target.closest('[data-e]');if(ed){const L=+ed.dataset.e,v=prompt('Reward at level '+L,(mil[L]||{}).t||'');if(v!=null){mil[L]=Object.assign(mil[L]||{c:false},{t:v.trim()});sv();rwSheet()}return}
     const m=e.target.closest('[data-m]');if(m&&!m.disabled){const L=+m.dataset.m;mil[L].c=true;sv();vib(40);burst(innerWidth/2,innerHeight/2,40);toast('Level '+L+' reward unlocked: '+mil[L].t+' 🏅');rwSheet()}
@@ -1717,7 +1738,7 @@ document.addEventListener('click',e=>{
   else if(act==='cview'){cmode=a.dataset.v;rCal();vib(8)}
   else if(act==='dgo')dGoDay(+a.dataset.n);
   else if(act==='wgoalset')wgoalEdit();
-  else if(act==='rewards')rwSheet();
+  else if(act==='rewards'){rsub=null;rwSheet()}
   else if(act==='hhset')hhSheet();
   else if(act==='hhgo'){show('focus')}
   else if(act==='hhhere'){hhSheet()}
@@ -3926,7 +3947,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rlog','mil','wch','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','rlog','mil','wch','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
