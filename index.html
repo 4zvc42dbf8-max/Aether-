@@ -156,6 +156,9 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .stepper button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:transparent;color:var(--text);font-size:20px;transition:transform .25s var(--spring)}
 .stepper button:active{transform:scale(.8)}
 .pinned{font-size:.85em}
+.dnav{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 14px}.dnav .dl{flex:1;text-align:center;font-weight:700;font-size:15px}
+.dnav button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:var(--inset);color:var(--text);font-size:22px;line-height:1;padding:0;display:grid;place-items:center;flex:none}
+.dnav button:disabled{opacity:.25}.dnav button:active{transform:scale(.88)}.dnav .dtoday{width:auto;height:32px;border-radius:99px;padding:0 12px;font-size:13px;font-weight:600;color:var(--accent,#4d8dff)}
 .motiv .pg.done{stroke:#34c759}.motiv .big{font-size:15px;color:var(--muted)}.motiv .big b{font-size:30px;color:var(--text);font-variant-numeric:tabular-nums}
 .whyrow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin:14px 0 10px;padding:12px 14px;border-radius:16px;background:var(--inset);border:1px solid var(--line);color:var(--text);flex-wrap:wrap}
 .whyrow .wl{flex:0 0 100%;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:700}
@@ -713,10 +716,11 @@ textarea::placeholder{color:var(--dim)}
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
   <div class="card"><div class="lbl">Focus today</div><div id="focus-bar"></div></div>
   <div class="card"><div class="lbl">How was your day?</div>
+    <div class="dnav" id="dnav"></div>
     <div class="moods" id="moods"><button data-act="mood" data-n="1">😞</button><button data-act="mood" data-n="2">😐</button><button data-act="mood" data-n="3">🙂</button><button data-act="mood" data-n="4">😊</button><button data-act="mood" data-n="5">🤩</button></div>
     <div class="sub" id="moodt" style="text-align:center;margin-top:10px"></div>
     <div class="hrs" id="hrs"></div></div>
-  <div class="card"><div class="lbl">Daily review</div><div id="rev"></div></div>
+  <div class="card"><div class="lbl" id="revl">Daily review</div><div id="rev"></div></div>
   <div class="card tap" onclick="showJournal()"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Journal</div><div class="sub">Last 14 days</div></div><span class="chev">›</span></div></div>
   <div class="card tap" onclick="show('stats')"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Stats</div><div class="sub">Streak, focus time, mood</div></div><span class="chev">›</span></div></div>
 </section>
@@ -998,7 +1002,7 @@ function rHome(){
   $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
-  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rHrs();rMotiv();
+  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rMotiv();
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
@@ -1041,15 +1045,24 @@ function rFocusBar(){
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const p=$('fpg');if(p)p.style.strokeDashoffset=C*(1-clamp(min/plan,0,1))}));
   countTo($('fmn'),Math.round(clamp(min/plan,0,9.99)*100),900,v=>Math.round(v)+'%');
 }
+let rvDay=null;
+const rd=()=>rvDay||iso();
+const rvLabel=()=>rd()===iso()?'today':new Date(rd()+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
+function rDnav(){
+  const el=$('dnav');if(!el)return;const d=rd(),t=iso(),old=shiftD(t,-60);
+  el.innerHTML=`<button data-act="dgo" data-n="-1" ${d<=old?'disabled':''} aria-label="Previous day">‹</button><span class="dl">${d===t?'Today':esc(new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'}))}</span><button data-act="dgo" data-n="1" ${d>=t?'disabled':''} aria-label="Next day">›</button>${d!==t?'<button class="dtoday" data-act="dgo" data-n="0">Today</button>':''}`;
+  const l=$('revl');if(l)l.textContent=d===t?'Daily review':'Daily review · '+new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+}
+function dGoDay(n){const t=iso();let d=n===0?t:shiftD(rd(),n);if(d>t)d=t;if(d<shiftD(t,-60))d=shiftD(t,-60);rvDay=d===t?null:d;rDnav();rMood();rHrs();rRev();}
 const HRS=[['s','😴','Slept'],['c','🛋️','Chilled'],['w','📚','Worked']];
 function rHrs(){
-  const d=dayh[iso()]||{},el=$('hrs');if(!el)return;
+  const d=dayh[rd()]||{},el=$('hrs');if(!el)return;
   const tot=HRS.reduce((a,x)=>a+(+d[x[0]]||0),0);
   let avg='';{const n={s:0,c:0,w:0},c={s:0,c:0,w:0};for(let i=0;i<7;i++){const x=dayh[iso(new Date(Date.now()-i*864e5))];if(x)HRS.forEach(([k])=>{if(x[k]!=null){n[k]+=+x[k];c[k]++}})}
     if(HRS.some(([k])=>c[k]>1))avg='7-day average: '+HRS.filter(([k])=>c[k]).map(([k,e])=>e+' '+(n[k]/c[k]).toFixed(1)+'h').join(' · ')}
-  const fm=typeof minOn==='function'?Math.round(minOn(new Date())):0;
+  const fm=typeof minOn==='function'?Math.round(minOn(new Date(rd()+'T12:00:00'))):0;
   el.innerHTML=HRS.map(([k,e,l])=>`<div class="hr"><div class="hl2">${e} ${l}</div><div class="hs"><button data-act="hr" data-k="${k}" data-d="-0.5" aria-label="Less">−</button><b>${d[k]==null?'–':(+d[k]).toFixed(1)}<small>h</small></b><button data-act="hr" data-k="${k}" data-d="0.5" aria-label="More">+</button></div></div>`).join('')+
-  `<div class="sub hrn">${tot>24?'That adds up to more than 24 h 🙂':''}${!d.w&&fm?`Focus timer logged ${(fm/60).toFixed(1)} h today.`:''}${avg?(tot>24||(!d.w&&fm)?'<br>':'')+avg:''}</div>`;
+  `<div class="sub hrn">${tot>24?'That adds up to more than 24 h 🙂':''}${!d.w&&fm?`Focus timer logged ${(fm/60).toFixed(1)} h ${rd()===iso()?'today':'that day'}.`:''}${avg?(tot>24||(!d.w&&fm)?'<br>':'')+avg:''}</div>`;
 }
 
 /* ================= MOTIVATION: weekly XP ring, "why", weekly review ================= */
@@ -1115,14 +1128,14 @@ function weekReview(){
   };
 }
 function rMood(){
-  const m=moods[iso()];
+  const m=moods[rd()];
   document.querySelectorAll('#moods button').forEach((b,i)=>b.classList.toggle('on',i+1===m));
-  $('moodt').textContent=m?['Rough one. Tomorrow is a reset.','Okay day.','Good day.','Great day!','Unstoppable 🔥'][m-1]:'Tap to rate your day';
+  $('moodt').textContent=m?['Rough one. Tomorrow is a reset.','Okay day.','Good day.','Great day!','Unstoppable 🔥'][m-1]:(rd()===iso()?'Tap to rate your day':'Tap to rate that day');
 }
 function rRev(edit){
-  const td=iso(),el=$('rev');
+  const td=rd(),el=$('rev');
   if(revs[td]&&!edit){el.innerHTML=`<div class="revtxt" data-act="revedit">${esc(revs[td])}</div><div class="hint" style="margin:8px 0 0">Tap to edit</div>`;return}
-  el.innerHTML=`<input id="ri" placeholder="What did you finish today?" value="${esc(revs[td]||'')}"><button class="btn primary" data-act="revsave">Save</button>`;
+  el.innerHTML=`<input id="ri" placeholder="What did you finish ${td===iso()?'today':'that day'}?" value="${esc(revs[td]||'')}"><button class="btn primary" data-act="revsave">Save</button>`;
 }
 
 /* ================= TASKS ================= */
@@ -1583,12 +1596,13 @@ document.addEventListener('click',e=>{
   else if(act==='cd'){selD=a.dataset.d;if(a.dataset.go)cmode='day';rCal();vib(8)}
   else if(act==='cprev'||act==='cnext'){const n=act==='cnext'?1:-1;selD=shiftD(selD,7*n);rCal(n)}
   else if(act==='cview'){cmode=a.dataset.v;rCal();vib(8)}
+  else if(act==='dgo')dGoDay(+a.dataset.n);
   else if(act==='wgoalset')wgoalEdit();
   else if(act==='whyedit')whyEdit();
   else if(act==='wreview')weekReview();
-  else if(act==='hr'){const d=dayh[iso()]=dayh[iso()]||{},k=a.dataset.k,dl=+a.dataset.d;d[k]=Math.max(0,Math.min(24,Math.round(((d[k]==null?(dl>0?0:0):+d[k])+dl)*2)/2));sv();rHrs();vib(8)}
-  else if(act==='mood'){const n=+a.dataset.n;moods[iso()]=n;sv();rMood();const r=a.getBoundingClientRect();burst(r.left+r.width/2,r.top+10,10,['#ffd23f','#ff9f0a','#fff']);vib(15)}
-  else if(act==='revsave'){const v=$('ri').value.trim();if(v){revs[iso()]=v;sv();rRev();toast('Saved')}}
+  else if(act==='hr'){const d=dayh[rd()]=dayh[rd()]||{},k=a.dataset.k,dl=+a.dataset.d;d[k]=Math.max(0,Math.min(24,Math.round(((d[k]==null?(dl>0?0:0):+d[k])+dl)*2)/2));sv();rHrs();vib(8)}
+  else if(act==='mood'){const n=+a.dataset.n;moods[rd()]=n;sv();rMood();const r=a.getBoundingClientRect();burst(r.left+r.width/2,r.top+10,10,['#ffd23f','#ff9f0a','#fff']);vib(15)}
+  else if(act==='revsave'){const v=$('ri').value.trim();if(v){revs[rd()]=v;sv();rRev();toast('Saved')}}
   else if(act==='revedit')rRev(true);
   else if(act==='plan'){const td=iso();plans[td]=clamp((plans[td]||60)+(+a.dataset.d),15,480);sv();rFocusBar()}
   else if(act==='orb'){const w=a.closest('.orbwrap')||a;w.classList.remove('squish');void w.offsetWidth;w.classList.add('squish');const r=w.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,8,['#4d8dff','#fff']);toast(TIPS[Math.floor(Math.random()*TIPS.length)])}
@@ -2015,7 +2029,7 @@ async function aiGemini({system,content,max,model,onText}){
 /* Auto mode: Gemini first (free). If it fails or the quota is hit and a Claude key exists, the same request goes to Claude:
    Haiku for reading jobs (scans, programmes, cards), Sonnet for writing jobs (exams, sheets, feedback). */
 const READ_JOBS=()=>[SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_CARDS];
-const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s);
+const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s);
 async function aiAuto(o){
   const gk=localStorage.getItem('p_gkey'),ck=localStorage.getItem('p_key');
   const claude=()=>aiClaude(Object.assign({},o,{model:isRead(o.system)?S.set.mread:S.set.mwrite}));
@@ -2116,6 +2130,8 @@ const SYS_TRANSCRIBE="You are a meticulous transcriber of scanned handwritten or
 const SYS_PROGRAMME="You read a 'programme de colles' given by a teacher in a French classe préparatoire. Extract the list of chapters/topics the student may be questioned on. Answer with ONLY a JSON object, no other text: {\"title\":\"short title\",\"chapters\":[{\"title\":\"chapter name\",\"detail\":\"precise content, notions, theorems or exercise types listed (one or two sentences)\"}],\"remarks\":\"any special instruction (or empty string)\"}. Keep the teacher's wording. Merge duplicated lines. Maximum 12 chapters.";
 const SYS_MOCK=(subj,dur,calc)=>"You are a teacher in a French classe préparatoire (MPSI, first year, lycée Aux Lazaristes) writing a 'devoir surveillé' (DS), i.e. a mock exam, in "+subj+". You receive: (1) MAIN LESSONS: the chapters the exam must be centred on; (2) COMPLEMENTARY LESSONS (optional): chapters that may appear in smaller parts or as prerequisites; (3) MODEL EXAMS (optional): real past papers from the student's teachers, only to copy their style, level, length, point scale and layout. Write the paper in French, in Markdown, with LaTeX between $...$ and $$...$$. Layout:\n\n# DS blanc — "+subj+"\nA line with: Durée : "+dur+" — Calculatrice : "+(calc?'AUTORISÉE':'NON autorisée')+".\nThen a short bullet list of instructions in the style of the model exams (soin / présentation, résultats encadrés, réponses non justifiées ou sans unité = 0 point, exercices indépendants and may be done in any order). Then 3 or 4 independent exercises (or problem parts), titled 'I. Title (n pts)', 'II. ...', with numbered questions (I.1), (I.2)... of increasing difficulty, the total being 20 points. Include data, constants or figure descriptions the questions need. The main lessons must carry about 75 to 85 percent of the points; complementary lessons the rest. Match the model exams' difficulty and typical question types (standard computations, proofs from the course, application, one harder final question). The length must fit the duration.\n\n<!--CORRECTIONS-->\n## Corrigé\nA complete, rigorous correction for every question, with the final results clearly stated, the point scale (barème) per question, and for each exercise a short remark on the classic trap or method. Double-check every calculation, unit and sign before writing; correctness matters more than length.\n\nRules: use only notations, definitions and results of the student's course (state any needed extra result as 'rappel'); never copy a question from the model exams, create new ones; no introduction or closing sentence outside this structure.";
 const SYS_DIGEST=(others)=>"You build a compact MEMORY NOTE of one lesson from a French classe préparatoire student, to be reused later instead of the full text (it saves tokens). Write in French, Markdown, with LaTeX $...$ for formulas, at most 350 words, exactly with these sections:\n**Mots-clés:** 8 to 12 key terms separated by commas.\n**À retenir:** the definitions, theorems, formulas and standard methods of the lesson as terse bullets (statement + conditions). Keep the student's notation.\n**Pièges:** 2 or 3 classic mistakes.\n**Liens:** which of the OTHER LESSONS below it uses or prepares, as 'Titre exact — relation courte' (only genuine links, at most 5; write 'aucun' if none).\nOTHER LESSONS:\n"+(others||'(none)')+"\nNo introduction or closing sentence.";
+const SYS_RESUME=(what,subj)=>"You are an excellent teacher in a French classe préparatoire (first year, "+subj+"). Write the student's REVISION RÉSUMÉ for "+what+": everything he or she needs to know and be able to do to get the best possible result, built ONLY from the student's own course below (their notations and results) and, for the order and emphasis, from the PROGRAMME or the list of main lessons. Write in French, Markdown, LaTeX between $...$ and $$...$$. Dense, scannable, no filler: at most about 1400 words. Structure:\n\n## Les priorités\nThe 5 to 8 things that earn the most points (what examiners always ask), ordered by importance.\n\n## Chapitre par chapitre\nFor each chapter or lesson (as a ### heading): **À savoir par cœur** (definitions, theorems with their hypotheses, key formulas), **Méthodes types** (how to attack the standard exercises, in 2 to 4 steps), **Pièges** (classic mistakes, units, signs, conditions forgotten).\n\n## Liens entre les chapitres\nHow chapters feed each other (a few bullets).\n\n## Check-list de dernière minute\nA short list of 8 to 12 checkboxes (- [ ]) the student can tick before the test.\n\nIf a STUDENT PROFILE is given, add a short '⚠️ Mes points faibles' section at the top aiming at his or her recurring mistakes, without quoting the profile. Never invent results absent from the course: if something essential is missing from the course, list it under '## À compléter' as 'rappel' with the standard statement. Do not reveal or reuse any exam or exercise sheet text. No introduction or closing sentence.";
+const SYS_VOCAB_TEXT="You read the text of a vocabulary file for a French student (for example general vocabulary, linking words such as connectors, useful expressions, word lists with or without translations). Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list\",\"langA\":\"language of the entries, e.g. French\",\"langB\":\"the other language, e.g. English\",\"pairs\":[{\"a\":\"word or expression\",\"b\":\"translation or short meaning\"}]}. Rules: extract EVERY entry in reading order and keep spelling and accents exactly; if the file already gives a translation or definition, keep it as b; if it only lists words or expressions in one language, write b yourself as the short, natural equivalent in the other language (French <-> English by default; for a connector give the connector, e.g. 'néanmoins' -> 'nevertheless / however'); if an entry has several meanings join them with ' / '; ignore page numbers, headings and decoration; skip anything unclear. Inside JSON strings escape backslashes and double quotes.";
 const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the student's COURSE (their own lesson notes, transcribed) as the reference, and the PROGRAMME the colle will cover. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\n6 short questions of the kind a colleur asks at the start (definitions, statements of theorems, quick proofs, standard formulas). Number them.\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes for the harder ones). For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\nFirst, short answers to the questions de cours (including the key idea of any proof). Then, for each exercise, a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nRules: stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Cover the programme's chapters evenly. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
 const SYS_CARDS="You make spaced-repetition flashcards from a student's course notes (French classe préparatoire). Output ONLY a JSON array, no other text: [{\"q\":\"...\",\"a\":\"...\"}]. 12 to 20 cards covering the most important definitions, theorem statements (with hypotheses), key formulas and standard methods of the course, in French (or English if the course is in English). Each question must be answerable on its own; keep answers short and precise. Use LaTeX between $...$ for math. Do not invent anything that is not in the course. Inside JSON strings, write every LaTeX backslash doubled (\\\\frac, \\\\ell) so the JSON stays valid.";
 const SYS_ENGLISH="You are an English teacher in a French classe préparatoire (CPGE). The student has an oral English 'colle' about current affairs and must present and discuss a topic. You receive 2 topics, each with 2 recent news items (headline, outlet, short summary only: you do NOT have the full articles, so never invent details that are not in the summaries). For each topic write, in English: 1) 'Why it matters' in 3 sentences; 2) 'Key vocabulary': 10 useful words or expressions with a short definition; 3) 'Questions you may be asked': 5 questions; 4) 'A 2-minute outline': introduction, three points, conclusion, with useful connectors. Use Markdown with ## for each topic and ### for sub-parts. Do not use the dollar sign for currencies.";
@@ -2208,7 +2224,7 @@ async function dump(){return{texts:await dbAll('texts')}}
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
 window.PC={SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
-  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_MOCK,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_MOCK,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -2532,7 +2548,7 @@ function vMock(id){
   if(live[k])h+=liveBox(k);
   else{
     if(errs[k]||m.err)h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[k]||m.err)+'</div>';
-    h+='<div class="row2" style="margin-top:12px"><button class="btn '+(m.at?'':'primary')+'" data-a="mkMock" data-i="'+id+'">'+(m.at?'Write a new version':'Write the exam')+'</button><button class="btn danger" data-a="delMock" data-i="'+id+'">Delete</button></div>'+folderPill('mocks',id);
+    h+='<button class="btn '+(m.fiAt?'':'')+'" style="margin-top:12px" data-a="fiche" data-i="m|'+id+'">📘 '+(m.fiAt?'Open the résumé':'Résumé: what to know for this exam')+'</button><div class="row2" style="margin-top:12px"><button class="btn '+(m.at?'':'primary')+'" data-a="mkMock" data-i="'+id+'">'+(m.at?'Write a new version':'Write the exam')+'</button><button class="btn danger" data-a="delMock" data-i="'+id+'">Delete</button></div>'+folderPill('mocks',id);
   }
   h+='</div>';
   if(m.at&&!live[k])h+='<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Sujet</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrigé</button></div><div class="card"><div class="doc" id="mockdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
@@ -2591,19 +2607,7 @@ async function lessonBlock(ids,cap){
 function mkMock(id){
   const m=S.mocks.find(x=>x.id===id);if(!m)return;
   return run('M'+id,'Writing your exam…',async(lab,txt)=>{
-    lab('Reading your lessons…');
-    const main=await lessonBlock(m.main,120000);
-    if(!main)throw new C.AIError('The main lessons have no text yet. Read them first (Lessons tab).');
-    /* complementary and linked lessons: short memory notes instead of the full text (saves tokens) */
-    let comp='',linked=[];
-    const ids=new Set(m.main.concat(m.comp));
-    if(memOn()){
-      lab('Using your lesson memory…');
-      for(const lid of m.comp){const l=S.lessons.find(x=>x.id===lid);if(!l)continue;let d='';try{d=await digestOf(l,true)}catch(e){}
-        comp+='\n\n=== LESSON NOTE: '+l.title+' ===\n'+(d||((await C.getText('L'+lid))||'').slice(0,4000))}
-      for(const lid of m.main){const l=S.lessons.find(x=>x.id===lid);if(!l)continue;const d=await digestOf(l,false);
-        for(const x of linkedOf(l,d)){if(ids.has(x.id)||linked.length>=4)continue;ids.add(x.id);const dx=await digestOf(x,false);if(dx){linked.push(x.title);comp+='\n\n=== LINKED LESSON NOTE: '+x.title+' ===\n'+dx}}}
-    }else comp=await lessonBlock(m.comp,50000);
+    const{main,comp,linked}=await mockCtx(m,lab);
     lab('Looking at your real exams for the style…');
     const sm=await styleModels(m.subj);
     lab('Writing the exam and the corrigé…');
@@ -2613,6 +2617,53 @@ function mkMock(id){
     if(r.text.length<400)throw new C.AIError('The exam came out empty. Try again.');
     await C.setText('M'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The exam was cut: write a new version.]*':''));
     m.at=Date.now();m.err='';m.styled=sm.used.join(', ');m.linked=linked.join(', ');save.mocks();toast('Mock exam ready ✓');
+  });
+}
+
+/* ----- Revision résumé (fiche) for a programme de colle or a mock exam ----- */
+function vFiche(id){
+  const[k,rid]=id.split('|'),o=k==='p'?S.progs.find(x=>x.id===rid):S.mocks.find(x=>x.id===rid);if(!o){st.stack.pop();return ''}
+  const key='F'+rid,title=k==='p'?(o.title||SUBJ[o.subj].n+' programme'):o.title;
+  let h=backBar('Résumé','<button class="pmini" data-a="printFiche" data-i="'+id+'" aria-label="Print">⎙</button>');
+  h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[o.subj].n+' · résumé of what to know'+(o.fiUsed?'<br>From: '+esc(o.fiUsed):'')+'</div>';
+  if(live[key])h+=liveBox(key);
+  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';h+='<button class="btn '+(o.fiAt?'':'primary')+'" style="margin-top:12px" data-a="mkFiche" data-i="'+id+'">'+(o.fiAt?'Write a new version':'Write the résumé')+'</button>'}
+  h+='</div>';
+  if(o.fiAt&&!live[key])h+='<div class="card"><div class="doc" id="fichedoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  return h;
+}
+async function mockCtx(m,lab){
+  lab('Reading your lessons…');
+  const main=await lessonBlock(m.main,120000);
+  if(!main)throw new C.AIError('The main lessons have no text yet. Read them first (Lessons tab).');
+  let comp='',linked=[];const ids=new Set(m.main.concat(m.comp));
+  if(memOn()){
+    lab('Using your lesson memory…');
+    for(const lid of m.comp){const l=S.lessons.find(x=>x.id===lid);if(!l)continue;let d='';try{d=await digestOf(l,true)}catch(e){}
+      comp+='\n\n=== LESSON NOTE: '+l.title+' ===\n'+(d||((await C.getText('L'+lid))||'').slice(0,4000))}
+    for(const lid of m.main){const l=S.lessons.find(x=>x.id===lid);if(!l)continue;const d=await digestOf(l,false);
+      for(const x of linkedOf(l,d)){if(ids.has(x.id)||linked.length>=4)continue;ids.add(x.id);const dx=await digestOf(x,false);if(dx){linked.push(x.title);comp+='\n\n=== LINKED LESSON NOTE: '+x.title+' ===\n'+dx}}}
+  }else comp=await lessonBlock(m.comp,50000);
+  return{main,comp,linked};
+}
+function mkFiche(id){
+  const[k,rid]=id.split('|'),key='F'+rid;
+  const o=k==='p'?S.progs.find(x=>x.id===rid):S.mocks.find(x=>x.id===rid);if(!o)return;
+  return run(key,'Writing your résumé…',async(lab,txt)=>{
+    let body,used;
+    if(k==='p'){
+      lab('Collecting your lessons…');const c=await courseFor(o);
+      const prog=o.chapters.map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n');
+      body='PROGRAMME ('+SUBJ[o.subj].n+'):\n'+prog+(o.remarks?'\nTeacher note: '+o.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject: use the standard French prépa programme and say so at the top.)');used=(c.used||[]).join(', ');
+    }else{
+      const x=await mockCtx(o,lab);
+      body='MAIN LESSONS (the exam is centred on these):'+x.main+'\n\nCOMPLEMENTARY / LINKED LESSONS (memory notes):'+(x.comp||'\n(none)');used=o.main.map(i=>(S.lessons.find(l=>l.id===i)||{}).title).filter(Boolean).join(', ');
+    }
+    lab('Writing the résumé…');
+    const r=await C.ai({system:C.SYS_RESUME(k==='p'?'the colle programme below':'a '+o.dur+' mock exam on the main lessons below',SUBJ[o.subj].n),content:[{type:'text',text:body,cache:true},{type:'text',text:profileFor(o.subj)||'(no profile yet)'}],max:9000,onText:txt});
+    if(r.text.length<300)throw new C.AIError('The résumé came out empty. Try again.');
+    await C.setText(key,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
+    o.fiAt=Date.now();o.fiUsed=used;(k==='p'?save.progs:save.mocks)();toast('Résumé ready ✓');
   });
 }
 
@@ -2696,6 +2747,7 @@ function vProg(id){
     }
     if(!live[k])h+='<button class="btn '+(p.sheetAt?'':'primary')+'" data-a="mkSheet" data-i="'+id+'">'+(p.sheetAt?'Generate a new sheet':'Generate the sheet')+'</button>';
     h+='</div>';
+    h+='<div class="card"><div class="lbl">Revision résumé</div><div class="sub" style="margin-bottom:10px">Everything to know for this programme, built from your lessons: priorities, definitions and formulas, methods, traps, and a last-minute checklist.</div>'+liveBox('F'+id)+errBox('F'+id)+(live['F'+id]?'':'<button class="btn '+(p.fiAt?'':'primary')+'" data-a="fiche" data-i="p|'+id+'">'+(p.fiAt?'Open the résumé':'Generate the résumé')+'</button>')+'</div>';
   }
   return h;
 }
@@ -2776,7 +2828,7 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
   }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():st.tab==='grades'?vGrades():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
@@ -2795,6 +2847,7 @@ async function post(top){
   try{
     if(top&&top.v==='lesson'){const l=S.lessons.find(x=>x.id===top.id);if(l&&l.status==='done')into('ltext',(await C.getText('L'+l.id))||'*(empty)*')}
     if(top&&top.v==='sheet'){const p=S.progs.find(x=>x.id===top.id),tx=(await C.getText('S'+top.id))||'',sp=splitSheet(tx);into('sheetdoc',st.seg==='co'?(sp.co||'*No corrections found.*'):sp.ex)}
+    if(top&&top.v==='fiche'){const tx=(await C.getText('F'+top.id.split('|')[1]))||'';if($('fichedoc'))into('fichedoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mock'){const tx=(await C.getText('M'+top.id))||'',sp=splitSheet(tx);if($('mockdoc'))into('mockdoc',st.seg==='co'?(sp.co||'*No corrigé found.*'):sp.ex)}
     if(top&&top.v==='rec'){const[k,id]=top.id.split('|'),r=S[k][id];if(r&&r.fb)into('fbtext',r.fb)}
     if(top&&top.v==='eng'&&eng&&eng.text)into('engdoc',eng.text);
@@ -3102,13 +3155,19 @@ function mkSheet(id,n){
 A.mkSheet=async id=>{if(await askUnread(id)===false)return;if(needKey())mkSheet(id)};
 A.ready=i=>{const[id,cid]=i.split('|'),p=S.progs.find(x=>x.id===id),c=p.chapters.find(x=>x.id===cid);c.ready=!c.ready;save.progs();render()};
 A.openSheet=id=>go('sheet',id);
-A.delProg=async id=>{if(!await ask({title:'Delete this programme?',msg:'The sheet is deleted too.',ok:'Delete',danger:1}))return;const p=S.progs.find(x=>x.id===id);for(const f of p.files)await C.delFile(f.id);await C.dbDel('texts','S'+id).catch(()=>{});S.progs=S.progs.filter(x=>x.id!==id);save.progs();back()};
+A.delProg=async id=>{if(!await ask({title:'Delete this programme?',msg:'The sheet is deleted too.',ok:'Delete',danger:1}))return;const p=S.progs.find(x=>x.id===id);for(const f of p.files)await C.delFile(f.id);await C.dbDel('texts','S'+id).catch(()=>{});await C.dbDel('texts','F'+id).catch(()=>{});S.progs=S.progs.filter(x=>x.id!==id);save.progs();back()};
 A.printLesson=async id=>{const l=S.lessons.find(x=>x.id===id),t=await C.getText('L'+id);if(!t){toast('Read the lesson first');return}await C.loadKatex();printHtml('<h1>'+esc(l.title)+'</h1>'+C.md(t));toast('Choose "Save to Files" / "Save as PDF" in the share sheet')};
 A.printSheet=async id=>{const sp=splitSheet((await C.getText('S'+id))||'');await C.loadKatex();printHtml(C.md(st.seg==='co'?sp.co:sp.ex))};
 A.mkMock=async id=>{if(needKey())mkMock(id)};
 A.mock=id=>{st.seg='ex';go('mock',id)};
-A.delMock=async id=>{if(!await ask({title:'Delete this mock exam?',msg:'The text is deleted too.',ok:'Delete',danger:1}))return;await C.dbDel('texts','M'+id).catch(()=>{});S.mocks=S.mocks.filter(x=>x.id!==id);save.mocks();back()};
+A.delMock=async id=>{if(!await ask({title:'Delete this mock exam?',msg:'The text is deleted too.',ok:'Delete',danger:1}))return;await C.dbDel('texts','M'+id).catch(()=>{});await C.dbDel('texts','F'+id).catch(()=>{});S.mocks=S.mocks.filter(x=>x.id!==id);save.mocks();back()};
 A.printMock=async id=>{const sp=splitSheet((await C.getText('M'+id))||'');await C.loadKatex();printHtml(C.md(st.seg==='co'?sp.co:sp.ex))};
+A.fiche=async i=>{const[k,rid]=i.split('|'),o=k==='p'?S.progs.find(x=>x.id===rid):S.mocks.find(x=>x.id===rid);if(!o)return;
+  if(o.fiAt){go('fiche',i);return}
+  if(k==='p'&&await askUnread(rid)===false)return;
+  if(!needKey())return;go('fiche',i);mkFiche(i)};
+A.mkFiche=async i=>{const[k,rid]=i.split('|');if(k==='p'&&await askUnread(rid)===false)return;if(needKey())mkFiche(i)};
+A.printFiche=async i=>{const rid=i.split('|')[1];await C.loadKatex();printHtml(C.md((await C.getText('F'+rid))||''))};
 A.memTog=()=>{S.set.mem=!memOn();save.set();render('card')};
 A.buildMem=()=>{if(!needKey())return;
   return run('MEM','Building memory notes…',async(lab)=>{
@@ -3214,7 +3273,7 @@ const svgSpk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 
 /* ----- list of lists (inside the Cards tab) ----- */
 function vocabHome(){
-  let h='<button class="add" data-a="addVocab">+ New list from a photo of the book</button>';
+  let h='<button class="add" data-a="addVocab">+ New list from a photo or a file</button>';
   h+=liveBox('VOC')+errBox('VOC');
   if(!S.vocab.length)return h+'<div class="hidecorr">Take a photo of a vocabulary page (French on one side, English on the other). The AI turns it into cards you swipe: right if you know it, left if not.</div>';
   h+=inFolders('vocab',S.vocab.slice().sort((a,b)=>b.date.localeCompare(a.date)),l=>l.folder||'',l=>{
@@ -3321,13 +3380,51 @@ A.vreset=async id=>{const l=S.vocab.find(x=>x.id===id);l.items.forEach(i=>i.k=0)
 A.ctab=i=>{st.ctab=i;render('tab')};
 
 /* ----- create from photos ----- */
+const VACC='application/pdf,image/*,.txt,.md,.csv,.tsv,text/plain,text/csv';
+const sepPairs=text=>{
+  const L=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),out=[];let ok=0;
+  for(const l of L){const m=/^(.{1,80}?)(?:\t|\s*;\s*|\s+[—–=]\s+|\s+-\s+)(.{1,160})$/.exec(l);if(m&&m[1].trim()&&m[2].trim()){ok++;out.push({a:m[1].trim().replace(/^["']|["']$/g,''),b:m[2].trim().replace(/^["']|["']$/g,'')})}}
+  return L.length>=3&&ok>=L.length*.7?out:null;
+};
+async function fileText(f){
+  if(C.isPdf(f)){try{const r=await C.pdfText(f);return r.avg>=150?r.text.replace(/^## Page \d+\s*$/gm,''):null}catch(e){return null}}
+  if(/^text\//.test(f.type)||/\.(txt|md|csv|tsv)$/i.test(f.name||''))return await f.text();
+  return null;
+}
+async function vocabFromText(text,lab,txt){
+  const pairs=[];let meta={};
+  const parts=[];for(let i=0;i<text.length;){let e=Math.min(text.length,i+9000);if(e<text.length){const nl=text.lastIndexOf('\n',e);if(nl>i+4000)e=nl}parts.push(text.slice(i,e));i=e}
+  for(let i=0;i<parts.length;i++){
+    lab('Reading the words'+(parts.length>1?' ('+(i+1)+'/'+parts.length+')':'')+'…');
+    const r=await C.ai({system:C.SYS_VOCAB_TEXT,content:[{type:'text',text:'FILE TEXT:\n'+parts[i]}],max:12000,onText:txt});
+    const j=C.parseJson(r.text);if(!meta.langA)meta=j;
+    (j.pairs||[]).forEach(p=>{const a=String(p.a||'').trim(),b=String(p.b||'').trim();if(a&&b&&!pairs.some(x=>x.a===a&&x.b===b))pairs.push({a,b})});
+  }
+  return{title:meta.title||'',la:meta.langA||'French',lb:meta.langB||'English',pairs};
+}
 async function vocabFromFiles(files,lab,txt){
+  /* text files, CSV and text PDFs are read as text (no photos); the rest as photos */
+  const photos=[],all={pairs:[],title:'',la:'',lb:''};
+  for(const f of files){
+    const t=await fileText(f);
+    if(t==null){photos.push(f);continue}
+    const sp=sepPairs(t);
+    const r=sp?{title:'',la:'French',lb:'English',pairs:sp}:await vocabFromText(t,lab,txt);
+    r.pairs.forEach(p=>{if(!all.pairs.some(x=>x.a===p.a&&x.b===p.b))all.pairs.push(p)});
+    if(!all.title&&r.title)all.title=r.title;if(!all.la&&r.la){all.la=r.la;all.lb=r.lb}
+  }
+  if(!photos.length){if(!all.pairs.length)throw new C.AIError('I could not find any words in this file.');return{title:all.title,la:all.la||'French',lb:all.lb||'English',pairs:all.pairs}}
+  const ph=await vocabFromPhotos(photos,lab,txt);
+  ph.pairs.forEach(p=>{if(!all.pairs.some(x=>x.a===p.a&&x.b===p.b))all.pairs.push(p)});
+  return{title:all.title||ph.title,la:all.la||ph.la,lb:all.lb||ph.lb,pairs:all.pairs};
+}
+async function vocabFromPhotos(files,lab,txt){
   const blocks=[];
   for(const f of files){
     if(C.isPdf(f)){const pg=await C.pageImages(f,(i,n)=>lab('Preparing '+f.name+' · page '+i+'/'+n),1800);pg.forEach(x=>blocks.push(x.block))}
     else blocks.push(await C.imgBlock(f,2000));
   }
-  if(!blocks.length)throw new C.AIError('Choose at least one photo.');
+  if(!blocks.length)throw new C.AIError('Choose at least one file.');
   const pairs=[];let meta={};
   for(let i=0;i<blocks.length;i+=6){
     lab('Reading the words'+(blocks.length>6?' ('+(i/6+1)+'/'+Math.ceil(blocks.length/6)+')':'')+'…');
@@ -3340,11 +3437,11 @@ async function vocabFromFiles(files,lab,txt){
 }
 A.addVocab=()=>{
   let files=[];
-  openSheet('<h2 class="sh">Vocabulary list</h2><div class="sub" style="margin-bottom:12px">Photo of the book page with the words and their translations. You can add several pages.</div><div class="field"><label>Name (optional)</label><input id="v-t" placeholder="e.g. Unit 3 — Politics"></div><div id="v-f"></div><div class="two2"><button class="btn" id="v-cam">Take / choose photos</button></div><button class="btn primary" id="v-go">Make my cards</button>');
+  openSheet('<h2 class="sh">Vocabulary list</h2><div class="sub" style="margin-bottom:12px">Photos of a book page, or a file (PDF, .txt, .csv) with general vocabulary such as linking words and useful expressions. If the file has no translations, the AI adds them. You can add several files.</div><div class="field"><label>Name (optional)</label><input id="v-t" placeholder="e.g. Unit 3 — Politics"></div><div id="v-f"></div><div class="two2"><button class="btn" id="v-cam">Add photos, a PDF or a text file</button></div><button class="btn primary" id="v-go">Make my cards</button>');
   const draw=()=>{$('v-f').innerHTML=files.map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+'</small></span></div>').join('')};
-  $('v-cam').onclick=async()=>{const fs=await C.pickFiles();if(fs.length){files=files.concat(fs);draw()}};
+  $('v-cam').onclick=async()=>{const fs=await C.pickFiles({accept:VACC});if(fs.length){files=files.concat(fs);draw()}};
   $('v-go').onclick=()=>{
-    if(!files.length){toast('Add at least one photo');return}
+    if(!files.length){toast('Add at least one file');return}
     if(!needKey())return;
     const name=$('v-t').value.trim(),fl=files;closeSheet();st.tab='cards';st.ctab='vocab';st.stack=[];render('tab');
     run('VOC','Preparing the photos…',async(lab,txt)=>{
@@ -3355,7 +3452,7 @@ A.addVocab=()=>{
   };
 };
 A.vaddPhoto=async id=>{
-  if(!needKey())return;const l=S.vocab.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;
+  if(!needKey())return;const l=S.vocab.find(x=>x.id===id),fs=await C.pickFiles({accept:VACC});if(!fs.length)return;
   run('VOC','Preparing the photos…',async(lab,txt)=>{
     const r=await vocabFromFiles(fs,lab,txt);let n=0;
     r.pairs.forEach(p=>{if(!l.items.some(x=>x.a===p.a&&x.b===p.b)){l.items.push({id:uid(),a:p.a,b:p.b,k:0,n:0});n++}});
