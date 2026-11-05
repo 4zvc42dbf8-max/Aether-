@@ -156,6 +156,9 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .stepper button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:transparent;color:var(--text);font-size:20px;transition:transform .25s var(--spring)}
 .stepper button:active{transform:scale(.8)}
 .pinned{font-size:.85em}
+.ftf{margin:12px 0 6px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.ftitem{display:flex;width:100%;text-align:left;margin-bottom:7px;padding:12px 14px;border-radius:14px;background:var(--inset);border:1px solid var(--line);color:var(--text)}
+.ftitem.on{border-color:var(--accent,#4d8dff);box-shadow:0 0 0 1px var(--accent,#4d8dff) inset}.ftitem .m{display:block;min-width:0}.ftitem b{display:block;font-size:15px}.ftitem small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .dnav{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 14px}.dnav .dl{flex:1;text-align:center;font-weight:700;font-size:15px}
 .dnav button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:var(--inset);color:var(--text);font-size:22px;line-height:1;padding:0;display:grid;place-items:center;flex:none}
 .dnav button:disabled{opacity:.25}.dnav button:active{transform:scale(.88)}.dnav .dtoday{width:auto;height:32px;border-radius:99px;padding:0 12px;font-size:13px;font-weight:600;color:var(--accent,#4d8dff)}
@@ -235,6 +238,8 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .ghead .btn{flex:none;width:auto;padding:9px 14px}
 .cdot{width:14px;height:14px;border-radius:50%;display:inline-block;vertical-align:-1px;margin-right:6px}
 .chip .cdot{margin-right:6px}
+.hhc.on{border-color:rgba(255,159,10,.55);background:linear-gradient(180deg,rgba(255,159,10,.16),transparent),var(--card,#14171f)}
+.hhc:not(.on){padding-top:10px;padding-bottom:10px}
 .lazycard{transition:border-color .4s,background .4s}
 .lazycard.on{border-color:rgba(155,140,255,.4);background:linear-gradient(180deg,rgba(155,140,255,.10),transparent),var(--surf)}
 .lazycard.warn{border-color:rgba(255,159,10,.5);background:linear-gradient(180deg,rgba(255,159,10,.10),transparent),var(--surf)}
@@ -665,6 +670,9 @@ textarea::placeholder{color:var(--dim)}
 .gh{margin:12px 0 6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em}.gc{flex-wrap:wrap}
 .gch .gl{stroke:var(--line);stroke-width:1}.gch .gt{fill:var(--dim,#8a8f9c);font-size:10px}
 
+.tdex .dpill{flex:none;align-self:center;font-size:12px;font-weight:800;color:#ffb340;background:rgba(255,159,10,.12);border-radius:99px;padding:5px 9px;white-space:nowrap}
+.tdex .dpill small{font-size:10.5px;margin-left:5px;color:var(--muted);font-weight:700}.tdex.done .dpill{opacity:.65}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
@@ -710,6 +718,7 @@ textarea::placeholder{color:var(--dim)}
 <section id="home" class="view">
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
+  <div class="card hhc" id="hhcard"></div>
   <div class="card motiv" id="motiv"></div>
   <div class="card lazycard" id="lazycard"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
@@ -846,6 +855,7 @@ function sv(){try{
   localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);localStorage.dayh=JSON.stringify(dayh);localStorage.xpd=JSON.stringify(xpd);localStorage.wgoal=JSON.stringify(wgoal);localStorage.why=JSON.stringify(why);localStorage.wrev=JSON.stringify(wrev);
   localStorage.revs=JSON.stringify(revs);localStorage.plans=JSON.stringify(plans);
   localStorage.donelog=JSON.stringify(donelog);localStorage.goals=JSON.stringify(goals);localStorage.lazy=JSON.stringify(lazy);
+  localStorage.hh=JSON.stringify(hh);localStorage.hols=JSON.stringify(hols);localStorage.spent=JSON.stringify(spent);localStorage.rwd=JSON.stringify(rwd);localStorage.rlog=JSON.stringify(rlog);localStorage.mil=JSON.stringify(mil);localStorage.wch=JSON.stringify(wch);
   if(F)localStorage.ftimer=JSON.stringify(F);
 }catch(e){}}
 const needed=l=>100+(l-1)*50;
@@ -1002,7 +1012,7 @@ function rHome(){
   $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
-  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rMotiv();
+  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rHH();rMotiv();
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
@@ -1077,6 +1087,7 @@ function rMotiv(){
   <div class="fring"><div class="rg"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="37"/><circle class="pg ${w>=g?'done':''}" id="wpg" cx="42" cy="42" r="37" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rn"><span>${Math.round(p*100)}%</span></div></div>
   <div style="flex:1;min-width:0"><div class="big"><b>${w}</b> <span>/ ${g} XP</span></div><div class="sub" style="margin-top:4px">${w>=g?'Goal reached 🎉 Everything now is a bonus.':`${need} XP to go · about ${Math.ceil(need/left)} a day for ${left} day${left>1?'s':''}`}</div></div></div>
   <button class="whyrow ${why.t?'':'empty'}" data-act="whyedit"><span class="wl">Why I'm doing this</span><span class="wt">${why.t?esc(why.t):'＋ Add your goal: the school, the grade, the reason'}</span>${dl!=null?`<span class="wd">${dl>0?'D−'+dl:dl===0?'Today!':'Done'}</span>`:''}</button>
+  <button class="btn" data-act="rewards">🎁 Rewards · ${balance()} XP to spend</button>
   <button class="btn ${sun&&!has?'primary':''}" data-act="wreview">${sun&&!has?'📋 Your weekly review is ready':'📋 Weekly review'}</button>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const e=$('wpg');if(e)e.style.strokeDashoffset=C*(1-p)}));
 }
@@ -1146,7 +1157,8 @@ const pkey=(rep,d)=>rep==='daily'?d:rep==='weekly'?mondayOf(d):rep==='biweekly'?
 const pprev=(rep,d)=>{if(rep==='daily')return shiftD(d,-1);if(rep==='weekly')return shiftD(mondayOf(d),-7);if(rep==='biweekly')return bkey(shiftD(mondayOf(d),-14));const x=new Date(d.slice(0,7)+'-15T12:00:00');x.setMonth(x.getMonth()-1);return iso(x).slice(0,7)};
 const isDone=t=>!!(t.rep&&t.hk&&t.hk===pkey(t.rep,iso()));
 const isOpen=t=>!isDone(t);
-const streakOf=t=>{if(!t.rep||!t.hk)return 0;const c=pkey(t.rep,iso());return(t.hk===c||t.hk===pprev(t.rep,c))?(t.streak||0):0};
+const holBridge=(t,c)=>{const h=[...hols].filter(x=>x.e<iso()).sort((a,b)=>a.e<b.e?1:-1)[0];if(!h||!hh.pause)return false;return t.hk===pkey(t.rep,shiftD(h.s,-1))&&(c===pkey(t.rep,shiftD(h.e,1))||pprev(t.rep,c)===pkey(t.rep,shiftD(h.e,1)))};
+const streakOf=t=>{if(!t.rep||!t.hk)return 0;const c=pkey(t.rep,iso());return(t.hk===c||t.hk===pprev(t.rep,c)||holBridge(t,c))?(t.streak||0):0};
 const nextTxt=t=>t.rep==='daily'?'back tomorrow':t.rep==='weekly'?'back next Monday':t.rep==='biweekly'?'back in 2 weeks':'back next month';
 /* overdue tasks pay less: -10% per day late, never below 30% of the reward (habits have no due date, so they are not affected) */
 function daysLate(t){if(t.rep||!t.due||t.due>=iso())return 0;return Math.round((new Date(iso()+'T12:00:00')-new Date(t.due+'T12:00:00'))/864e5)}
@@ -1154,7 +1166,7 @@ function xpFor(t){const b=t.xp||20,d=daysLate(t);return d?Math.max(1,Math.round(
 function xpPill(t){const e=xpFor(t),b=t.xp||20;return e<b?`<span class="pill xp" style="color:#ff9f0a;background:rgba(255,159,10,.14)">+${e} XP <s style="opacity:.6;margin-left:3px">${b}</s></span>`:`<span class="pill xp">+${b} XP</span>`}
 function sortedTasks(){
   const td=iso();
-  return [...tasks].sort((a,b)=>(isDone(a)?1:0)-(isDone(b)?1:0)||(isDone(a)?0:(b.pin?1:0)-(a.pin?1:0)));
+  return [...visTasks()].sort((a,b)=>(isDone(a)?1:0)-(isDone(b)?1:0)||(isDone(a)?0:(b.pin?1:0)-(a.pin?1:0)));
 }
 function dueBadge(t){
   if(t.rep){const s=streakOf(t);return `<span class="pill hab">↻ ${REPL[t.rep]}</span>${isDone(t)?`<span class="pill">Done · ${nextTxt(t)}</span>`:''}${s>1?`<span class="pill str">🔥 ${s}</span>`:''}`}
@@ -1175,7 +1187,7 @@ function rTasks(anim){
     $('tlbl').textContent='Goals';$('thint').textContent="Tap a goal to open it · hold and drag to reorder · hold still to edit · tap your level for all goal levels";
     const un=gTasks('_');
     let h=goals.map((g,i)=>{
-      const n=tasks.filter(t=>t.gid===g.id&&isOpen(t)).length,need=needed(g.lv);
+      const n=visTasks().filter(t=>t.gid===g.id&&isOpen(t)).length,need=needed(g.lv);
       return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="gopen" data-hold="goal" data-id="${g.id}"><div class="gd" style="background:${g.color}">${g.lv}</div><div class="gm"><div class="gn">${esc(g.name)}</div><div class="gs">Level ${g.lv} · ${g.xp}/${need} XP</div><div class="bar"><div class="bar-fill" style="width:${clamp(g.xp/need*100,0,100)}%;background:${g.color};box-shadow:none"></div></div></div>${n?`<div class="gbadge">${n}</div>`:''}</div>`}).join('');
     if(un.length)h+=`<div class="goal" data-act="gopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No goal</div><div class="gs">Tasks not in a goal yet</div></div>${un.filter(isOpen).length?`<div class="gbadge">${un.filter(isOpen).length}</div>`:''}</div>`;
     h+=`<button class="btn" data-act="gnew" style="margin-top:4px">+ New goal</button>`;
@@ -1205,7 +1217,7 @@ function editGoal(id){
     sv();closeSheet();vib(15);toast(g?'Saved':'Goal created');rTasks();
   };
   if(g)$('g-del').onclick=()=>{
-    const n=tasks.filter(t=>t.gid===g.id).length;
+    const n=visTasks().filter(t=>t.gid===g.id).length;
     goals.splice(goals.indexOf(g),1);tasks.forEach(t=>{if(t.gid===g.id)delete t.gid});tgoal=null;sv();closeSheet();toast('Goal deleted'+(n?' · its '+n+' task'+(n>1?'s':'')+' moved to "No goal"':''));rTasks();
   };
   setTimeout(()=>{if(!g)$('g-n').focus()},50);
@@ -1262,7 +1274,113 @@ function lazyToggle(on){
   sv();rLazy();vib(on?20:12);
   toast(on?'Lazy day on 😴':'Lazy day cancelled · let\'s go 💪',{label:'Undo',fn:()=>{if(on)lazy=lazy.filter(d=>d!==td);else if(!lazy.includes(td))lazy.push(td);sv();rLazy()}});
 }
+/* ===== Happy Hour · holidays · rewards ===== */
+const HOL0=[{n:'Toussaint',s:'2026-10-17',e:'2026-11-01'},{n:'Noël',s:'2026-12-19',e:'2027-01-03'},{n:'Hiver',s:'2027-02-13',e:'2027-02-28'},{n:'Printemps',s:'2027-04-10',e:'2027-04-25'},{n:'Été',s:'2027-07-03',e:'2027-09-05'}];
+let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:00',a2:'21:00',pause:true,man:''},ld('hh',{}));
+let hols=ld('hols',null)||HOL0.map(x=>({...x}));
+let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
+let hhome=ld('hhome',null),homeNow=null;
+const curHol=(d=iso())=>hols.find(h=>h.s<=d&&d<=h.e)||null;
+const hpaused=()=>!!(hh.pause&&curHol());
+const visTasks=()=>hpaused()?tasks.filter(t=>!t.rep):tasks;
+const schoolDay=(d=iso())=>{const w=new Date(d+'T12:00:00').getDay();return w>=1&&w<=5&&!curHol(d)};
+const nowMin=()=>{const n=new Date();return n.getHours()*60+n.getMinutes()};
+function hhState(){
+  const n=nowMin(),td=iso();
+  if(hh.lunch&&schoolDay(td)&&n>=tmin(hh.l1)&&n<tmin(hh.l2))return{k:'lunch',end:hh.l2,m:hh.mult};
+  if(hh.aft&&n>=tmin(hh.a1)&&n<tmin(hh.a2)&&(hh.man===td||(homeNow&&Date.now()-homeNow.t<6e5&&homeNow.in)))return{k:'home',end:hh.a2,m:hh.mult};
+  return null;
+}
+const hhMult=()=>{const s=hhState();return s?s.m:1};
+function hhNext(){
+  const n=nowMin(),td=iso(),a=[];
+  if(hh.lunch&&schoolDay(td)&&n<tmin(hh.l1))a.push([tmin(hh.l1),'Lunch '+hh.l1]);
+  if(hh.aft&&n<tmin(hh.a1))a.push([tmin(hh.a1),'Afternoon '+hh.a1+' (at home)']);
+  a.sort((x,y)=>x[0]-y[0]);return a[0]?a[0][1]:null;
+}
+const distM=(a,b,c,d)=>{const R=6371e3,r=x=>x*Math.PI/180,dl=r(c-a),dn=r(d-b),h=Math.sin(dl/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+function hhLoc(force){
+  if(!hhome||!hh.aft||!navigator.geolocation)return;
+  const n=nowMin();if(!force&&(n<tmin(hh.a1)||n>=tmin(hh.a2)))return;
+  if(!force&&homeNow&&Date.now()-homeNow.t<12e4)return;
+  navigator.geolocation.getCurrentPosition(p=>{homeNow={t:Date.now(),in:distM(p.coords.latitude,p.coords.longitude,hhome.lat,hhome.lng)<200};rHH()},()=>{},{maximumAge:6e4,timeout:8000});
+}
+function rHH(){
+  const el=$('hhcard');if(!el)return;
+  const s=hhState(),h=curHol(),nx=hhNext();
+  el.className='card hhc'+(s?' on':'');
+  let t;
+  if(s)t=`<div class="cardhead"><div class="lbl">🎉 Happy Hour · ×${s.m}</div><span class="sub">until ${s.end}</span></div><div class="lmsg">${s.k==='lunch'?'You are home for lunch: everything you complete now earns ×'+s.m+' XP.':'You are home: everything you complete now earns ×'+s.m+' XP. Start now, even 20 minutes counts.'}</div><button class="btn primary" data-act="hhgo">Start a focus session</button>`;
+  else t=`<div class="cardhead"><div class="lbl">Happy Hour</div><button class="lnk" data-act="hhset">Settings</button></div><div class="hint" style="text-align:left;margin:0">${h?'Holidays · '+esc(h.n)+' · habits are paused until '+new Date(dAddDays(h.e,1)+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'.':nx?'Next: '+nx+' · ×'+hh.mult+' XP':'No more Happy Hour today.'}</div>${hh.aft&&!hhome?'<button class="btn sm" data-act="hhhere">📍 Set my home location</button>':''}${hh.aft&&hh.man!==iso()&&nowMin()>=tmin(hh.a1)&&nowMin()<tmin(hh.a2)?'<button class="btn sm" data-act="hhman">🏠 I\'m home now</button>':''}`;
+  el.innerHTML=t;
+}
+function hhSheet(){
+  const T=(k,l)=>`<button class="chip ${hh[k]?'on':''}" data-t="${k}">${l}</button>`;
+  openSheet(`<h2>Happy Hour</h2>
+  <div class="field"><label>When</label><div class="chips">${T('lunch','🍽 Lunch (school days)')}${T('aft','🏠 Afternoon (when home)')}</div></div>
+  <div class="field"><label>Lunch window</label><div class="two"><input id="h-l1" type="time" value="${hh.l1}"><input id="h-l2" type="time" value="${hh.l2}"></div></div>
+  <div class="field"><label>Afternoon window</label><div class="two"><input id="h-a1" type="time" value="${hh.a1}"><input id="h-a2" type="time" value="${hh.a2}"></div></div>
+  <div class="field"><label>XP multiplier</label><div class="chips" id="h-m">${[1.25,1.5,2].map(v=>`<button class="chip ${v===hh.mult?'on':''}" data-v="${v}">×${v}</button>`).join('')}</div></div>
+  <div class="field"><label>Home location</label><button class="btn sm" id="h-here">📍 ${hhome?'Update: I am home now':'Set: I am home now'}</button>${hhome?'<button class="btn sm danger" id="h-noloc">Forget location</button>':''}<div class="hint" style="text-align:left;margin-top:6px">Stays on this phone only, never in a backup. Checked only while Aether is open (the web app cannot run in the background). Without a location, use the “I'm home now” button.</div></div>
+  <div class="field"><label>School holidays (lunch Happy Hour is off, habits paused)</label><div class="chips"><button class="chip ${hh.pause?'on':''}" data-t="pause">Pause recurring tasks during holidays</button></div><div id="h-hols"></div><button class="btn sm" id="h-add">＋ Add a holiday</button><button class="btn sm" id="h-reset">Reset to Lyon 2026-27</button></div>
+  <button class="btn primary" id="h-save">Save</button>`);
+  const B=$('sbody');
+  const drawH=()=>{$('h-hols').innerHTML=hols.map((h,i)=>`<div class="two" style="margin:6px 0"><input data-i="${i}" data-f="n" value="${esc(h.n)}" style="max-width:34%"><input type="date" data-i="${i}" data-f="s" value="${h.s}"><input type="date" data-i="${i}" data-f="e" value="${h.e}"><button class="btn sm danger" data-d="${i}" style="flex:none">✕</button></div>`).join('')};
+  drawH();
+  B.onclick=e=>{const c=e.target.closest('[data-t]');if(c){hh[c.dataset.t]=!hh[c.dataset.t];c.classList.toggle('on');}const d=e.target.closest('[data-d]');if(d){hols.splice(+d.dataset.d,1);drawH()}const m=e.target.closest('#h-m .chip');if(m){hh.mult=+m.dataset.v;[...$('h-m').children].forEach(x=>x.classList.toggle('on',x===m))}};
+  B.oninput=e=>{const i=e.target.dataset.i;if(i!=null&&e.target.dataset.f)hols[+i][e.target.dataset.f]=e.target.value};
+  $('h-add').onclick=()=>{hols.push({n:'Holiday',s:iso(),e:iso()});drawH()};
+  $('h-reset').onclick=()=>{hols=HOL0.map(x=>({...x}));drawH()};
+  $('h-here').onclick=()=>{if(!navigator.geolocation){toast('Location not available');return}navigator.geolocation.getCurrentPosition(p=>{hhome={lat:p.coords.latitude,lng:p.coords.longitude};try{localStorage.hhome=JSON.stringify(hhome)}catch(e){}toast('Home location saved');$('sbody').querySelector('#h-here').textContent='📍 Saved ✓'},()=>toast('Location refused: allow it in Settings > Privacy > Location Services'),{enableHighAccuracy:true,timeout:12000})};
+  const nl=$('h-noloc');if(nl)nl.onclick=()=>{hhome=null;homeNow=null;try{localStorage.removeItem('hhome')}catch(e){}toast('Location forgotten');rHH()};
+  $('h-save').onclick=()=>{hh.l1=$('h-l1').value||'13:00';hh.l2=$('h-l2').value||'13:45';hh.a1=$('h-a1').value||'16:00';hh.a2=$('h-a2').value||'21:00';hols=hols.filter(h=>h.s&&h.e&&h.s<=h.e);hols.sort((a,b)=>a.s<b.s?-1:1);sv();closeSheet();rHH();rHomeTasks();if(cur==='tasks')rTasks();hhLoc(true);toast('Saved')};
+}
+/* ----- rewards ----- */
+const lifeXP=()=>{let s=xp;for(let l=1;l<lv;l++)s+=needed(l);return s};
+const balance=()=>Math.max(0,lifeXP()-spent);
+const MILE=[3,5,10,15,20,25,30,40,50];
+function wkProg(){
+  const ds=weekDays(iso());
+  const foc=ds.reduce((a,d)=>a+fhist.filter(h=>h.date===d).reduce((b,h)=>b+(h.min||0),0),0);
+  const dn=donelog.filter(x=>x.d>=ds[0]&&x.d<=ds[6]).length;
+  const act=ds.filter(d=>fhist.some(h=>h.date===d&&h.min>0)||donelog.some(x=>x.d===d)).length;
+  return{foc,dn,act};
+}
+function chals(){
+  const wk=mondayOf(iso());if(wch.wk!==wk){wch={wk,cl:[]};sv()}
+  const p=wkProg();
+  return[{id:'f',t:'Focus for 4 hours',v:p.foc,g:240,b:60,u:' min'},{id:'d',t:'Complete 8 objectives',v:p.dn,g:8,b:40,u:''},{id:'a',t:'Be active on 5 days',v:p.act,g:5,b:50,u:''}];
+}
+function badges(){
+  const hs=Math.max(0,...tasks.map(t=>t.streak||0)),fm=fhist.reduce((a,h)=>a+(h.min||0),0),L=lifeXP();
+  return[['🌱','First 500 XP',L>=500],['🔥','2 000 XP',L>=2000],['⚡','5 000 XP',L>=5000],['👑','10 000 XP',L>=1e4],['🔁','7-day habit streak',hs>=7],['⏱','10 hours of focus',fm>=600],['🧠','50 hours of focus',fm>=3000],['🎯','Weekly goal reached',Object.keys(xpd||{}).length&&weekXP()>=wgoal||wch.cl.length>=3],['🏆','3 challenges in a week',wch.cl.length>=3],['🛍','First reward bought',rlog.length>0]];
+}
+let rtab='shop';
+function rwSheet(tab){
+  if(tab)rtab=tab;
+  const tabs=[['shop','🛍 Shop'],['chal','🎯 Challenges'],['mil','🏅 Milestones'],['bad','🎖 Badges']];
+  let b='';
+  if(rtab==='shop'){
+    b=`<div class="hint" style="text-align:left">Spend XP on rewards you choose. Your level and weekly goal are not affected.</div>`+rwd.map(r=>`<div class="two" style="margin:6px 0;align-items:center"><div style="flex:1"><b>${esc(r.n)}</b><div class="hint" style="text-align:left;margin:0">${r.c} XP</div></div><button class="btn sm ${balance()>=r.c?'primary':''}" data-b="${r.id}" style="flex:none">Buy</button><button class="btn sm" data-x="${r.id}" style="flex:none">✕</button></div>`).join('')+`<div class="two" style="margin-top:10px"><input id="rw-n" placeholder="New reward" maxlength="50"><input id="rw-c" type="number" inputmode="numeric" placeholder="XP" style="max-width:80px"></div><button class="btn sm" id="rw-a">＋ Add reward</button>`+(rlog.length?`<div class="hint" style="text-align:left;margin-top:10px">Recent: ${rlog.slice(-3).reverse().map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')}</div>`:'');
+  }else if(rtab==='chal'){
+    b=`<div class="hint" style="text-align:left">New challenges every Monday. Bonus XP when you claim them.</div>`+chals().map(c=>{const ok=c.v>=c.g,cl=wch.cl.includes(c.id);return`<div style="margin:10px 0"><div class="two" style="align-items:center"><div style="flex:1"><b>${c.t}</b><div class="hint" style="text-align:left;margin:0">${Math.min(c.v,c.g)}/${c.g}${c.u} · +${c.b} XP</div></div><button class="btn sm ${ok&&!cl?'primary':''}" data-c="${c.id}" style="flex:none" ${ok&&!cl?'':'disabled'}>${cl?'Claimed ✓':'Claim'}</button></div><div style="height:6px;border-radius:3px;background:var(--line,#2a2f3a);margin-top:6px"><div style="height:6px;border-radius:3px;background:var(--acc,#4fd1ff);width:${Math.min(100,c.v/c.g*100)}%"></div></div></div>`}).join('');
+  }else if(rtab==='mil'){
+    b=`<div class="hint" style="text-align:left">Choose your own reward for each level. Tap to edit it, claim it once you reach the level (current level ${lv}).</div>`+MILE.map(L=>{const m=mil[L]||{t:'',c:false},ok=lv>=L;return`<div class="two" style="margin:6px 0;align-items:center"><div style="flex:1;min-width:0"><b>Level ${L}</b><div class="hint" style="text-align:left;margin:0;cursor:pointer" data-e="${L}">${esc(m.t||'＋ Choose a reward')}</div></div><button class="btn sm ${ok&&!m.c&&m.t?'primary':''}" data-m="${L}" style="flex:none" ${ok&&!m.c&&m.t?'':'disabled'}>${m.c?'Claimed ✓':ok?'Claim':'🔒'}</button></div>`}).join('');
+  }else b=`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">`+badges().map(([i,n,ok])=>`<div class="card" style="padding:12px;text-align:center;opacity:${ok?1:.35}"><div style="font-size:26px">${i}</div><div class="hint" style="margin:4px 0 0">${n}</div></div>`).join('')+`</div>`;
+  openSheet(`<h2>Rewards · ${balance()} XP to spend</h2><div class="chips" id="rw-t">${tabs.map(([k,l])=>`<button class="chip ${k===rtab?'on':''}" data-k="${k}">${l}</button>`).join('')}</div>${b}`);
+  const B=$('sbody');
+  B.onclick=async e=>{
+    const t=e.target.closest('[data-k]');if(t){rwSheet(t.dataset.k);return}
+    const by=e.target.closest('[data-b]');if(by){const r=rwd.find(x=>x.id===by.dataset.b);if(!r)return;if(balance()<r.c){toast('Not enough XP · you have '+balance());return}if(!await ask({title:'Buy "'+r.n+'"?',msg:'−'+r.c+' XP from your balance. Your level stays the same.',ok:'Buy',cancel:'Cancel'}))return;spent+=r.c;rlog.push({n:r.n,c:r.c,t:Date.now()});sv();vib(30);burst(innerWidth/2,innerHeight/2,30);toast('Enjoy: '+r.n+' 🎉');rwSheet();rMotiv();return}
+    const x=e.target.closest('[data-x]');if(x){rwd=rwd.filter(r=>r.id!==x.dataset.x);sv();rwSheet();return}
+    if(e.target.closest('#rw-a')){const n=$('rw-n').value.trim(),c=Math.round(+$('rw-c').value);if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}rwd.push({id:uid(),n,c});sv();rwSheet();return}
+    const c=e.target.closest('[data-c]');if(c&&!c.disabled){const q=chals().find(z=>z.id===c.dataset.c);if(q&&q.v>=q.g&&!wch.cl.includes(q.id)){wch.cl.push(q.id);sv();gain(q.b,innerWidth/2,innerHeight/2);toast('Challenge done +'+q.b+' XP 🎯');rwSheet();rMotiv()}return}
+    const ed=e.target.closest('[data-e]');if(ed){const L=+ed.dataset.e,v=prompt('Reward at level '+L,(mil[L]||{}).t||'');if(v!=null){mil[L]=Object.assign(mil[L]||{c:false},{t:v.trim()});sv();rwSheet()}return}
+    const m=e.target.closest('[data-m]');if(m&&!m.disabled){const L=+m.dataset.m;mil[L].c=true;sv();vib(40);burst(innerWidth/2,innerHeight/2,40);toast('Level '+L+' reward unlocked: '+mil[L].t+' 🏅');rwSheet()}
+  };
+}
 function gain(n,x,y,gid){
+  n=Math.round(n*hhMult());
   if(isLazy()){lazy=lazy.filter(d=>d!==iso());sv();setTimeout(()=>{toast('You got to work: lazy day cancelled 💪');if(cur==='home')rLazy()},900)}
   const g=gid&&goals.find(q=>q.id===gid);
   if(g){g.xp+=n;const gb=g.lv;while(g.xp>=needed(g.lv)){g.xp-=needed(g.lv);g.lv++}if(g.lv>gb)setTimeout(()=>toast(g.name+' → level '+g.lv+' 🎉'),1800)}
@@ -1285,7 +1403,7 @@ function completeTask(id,btn){
   const t=tasks[i],row=btn.closest('.task'),r=btn.getBoundingClientRect();
   if(t.rep){
     if(isDone(t)){toast('Done for now · '+nextTxt(t));return}
-    const c=pkey(t.rep,iso());t.streak=(t.hk===pprev(t.rep,c))?(t.streak||0)+1:1;t.hk=c;
+    const c=pkey(t.rep,iso());t.streak=(t.hk===pprev(t.rep,c)||holBridge(t,c))?(t.streak||0)+1:1;t.hk=c;
     row.classList.add('done');vib(30);const x=r.left+r.width/2,y=r.top+r.height/2;burst(x,y,18);
     donelog.push({d:iso(),xp:t.xp||20,t:Date.now()});gain(t.xp||20,x,y-10,t.gid);sv();
     const st=$('hli');if(st){st.classList.remove('pop');void st.offsetWidth;st.classList.add('pop')}
@@ -1296,7 +1414,7 @@ function completeTask(id,btn){
   row.classList.add('done');vib(30);
   const x=r.left+r.width/2,y=r.top+r.height/2;
   burst(x,y,18);
-  const pay=xpFor(t),late=daysLate(t);
+  let pay=xpFor(t);const late=daysLate(t);if(t.due&&t.due>iso()){pay=Math.round(pay*1.2);setTimeout(()=>toast('Done early: +20% XP ⚡'),900)}
   tasks.splice(i,1);donelog.push({d:iso(),xp:pay,t:Date.now()});
   gain(pay,x,y-10,t.gid);sv();
   if(late&&pay<(t.xp||20))toast('Late by '+late+' day'+(late>1?'s':'')+' · +'+pay+' XP instead of '+(t.xp||20));
@@ -1598,6 +1716,11 @@ document.addEventListener('click',e=>{
   else if(act==='cview'){cmode=a.dataset.v;rCal();vib(8)}
   else if(act==='dgo')dGoDay(+a.dataset.n);
   else if(act==='wgoalset')wgoalEdit();
+  else if(act==='rewards')rwSheet();
+  else if(act==='hhset')hhSheet();
+  else if(act==='hhgo'){show('focus')}
+  else if(act==='hhhere'){hhSheet()}
+  else if(act==='hhman'){hh.man=iso();sv();rHH();toast('Happy Hour on 🎉')}
   else if(act==='whyedit')whyEdit();
   else if(act==='wreview')weekReview();
   else if(act==='hr'){const d=dayh[rd()]=dayh[rd()]||{},k=a.dataset.k,dl=+a.dataset.d;d[k]=Math.max(0,Math.min(24,Math.round(((d[k]==null?(dl>0?0:0):+d[k])+dl)*2)/2));sv();rHrs();vib(8)}
@@ -1719,16 +1842,36 @@ function rFtask(){
 }
 function fPickTask(){
   if(F.status!=='idle'||F.kind==='break'){toast('Finish the session to change the task');return}
-  const open=sortedTasks().filter(isOpen).slice(0,12);
-  openSheet(`<h2>Working on…</h2><div class="sub" style="margin-bottom:12px">The session is saved to your calendar under this name.</div>
-    <div class="chips" id="ft-c">${open.map(t=>`<button class="chip ${F.taskId===t.id?'on':''}" data-id="${t.id}" data-v="${esc(t.text)}">${esc(t.text)}</button>`).join('')}</div>
-    <div class="field" style="margin-top:14px"><label>Or type anything</label><input id="ft-t" maxlength="60" placeholder="e.g. Maths · complexes exercises" value="${F.taskId?'':esc(F.task||'')}"></div>
-    <button class="btn primary" id="ft-s">Use this</button>${F.task?'<button class="btn" id="ft-n">No task</button>':''}`);
-  let id=F.taskId||'',txt=F.task||'';
-  $('ft-c').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;id=b.dataset.id;txt=b.dataset.v;$('ft-t').value='';[...$('ft-c').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
-  $('ft-t').oninput=()=>{id='';txt=$('ft-t').value;[...$('ft-c').children].forEach(c=>c.classList.remove('on'))};
-  $('ft-s').onclick=()=>{F.taskId=id;F.task=(txt||'').trim();if(!F.task)F.taskId='';sv();closeSheet();rFtask()};
-  if($('ft-n'))$('ft-n').onclick=()=>{F.task='';F.taskId='';sv();closeSheet();rFtask()};
+  let kind=F.ref?(F.ref.k==='td'?'td':'colle'):'task';
+  const hasP=!!(window.P&&P.focusItems);
+  const draw=()=>{
+    const open=sortedTasks().filter(isOpen).slice(0,12);
+    let body='';
+    if(kind==='task'){
+      body=`<div class="chips" id="ft-c">${open.map(t=>`<button class="chip ${F.taskId===t.id&&!F.ref?'on':''}" data-id="${t.id}" data-v="${esc(t.text)}">${esc(t.text)}</button>`).join('')}</div>
+      <div class="field" style="margin-top:14px"><label>Or type anything</label><input id="ft-t" maxlength="60" placeholder="e.g. Maths · complexes exercises" value="${F.taskId||F.ref?'':esc(F.task||'')}"></div>
+      <button class="btn primary" id="ft-s">Use this</button>`;
+    }else{
+      const items=P.focusItems(kind==='td'?'td':'prog'),groups={};items.forEach(it=>{(groups[it.folder||'']=groups[it.folder||'']||[]).push(it)});
+      const names=Object.keys(groups).sort((x,y)=>(x===''?1:0)-(y===''?1:0)||x.localeCompare(y));
+      body=items.length?names.map(n=>`${n?`<div class="ftf">📁 ${esc(n)}</div>`:(names.length>1?'<div class="ftf">No folder</div>':'')}${groups[n].map(it=>`<button class="ftitem ${F.ref&&F.ref.id===it.id?'on':''}" data-id="${it.id}"><span class="m"><b>${esc(it.title)}</b><small>${esc(it.sub)}</small></span></button>`).join('')}`).join(''):`<div class="hint">${kind==='td'?'No TD yet. Add one in Prépa → TD.':'No programme de colles yet. Add one in Prépa → Colles.'}</div>`;
+    }
+    openSheet(`<h2>Working on…</h2><div class="sub" style="margin-bottom:10px">The session is saved to your calendar under this name${hasP?', and its time is added to the TD or colle':''}.</div>
+      ${hasP?`<div class="chips" id="ft-k"><button class="chip ${kind==='task'?'on':''}" data-k="task">Task</button><button class="chip ${kind==='td'?'on':''}" data-k="td">TD</button><button class="chip ${kind==='colle'?'on':''}" data-k="colle">Colle</button></div><div style="height:12px"></div>`:''}
+      ${body}${F.task?'<button class="btn" id="ft-n">No task</button>':''}`);
+    if($('ft-k'))$('ft-k').onclick=e=>{const b=e.target.closest('.chip');if(!b||b.dataset.k===kind)return;kind=b.dataset.k;vib(10);draw()};
+    let id=F.ref?'':(F.taskId||''),txt=F.ref?'':(F.task||'');
+    if(kind==='task'){
+      $('ft-c').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;id=b.dataset.id;txt=b.dataset.v;$('ft-t').value='';[...$('ft-c').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
+      $('ft-t').oninput=()=>{id='';txt=$('ft-t').value;[...$('ft-c').children].forEach(c=>c.classList.remove('on'))};
+      $('ft-s').onclick=()=>{F.ref=null;F.taskId=id;F.task=(txt||'').trim();if(!F.task)F.taskId='';sv();closeSheet();rFtask()};
+    }else{
+      const sb=$('sbody');
+      sb.querySelectorAll('.ftitem').forEach(b=>b.onclick=()=>{const it=P.focusItems(kind==='td'?'td':'prog').find(x=>x.id===b.dataset.id);if(!it)return;F.ref={k:kind==='td'?'td':'prog',id:it.id};F.taskId='';F.task=(kind==='td'?'TD · ':'Colle · ')+it.title;sv();vib(12);closeSheet();rFtask()});
+    }
+    if($('ft-n'))$('ft-n').onclick=()=>{F.ref=null;F.task='';F.taskId='';sv();closeSheet();rFtask()};
+  };
+  draw();
 }
 /* save a focus block to the calendar (start = when it began, end = when it ended) */
 function fLog(endMs,mins){
@@ -1737,6 +1880,7 @@ function fLog(endMs,mins){
   if(iso(new Date(endMs))!==date||tmin(t2)<=tmin(t1))t2=tmin(t1)>=23*60+59?'23:59':fmt(Math.min(24*60-1,tmin(t1)+Math.max(1,mins)));
   cal.push({id:uid(),title:F.task||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:1,kind:'focus'});
   fhist.push({task:F.task||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1});
+  if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,mins);
 }
 function fPauseCheck(){
   if(F.status!=='pause'||!F.pAt||Date.now()-F.pAt<=180000)return;
@@ -1755,8 +1899,9 @@ function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
   const M=MODES[F.mode];F.status='done';F.rem=0;
   if(F.kind==='focus'){
     fhist.push({task:F.task||'Focus',min:M.min,date:fk(),ts:Date.now(),mode:F.mode});
+    if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,M.min);
     {const s=F.start||Date.now()-M.min*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+M.min));cal.push({id:uid(),title:F.task||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+M.min+' min',color:1,kind:'focus'})}
-    sv();gain(M.xp);
+    sv();gain(F.mode==='intense'?Math.round(M.xp*1.25):M.xp);if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);
   }else sv();
   sv();vib(80);chime();
   if(cur!=='focus')toast(F.kind==='focus'?'Focus session complete · +'+M.xp+' XP':'Break is over');
@@ -1792,6 +1937,7 @@ document.addEventListener('click',e=>{
   else if(a==='break'){F.kind='break';F.status='idle';sv();fRender(true,true);fStart()}
   else if(a==='reset'){F.kind='focus';F.status='idle';sv();fRender(true,true)}
 });
+setInterval(()=>{try{if(cur==='home'){hhLoc();rHH()}}catch(e){}},60000);
 setInterval(()=>{
   fPauseCheck();
   if(F.status==='run'){
@@ -1865,11 +2011,11 @@ const SCHED=[{"id":"s-ds-20260907","kind":"ds","subj":"ang","title":"DS Anglais"
 /* ---------- state ---------- */
 const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Storage is full')}};
 const S={
-  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),mocks:ld('p_mocks',[]),
+  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),mocks:ld('p_mocks',[]),tds:ld('p_tds',[]),
   set:Object.assign({prov:'gemini',model:'claude-sonnet-5-5',gmodel:'gemini-flash-latest',mread:'claude-haiku-5-5',mwrite:'claude-sonnet-5-5',news:'meridian-news'},ld('p_set',{})),
   removed:ld('p_removed',[]),usage:ld('p_usage',{i:0,o:0,n:0})
 };
-const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),mocks:()=>put('p_mocks',S.mocks),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
+const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),mocks:()=>put('p_mocks',S.mocks),tds:()=>put('p_tds',S.tds),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
 
 /* ---------- IndexedDB (files + big texts) ---------- */
 let dbp=null;
@@ -2029,7 +2175,7 @@ async function aiGemini({system,content,max,model,onText}){
 /* Auto mode: Gemini first (free). If it fails or the quota is hit and a Claude key exists, the same request goes to Claude:
    Haiku for reading jobs (scans, programmes, cards), Sonnet for writing jobs (exams, sheets, feedback). */
 const READ_JOBS=()=>[SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_CARDS];
-const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s);
+const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s)||/^You read a TD sheet/.test(s);
 async function aiAuto(o){
   const gk=localStorage.getItem('p_gkey'),ck=localStorage.getItem('p_key');
   const claude=()=>aiClaude(Object.assign({},o,{model:isRead(o.system)?S.set.mread:S.set.mwrite}));
@@ -2132,6 +2278,11 @@ const SYS_MOCK=(subj,dur,calc)=>"You are a teacher in a French classe préparato
 const SYS_DIGEST=(others)=>"You build a compact MEMORY NOTE of one lesson from a French classe préparatoire student, to be reused later instead of the full text (it saves tokens). Write in French, Markdown, with LaTeX $...$ for formulas, at most 350 words, exactly with these sections:\n**Mots-clés:** 8 to 12 key terms separated by commas.\n**À retenir:** the definitions, theorems, formulas and standard methods of the lesson as terse bullets (statement + conditions). Keep the student's notation.\n**Pièges:** 2 or 3 classic mistakes.\n**Liens:** which of the OTHER LESSONS below it uses or prepares, as 'Titre exact — relation courte' (only genuine links, at most 5; write 'aucun' if none).\nOTHER LESSONS:\n"+(others||'(none)')+"\nNo introduction or closing sentence.";
 const SYS_RESUME=(what,subj)=>"You are an excellent teacher in a French classe préparatoire (first year, "+subj+"). Write the student's REVISION RÉSUMÉ for "+what+": everything he or she needs to know and be able to do to get the best possible result, built ONLY from the student's own course below (their notations and results) and, for the order and emphasis, from the PROGRAMME or the list of main lessons. Write in French, Markdown, LaTeX between $...$ and $$...$$. Dense, scannable, no filler: at most about 1400 words. Structure:\n\n## Les priorités\nThe 5 to 8 things that earn the most points (what examiners always ask), ordered by importance.\n\n## Chapitre par chapitre\nFor each chapter or lesson (as a ### heading): **À savoir par cœur** (definitions, theorems with their hypotheses, key formulas), **Méthodes types** (how to attack the standard exercises, in 2 to 4 steps), **Pièges** (classic mistakes, units, signs, conditions forgotten).\n\n## Liens entre les chapitres\nHow chapters feed each other (a few bullets).\n\n## Check-list de dernière minute\nA short list of 8 to 12 checkboxes (- [ ]) the student can tick before the test.\n\nIf a STUDENT PROFILE is given, add a short '⚠️ Mes points faibles' section at the top aiming at his or her recurring mistakes, without quoting the profile. Never invent results absent from the course: if something essential is missing from the course, list it under '## À compléter' as 'rappel' with the standard statement. Do not reveal or reuse any exam or exercise sheet text. No introduction or closing sentence.";
 const SYS_VOCAB_TEXT="You read the text of a vocabulary file for a French student (for example general vocabulary, linking words such as connectors, useful expressions, word lists with or without translations). Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list\",\"langA\":\"language of the entries, e.g. French\",\"langB\":\"the other language, e.g. English\",\"pairs\":[{\"a\":\"word or expression\",\"b\":\"translation or short meaning\"}]}. Rules: extract EVERY entry in reading order and keep spelling and accents exactly; if the file already gives a translation or definition, keep it as b; if it only lists words or expressions in one language, write b yourself as the short, natural equivalent in the other language (French <-> English by default; for a connector give the connector, e.g. 'néanmoins' -> 'nevertheless / however'); if an entry has several meanings join them with ' / '; ignore page numbers, headings and decoration; skip anything unclear. Inside JSON strings escape backslashes and double quotes.";
+const METH_FMT="For EVERY method use exactly this layout (Markdown, French, LaTeX between $...$ and $$...$$):\n\n### Nom de la méthode\n**Quand l'utiliser :** the typical statements or situations where it applies (recognise it from the wording).\n**Pourquoi ça marche :** the idea in one or two sentences.\n**Rédaction :** the model write-up exactly as it should appear on a graded copy (full sentences, the standard phrases and connectors a teacher expects, every step in order: for example for a proof by induction the statement P(n), initialisation, hérédité with the hypothesis written out, conclusion). THIS IS THE MOST IMPORTANT PART: write it completely, with blanks like $\\dots$ only where the content depends on the problem.\n**Exemple :** a short concrete example, fully written up with that rédaction.\n**Piège :** the classic mistake to avoid (one line).\n\n";
+const SYS_METHODS=(subj,title)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). From the student's lesson '"+title+"' below, write the sheet of KEY METHODS of this chapter: every technique the student must master to solve the standard exercises and prove the standard results of this chapter (typically 6 to 14 methods, ordered as in the lesson). Include the general proof or reasoning techniques that this chapter's exercises call for (for example double inclusion, équivalence par chaînes, récurrence, raisonnement par l'absurde, contraposée, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, majoration/encadrement, changement de variable...) when they genuinely apply, marked '(méthode transversale)'. Prefer examples and notation taken from the student's lesson; otherwise use a standard example of the chapter. "+METH_FMT+"Start with a one-line '## Méthodes du chapitre : "+title+"'. Rules: stay faithful to the student's notation and to results stated in the lesson; every write-up must be mathematically/physically correct and complete; double-check each example. No introduction or closing sentence.";
+const SYS_METHODS_T=(subj)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). Write the sheet of CROSS-CHAPTER METHODS (méthodes transversales) of "+subj+" that a first-year student must master: "+(/math/i.test(subj)?"all the standard reasoning and proof techniques: double inclusion, équivalence (chaîne d'équivalences), implication directe / réciproque, contraposée, raisonnement par l'absurde, récurrence simple, double, forte, récurrence avec hérédité à plusieurs rangs, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, unicité (par l'absurde ou par différence), existence (construction, théorème des valeurs intermédiaires), contre-exemple, négation de quantificateurs, majoration/minoration, encadrement, passage aux inégalités, changement de variable, intégration par parties, symétrie/parité, raisonnement par analyse des cas limites, utilisation de la conjugaison/factorisation de l'angle moitié, etc.":"the standard reasoning habits of the subject: how to set up a problem, justify results, check homogeneity and orders of magnitude, approximations, structure of a clean answer, units and significant figures, and the typical solving methods of the year")+". Order them from the most frequent to the least. "+METH_FMT+"Start with '## Méthodes transversales : "+subj+"'. Every write-up must be correct and complete. No introduction or closing sentence.";
+const SYS_TD="You read a TD sheet (travaux dirigés: a series of exercises) given by a teacher in a French classe préparatoire. Answer with ONLY a JSON object, no other text: {\"title\":\"short title, e.g. TD 4 — Suites\",\"exercises\":[{\"title\":\"short name of the exercise, e.g. Exercice 3 — Suite de Fibonacci\",\"diff\":3,\"summary\":\"one short sentence on what it asks\"}],\"skills\":[{\"title\":\"a skill or thing to know or do to be able to solve this TD\",\"detail\":\"one short sentence\"}]}. Rules: list EVERY exercise in order (maximum 40); 'diff' is an integer from 1 (direct application of the course) to 5 (hard, multi-step or non-standard) judged from the statement and any star marks, 'ex: * or **' in the sheet, which raise the difficulty; 'skills' are 5 to 10 checkable items of the form 'Savoir démontrer ...', 'Maîtriser ...', 'Connaître ...' that a student ticks to say 'I am ready for this TD'. Keep the teacher's wording and language. Inside JSON strings escape backslashes and double quotes.";
+const SYS_TDCORR=(subj)=>"You are an experienced, rigorous teacher in a French classe préparatoire (first year, "+subj+"). You are given a TD sheet (the exercises, as text or pictures) and the student's COURSE as the reference. Write the full corrigé in French, Markdown, LaTeX between $...$ and $$...$$. For each exercise, in order, use a '## Exercice n' heading (use the sheet's own numbering) then: **Idée / méthode** (one or two lines naming the method, e.g. 'récurrence double', 'double inclusion'), then the complete, rigorous solution written exactly as a student should write it on a copy (hypotheses stated, each step justified, quantifiers and conclusions explicit), then **Résultat** clearly stated and, if relevant, **Piège** (a classic mistake). Stay faithful to the notations, definitions and results of the student's course, and cite which result is used ('d'après le théorème de ... du cours'); if a needed result is not in the course, state it as 'rappel'. Double-check every calculation before writing; correctness matters more than length. If a picture or part is unreadable, say so for that exercise instead of guessing. No introduction or closing sentence.";
 const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the student's COURSE (their own lesson notes, transcribed) as the reference, and the PROGRAMME the colle will cover. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\n6 short questions of the kind a colleur asks at the start (definitions, statements of theorems, quick proofs, standard formulas). Number them.\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes for the harder ones). For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\nFirst, short answers to the questions de cours (including the key idea of any proof). Then, for each exercise, a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nRules: stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Cover the programme's chapters evenly. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
 const SYS_CARDS="You make spaced-repetition flashcards from a student's course notes (French classe préparatoire). Output ONLY a JSON array, no other text: [{\"q\":\"...\",\"a\":\"...\"}]. 12 to 20 cards covering the most important definitions, theorem statements (with hypotheses), key formulas and standard methods of the course, in French (or English if the course is in English). Each question must be answerable on its own; keep answers short and precise. Use LaTeX between $...$ for math. Do not invent anything that is not in the course. Inside JSON strings, write every LaTeX backslash doubled (\\\\frac, \\\\ell) so the JSON stays valid.";
 const SYS_ENGLISH="You are an English teacher in a French classe préparatoire (CPGE). The student has an oral English 'colle' about current affairs and must present and discuss a topic. You receive 2 topics, each with 2 recent news items (headline, outlet, short summary only: you do NOT have the full articles, so never invent details that are not in the summaries). For each topic write, in English: 1) 'Why it matters' in 3 sentences; 2) 'Key vocabulary': 10 useful words or expressions with a short definition; 3) 'Questions you may be asked': 5 questions; 4) 'A 2-minute outline': introduction, three points, conclusion, with useful connectors. Use Markdown with ## for each topic and ### for sub-parts. Do not use the dollar sign for currencies.";
@@ -2224,7 +2375,7 @@ async function dump(){return{texts:await dbAll('texts')}}
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
 window.PC={SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
-  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_MOCK,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -2272,12 +2423,13 @@ const needKey=()=>{if(C.hasKey())return true;toast('Add your AI key first');sett
 
 /* ---------- folders ---------- */
 const gkOf=t=>t==='progs'?'colles':t;
-function fItems(gk){return gk==='lessons'?S.lessons:gk==='mocks'?S.mocks:gk==='exams'?Object.values(S.exams):gk==='colles'?Object.values(S.colles).concat(S.progs):S.vocab}
+function fItems(gk){return gk==='lessons'?S.lessons:gk==='tds'?S.tds:gk==='mocks'?S.mocks:gk==='exams'?Object.values(S.exams):gk==='colles'?Object.values(S.colles).concat(S.progs):S.vocab}
 function fObj(type,id){
   if(type==='lessons')return S.lessons.find(x=>x.id===id);
   if(type==='progs')return S.progs.find(x=>x.id===id);
   if(type==='vocab')return S.vocab.find(x=>x.id===id);
   if(type==='mocks')return S.mocks.find(x=>x.id===id);
+  if(type==='tds')return S.tds.find(x=>x.id===id);
   return S[type][id]||null;
 }
 const fGet=(type,id)=>{const o=fObj(type,id);return o&&o.folder||''};
@@ -2373,7 +2525,7 @@ function back(){st.stack.pop();render('pop');window.scrollTo(0,0)}
 function tab(t){st.tab=t;st.stack=[];render('tab');window.scrollTo(0,0)}
 
 /* ================= SCREENS ================= */
-const TABS=[['home','Overview'],['lessons','Lessons'],['exams','Exams'],['colles','Colles'],['grades','Grades'],['cards','Cards']];
+const TABS=[['home','Overview'],['lessons','Lessons'],['exams','Exams'],['colles','Colles'],['td','TD'],['grades','Grades'],['cards','Cards']];
 function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px"><button data-a="back" aria-label="Back">‹</button><b style="font-size:19px;flex:1;text-align:center;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(title)+'</b>'+(right||'<span style="width:36px"></span>')+'</div>'}
 
 /* ----- OVERVIEW (the calendar itself lives in the Calendar tab) ----- */
@@ -2409,6 +2561,65 @@ function evBtn(e,past){
 
 /* ----- LESSONS ----- */
 
+/* ----- Key methods (fiche méthodes) per chapter, and the methods book per subject ----- */
+function vMeth(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l){st.stack.pop();return ''}
+  const key='K'+id;
+  let h=backBar('Key methods','<button class="pmini" data-a="printMeth" data-i="'+id+'" aria-label="Print">⎙</button>');
+  h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(l.title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[l.subj].n+' · each method with when to use it, why it works, the model write-up and an example</div>';
+  if(live[key])h+=liveBox(key);
+  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';h+='<button class="btn '+(l.mt?'':'primary')+'" style="margin-top:12px" data-a="mkMeth" data-i="'+id+'">'+(l.mt?'Write a new version':'Write the key methods')+'</button>'}
+  h+='</div>';
+  if(l.mt&&!live[key])h+='<div class="card"><div class="doc" id="methdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  return h;
+}
+function mkMeth(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l)return;
+  return run('K'+id,'Writing the key methods…',async(lab,txt)=>{
+    lab('Reading the lesson…');const t=(await C.getText('L'+id))||'';
+    if(t.length<300)throw new C.AIError('This lesson has no text yet. Read it first.');
+    lab('Writing the methods and their write-ups…');
+    const r=await C.ai({system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
+    if(r.text.length<400)throw new C.AIError('The methods came out empty. Try again.');
+    await C.setText('K'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
+    l.mt=Date.now();save.lessons();toast('Key methods ready ✓');
+  });
+}
+function mkMethT(subj){
+  return run('KT'+subj,'Writing the cross-chapter methods…',async(lab,txt)=>{
+    const r=await C.ai({system:C.SYS_METHODS_T(SUBJ[subj].n),content:[{type:'text',text:'Write the sheet for '+SUBJ[subj].n+'.'}],max:20000,onText:txt});
+    if(r.text.length<400)throw new C.AIError('The methods came out empty. Try again.');
+    await C.setText('KT'+subj,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
+    S.set.kt=Object.assign({},S.set.kt,{[subj]:Date.now()});save.set();toast('Cross-chapter methods ready ✓');
+  });
+}
+function vMBook(subj){
+  const ls=S.lessons.filter(l=>l.subj===subj&&l.mt),kt=(S.set.kt||{})[subj];
+  let h=backBar('Methods · '+SUBJ[subj].n,'<button class="pmini" data-a="printMBook" data-i="'+subj+'" aria-label="Print">⎙</button>');
+  h+='<div class="card"><div class="sub">'+(ls.length?ls.length+' chapter'+(ls.length>1?'s':''):'No chapter yet')+(kt?' + the cross-chapter methods':'')+'. Open a lesson to write the methods of a chapter.</div>';
+  if(live['KT'+subj])h+=liveBox('KT'+subj);
+  else{if(errs['KT'+subj])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs['KT'+subj])+'</div>';
+    h+='<button class="btn '+(kt?'':'primary')+'" style="margin-top:12px" data-a="mkMethT" data-i="'+subj+'">'+(kt?'Rewrite the cross-chapter methods':'Add the cross-chapter methods'+(subj==='maths'?' (récurrence, absurde, double inclusion…)':''))+'</button>'}
+  h+='</div>';
+  if(kt||ls.length)h+='<div class="card"><div class="doc" id="mbookdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  return h;
+}
+async function mbookText(subj){
+  let t='';const kt=await C.getText('KT'+subj);if(kt)t+=kt+'\n\n---\n\n';
+  const ls=S.lessons.filter(l=>l.subj===subj&&l.mt).sort((a,b)=>a.title.localeCompare(b.title,undefined,{numeric:true}));
+  for(const l of ls){const x=await C.getText('K'+l.id);if(x)t+=x+'\n\n---\n\n'}
+  return t.replace(/\n\n---\n\n$/,'');
+}
+function methCard(){
+  const subs=C.LSUBJ.filter(s=>S.lessons.some(l=>l.subj===s&&l.status==='done'));if(!subs.length)return '';
+  let h='<div class="card"><div class="cardhead"><div class="lbl">Key methods</div></div><div class="sub" style="margin:-2px 0 10px">For each chapter: the key methods with when to use them, the model write-up and an example. Open a lesson to write its methods, then read them all here.</div>';
+  subs.forEach(s=>{const d=S.lessons.filter(l=>l.subj===s&&l.status==='done'),n=d.filter(l=>l.mt).length,miss=d.length-n;
+    h+='<button class="prow" style="--c:'+C.sc(s)+'" data-a="mbook" data-i="'+s+'"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+n+' of '+d.length+' chapters'+((S.set.kt||{})[s]?' · cross-chapter ✓':'')+'</div></span>'+ico.chev+'</button>'});
+  if(live.KALL)h+=liveBox('KALL');else{if(errs.KALL)h+='<div class="hidecorr">'+esc(errs.KALL)+'</div>';
+    const miss=S.lessons.filter(l=>l.status==='done'&&!l.mt).length;if(miss)h+='<button class="btn" data-a="mkMethAll">Write the missing chapters ('+miss+')</button>'}
+  return h+'</div>';
+}
+
 function memCard(){
   const done=S.lessons.filter(l=>l.status==='done'),have=done.filter(l=>l.dg).length;
   if(!done.length)return '';
@@ -2423,7 +2634,7 @@ function vLessons(){
   if(!S.lessons.length)return h+'<div class="hidecorr">Upload your résumés here. The AI reads them once, and your exercise sheets are then built from <b>your</b> course.</div>';
   const un=unread();
   if(un.length)h+='<div class="card" style="padding:14px"><div style="font-weight:700">'+un.length+' lesson'+(un.length>1?'s':'')+' not read yet</div><div class="sub" style="margin:4px 0 2px">The AI reads formulas best. If its free limit is reached, text PDFs fall back to a quick text read.</div><button class="btn primary" data-a="readAll" data-i="">Read all now</button></div>';
-  h+=memCard();
+  h+=memCard()+methCard();
   C.LSUBJ.forEach(s=>{
     const ls=S.lessons.filter(l=>l.subj===s);if(!ls.length)return;
     h+='<div class="sec2"><div class="lbl" style="margin:0">'+SUBJ[s].n+'</div><span class="sub">'+ls.length+'</span></div>';
@@ -2442,7 +2653,7 @@ function vLesson(id){
   if(!live[k]&&l.status!=='done')h+='<button class="btn" data-a="upText" data-i="'+id+'">⬆ I already have the read file (text PDF or .txt) — upload it</button>';
   if(!live[k]){
     h+=l.status==='done'?'<button class="btn" data-a="transcribeAI" data-i="'+id+'">'+(l.how==='text'?'Re-read with AI (better formulas)':'Read again with AI')+'</button>':'<button class="btn primary" data-a="transcribe" data-i="'+id+'">Read this lesson with AI</button><button class="btn" data-a="transcribeText" data-i="'+id+'">Quick read without AI (text PDFs)</button>';
-    if(l.status==='done')h+='<button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="printLesson" data-i="'+id+'">Save as a clean typed PDF</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
+    if(l.status==='done')h+='<button class="btn" data-a="meth" data-i="'+id+'">'+(l.mt?'📐 Open the key methods':'📐 Key methods of this chapter')+'</button><button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="printLesson" data-i="'+id+'">Save as a clean typed PDF</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
   }
   h+='</div>';
   if(l.status==='done')h+='<div class="card"><div class="cardhead"><div class="lbl">Text the AI will use</div><button class="addf" data-a="upText" data-i="'+id+'">⬆ Upload read file</button></div><div class="doc" id="ltext"><div class="shimmer" style="height:120px;border-radius:14px"></div></div></div>';
@@ -2667,6 +2878,93 @@ function mkFiche(id){
   });
 }
 
+/* ================= TD (travaux dirigés) ================= */
+const XPD=[0,10,20,35,55,80];                   // XP for an exercise, by difficulty 1..5
+const DIFFT=['','★ Direct','★★ Standard','★★★ Medium','★★★★ Hard','★★★★★ Very hard'];
+const tdDone=t=>(t.exos||[]).filter(e=>e.done).length;
+const hmin=m=>{m=Math.round(m||0);return m<60?m+' min':Math.floor(m/60)+' h '+(m%60?String(m%60).padStart(2,'0'):'')};
+function vTD(){
+  let h='<button class="add" data-a="addTD">+ Add a TD (sheet of exercises)</button>';
+  if(!S.tds.length)return h+'<div class="hidecorr">Upload a TD sheet: the AI lists its exercises with their difficulty, a checklist of skills (“Am I ready?”) and, when you ask, the full corrigé. Ticking an exercise gives XP, more for harder ones.</div>';
+  h+=inFolders('tds',S.tds.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')),t=>t.folder||'',t=>{
+    const n=(t.exos||[]).length,d=tdDone(t),sk=(t.skills||[]).length,r=sk?Math.round(100*t.skills.filter(c=>c.ready).length/sk):null;
+    return '<button class="prow" style="--c:'+C.sc(t.subj)+'" data-a="td" data-i="'+t.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(t.title||SUBJ[t.subj].n+' TD')+'</div><div class="s">'+SUBJ[t.subj].n+' · '+fdl(t.date)+' · '+(live['T'+t.id]?'Reading…':n?d+'/'+n+' exercises':'Not read yet')+(t.min?' · '+hmin(t.min):'')+'</div></span>'+(r!=null?'<span class="gpill '+(r>=70?'g-hi':r>=40?'g-mid':'g-lo')+'">'+r+'%</span>':'')+ico.chev+'</button>';
+  });
+  return h;
+}
+function vTDpage(id){
+  const t=S.tds.find(x=>x.id===id);if(!t){st.stack.pop();return vTD()}
+  const k='T'+id,K='TCO'+id,nx=(t.exos||[]).length,dn=tdDone(t);
+  let h=backBar(t.title||SUBJ[t.subj].n+' TD','<button class="pmini" data-a="tdEdit" data-i="'+id+'" aria-label="Rename">✎</button><button class="pmini" data-a="delTD" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(t.subj)+'">'+SUBJ[t.subj].n+'</span><span class="pill">'+fdl(t.date)+'</span>'+folderPill('tds',id)+(t.min?'<span class="pill">⏱ '+hmin(t.min)+'</span>':'')+'</div>';
+  h+='<div class="slot"><div class="hd"><div class="lbl">TD sheet</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|files">+ Add</button></div>'+fileRows(t.files,'td',id)+'</div>';
+  h+='<div class="slot"><div class="hd"><div class="lbl">My solutions</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|mine">+ Add</button></div>'+(fileRows(t.mine,'tdmine',id)||'<div class="sub">Drop your own work here (photos or PDF) to keep it with the TD.</div>')+'</div>';
+  h+=liveBox(k)+errBox(k);
+  if(!live[k]&&!nx)h+='<button class="btn primary" data-a="tdRead" data-i="'+id+'">Read the TD</button>';
+  h+='</div>';
+  if(nx){
+    const tot=t.exos.reduce((a,e)=>a+XPD[e.diff||3],0),got=t.exos.filter(e=>e.got).reduce((a,e)=>a+XPD[e.diff||3],0);
+    h+='<div class="card"><div class="cardhead"><div class="lbl">Exercises</div><span class="gpill todo">'+dn+'/'+nx+'</span></div><div class="pbar" style="margin-bottom:8px"><i style="width:'+Math.round(100*dn/nx)+'%"></i></div>';
+    h+='<div class="sub" style="margin:0 0 8px">Tick an exercise when it is done: you earn XP by difficulty (tap the stars to change it). '+got+' / '+tot+' XP earned.</div>';
+    h+=t.exos.map(e=>'<div class="todo tdex '+(e.done?'done':'')+'" data-a="tdEx" data-i="'+id+'|'+e.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(e.title)+'</b>'+(e.summary?'<div class="sub">'+esc(e.summary)+'</div>':'')+'</span><span class="dpill" data-a="tdDiff" data-i="'+id+'|'+e.id+'" title="Change difficulty">'+'★'.repeat(e.diff||3)+'<small>+'+XPD[e.diff||3]+(e.got?' ✓':'')+'</small></span></div>').join('');
+    h+='<div class="two2" style="margin-top:10px"><input id="td-new" placeholder="Add an exercise, e.g. Exercice 7"><button class="btn sm" style="flex:none" data-a="tdAddEx" data-i="'+id+'">Add</button></div></div>';
+  }
+  if((t.skills||[]).length){
+    const n=t.skills.filter(c=>c.ready).length;
+    h+='<div class="card"><div class="cardhead"><div class="lbl">Am I ready?</div><span class="gpill todo">'+n+'/'+t.skills.length+'</span></div><div class="pbar" style="margin-bottom:8px"><i style="width:'+Math.round(100*n/t.skills.length)+'%"></i></div>';
+    h+=t.skills.map(c=>'<div class="todo '+(c.ready?'done':'')+'" data-a="tdReady" data-i="'+id+'|'+c.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(c.title)+'</b>'+(c.detail?'<div class="sub">'+esc(c.detail)+'</div>':'')+'</span></div>').join('')+'</div>';
+  }
+  if(nx){
+    h+='<div class="card"><div class="lbl">Corrigé</div><div class="sub" style="margin-bottom:10px">'+(t.coAt?'Written '+new Date(t.coAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+(t.coNote?' · '+esc(t.coNote):''):'A full, rigorous correction of every exercise, written as on a copy and based on your course.')+'</div>'+liveBox(K)+errBox(K);
+    if(!live[K]){if(t.coAt)h+='<button class="btn primary" data-a="tdCo" data-i="'+id+'">Open the corrigé</button>';h+='<button class="btn '+(t.coAt?'':'primary')+'" data-a="mkTdCo" data-i="'+id+'">'+(t.coAt?'Write a new corrigé':'Generate the corrigé')+'</button>'}
+    h+='</div>';
+  }
+  return h;
+}
+function vTDco(id){
+  const t=S.tds.find(x=>x.id===id);if(!t){st.stack.pop();return ''}
+  return backBar('Corrigé','<button class="pmini" data-a="printTdCo" data-i="'+id+'" aria-label="Print">⎙</button>')+'<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(t.title||'TD')+'</div></div><div class="card"><div class="doc" id="tcdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+}
+/* TD statement as text blocks when the PDF has a text layer (cheap), as page pictures otherwise */
+async function tdSource(files,lab){
+  const blocks=[];
+  for(const f of files){
+    const rec=await C.dbGet('blobs',f.id);if(!rec)throw new C.AIError('A TD file is missing on this phone. Re-attach it (tap 👁 on the file).');
+    if(C.isPdf(rec)){
+      let tx=null;try{const r=await C.pdfText(rec.blob);if(r.avg>=250)tx=r.text}catch(e){}
+      if(tx){blocks.push({type:'text',text:'=== '+rec.name+' (text) ===\n'+tx.slice(0,60000)});continue}
+    }
+    const parts=await C.filesToParts([f],lab);parts.forEach(p=>p.blocks.forEach(b=>blocks.push(b)));
+  }
+  return blocks;
+}
+function tdRead(id){
+  const t=S.tds.find(x=>x.id===id);if(!t)return;
+  return run('T'+id,'Reading the TD…',async(lab,txt)=>{
+    lab('Preparing the sheet…');const src=await tdSource(t.files,lab);
+    const r=await C.ai({system:C.SYS_TD,content:src.slice(0,24).concat([{type:'text',text:'Subject: '+SUBJ[t.subj].n+'. Extract the exercises and the skills.'}]),max:6000,onText:txt});
+    const j=C.parseJson(r.text);if(!j.exercises||!j.exercises.length)throw new C.AIError('I could not find exercises in this file. Try a sharper scan or a text PDF.');
+    if(!t.title)t.title=String(j.title||'');
+    t.exos=j.exercises.slice(0,40).map(e=>({id:uid(),title:String(e.title||'Exercise'),diff:Math.min(5,Math.max(1,Math.round(+e.diff)||3)),summary:String(e.summary||''),done:false,got:false}));
+    t.skills=(j.skills||[]).slice(0,12).map(c=>({id:uid(),title:String(c.title||''),detail:String(c.detail||''),ready:false})).filter(c=>c.title);
+    save.tds();toast(t.exos.length+' exercises found ✓');
+  });
+}
+function mkTdCo(id){
+  const t=S.tds.find(x=>x.id===id);if(!t)return;
+  return run('TCO'+id,'Writing the corrigé…',async(lab,txt)=>{
+    lab('Preparing the sheet…');const src=await tdSource(t.files,lab);
+    lab('Collecting your lessons…');
+    const fake={subj:t.subj,chapters:[{title:t.title||'',detail:(t.exos||[]).map(e=>e.title+' '+e.summary).join(' ')+' '+(t.skills||[]).map(c=>c.title).join(' ')}]};
+    const c=await courseFor(fake);
+    lab('Writing the corrections…');
+    const r=await C.ai({system:C.SYS_TDCORR(SUBJ[t.subj].n),content:src.slice(0,24).concat([{type:'text',text:'STUDENT COURSE:'+(c.txt||'\n(No lesson of this subject was read: use the standard French prépa programme and say so in one short note at the top.)'),cache:true},{type:'text',text:profileFor(t.subj)||'(no profile yet)'}]),max:30000,onText:txt});
+    if(r.text.length<300)throw new C.AIError('The corrigé came out empty. Try again.');
+    await C.setText('TC'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The corrigé was cut: write a new one, or split the TD in two files.]*':''));
+    t.coAt=Date.now();t.coNote=c.used.length?'from '+c.used.length+' of your lessons':'no lesson used';save.tds();toast('Corrigé ready ✓');
+  });
+}
+
 function mistakeCard(){
   const rs=allRecs(),cnt={};rs.forEach(r=>(r.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
   const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);if(!ks.length)return '';
@@ -2727,7 +3025,7 @@ function vProg(id){
   const p=S.progs.find(x=>x.id===id);if(!p){st.stack.pop();return vColles()}
   const k='P'+id;
   let h=backBar(p.title||SUBJ[p.subj].n+' programme','<button class="pmini" data-a="delProg" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
-  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span>'+folderPill('progs',id)+'</div>';
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span>'+folderPill('progs',id)+(p.min?'<span class="pill">⏱ '+hmin(p.min)+'</span>':'')+'</div>';
   h+=fileRows(p.files,'prog',id)+liveBox(k)+errBox(k)+(p.err&&!errs[k]?'<div class="warnbox">'+esc(p.err)+'</div>':'');
   if(!live[k]){
     if(!p.chapters||!p.chapters.length)h+='<button class="btn primary" data-a="parseProg" data-i="'+id+'">Read the programme and build my sheet</button>';
@@ -2828,8 +3126,8 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
-  }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():st.tab==='grades'?vGrades():vCards();
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
+  }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():st.tab==='td'?vTD():st.tab==='grades'?vGrades():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
   post(top);
@@ -2847,6 +3145,9 @@ async function post(top){
   try{
     if(top&&top.v==='lesson'){const l=S.lessons.find(x=>x.id===top.id);if(l&&l.status==='done')into('ltext',(await C.getText('L'+l.id))||'*(empty)*')}
     if(top&&top.v==='sheet'){const p=S.progs.find(x=>x.id===top.id),tx=(await C.getText('S'+top.id))||'',sp=splitSheet(tx);into('sheetdoc',st.seg==='co'?(sp.co||'*No corrections found.*'):sp.ex)}
+    if(top&&top.v==='meth'){const tx=(await C.getText('K'+top.id))||'';if($('methdoc'))into('methdoc',tx||'*Nothing yet.*')}
+    if(top&&top.v==='mbook'){const tx=await mbookText(top.id);if($('mbookdoc'))into('mbookdoc',tx||'*Nothing yet.*')}
+    if(top&&top.v==='tdco'){const tx=(await C.getText('TC'+top.id))||'';if($('tcdoc'))into('tcdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='fiche'){const tx=(await C.getText('F'+top.id.split('|')[1]))||'';if($('fichedoc'))into('fichedoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mock'){const tx=(await C.getText('M'+top.id))||'',sp=splitSheet(tx);if($('mockdoc'))into('mockdoc',st.seg==='co'?(sp.co||'*No corrigé found.*'):sp.ex)}
     if(top&&top.v==='rec'){const[k,id]=top.id.split('|'),r=S[k][id];if(r&&r.fb)into('fbtext',r.fb)}
@@ -2891,7 +3192,7 @@ A.addLesson=()=>{
   $('l-go').onclick=()=>fin(true);$('l-go2').onclick=()=>fin(false);
 };
 A.addLessonFiles=async id=>{const l=S.lessons.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;l.files=l.files.concat(await C.addFiles(fs));l.status='new';save.lessons();render()};
-A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});await C.dbDel('texts','D'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
+A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});await C.dbDel('texts','D'+id).catch(()=>{});await C.dbDel('texts','K'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
 A.transcribe=id=>{if(needKey())transcribe(id,'ai')};A.transcribeAI=id=>{if(needKey())transcribe(id,'ai')};A.transcribeText=id=>{transcribe(id,'text')};
 /* mode: 'auto' (AI when a key exists, else text layer) | 'ai' | 'text' */
 async function transcribe(id,mode){
@@ -2962,6 +3263,7 @@ A.rmfile=async i=>{
   const[id,slot,fid]=i.split('|');
   if(slot==='lesson'){const l=S.lessons.find(x=>x.id===id);if(l.files.length<2){toast('A lesson needs at least one file');return}if(!await ask({title:'Remove this file?',ok:'Remove',danger:1}))return;l.files=l.files.filter(f=>f.id!==fid);await C.delFile(fid);save.lessons();render();return}
   if(slot==='prog'){const p=S.progs.find(x=>x.id===id);if(p.files.length<2){toast('Keep at least one file');return}p.files=p.files.filter(f=>f.id!==fid);await C.delFile(fid);save.progs();render();return}
+  if(slot==='td'||slot==='tdmine'){const t=S.tds.find(x=>x.id===id),k=slot==='td'?'files':'mine';if(k==='files'&&t.files.length<2){toast('Keep at least one file');return}if(!await ask({title:'Remove this file?',ok:'Remove',danger:1}))return;t[k]=(t[k]||[]).filter(f=>f.id!==fid);await C.delFile(fid);save.tds();render();return}
   const[kind,sl]=slot.split('|');
   if(!await ask({title:'Remove this file?',ok:'Remove',danger:1}))return;
   const r=S[kind][id];r[sl]=r[sl].filter(f=>f.id!==fid);await C.delFile(fid);save[kind]();render();
@@ -3162,6 +3464,52 @@ A.mkMock=async id=>{if(needKey())mkMock(id)};
 A.mock=id=>{st.seg='ex';go('mock',id)};
 A.delMock=async id=>{if(!await ask({title:'Delete this mock exam?',msg:'The text is deleted too.',ok:'Delete',danger:1}))return;await C.dbDel('texts','M'+id).catch(()=>{});await C.dbDel('texts','F'+id).catch(()=>{});S.mocks=S.mocks.filter(x=>x.id!==id);save.mocks();back()};
 A.printMock=async id=>{const sp=splitSheet((await C.getText('M'+id))||'');await C.loadKatex();printHtml(C.md(st.seg==='co'?sp.co:sp.ex))};
+A.td=id=>go('td',id);
+A.addTD=()=>{
+  let subj='maths',files=[];
+  openSheet('<h2 class="sh">Add a TD</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ.filter(s=>s!=='ang'),'t-s')+'</div><div class="field"><label>Title (optional: the AI finds it)</label><input id="t-t" maxlength="80" placeholder="e.g. TD 4 — Suites"></div><div class="field"><label>Date</label><input id="t-d" type="date" value="'+iso()+'"></div><div class="field"><label>The TD sheet (PDF or photos)</label><div id="t-f"></div><button class="btn" id="t-p">Choose the file(s)</button></div><button class="btn primary" id="t-go">Add and read the TD</button>');
+  bindChips('t-s',v=>subj=v);
+  $('t-p').onclick=async()=>{const fs=await C.pickFiles();if(fs.length){files=files.concat(fs);$('t-f').innerHTML=files.map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'</span></div>').join('')}};
+  $('t-go').onclick=async()=>{
+    if(!files.length){toast('Choose the TD file');return}
+    const stored=await C.addFiles(files),t={id:uid(),subj,title:$('t-t').value.trim(),date:$('t-d').value||iso(),files:stored,mine:[],exos:[],skills:[],min:0};
+    S.tds.push(t);save.tds();closeSheet();st.tab='td';go('td',t.id);
+    if(C.hasKey())tdRead(t.id);else toast('Add your AI key (⚙️) to read the TD');
+  };
+};
+A.tdRead=id=>{if(needKey())tdRead(id)};
+A.tdAddFile=async i=>{const[id,sl]=i.split('|'),t=S.tds.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;t[sl]=(t[sl]||[]).concat(await C.addFiles(fs));save.tds();render()};
+A.tdEx=(i,el,e)=>{
+  const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;
+  x.done=!x.done;let msg='';
+  if(x.done&&!x.got){x.got=true;const n=XPD[x.diff||3];if(window.gain){gain(n,e&&e.clientX||200,e&&e.clientY||300);if(window.sv)sv();msg='+'+n+' XP'}}
+  save.tds();render('card');if(msg)toast(msg+' · '+x.title);
+};
+A.tdDiff=(i,el,e)=>{if(e)e.stopPropagation();const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;if(x.got){toast('XP already earned for this exercise');return}x.diff=(x.diff||3)%5+1;save.tds();render('card')};
+A.tdReady=i=>{const[id,cid]=i.split('|'),t=S.tds.find(x=>x.id===id),c=t.skills.find(q=>q.id===cid);c.ready=!c.ready;save.tds();render('card')};
+A.tdAddEx=id=>{const t=S.tds.find(x=>x.id===id),v=$('td-new').value.trim();if(!v){toast('Name the exercise');return}t.exos.push({id:uid(),title:v,diff:3,summary:'',done:false,got:false});save.tds();render('card')};
+A.tdEdit=id=>{const t=S.tds.find(x=>x.id===id);openSheet('<h2 class="sh">Rename</h2><div class="field"><input id="t-n" maxlength="80" value="'+esc(t.title||'')+'"></div><button class="btn primary" id="t-ns">Save</button>');$('t-ns').onclick=()=>{t.title=$('t-n').value.trim();save.tds();closeSheet();render()}};
+A.delTD=async id=>{if(!await ask({title:'Delete this TD?',msg:'Its files, exercises and corrigé are deleted.',ok:'Delete',danger:1}))return;const t=S.tds.find(x=>x.id===id);for(const f of (t.files||[]).concat(t.mine||[]))await C.delFile(f.id);await C.dbDel('texts','TC'+id).catch(()=>{});S.tds=S.tds.filter(x=>x.id!==id);save.tds();back()};
+A.tdCo=id=>go('tdco',id);
+A.mkTdCo=async id=>{if(needKey())mkTdCo(id)};
+A.printTdCo=async id=>{await C.loadKatex();printHtml(C.md((await C.getText('TC'+id))||''))};
+A.meth=i=>{const l=S.lessons.find(x=>x.id===i);if(!l)return;if(l.mt){go('meth',i);return}if(!needKey())return;go('meth',i);mkMeth(i)};
+A.mkMeth=i=>{if(needKey())mkMeth(i)};
+A.printMeth=async i=>{await C.loadKatex();printHtml(C.md((await C.getText('K'+i))||''))};
+A.mbook=s=>go('mbook',s);
+A.mkMethT=s=>{if(needKey())mkMethT(s)};
+A.printMBook=async s=>{await C.loadKatex();printHtml(C.md(await mbookText(s)))};
+A.mkMethAll=()=>{if(!needKey())return;
+  return run('KALL','Writing the key methods…',async(lab,txt)=>{
+    const todo=S.lessons.filter(l=>l.status==='done'&&!l.mt);let i=0,bad=0;
+    for(const l of todo){lab('Chapter '+(++i)+' of '+todo.length+': '+l.title);
+      try{const t=(await C.getText('L'+l.id))||'';if(t.length<300)continue;
+        const r=await C.ai({system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
+        if(r.text.length>=400){await C.setText('K'+l.id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));l.mt=Date.now();save.lessons()}}
+      catch(e){bad++;if(bad>=2)throw e}}
+    toast('Key methods updated ✓');
+  });
+};
 A.fiche=async i=>{const[k,rid]=i.split('|'),o=k==='p'?S.progs.find(x=>x.id===rid):S.mocks.find(x=>x.id===rid);if(!o)return;
   if(o.fiAt){go('fiche',i);return}
   if(k==='p'&&await askUnread(rid)===false)return;
@@ -3570,14 +3918,14 @@ function calHint(){
   el.onclick=()=>{selD=nx.date;stripWeek='';rCal(1)};
 }
 function openEvent(id){A.evOpen(id);show('prepa')}
-window.P={render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
+window.P={addTime:(ref,m)=>{try{const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o){o.min=(o.min||0)+m;(ref.k==='td'?save.tds:save.progs)()}}catch(e){}},focusItems:k=>(k==='td'?S.tds.map(t=>({id:t.id,title:t.title||SUBJ[t.subj].n+' TD',sub:SUBJ[t.subj].n+' · '+fdl(t.date),folder:t.folder||'',subj:t.subj})):S.progs.map(p=>({id:p.id,title:p.title||SUBJ[p.subj].n+' programme',sub:SUBJ[p.subj].n+' · '+fdl(p.date),folder:p.folder||'',subj:p.subj}))).sort((a,b)=>a.folder.localeCompare(b.folder)||a.title.localeCompare(b.title)),render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
 })();
 
 P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rlog','mil','wch','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
@@ -3649,7 +3997,7 @@ P.boot();
   forgotB.addEventListener('click',function(){
     ask({title:'Forgot your PIN?',msg:'The only way back in is to erase this app\'s data on this phone. You can then restore it from a backup file.',ok:'Erase everything',danger:true}).then(function(ok){
       if(!ok)return;
-      KEYS.forEach(del);del('p_key');del('p_gkey');try{indexedDB.deleteDatabase('aether-prepa');}catch(e){}
+      KEYS.forEach(del);del('hhome');del('p_key');del('p_gkey');try{indexedDB.deleteDatabase('aether-prepa');}catch(e){}
       ['hash','salt','fails','until'].forEach(function(s){del(K+s);});
       location.reload();
     });
