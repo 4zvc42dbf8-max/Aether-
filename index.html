@@ -866,6 +866,30 @@ textarea::placeholder{color:var(--dim)}
 .xmch span{font-size:13px;padding:4px 10px;border-radius:99px;background:rgba(79,209,255,.12);border:1px solid rgba(79,209,255,.25)}
 .xmdet{display:none;margin-top:8px}.xmc.open .xmdet{display:block}
 .tmr{display:flex;align-items:center;gap:10px}.tmr b{font-size:15px}
+
+/* v55: polish: motion that feels physical, cheap to run (transform/opacity only) */
+button,.card.tap,.prow,.chip,.btn,.nb,.ptab,.pev,.dk,.goal,.task,.tprow{touch-action:manipulation}
+.btn,.chip,.prow,.ptab,.pev,.goal,.dk,.add,.qa button,.atile,.tg,.vbtn,.nb svg,.chk,.fab{transition:transform .32s var(--spring),background-color .2s,border-color .2s,box-shadow .25s,opacity .2s,color .2s}
+.btn:active,.chip:active,.prow:active,.goal:active{transition-duration:.08s}
+.btn.primary{transition:transform .32s var(--spring),filter .2s,box-shadow .25s}
+.btn.primary:active{filter:brightness(1.12);box-shadow:0 0 26px rgba(77,141,255,.45)}
+.nb.on svg{animation:nbpop .5s var(--spring)}
+@keyframes nbpop{0%{transform:scale(.7) translateY(2px)}60%{transform:scale(1.18) translateY(-2px)}100%{transform:none}}
+.chk.pop{animation:chkpop .55s var(--spring)}
+@keyframes chkpop{0%{transform:scale(.7)}45%{transform:scale(1.35)}100%{transform:scale(1.18)}}
+.chip.on{animation:chipon .4s var(--spring)}
+@keyframes chipon{0%{transform:scale(.88)}100%{transform:none}}
+.ptab.on{animation:chipon .4s var(--spring)}
+#sheet{transition:background .35s var(--ease),backdrop-filter .35s}
+#sheet.show{-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+#sheet.show .sbox #sbody>*{animation:rise .5s var(--ease) both}
+#sheet.show .sbox #sbody>*:nth-child(1){animation-delay:.04s}#sheet.show .sbox #sbody>*:nth-child(2){animation-delay:.08s}#sheet.show .sbox #sbody>*:nth-child(3){animation-delay:.12s}#sheet.show .sbox #sbody>*:nth-child(4){animation-delay:.16s}#sheet.show .sbox #sbody>*:nth-child(5){animation-delay:.2s}#sheet.show .sbox #sbody>*:nth-child(n+6){animation-delay:.24s}
+.sbox{will-change:transform}
+.shim{background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.09) 50%,transparent 70%) 0 0/220% 100%,rgba(128,128,128,.12);animation:shim 1.3s linear infinite;border-radius:10px;color:transparent!important}
+@keyframes shim{to{background-position:-220% 0}}
+.bar-fill,#hbar,.pbar i{transition:width .9s var(--ease)}
+.toast,#toast{transition:transform .45s var(--spring),opacity .3s}
+@media (prefers-reduced-motion:reduce){.nb.on svg,.chk.pop,.chip.on,.ptab.on,#sheet.show .sbox #sbody>*{animation:none!important}}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -1255,18 +1279,26 @@ function dockRefresh(){
 }
 function dkCollapse(id){
   const o=dkLoad(),el=$(id);if(!el)return;
-  o.o=o.o.filter(x=>x!==id);if(!o.c.includes(id))o.c.push(id);dkSave(o);
-  el.classList.add('bye');setTimeout(()=>{el.classList.remove('bye');dkSig='';dockRefresh()},260);vib(10);
+  o.o=o.o.filter(x=>x!==id);if(!o.c.includes(id))o.c.push(id);dkSave(o);vib(10);
+  const h=el.offsetHeight,cs=getComputedStyle(el);
+  el.style.height=h+'px';el.style.overflow='hidden';void el.offsetHeight;
+  el.style.transition='height .34s var(--ease),margin-bottom .34s var(--ease),padding .34s var(--ease),opacity .26s,transform .3s var(--ease)';
+  el.style.height='0px';el.style.marginBottom='0px';el.style.paddingTop='0px';el.style.paddingBottom='0px';el.style.opacity='0';el.style.transform='translateX(-35%)';
+  setTimeout(()=>{['height','overflow','transition','marginBottom','paddingTop','paddingBottom','opacity','transform'].forEach(p=>el.style[p]='');dkSig='';dockRefresh()},350);
 }
 function dkExpand(id){
-  const o=dkLoad();o.c=o.c.filter(x=>x!==id);if(id==='hhcard'&&!hhState()&&!o.o.includes(id))o.o.push(id);dkSave(o);dkSig='';dockRefresh();
-  const el=$(id);if(el){el.scrollIntoView({block:'center',behavior:'smooth'})}vib(10);
+  const o=dkLoad();o.c=o.c.filter(x=>x!==id);if(id==='hhcard'&&!hhState()&&!o.o.includes(id))o.o.push(id);dkSave(o);dkSig='';dockRefresh();vib(10);
+  const el=$(id);if(!el)return;el.scrollIntoView({block:'center',behavior:'smooth'});
+  const h=el.offsetHeight;el.style.overflow='hidden';el.style.height='0px';el.style.opacity='0';el.style.transform='scale(.92)';void el.offsetHeight;
+  el.style.transition='height .4s var(--ease),opacity .3s,transform .45s var(--spring)';el.style.height=h+'px';el.style.opacity='1';el.style.transform='none';
+  setTimeout(()=>{['height','overflow','transition','opacity','transform'].forEach(p=>el.style[p]='')},460);
 }
 (function(){
   document.addEventListener('click',e=>{
     const x=e.target.closest('[data-dkc]');if(x){e.stopPropagation();dkCollapse(x.dataset.dkc);return}
     const d=e.target.closest('[data-dk]');if(d){dkExpand(d.dataset.dk)}
   },true);
+  document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('.chk');if(c){c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop');setTimeout(()=>c.classList.remove('pop'),600)}},true);
   let sx=0,sy=0,el=null,dx=0,on=false;
   document.addEventListener('touchstart',e=>{const c=e.target.closest&&e.target.closest('#home .swp');if(!c||e.touches.length!==1||e.target.closest('.chips,input,textarea,select,button.btn,[data-noswipe]')){el=null;return}el=c;sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;on=false},{passive:true});
   document.addEventListener('touchmove',e=>{if(!el)return;const t=e.touches[0],mx=t.clientX-sx,my=t.clientY-sy;
@@ -4758,7 +4790,7 @@ function vFormu(subj){
   h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+SUBJ[subj].n+'</div><div class="sub" style="margin-top:6px">A dense, printable summary (definitions, theorems, formulas, key methods, traps) built only from your own lessons.</div>';
   h+='<div class="lbl" style="margin-top:12px">Lessons included</div><div class="chips" style="margin-top:6px">'+(ls.length?ls.map(l=>'<button class="chip '+(ex.includes(l.id)?'':'on')+'" data-a="fmTog" data-i="'+subj+'|'+l.id+'">'+esc(l.title)+'</button>').join(''):'<span class="sub">No lesson yet.</span>')+'</div>';
   if(live[key])h+=liveBox(key);else{h+=errBox(key);if(ls.length)h+='<button class="btn primary" style="margin-top:12px" data-a="mkFormu" data-i="'+subj+'">'+(fm.at?'Rewrite the formulaire':'Write the formulaire')+'</button>'}
-  h+='</div><div class="card"><div class="doc" id="fmdoc"><div class="sub">Loading…</div></div></div>';
+  h+='</div><div class="card"><div class="doc" id="fmdoc"><div class="shim" style="height:64px"></div></div></div>';
   setTimeout(async()=>{const d=$('fmdoc');if(!d)return;const t=await C.getText(key);if(!t){d.innerHTML='<div class="sub">Not written yet.</div>';return}await C.loadKatex();d.innerHTML=C.md(t)},0);
   return h;
 }
