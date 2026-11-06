@@ -292,6 +292,8 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .goal.rw.tier3:before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;background:conic-gradient(from var(--hha,0deg),#ffd60a,#fff3b0,#ff9f0a,#ffd60a);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:hhspin 6s linear infinite;pointer-events:none}
 .goal.rw .gs{line-height:1.45}
 details.rwrules summary{cursor:pointer;list-style:none}
+.xmc{border-color:rgba(79,209,255,.4);background:linear-gradient(180deg,rgba(79,209,255,.10),transparent),var(--card,#14171f)}
+.xmrow{font-size:13.5px;margin:6px 0;color:var(--text)}
 .lazycard{transition:border-color .4s,background .4s}
 .lazycard.on{border-color:rgba(155,140,255,.4);background:linear-gradient(180deg,rgba(155,140,255,.10),transparent),var(--surf)}
 .lazycard.warn{border-color:rgba(255,159,10,.5);background:linear-gradient(180deg,rgba(255,159,10,.10),transparent),var(--surf)}
@@ -770,6 +772,7 @@ textarea::placeholder{color:var(--dim)}
 <section id="home" class="view">
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
+  <div class="card" id="xmcard" style="display:none"></div>
   <div class="card hhc" id="hhcard"></div>
   <div class="card" id="rtcard" style="display:none"></div>
   <div class="card" id="rescue" style="display:none"></div>
@@ -1067,7 +1070,7 @@ function rHome(){
   $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
-  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rHH();rtRender();svRender();rRescue();rMotiv();
+  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rXM();rHH();rtRender();svRender();rRescue();rMotiv();
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
@@ -1336,7 +1339,7 @@ let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:
 let hols=ld('hols',null)||HOL0.map(x=>({...x}));
 let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
 let rcat=ld('rcat',['🍕 Food','🎮 Games','📺 Leisure','🛍 Other']),rcf='',rsub=null;
-let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
+let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,xm:true,xd:3,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
 let commits=ld('commits',[]),rtimer=ld('rtimer',null),rsave=ld('rsave',''),bnd=ld('bnd',{g:null,p:[],s:[]}),alw=ld('alw',{wk:'',left:0}),cmSel={tid:'',stake:50,due:''};
 let hhome=ld('hhome',null),homeNow=null;
 const curHol=(d=iso())=>hols.find(h=>h.s<=d&&d<=h.e)||null;
@@ -1429,6 +1432,22 @@ function badges(){
   return[['🌱','First 500 XP',L>=500],['🔥','2 000 XP',L>=2000],['⚡','5 000 XP',L>=5000],['👑','10 000 XP',L>=1e4],['🔁','7-day habit streak',hs>=7],['⏱','10 hours of focus',fm>=600],['🧠','50 hours of focus',fm>=3000],['🎯','Weekly goal reached',Object.keys(xpd||{}).length&&weekXP()>=wgoal||wch.cl.length>=3],['🏆','3 challenges in a week',wch.cl.length>=3],['🛍','First reward bought',rlog.length>0]];
 }
 
+
+function examMode(){
+  if(!shs.xm)return null;
+  const td=iso(),lim=shiftD(td,shs.xd||3);
+  const e=(cal||[]).filter(x=>(x.kind==='ds'||x.kind==='colle')&&x.date>=td&&x.date<=lim).sort((a,b)=>a.date<b.date?-1:1)[0];
+  if(!e)return null;
+  return{e,days:Math.round((new Date(e.date+'T12:00:00')-new Date(td+'T12:00:00'))/864e5)};
+}
+function rXM(){
+  const el=$('xmcard');if(!el)return;const x=examMode();
+  if(!x){el.style.display='none';return}
+  let plan=[];try{plan=P.xmPlan(x.e)||[]}catch(e){}
+  el.style.display='';el.className='card xmc';
+  const when=x.days===0?'today':x.days===1?'tomorrow':'in '+x.days+' days';
+  el.innerHTML=`<div class="cardhead"><div class="lbl">📚 Exam mode</div><span class="sub">${esc(x.e.title||'Exam')} · ${when}</span></div><div class="lmsg">${x.days===0?'Today is the day. Light review only, eat, and trust your work.':'Focus on what matters. No new big things, and protect your sleep.'}</div>${plan.map(p=>`<div class="xmrow">▸ ${esc(p)}</div>`).join('')}<div class="xmrow">😴 Sleep 7h30 or more tonight: the sleep bonus is doubled</div><div class="xmrow" style="opacity:.75">🔒 Big rewards (🔥 and 👑) wait until after the exam</div><button class="btn" data-act="xmopen" style="margin-top:8px">Open Prépa</button>`;
+}
 const TIERS=[['🌱','Small treat'],['✨','Nice treat'],['🔥','Big treat'],['👑','Jackpot']];
 const tierOf=c=>c<shs.t1?0:c<shs.t2?1:c<shs.t3?2:3;
 const worthTxt=c=>{const m=Math.round(c/30*60);return m<60?m+' min':Math.floor(m/60)+'h'+(m%60?pad(m%60):'')};
@@ -1440,6 +1459,7 @@ function rcheck(r){
   const td=iso(),wk=mondayOf(td),buys=rlog.filter(x=>x.id===r.id);
   if(r.from&&td<r.from)return'Opens '+fdm(r.from);if(r.to&&td>r.to)return'Season over';
   if(r.minLv&&lv<r.minLv)return'Reach level '+r.minLv;
+  {const x=examMode();if(x&&tierOf(r.c)>=2)return'After your exam ('+fdm(x.e.date)+')'}
   if(r.fm&&focusToday()<r.fm)return'Focus '+(r.fm-focusToday())+' more min today';
   if(r.gr&&!recsRecent(r.grk).some(x=>+x.grade>=r.gr))return'Needs '+(r.grk==='colles'?'a colle':r.grk==='exams'?'an exam':'a')+' grade ≥ '+r.gr+' (last 3 weeks)';
   if(r.lim&&buys.filter(x=>iso(new Date(x.t))>=wk).length>=r.lim)return'Weekly limit reached';
@@ -1458,7 +1478,7 @@ function bonusSweep(){
     if(bnd.g===null){bnd.g=rs.map(key);ch=1}else rs.forEach(r=>{if(!bnd.g.includes(key(r))){bnd.g.push(key(r));{const col=r.kind==='colles',th=col?shs.cthr:shs.gthr,x=col?shs.cxp:shs.gxp;if(+r.grade>=th)aw(x,(col?'🗣 Great colle':'🎓 Great exam')+' ('+r.grade+'/20)');else ch=1}}});
     (P.progs()||[]).forEach(p=>{if(p.chapters&&p.chapters.length&&p.chapters.every(c=>c.ready)&&(p.date||'')>=iso()&&!bnd.p.includes(p.id)){bnd.p.push(p.id);aw(shs.pxp,'📘 Fully prepared')}});
   }catch(e){}
-  const d=dayh[iso()];if(d&&+d.s>=shs.sth&&!bnd.s.includes(iso())){bnd.s.push(iso());aw(shs.sxp,'😴 Good night')}
+  const d=dayh[iso()];if(d&&+d.s>=shs.sth&&!bnd.s.includes(iso())){bnd.s.push(iso());aw(shs.sxp*(examMode()?2:1),'😴 Good night')}
   if(ch)sv();
 }
 /* timed rewards */
@@ -1541,12 +1561,12 @@ function rwSettings(){
   <div class="lbl" style="margin-top:12px">Treat sizes (by cost)</div><div class="two">${N('ss-t1','🌱→✨ from',shs.t1)}${N('ss-t2','✨→🔥 from',shs.t2)}${N('ss-t3','🔥→👑 from',shs.t3)}</div>
   <div class="lbl" style="margin-top:12px">Commitments and timers</div><div class="two">${N('ss-cb','Bonus when kept (%)',shs.cb)}${N('ss-ref','Timer refund (%)',shs.ref)}</div>
   <div class="lbl" style="margin-top:12px">Bonus XP (0 = off)</div><div class="hint" style="text-align:left">Exams and DS</div><div class="two">${N('ss-gthr','Grade ≥ /20',shs.gthr)}${N('ss-gxp','gives XP',shs.gxp)}</div><div class="hint" style="text-align:left;margin-top:6px">Colles</div><div class="two">${N('ss-cthr','Grade ≥ /20',shs.cthr)}${N('ss-cxp','gives XP',shs.cxp)}</div><div class="two" style="margin-top:6px">${N('ss-pxp','Fully prepared for a colle',shs.pxp)}${N('ss-sxp','Slept ≥ h gives XP',shs.sxp)}</div><div class="two" style="margin-top:6px">${N('ss-sth','Sleep threshold (h)',shs.sth)}<div></div></div>
-  <div class="lbl" style="margin-top:12px">Behaviour</div><div class="chips">${T('ss-arr','Ask what to do when I get home',shs.arr)}${T('ss-resc','Evening "smallest win" nudge',shs.resc)}${T('ss-snd','Sounds',shs.snd)}${T('ss-hap','Vibrations',shs.hap)}</div>
+  <div class="lbl" style="margin-top:12px">Exam mode</div><div class="chips">${T('ss-xm','Switch to recovery mode before a DS or colle',shs.xm)}</div><div class="two" style="margin-top:6px">${N('ss-xd','Days before',shs.xd)}<div></div></div><div class="lbl" style="margin-top:12px">Behaviour</div><div class="chips">${T('ss-arr','Ask what to do when I get home',shs.arr)}${T('ss-resc','Evening "smallest win" nudge',shs.resc)}${T('ss-snd','Sounds',shs.snd)}${T('ss-hap','Vibrations',shs.hap)}</div>
   <button class="btn primary" id="ss-save" style="margin-top:14px">Save</button>`);
   const B=$('sbody');
   B.onclick=e=>{const c=e.target.closest('.chip');if(c){if(c.parentElement.id==='ss-roll'){[...c.parentElement.children].forEach(x=>x.classList.toggle('on',x===c))}else c.classList.toggle('on')}if(e.target.closest('[data-sb]')){rsub=null;rwSheet()}};
   $('ss-save').onclick=()=>{const g=i=>+$(i).value||0,on=i=>$(i).classList.contains('on');const old=shs.al?shs.amt:0;
-    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),cthr:g('ss-cthr')||14,cxp:g('ss-cxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
+    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),cthr:g('ss-cthr')||14,cxp:g('ss-cxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),xm:on('ss-xm'),xd:Math.max(1,Math.min(14,g('ss-xd')||3)),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
     if(shs.al&&shs.amt!==old)alw.wk='';sv();rsub=null;rwSheet();rRescue();toast('Saved')};
 }
 let rtab='shop';
@@ -1950,6 +1970,7 @@ document.addEventListener('click',e=>{
   else if(act==='rewards'){rsub=null;rwSheet()}
   else if(act==='rbuy')rbuy(a.dataset.id,a)
   else if(act==='rtstop')rtStop()
+  else if(act==='xmopen')show('prepa')
   else if(act==='rescuego'){F.mode='short';F.kind='focus';F.task='Smallest win';F.status='idle';show('focus');setTimeout(fStart,350)}
   else if(act==='hhset')hhSheet();
   else if(act==='hhgo'){show('focus')}
@@ -2248,11 +2269,11 @@ const SCHED=[{"id":"s-ds-20260907","kind":"ds","subj":"ang","title":"DS Anglais"
 /* ---------- state ---------- */
 const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Storage is full')}};
 const S={
-  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),mocks:ld('p_mocks',[]),tds:ld('p_tds',[]),
+  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),mocks:ld('p_mocks',[]),tds:ld('p_tds',[]),mist:ld('p_mist',[]),
   set:Object.assign({prov:'gemini',model:'claude-sonnet-5-5',gmodel:'gemini-flash-latest',mread:'claude-haiku-5-5',mwrite:'claude-sonnet-5-5',news:'meridian-news'},ld('p_set',{})),
   removed:ld('p_removed',[]),usage:ld('p_usage',{i:0,o:0,n:0})
 };
-const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),mocks:()=>put('p_mocks',S.mocks),tds:()=>put('p_tds',S.tds),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
+const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),mocks:()=>put('p_mocks',S.mocks),tds:()=>put('p_tds',S.tds),mist:()=>put('p_mist',S.mist),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
 
 /* ---------- IndexedDB (files + big texts) ---------- */
 let dbp=null;
@@ -2348,7 +2369,18 @@ function errText(status,j){
   return m||('The AI service returned error '+status+'.');
 }
 const keyName=()=>S.set.prov==='gemini'?'p_gkey':'p_key';
-const freeOn=()=>!!(localStorage.getItem('p_fbase')&&S.set.fon!==false);
+function provs(){
+  let l=S.set.provs;
+  if(!Array.isArray(l)){l=[];S.set.provs=l}
+  let ch=false;
+  if(l.some(x=>x.id==='p0')){l=l.filter(x=>x.id!=='p0');localStorage.removeItem('p_pk_p0');localStorage.removeItem('p_fbase');localStorage.removeItem('p_fkey');ch=true}
+  if(!l.some(x=>x.id==='gemini')){l.push({id:'gemini',name:'Gemini',special:true,on:true});ch=true}
+  S.set.provs=l;if(ch){try{put('p_set',S.set)}catch(e){}}
+  return l;
+}
+const pkey=p=>(localStorage.getItem(p.special?'p_gkey':'p_pk_'+p.id)||'').trim();
+const provReady=p=>p.on!==false&&(p.special?!!pkey(p):!!p.base&&!!pkey(p));
+const freeOn=()=>provs().some(provReady);
 const hasKey=()=>S.set.prov==='auto'?!!(freeOn()||localStorage.getItem('p_gkey')||localStorage.getItem('p_key')):!!localStorage.getItem(keyName());
 function gErr(status,j){
   const m=(j&&j.error&&j.error.message)||'';
@@ -2410,61 +2442,64 @@ async function aiGemini({system,content,max,model,onText}){
   S.usage.i+=inT;S.usage.o+=outT;S.usage.n++;put('p_usage',S.usage);
   return{text,stop,inT,outT};
 }
-/* Free router (FreeLLMAPI, OpenAI-compatible, self-hosted): tried first, text-only jobs. */
-function fbase(){let u=(localStorage.getItem('p_fbase')||'').trim().replace(/\/+$/,'');if(u&&!/\/v1$/.test(u))u+='/v1';return u}
-function fErr(status,j){
-  const m=(j&&j.error&&(j.error.message||j.error))||'';
-  if(status===401||status===403)return 'The free router refused the key. Check it in AI settings.';
-  if(status===404)return 'The free router address looks wrong (no /v1/chat/completions there).';
-  if(status===429)return 'The free router is out of free quota right now.';
-  if(status===422||status===400)return 'The free router cannot do this request'+(typeof m==='string'&&m?' ('+m.slice(0,120)+')':'')+'.';
-  if(status>=500)return 'The free router is busy or its providers failed.';
-  return (typeof m==='string'&&m)||('The free router returned error '+status+'.');
+/* OpenAI-compatible providers (Groq, OpenRouter, Mistral, Cerebras, a FreeLLMAPI router...), tried in the order of the list. */
+function pbase(u){u=(u||'').trim().replace(/\/+$/,'');if(u&&!/\/v\d+$/.test(u))u+='/v1';return u}
+function fErr(status,j,name){
+  const m=(j&&j.error&&(j.error.message||j.error))||'';const n=name||'This provider';
+  if(status===401||status===403)return n+' refused the key. Check it in AI settings.';
+  if(status===404)return n+': address or model name looks wrong'+(typeof m==='string'&&m?' ('+m.slice(0,100)+')':'')+'.';
+  if(status===429)return n+' is out of free quota right now.';
+  if(status===422||status===400)return n+' cannot do this request'+(typeof m==='string'&&m?' ('+m.slice(0,120)+')':'')+'.';
+  if(status>=500)return n+' is busy or down.';
+  return (typeof m==='string'&&m)||(n+' returned error '+status+'.');
 }
-async function aiFree({system,content,max=4096,onText}){
-  const base=fbase();if(!base)throw new AIError('Free router: no address set.');
+async function aiProv(pr,{system,content,max=4096,onText}){
+  const base=pbase(pr.base),name=pr.name||'Provider';if(!base)throw new AIError(name+': no address set.');
   const text=content.map(c=>c.text).join('\n\n');
-  const key=(localStorage.getItem('p_fkey')||'').trim(),ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),S.set.fto*1000||30000);
+  const key=pkey(pr),ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),(S.set.fto||30)*1000);
   const headers={'content-type':'application/json'};if(key)headers.authorization='Bearer '+key;
   let r;
-  try{r=await fetch(base+'/chat/completions',{method:'POST',headers,signal:ctl.signal,body:JSON.stringify({model:S.set.fmodel||'auto',stream:true,max_tokens:Math.min(max,16000),temperature:0.4,messages:[{role:'system',content:system},{role:'user',content:text}]})})}
-  catch(e){clearTimeout(to);throw new AIError(e&&e.name==='AbortError'?'The free router did not answer in time.':'Cannot reach the free router. It must run with an https:// address that your phone can open, and allow this website (CORS).')}
+  try{r=await fetch(base+'/chat/completions',{method:'POST',headers,signal:ctl.signal,body:JSON.stringify({model:pr.model||'auto',stream:true,max_tokens:Math.min(max,pr.maxTok||8000),temperature:0.4,messages:[{role:'system',content:system},{role:'user',content:text}]})})}
+  catch(e){clearTimeout(to);throw new AIError(e&&e.name==='AbortError'?name+' did not answer in time.':'Cannot reach '+name+'. Check the address, or that it allows this website (CORS).')}
   clearTimeout(to);
-  if(!r.ok){let j={};try{j=await r.json()}catch(e){}throw new AIError(fErr(r.status,j))}
+  if(!r.ok){let j={};try{j=await r.json()}catch(e){}throw new AIError(fErr(r.status,j,name))}
   let out='',stop='',inT=0,outT=0;
-  const via=r.headers.get('x-routed-via')||'';
-  if(/json/.test(r.headers.get('content-type')||'')&&!/event-stream/.test(r.headers.get('content-type')||'')){
+  const ct=r.headers.get('content-type')||'';
+  if(/json/.test(ct)&&!/event-stream/.test(ct)){
     const j=await r.json();const c=j.choices&&j.choices[0];out=(c&&c.message&&c.message.content)||'';stop=c&&c.finish_reason==='length'?'max_tokens':'';if(j.usage){inT=j.usage.prompt_tokens||0;outT=j.usage.completion_tokens||0}if(onText&&out)onText(out);
   }else await readSSE(r,ev=>{
-    if(ev.error)throw new AIError(fErr(500,ev));
+    if(ev.error)throw new AIError(fErr(500,ev,name));
     const c=ev.choices&&ev.choices[0];
     if(c){const d=c.delta&&c.delta.content;if(d){out+=d;if(onText)onText(out)}if(c.finish_reason)stop=c.finish_reason==='length'?'max_tokens':c.finish_reason}
     if(ev.usage){inT=ev.usage.prompt_tokens||inT;outT=ev.usage.completion_tokens||outT}
   });
   out=out.replace(/<think>[\s\S]*?<\/think>/g,'').trim();
-  if(out.length<20)throw new AIError('The free router returned almost nothing.');
-  S.usage.f=(S.usage.f||0)+1;S.usage.via=via||'free router';put('p_usage',S.usage);
-  return{text:out,stop,inT,outT,via:'free'};
+  if(out.length<20)throw new AIError(name+' returned almost nothing.');
+  S.usage.by=S.usage.by||{};S.usage.by[name]=(S.usage.by[name]||0)+1;put('p_usage',S.usage);
+  return{text:out,stop,inT,outT,via:name};
 }
-/* Auto mode: Gemini first (free). If it fails or the quota is hit and a Claude key exists, the same request goes to Claude:
-   Haiku for reading jobs (scans, programmes, cards), Sonnet for writing jobs (exams, sheets, feedback). */
 const READ_JOBS=()=>[SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_CARDS];
-const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s)||/^You read a TD sheet/.test(s);
-const freeOk=o=>freeOn()&&(o.content||[]).every(c=>c.type==='text')&&(S.set.fuse!=='read'||isRead(o.system));
+const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s)||/^You read a TD sheet/.test(s)||/^You compare an AI-written lesson/.test(s);
+const textOnly=o=>(o.content||[]).every(c=>c.type==='text');
 async function aiAuto(o){
   const gk=localStorage.getItem('p_gkey'),ck=localStorage.getItem('p_key');
-  const chain=[];
-  if(freeOk(o))chain.push(['Free router',()=>aiFree(o)]);
-  if(gk)chain.push(['Gemini',()=>aiGemini(Object.assign({},o,{model:undefined}))]);
+  const chain=[],txt=textOnly(o);
+  provs().forEach(pr=>{
+    if(!provReady(pr))return;
+    if(pr.special){chain.push(['Gemini',()=>aiGemini(Object.assign({},o,{model:undefined}))]);return}
+    if(txt&&(pr.use!=='read'||isRead(o.system)))chain.push([pr.name||'Provider',()=>aiProv(pr,o)]);
+  });
   if(ck)chain.push(['Claude',()=>aiClaude(Object.assign({},o,{model:isRead(o.system)?S.set.mread:S.set.mwrite}))]);
-  if(!chain.length)throw new AIError(gk||ck||freeOn()?'This job needs Gemini or Claude (the free router only handles text). Add a Gemini or Claude key in AI settings.':'Add an AI key first (Prépa → AI settings).');
+  if(!chain.length)throw new AIError(gk||ck||freeOn()?'This job needs Gemini or Claude (the other providers only handle plain text jobs). Add or enable a Gemini or Claude key in AI settings.':'Add an AI key first (Prépa → AI settings).');
   const errs=[];let cut=null;
   for(let i=0;i<chain.length;i++){
     try{
       if(i>0&&o.onText)o.onText('');
       const r=await chain[i][1]();
       if(r.stop==='max_tokens'&&i<chain.length-1){cut=r;errs.push(chain[i][0]+': the answer was cut short.');continue}
-      if(i>0){r.fallback=true;r.from=chain[0][0];S.usage.fb=(S.usage.fb||0)+1;put('p_usage',S.usage)}
+      if(i>0){r.fallback=true;r.from=chain[0][0];S.usage.fb=(S.usage.fb||0)+1}
+      S.usage.by=S.usage.by||{};if(!r.via){r.via=chain[i][0];S.usage.by[r.via]=(S.usage.by[r.via]||0)+1}
+      put('p_usage',S.usage);
       return r;
     }catch(e){
       if(!(e instanceof AIError))throw e;
@@ -2565,6 +2600,9 @@ const SYS_DIGEST=(others)=>"You build a compact MEMORY NOTE of one lesson from a
 const SYS_RESUME=(what,subj)=>"You are an excellent teacher in a French classe préparatoire (first year, "+subj+"). Write the student's REVISION RÉSUMÉ for "+what+": everything he or she needs to know and be able to do to get the best possible result, built ONLY from the student's own course below (their notations and results) and, for the order and emphasis, from the PROGRAMME or the list of main lessons. Write in French, Markdown, LaTeX between $...$ and $$...$$. Dense, scannable, no filler: at most about 1400 words. Structure:\n\n## Les priorités\nThe 5 to 8 things that earn the most points (what examiners always ask), ordered by importance.\n\n## Chapitre par chapitre\nFor each chapter or lesson (as a ### heading): **À savoir par cœur** (definitions, theorems with their hypotheses, key formulas), **Méthodes types** (how to attack the standard exercises, in 2 to 4 steps), **Pièges** (classic mistakes, units, signs, conditions forgotten).\n\n## Liens entre les chapitres\nHow chapters feed each other (a few bullets).\n\n## Check-list de dernière minute\nA short list of 8 to 12 checkboxes (- [ ]) the student can tick before the test.\n\nIf a STUDENT PROFILE is given, add a short '⚠️ Mes points faibles' section at the top aiming at his or her recurring mistakes, without quoting the profile. If the PROGRAMME gives an exact list of questions de cours, the priorities and chapters must follow that list and its exercise theme, and nothing outside it. Never invent results absent from the course: if something essential is missing from the course, list it under '## À compléter' as 'rappel' with the standard statement. Do not reveal or reuse any exam or exercise sheet text. No introduction or closing sentence.";
 const SYS_VOCAB_TEXT="You read the text of a vocabulary file for a French student (for example general vocabulary, linking words such as connectors, useful expressions, word lists with or without translations). Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list\",\"langA\":\"language of the entries, e.g. French\",\"langB\":\"the other language, e.g. English\",\"pairs\":[{\"a\":\"word or expression\",\"b\":\"translation or short meaning\"}]}. Rules: extract EVERY entry in reading order and keep spelling and accents exactly; if the file already gives a translation or definition, keep it as b; if it only lists words or expressions in one language, write b yourself as the short, natural equivalent in the other language (French <-> English by default; for a connector give the connector, e.g. 'néanmoins' -> 'nevertheless / however'); if an entry has several meanings join them with ' / '; ignore page numbers, headings and decoration; skip anything unclear. Inside JSON strings escape backslashes and double quotes.";
 const METH_FMT="For EVERY method use exactly this layout (Markdown, French, LaTeX between $...$ and $$...$$):\n\n### Nom de la méthode\n**Quand l'utiliser :** the typical statements or situations where it applies (recognise it from the wording).\n**Pourquoi ça marche :** the idea in one or two sentences.\n**Rédaction :** the model write-up exactly as it should appear on a graded copy (full sentences, the standard phrases and connectors a teacher expects, every step in order: for example for a proof by induction the statement P(n), initialisation, hérédité with the hypothesis written out, conclusion). THIS IS THE MOST IMPORTANT PART: write it completely, with blanks like $\\dots$ only where the content depends on the problem.\n**Exemple :** a short concrete example, fully written up with that rédaction.\n**Piège :** the classic mistake to avoid (one line).\n\n";
+const SYS_COMPLETE=(subj,title,rules,others)=>"You are an excellent teacher in a French classe préparatoire aux grandes écoles (first year, scientific stream, lycée Aux Lazaristes in Lyon), with a deep knowledge of the official programme and of the usual style of French prépa lessons in "+subj+". You receive a BLANK lesson (course skeleton): definitions, theorems and propositions stated WITHOUT demonstration, proof, example or comment. Complete it into the full lesson the student will revise from, in French, in Markdown with LaTeX between $...$ (inline) and $$...$$ (display).\n\nRules:\n1. Keep the lesson's structure, numbering, notations, definitions and statements exactly as given. Never reword, reorder or drop what is already there. Insert your additions right after the item they belong to.\n2. After each theorem, proposition, property or formula that has no proof, add a complete and rigorous '**Démonstration.**' written the way a prépa teacher writes it on the board, ending with ∎. If the original says the result is admitted ('admis'), do not prove it. For long or delicate proofs, give the full argument in clear numbered steps.\n3. After the key definitions and theorems, add one or two '**Exemple.**' items (short, classic, with the full computation), and '**Méthode.**' (when and how to use it, with the model write-up) wherever a standard technique exists (double inclusion, récurrence, analyse-synthèse, changement de variable, ...). Add '**Attention.**' for the classic traps and '**Remarque.**' only when it really helps.\n4. In physics and chemistry: add the derivations, the physical justification, orders of magnitude and a dimensional check. In engineering sciences: justify models and relations.\n5. Use only tools that are available at this point of the programme. You may reuse results stated earlier in this lesson. If a statement of the blank lesson looks wrong or imprecise, keep it and add '⚠️ À vérifier :' with the issue.\n6. Mark everything you add so the student sees what was blank: use the bold labels above, and nothing else. No introduction, no closing sentence.\n7. Double-check every computation and every step of every proof. Correctness matters more than length."+(others?"\n\nOther lessons of the student in the same subject (for cross-references and prerequisites only): "+others:"")+(rules&&rules.length?"\n\nTHE STUDENT'S PREFERENCES (learned from how he corrected your earlier work: always follow them, they override your habits):\n"+rules.map((r,i)=>(i+1)+'. '+r).join('\n'):"");
+const SYS_LEARN="You compare an AI-written lesson with the version the student corrected by hand. You receive the lines REMOVED by the student and the lines ADDED by the student. Deduce what he wants for next times. Answer with ONLY a JSON object, no other text: {\"rules\":[\"...\"]} with at most 6 rules. Each rule is a short imperative instruction (English, under 160 characters) for a future writer of lessons, general and reusable (notation, level of detail of proofs, way of writing a method, what to add or leave out, vocabulary, layout), never tied to one specific sentence. Ignore typo fixes and one-off content corrections unless they reveal a general habit. If nothing general can be learned, return {\"rules\":[]}.";
+const SYS_DRILL=(subj)=>"You are an experienced teacher in a French classe préparatoire (first year, "+subj+"). From the list of the student's recurring MISTAKES (what went wrong, the fix, the type of error), write a short personal drill that makes him practise exactly those weaknesses. Write in French, Markdown, LaTeX between $...$ and $$...$$. Structure: '## Entraînement' with 6 exercises of 5 to 10 minutes (2 easy, 3 medium, 1 harder), each titled 'Exercice N', with the statement, a line '**Piège visé :**' naming the mistake it targets, and a one-line '**Indication :**'. Then a line containing only <!--CORRECTIONS--> and '## Corrections' with a complete, rigorous correction of every exercise (heading '#### Exercice N'), stating the final result and the method to remember. Use only tools of the first-year programme and the student's course when it is given. Double-check every calculation. No introduction or closing sentence.";
 const SYS_METHODS=(subj,title)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). From the student's lesson '"+title+"' below, write the sheet of KEY METHODS of this chapter: every technique the student must master to solve the standard exercises and prove the standard results of this chapter (typically 6 to 14 methods, ordered as in the lesson). Include the general proof or reasoning techniques that this chapter's exercises call for (for example double inclusion, équivalence par chaînes, récurrence, raisonnement par l'absurde, contraposée, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, majoration/encadrement, changement de variable...) when they genuinely apply, marked '(méthode transversale)'. Prefer examples and notation taken from the student's lesson; otherwise use a standard example of the chapter. "+METH_FMT+"Start with a one-line '## Méthodes du chapitre : "+title+"'. Rules: stay faithful to the student's notation and to results stated in the lesson; every write-up must be mathematically/physically correct and complete; double-check each example. No introduction or closing sentence.";
 const SYS_METHODS_T=(subj)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). Write the sheet of CROSS-CHAPTER METHODS (méthodes transversales) of "+subj+" that a first-year student must master: "+(/math/i.test(subj)?"all the standard reasoning and proof techniques: double inclusion, équivalence (chaîne d'équivalences), implication directe / réciproque, contraposée, raisonnement par l'absurde, récurrence simple, double, forte, récurrence avec hérédité à plusieurs rangs, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, unicité (par l'absurde ou par différence), existence (construction, théorème des valeurs intermédiaires), contre-exemple, négation de quantificateurs, majoration/minoration, encadrement, passage aux inégalités, changement de variable, intégration par parties, symétrie/parité, raisonnement par analyse des cas limites, utilisation de la conjugaison/factorisation de l'angle moitié, etc.":"the standard reasoning habits of the subject: how to set up a problem, justify results, check homogeneity and orders of magnitude, approximations, structure of a clean answer, units and significant figures, and the typical solving methods of the year")+". Order them from the most frequent to the least. "+METH_FMT+"Start with '## Méthodes transversales : "+subj+"'. Every write-up must be correct and complete. No introduction or closing sentence.";
 const SYS_TD="You read a TD sheet (travaux dirigés: a series of exercises) given by a teacher in a French classe préparatoire. Answer with ONLY a JSON object, no other text: {\"title\":\"short title, e.g. TD 4 — Suites\",\"exercises\":[{\"title\":\"short name of the exercise, e.g. Exercice 3 — Suite de Fibonacci\",\"diff\":3,\"summary\":\"one short sentence on what it asks\"}],\"skills\":[{\"title\":\"a skill or thing to know or do to be able to solve this TD\",\"detail\":\"one short sentence\"}]}. Rules: list EVERY exercise in order (maximum 40); 'diff' is an integer from 1 (direct application of the course) to 5 (hard, multi-step or non-standard) judged from the statement and any star marks, 'ex: * or **' in the sheet, which raise the difficulty; 'skills' are 5 to 10 checkable items of the form 'Savoir démontrer ...', 'Maîtriser ...', 'Connaître ...' that a student ticks to say 'I am ready for this TD'. Keep the teacher's wording and language. Inside JSON strings escape backslashes and double quotes.";
@@ -2660,7 +2698,7 @@ function removed(id,gone){
 async function dump(){return{texts:await dbAll('texts')}}
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
-window.PC={SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
+window.PC={SYS_DRILL,SYS_COMPLETE,SYS_LEARN,provs,SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
   SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
@@ -2939,7 +2977,7 @@ function vLesson(id){
   if(!live[k]&&l.status!=='done')h+='<button class="btn" data-a="upText" data-i="'+id+'">⬆ I already have the read file (text PDF or .txt) — upload it</button>';
   if(!live[k]){
     h+=l.status==='done'?'<button class="btn" data-a="transcribeAI" data-i="'+id+'">'+(l.how==='text'?'Re-read with AI (better formulas)':'Read again with AI')+'</button>':'<button class="btn primary" data-a="transcribe" data-i="'+id+'">Read this lesson with AI</button><button class="btn" data-a="transcribeText" data-i="'+id+'">Quick read without AI (text PDFs)</button>';
-    if(l.status==='done')h+='<button class="btn" data-a="meth" data-i="'+id+'">'+(l.mt?'📐 Open the key methods':'📐 Key methods of this chapter')+'</button><button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="printLesson" data-i="'+id+'">Save as a clean typed PDF</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
+    if(l.status==='done')h+='<button class="btn" data-a="lc" data-i="'+id+'">'+(l.lc?'✍️ Open the completed lesson':'✍️ Complete this blank lesson (proofs, examples)')+'</button><button class="btn" data-a="meth" data-i="'+id+'">'+(l.mt?'📐 Open the key methods':'📐 Key methods of this chapter')+'</button><button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="printLesson" data-i="'+id+'">Save as a clean typed PDF</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
   }
   h+='</div>';
   if(l.status==='done')h+='<div class="card"><div class="cardhead"><div class="lbl">Text the AI will use</div><button class="addf" data-a="upText" data-i="'+id+'">⬆ Upload read file</button></div><div class="doc" id="ltext"><div class="shimmer" style="height:120px;border-radius:14px"></div></div></div>';
@@ -3184,7 +3222,7 @@ function vTDpage(id){
   let h=backBar(t.title||SUBJ[t.subj].n+' TD','<button class="pmini" data-a="tdEdit" data-i="'+id+'" aria-label="Rename">✎</button><button class="pmini" data-a="delTD" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(t.subj)+'">'+SUBJ[t.subj].n+'</span><span class="pill">'+fdl(t.date)+'</span>'+folderPill('tds',id)+(t.min?'<span class="pill">⏱ '+hmin(t.min)+'</span>':'')+'</div>';
   h+='<div class="slot"><div class="hd"><div class="lbl">TD sheet</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|files">+ Add</button></div>'+fileRows(t.files,'td',id)+'</div>';
-  h+='<div class="slot"><div class="hd"><div class="lbl">My solutions</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|mine">+ Add</button></div>'+(fileRows(t.mine,'tdmine',id)||'<div class="sub">Drop your own work here (photos or PDF) to keep it with the TD.</div>')+'</div>';
+  h+='<button class="btn" data-a="logMist" data-i="manual" style="margin-bottom:10px">📓 Log a mistake from this TD</button><div class="slot"><div class="hd"><div class="lbl">My solutions</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|mine">+ Add</button></div>'+(fileRows(t.mine,'tdmine',id)||'<div class="sub">Drop your own work here (photos or PDF) to keep it with the TD.</div>')+'</div>';
   h+=liveBox(k)+errBox(k);
   if(!live[k]&&!nx)h+='<button class="btn primary" data-a="tdRead" data-i="'+id+'">Read the TD</button>';
   h+='</div>';
@@ -3253,9 +3291,9 @@ function mkTdCo(id){
 
 function mistakeCard(){
   const rs=allRecs(),cnt={};rs.forEach(r=>(r.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
-  const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);if(!ks.length)return '';
+  const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);if(!ks.length)return '<button class="btn" data-a="mb">📓 Mistake notebook'+(mistOpen().length?' · '+mistOpen().length+' open':'')+'</button>';
   const mx=cnt[ks[0]];
-  return '<div class="card"><div class="lbl">Mistake notebook · your patterns</div>'+ks.map(k=>'<button class="prow" data-a="tagView" data-i="'+esc(k)+'" style="--c:var(--orange,#ff9f0a);margin-bottom:7px"><span class="m"><div class="t" style="font-size:14.5px">'+esc(k)+'</div><div class="pbar" style="margin-top:7px"><i style="width:'+Math.round(100*cnt[k]/mx)+'%"></i></div></span><b>'+cnt[k]+'</b></button>').join('')+'</div>';
+  return '<div class="card"><div class="cardhead"><div class="lbl">Mistake notebook · your patterns</div><button class="lnk" data-a="mb">Open ›</button></div>'+ks.map(k=>'<button class="prow" data-a="tagView" data-i="'+esc(k)+'" style="--c:var(--orange,#ff9f0a);margin-bottom:7px"><span class="m"><div class="t" style="font-size:14.5px">'+esc(k)+'</div><div class="pbar" style="margin-top:7px"><i style="width:'+Math.round(100*cnt[k]/mx)+'%"></i></div></span><b>'+cnt[k]+'</b></button>').join('')+'</div>';
 }
 
 /* ----- COLLES ----- */
@@ -3413,7 +3451,7 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
   }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():st.tab==='td'?vTD():st.tab==='grades'?vGrades():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
@@ -3432,6 +3470,7 @@ async function post(top){
   try{
     if(top&&top.v==='lesson'){const l=S.lessons.find(x=>x.id===top.id);if(l&&l.status==='done')into('ltext',(await C.getText('L'+l.id))||'*(empty)*')}
     if(top&&top.v==='sheet'){const p=S.progs.find(x=>x.id===top.id),tx=(await C.getText('S'+top.id))||'',sp=splitSheet(tx);into('sheetdoc',st.seg==='co'?(sp.co||'*No corrections found.*'):sp.ex)}
+    if(top&&top.v==='lc'){const tx=(await C.getText('LC'+top.id))||'';if($('lcdoc'))into('lcdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='meth'){const tx=(await C.getText('K'+top.id))||'';if($('methdoc'))into('methdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mbook'){const tx=await mbookText(top.id);if($('mbookdoc'))into('mbookdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='tdco'){const tx=(await C.getText('TC'+top.id))||'';if($('tcdoc'))into('tcdoc',tx||'*Nothing yet.*')}
@@ -3479,7 +3518,7 @@ A.addLesson=()=>{
   $('l-go').onclick=()=>fin(true);$('l-go2').onclick=()=>fin(false);
 };
 A.addLessonFiles=async id=>{const l=S.lessons.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;l.files=l.files.concat(await C.addFiles(fs));l.status='new';save.lessons();render()};
-A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});await C.dbDel('texts','D'+id).catch(()=>{});await C.dbDel('texts','K'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
+A.delLesson=async id=>{if(!await ask({title:'Delete this lesson?',msg:'The text and the files stored on this phone are removed.',ok:'Delete',danger:1}))return;const l=S.lessons.find(x=>x.id===id);for(const f of l.files)await C.delFile(f.id);await C.dbDel('texts','L'+id).catch(()=>{});await C.dbDel('texts','D'+id).catch(()=>{});await C.dbDel('texts','K'+id).catch(()=>{});await C.dbDel('texts','LC'+id).catch(()=>{});await C.dbDel('texts','LCB'+id).catch(()=>{});S.lessons=S.lessons.filter(x=>x.id!==id);S.cards=S.cards.filter(c=>c.lid!==id);save.lessons();save.cards();back()};
 A.transcribe=id=>{if(needKey())transcribe(id,'ai')};A.transcribeAI=id=>{if(needKey())transcribe(id,'ai')};A.transcribeText=id=>{transcribe(id,'text')};
 /* mode: 'auto' (AI when a key exists, else text layer) | 'ai' | 'text' */
 async function transcribe(id,mode){
@@ -3847,6 +3886,155 @@ A.promptSheet=id=>{
 A.promptMock=()=>{
   copyPrompt('Prompt: mock exam',"You are a teacher in a French classe préparatoire (first year, lycée Aux Lazaristes) writing a 'devoir surveillé' (DS blanc). Attached: my MAIN LESSONS (the exam is centred on these: 75–85% of the points), optionally COMPLEMENTARY LESSONS (smaller parts), and my teachers' real past exams (copy their style, level, length, point scale and layout). Subject: [subject]. Duration: [2 h]. Calculator: [not allowed].\n\nWrite in French, Markdown, LaTeX between $...$ and $$...$$: '# DS blanc — [subject]', a line 'Durée : … — Calculatrice : …', short instructions like the model exams, then 3 or 4 independent exercises titled 'I. Title (n pts)' with numbered questions (I.1), (I.2)… of increasing difficulty, total 20 points. Then the line <!--CORRECTIONS--> alone and '## Corrigé' with a complete, rigorous correction of every question and a point scale. Double-check every calculation. No introduction or closing sentence.");
 };
+
+/* ===== Completed lessons (blank lesson → full lesson) and the style the app learns from the student's edits ===== */
+const lrules=()=>S.set.lrules||(S.set.lrules=[]);
+function vLC(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l){st.stack.pop();return ''}
+  const key='LC'+id;
+  let h=backBar('Completed lesson','');
+  h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(l.title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[l.subj].n+' · your blank lesson completed with proofs, examples, methods and traps. Your corrections teach the app your style.</div>';
+  if(live[key])h+=liveBox(key);
+  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';
+    h+='<button class="btn '+(l.lc?'':'primary')+'" style="margin-top:12px" data-a="mkLC" data-i="'+id+'">'+(l.lc?'Write a new version':'Complete this lesson')+'</button>';
+    if(l.lc)h+='<div class="row2" style="margin-top:8px"><button class="btn" data-a="editLC" data-i="'+id+'">✎ Edit the text</button><button class="btn" data-a="printLC" data-i="'+id+'">⎙ Print</button></div>';
+    h+='<div class="row2" style="margin-top:8px"><button class="btn" data-a="promptLC" data-i="'+id+'">📋 Prompt for Claude</button><button class="btn" data-a="impLC" data-i="'+id+'">⬆ Import one</button></div><button class="btn" data-a="lstyle" style="margin-top:8px">🧠 My lesson style · '+lrules().length+' rule'+(lrules().length===1?'':'s')+'</button>'}
+  h+='</div>';
+  if(l.lc&&!live[key])h+='<div class="card"><div class="doc" id="lcdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  return h;
+}
+function mkLC(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l)return;
+  return run('LC'+id,'Completing the lesson…',async(lab,txt)=>{
+    lab('Reading the blank lesson…');const t=(await C.getText('L'+id))||'';
+    if(t.length<300)throw new C.AIError('This lesson has no text yet. Read it first.');
+    const others=S.lessons.filter(x=>x.id!==id&&x.subj===l.subj&&x.status==='done').map(x=>x.title).slice(0,25).join(' · ');
+    let ex='';const prev=S.lessons.filter(x=>x.id!==id&&x.lcEdit).sort((a,b)=>b.lcEdit-a.lcEdit)[0];
+    if(prev){const pt=(await C.getText('LC'+prev.id))||'';if(pt)ex='\n\nSTYLE EXAMPLE: an excerpt of a lesson you completed earlier that the student corrected and approved, to match its voice, level of detail and layout:\n'+pt.slice(0,3500)}
+    lab('Writing proofs, examples and methods…');
+    const r=await C.ai({system:C.SYS_COMPLETE(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others)+ex,content:[{type:'text',text:'BLANK LESSON: '+l.title+'\n\n'+t.slice(0,70000)}],max:30000,onText:txt});
+    if(r.text.length<400)throw new C.AIError('The lesson came out empty. Try again.');
+    const out=r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: the lesson is long. Write a new version.]*':'');
+    await C.setText('LC'+id,out);await C.setText('LCB'+id,out);
+    l.lc=Date.now();save.lessons();toast('Lesson completed ✓');
+  });
+}
+function lineDiff(a,b){
+  const A=a.split('\n').map(x=>x.trim()).filter(Boolean),B=b.split('\n').map(x=>x.trim()).filter(Boolean),sa=new Set(A),sb=new Set(B);
+  return{rem:A.filter(x=>!sb.has(x)),add:B.filter(x=>!sa.has(x))};
+}
+async function learnFrom(id,before,after){
+  const d=lineDiff(before,after);if(!d.rem.length&&!d.add.length)return 0;
+  const cut=l=>l.slice(0,40).map(x=>'- '+x.slice(0,300)).join('\n');
+  if(!C.hasKey())return 0;
+  let n=0;
+  try{
+    const r=await C.ai({system:C.SYS_LEARN,content:[{type:'text',text:'REMOVED BY THE STUDENT:\n'+cut(d.rem)+'\n\nADDED BY THE STUDENT:\n'+cut(d.add)}],max:700});
+    const j=C.parseJson(r.text),L=lrules(),norm=x=>x.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+    (Array.isArray(j.rules)?j.rules:[]).slice(0,6).forEach(x=>{x=String(x).trim().slice(0,200);if(x.length>8&&!L.some(y=>norm(y.t)===norm(x))){L.push({t:x,at:Date.now()});n++}});
+    while(L.length>40)L.shift();save.set();
+  }catch(e){}
+  return n;
+}
+A.lc=i=>{const l=S.lessons.find(x=>x.id===i);if(!l)return;go('lc',i)};
+A.mkLC=i=>{if(needKey())mkLC(i)};
+A.printLC=async i=>{await C.loadKatex();printHtml(C.md((await C.getText('LC'+i))||''))};
+A.editLC=async i=>{
+  const l=S.lessons.find(x=>x.id===i);if(!l)return;const cur0=(await C.getText('LC'+i))||'';
+  openSheet('<h2 class="sh">Edit the lesson</h2><div class="sub" style="margin:-4px 0 10px">Change anything you like (Markdown, formulas between $…$). When you save, the app compares with the previous version and learns your preferences for the next lessons.</div><textarea id="lc-t" style="width:100%;height:55vh;font-size:13px;line-height:1.5;border-radius:12px;padding:10px;background:var(--surf2);color:var(--text);border:1px solid var(--line)" spellcheck="false"></textarea><button class="btn primary" id="lc-s" style="margin-top:10px">Save and let the app learn</button>');
+  $('lc-t').value=cur0;
+  $('lc-s').onclick=async()=>{
+    const nt=$('lc-t').value;if(nt.trim().length<100){toast('The text is too short');return}
+    const before=(await C.getText('LCB'+i))||cur0;
+    await C.setText('LC'+i,nt);await C.setText('LCB'+i,nt);l.lcEdit=Date.now();save.lessons();closeSheet();render();
+    if(nt!==before){toast('Saved · learning from your edits…');const n=await learnFrom(i,before,nt);if(n)toast('Learned '+n+' new rule'+(n>1?'s':'')+' 🧠');else toast('Saved')}else toast('Saved');
+    render();
+  };
+};
+A.lstyle=()=>{
+  const draw=()=>{const L=lrules();
+    openSheet('<h2 class="sh">My lesson style</h2><div class="sub" style="margin:-4px 0 10px">Rules the app learned from your corrections. They are applied every time it completes a lesson. Delete the ones you disagree with, or add your own.</div>'+
+    (L.length?L.map((x,k)=>'<div class="two" style="align-items:center;margin:6px 0"><div style="flex:1;min-width:0;font-size:14px">'+esc(x.t)+'</div><button class="btn sm danger" data-d="'+k+'" style="flex:none">✕</button></div>').join(''):'<div class="sub">No rule yet. Edit a completed lesson and the app will learn.</div>')+
+    '<div class="two" style="margin-top:12px"><input id="ls-n" maxlength="180" placeholder="e.g. Always write proofs by double inclusion in two parts"><button class="btn sm primary" id="ls-a" style="flex:none">Add</button></div>');
+    $('sbody').onclick=ev=>{const d=ev.target.closest('[data-d]');if(d){L.splice(+d.dataset.d,1);save.set();draw()}};
+    $('ls-a').onclick=()=>{const v=$('ls-n').value.trim();if(v.length<8)return;L.push({t:v,at:Date.now()});save.set();draw()};
+  };draw();
+};
+
+/* ===== Mistake notebook: every error in one list + a drill built from the open ones ===== */
+const mistOpen=subj=>S.mist.filter(m=>!m.done&&(!subj||m.subj===subj));
+function mistSync(){
+  let ch=0;
+  allRecs().forEach(r=>{const key=r.kind+'|'+r.id;
+    if((r.wrong||'').trim().length>3&&!S.mist.some(m=>m.src===key)){S.mist.push({id:uid(),subj:r.subj,src:key,from:(r.kind==='colles'?'Colle':'DS')+' · '+(r.title||''),date:r.date||iso(),text:r.wrong.trim().slice(0,500),fix:((r.why||'')+(r.todo&&r.todo.length?' → '+r.todo.map(x=>x.t||x).join('; '):'')).trim().slice(0,400),tags:(r.tags||[]).slice(0,4),done:0});ch=1}});
+  if(ch)save.mist();
+}
+function vMB(){
+  mistSync();
+  const op=mistOpen(),dn=S.mist.filter(m=>m.done);
+  let h=backBar('Mistake notebook','<button class="pmini" data-a="logMist" data-i="manual" aria-label="Add">＋</button>');
+  h+='<div class="card"><div class="sub">Every mistake from your exams, colles and TD in one place. Tick one when you have really mastered it (+10 XP), or build a drill from the open ones.</div>';
+  const subs=C.LSUBJ.filter(s=>op.some(m=>m.subj===s));
+  if(subs.length){h+='<div class="lbl" style="margin-top:12px">Drill from my open mistakes</div><div class="chips" style="margin-top:6px">'+subs.map(s=>'<button class="chip" data-a="mkDrill" data-i="'+s+'">'+SUBJ[s].n+' · '+mistOpen(s).length+'</button>').join('')+'</div>'}
+  h+='</div>';
+  C.LSUBJ.forEach(sj=>{
+    const dr=(S.set.drill||{})[sj];
+    if(live['MD'+sj])h+='<div class="card">'+liveBox('MD'+sj)+'</div>';
+    else if(dr)h+='<div class="card"><div class="cardhead"><div class="lbl">Drill · '+SUBJ[sj].n+'</div><span class="sub">'+fdl(iso(new Date(dr.at)))+'</span></div><button class="btn" data-a="openDrill" data-i="'+sj+'">Open the drill</button>'+(dr.paid?'<div class="sub" style="margin-top:6px">Done ✓</div>':'<button class="btn primary" data-a="drillDone" data-i="'+sj+'" style="margin-top:8px">I did the drill (+20 XP)</button>')+'</div>';
+    if(errs['MD'+sj])h+='<div class="warnbox">'+esc(errs['MD'+sj])+'</div>';
+  });
+  if(!op.length)h+='<div class="hidecorr" style="padding:14px">No open mistake. Add one with ＋, or fill “What went wrong” after a DS or a colle.</div>';
+  op.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).forEach(m=>{
+    h+='<div class="card" style="padding:14px"><div class="pmeta" style="margin:0 0 8px"><span class="pill" style="color:'+C.sc(m.subj)+'">'+SUBJ[m.subj].n+'</span><span class="pill">'+esc(m.from||'Manual')+'</span>'+(m.tags||[]).map(t=>'<span class="pill">'+esc(t)+'</span>').join('')+'</div><div style="font-size:14.5px">'+esc(m.text)+'</div>'+(m.fix?'<div class="sub" style="margin-top:6px">Fix: '+esc(m.fix)+'</div>':'')+'<div class="row2" style="margin-top:10px"><button class="btn sm primary" data-a="mistOk" data-i="'+m.id+'">✓ Mastered</button><button class="btn sm" data-a="logMist" data-i="'+m.id+'">✎</button><button class="btn sm danger" data-a="mistDel" data-i="'+m.id+'">✕</button></div></div>'});
+  if(dn.length)h+='<div class="sub" style="margin:14px 0 6px">Mastered · '+dn.length+'</div>'+dn.slice(-6).reverse().map(m=>'<div class="sub" style="padding:4px 0">✓ '+esc(m.text.slice(0,90))+'</div>').join('');
+  return h;
+}
+A.mb=()=>go('mb','x');
+A.logMist=i=>{
+  const m=i==='manual'?null:S.mist.find(x=>x.id===i);let sj=m?m.subj:'maths';
+  const draw=()=>{openSheet('<h2 class="sh">'+(m?'Edit the mistake':'Log a mistake')+'</h2><div class="field"><label>Subject</label>'+subjChips(sj,C.LSUBJ.filter(s=>s!=='ang'),'mi-s')+'</div><div class="field"><label>What went wrong</label><textarea id="mi-t" placeholder="Be specific: exercise, step, reason…">'+esc(m?m.text:(window.__mi||''))+'</textarea></div><div class="field"><label>The right way (optional)</label><textarea id="mi-f">'+esc(m?m.fix:'')+'</textarea></div><button class="btn primary" id="mi-s">Save</button>');
+    bindChips('mi-s',v=>{window.__mi=$('mi-t').value;sj=v;draw()});
+    $('mi-s').onclick=()=>{const t=$('mi-t').value.trim();if(t.length<4){toast('Describe it first');return}window.__mi='';if(m){m.subj=sj;m.text=t;m.fix=$('mi-f').value.trim()}else S.mist.push({id:uid(),subj:sj,src:'manual|'+uid(),from:'Added by hand',date:iso(),text:t,fix:$('mi-f').value.trim(),tags:[],done:0});save.mist();closeSheet();if(st.stack.length&&st.stack[st.stack.length-1].v!=='mb')go('mb','x');else render();toast('Saved')};
+  };draw();
+};
+A.mistOk=i=>{const m=S.mist.find(x=>x.id===i);if(!m||m.done)return;m.done=Date.now();save.mist();if(typeof gain==='function')gain(10,innerWidth/2,innerHeight*.4);toast('Mastered ✓ +10 XP');render()};
+A.mistDel=async i=>{if(!await ask({title:'Remove this mistake?',ok:'Remove',danger:1}))return;S.mist=S.mist.filter(x=>x.id!==i);save.mist();render()};
+function mkDrill(sj){
+  const op=mistOpen(sj).slice(0,15);if(!op.length)return;
+  return run('MD'+sj,'Building your drill…',async(lab,txt)=>{
+    lab('Reading your mistakes…');
+    const list=op.map((m,k)=>(k+1)+'. '+m.text+(m.fix?' | Fix: '+m.fix:'')+((m.tags||[]).length?' | Type: '+m.tags.join(', '):'')).join('\n');
+    const prof=profileFor(sj)||'';
+    lab('Writing the exercises and corrections…');
+    const r=await C.ai({system:C.SYS_DRILL(SUBJ[sj].n),content:[{type:'text',text:'MISTAKES:\n'+list+(prof?'\n\nSTUDENT PROFILE:\n'+prof:'')}],max:16000,onText:txt});
+    if(r.text.length<400)throw new C.AIError('The drill came out empty. Try again.');
+    await C.setText('MD'+sj,r.text.trim());(S.set.drill||(S.set.drill={}))[sj]={at:Date.now(),paid:0,n:op.length};save.set();toast('Drill ready ✓');
+  });
+}
+A.mkDrill=sj=>{if(needKey())mkDrill(sj)};
+A.openDrill=async sj=>{await C.loadKatex();const tx=(await C.getText('MD'+sj))||'';const sp=splitSheet(tx);openSheet('<h2 class="sh">Drill · '+SUBJ[sj].n+'</h2><div class="doc" id="dr-d"></div><button class="btn" id="dr-c" style="margin-top:10px">Show the corrections</button>');$('dr-d').innerHTML=await C.mdAsync(sp.ex);let sh=false;$('dr-c').onclick=async()=>{sh=!sh;$('dr-d').innerHTML=await C.mdAsync(sh?sp.ex+'\n\n'+(sp.co||''):sp.ex);$('dr-c').textContent=sh?'Hide the corrections':'Show the corrections'}};
+A.drillDone=sj=>{const d=(S.set.drill||{})[sj];if(!d||d.paid)return;d.paid=1;save.set();if(typeof gain==='function')gain(20,innerWidth/2,innerHeight*.4);toast('Drill done +20 XP 🎯');render()};
+
+/* ===== Exam mode plan (shown on Home by the app) ===== */
+function xmPlan(e){
+  const out=[],n=dueCards().length;
+  if(n)out.push('Review the '+n+' flashcard'+(n>1?'s':'')+' due');
+  const nr=S.progs.filter(p=>p.subj===e.subj&&(p.date||'')>=iso()).reduce((a,p)=>a+(p.chapters||[]).filter(c=>!c.ready).length,0);
+  if(nr)out.push('Tick the '+nr+' chapter'+(nr>1?'s':'')+' you are not ready on yet');
+  if(e.kind==='ds'){const mk=S.mocks.filter(m=>m.subj===e.subj);out.push(mk.length?'Redo the weak parts of your last mock exam':'Do one mock exam in '+SUBJ[e.subj].n)}
+  const mo=mistOpen(e.subj).length;if(mo)out.push('Re-read your '+mo+' open mistake'+(mo>1?'s':'')+' in '+SUBJ[e.subj].n);
+  return out.slice(0,4);
+}
+/* ===== Prompt for Claude + import for a blank lesson ===== */
+A.promptLC=i=>{
+  const l=S.lessons.find(x=>x.id===i);if(!l)return;
+  const others=S.lessons.filter(x=>x.id!==i&&x.subj===l.subj&&x.status==='done').map(x=>x.title).slice(0,25).join(' · ');
+  const sys=C.SYS_COMPLETE(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others);
+  copyPrompt('Prompt: complete a lesson',sys+"\n\nMy blank lesson is attached ("+l.title+"). Write the completed lesson now. Output ONE Markdown document in French and nothing else, so that I can import it in Aether. Keep my headings and numbering.");
+};
+A.impLC=i=>pickFile(IMP_ACC,async f=>{
+  try{const l=S.lessons.find(x=>x.id===i);const t=await impText(f);if(t.length<400)throw new Error('The file is almost empty.');
+    await C.setText('LC'+i,t);await C.setText('LCB'+i,t);l.lc=Date.now();save.lessons();toast('Completed lesson imported ✓');go('lc',i)}catch(e){toast(e.message||'Import failed')}});
 A.newMock=()=>{
   let subj='maths',main=[],comp=[],dur='2 h',calc=false,title='';
   const ls=()=>S.lessons.filter(l=>l.subj===subj&&l.status==='done');
@@ -4132,17 +4320,33 @@ A.vaddPhoto=async id=>{
 
 /* ================= SETTINGS ================= */
 function icsUrl(){return location.origin+location.pathname.replace(/[^/]*$/,'')+'prepa.ics'}
+const PRESETS=[['Groq','https://api.groq.com/openai/v1','llama-3.3-70b-versatile'],['OpenRouter','https://openrouter.ai/api/v1','meta-llama/llama-3.3-70b-instruct:free'],['Mistral','https://api.mistral.ai/v1','mistral-small-latest'],['Cerebras','https://api.cerebras.ai/v1','llama-3.3-70b']];
+function provHTML(){
+  const L=C.provs();
+  const row=(x,i)=>{
+    const sp=x.special,has=!!localStorage.getItem(sp?'p_gkey':'p_pk_'+x.id);
+    return '<div class="card" style="padding:12px;margin:8px 0" data-row="'+i+'"><div class="two" style="align-items:center"><div style="flex:1;font-weight:700;min-width:0">'+(sp?'Gemini':'<input class="pv-n" value="'+esc(x.name)+'" maxlength="24" style="font-weight:700">')+'</div><button class="btn sm" data-pa="up" data-pi="'+i+'" style="flex:none;padding:6px 10px">▲</button><button class="btn sm" data-pa="dn" data-pi="'+i+'" style="flex:none;padding:6px 10px">▼</button>'+(sp?'':'<button class="btn sm danger" data-pa="del" data-pi="'+i+'" style="flex:none;padding:6px 10px">✕</button>')+'</div>'+
+    '<input class="pv-k" type="password" placeholder="'+(has?'Key saved on this phone — paste to replace':'Paste your API key')+'" autocomplete="off" autocapitalize="off" style="margin-top:8px">'+
+    (sp?'':'<details style="margin-top:8px"><summary class="sub" style="cursor:pointer">Address and model</summary><input class="pv-b" placeholder="https://… (address)" value="'+esc(x.base||'')+'" autocapitalize="off" autocomplete="off" spellcheck="false" style="margin-top:6px"><input class="pv-m" placeholder="model name" value="'+esc(x.model||'')+'" autocapitalize="off" autocomplete="off" spellcheck="false" style="margin-top:6px"></details>')+
+    '<div class="chips" style="margin-top:8px"><button class="chip '+(x.on!==false?'on':'')+'" data-pa="on" data-pi="'+i+'">'+(x.on!==false?'On':'Paused')+'</button>'+(sp?'':'<button class="chip" data-pa="use" data-pi="'+i+'">'+(x.use==='read'?'Reading jobs only':'Everything')+'</button>')+'<span class="pill">'+(has?'Key ✓':'No key')+'</span></div></div>'};
+  return '<div class="lbl" style="margin-top:6px">AI keys, asked from top to bottom</div><div class="sub" style="margin:2px 0 8px">Aether tries the first one, and if it is out of quota or fails, the next, and so on. Use ▲▼ to change the order. Claude (paid) is always last, only if all the others are out.</div><div id="s-pv">'+L.map(row).join('')+
+  '<div class="sub" style="margin-top:8px">Add a provider:</div><div class="chips" style="margin-top:6px">'+PRESETS.map((p,k)=>'<button class="chip" data-pa="add" data-k="'+k+'" data-pi="0">＋ '+p[0]+'</button>').join('')+'</div></div><div class="sub" style="margin:8px 0 10px">Create a free key on each provider\'s website and paste it above. If a provider says “model not found”, open “Address and model” and copy a current free model name from its documentation. Photos and PDFs skip the providers that only read text (Groq, OpenRouter, Mistral, Cerebras) and go to Gemini or Claude. Free open models are weaker than Claude for long exams: keep them on “Reading jobs only” if the quality disappoints. Keys stay on this phone only.</div>';
+}
+function readProvs(){
+  const rows=document.querySelectorAll('#s-pv [data-row]');if(!rows.length)return;
+  const L=C.provs();
+  rows.forEach(r=>{const x=L[+r.dataset.row];if(!x)return;const k=r.querySelector('.pv-k').value.replace(/\s+/g,'');
+    if(x.special){if(k)localStorage.setItem('p_gkey',k);return}
+    x.name=r.querySelector('.pv-n').value.trim()||'Provider';x.base=r.querySelector('.pv-b').value.trim();x.model=r.querySelector('.pv-m').value.trim();if(k)localStorage.setItem('p_pk_'+x.id,k)});
+  S.set.provs=L;save.set();
+}
 function settings(){
   const g=S.set.prov==='gemini';
   function drawAuto(){
     const has=C.hasKey(),gk=!!localStorage.getItem('p_gkey'),ck=!!localStorage.getItem('p_key');
-    openSheet('<h2 class="sh">AI settings</h2><div class="field"><label>AI provider</label><div class="chips" id="s-p"><button class="chip on" data-v="auto">Auto: Free router → Gemini → Claude</button><button class="chip" data-v="gemini">Gemini only</button><button class="chip" data-v="claude">Claude only</button></div></div>'+
-    '<div class="sub" style="margin:-4px 0 10px">Your free router (if set) is tried first, then Gemini (free), then Claude. If one is out of quota, busy or fails, the same job moves to the next automatically, so you are never stuck. Jobs with photos or PDFs skip the router (text only). Reading jobs (scans, programmes, cards) use the cheap model; writing jobs (exams, prep sheets, feedback) use the stronger one.</div>'+
-    '<div class="field"><label>Free router address (FreeLLMAPI)</label><input id="s-fb" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://your-router.example.com" value="'+esc(localStorage.getItem('p_fbase')||'')+'"></div>'+
-    '<div class="field"><label>Free router key</label><input id="s-fk" type="password" autocomplete="off" autocapitalize="off" placeholder="'+(localStorage.getItem('p_fkey')?'Saved on this phone — paste to replace':'freellmapi-…')+'"></div>'+
-    '<div class="field"><label>Free router model</label><input id="s-fm" autocomplete="off" autocapitalize="off" value="'+esc(S.set.fmodel||'auto')+'" placeholder="auto"><div class="chips" id="s-fu" style="margin-top:8px"><button class="chip '+(S.set.fuse!=='read'?'on':'')+'" data-v="all">Use it for everything</button><button class="chip '+(S.set.fuse==='read'?'on':'')+'" data-v="read">Reading jobs only</button><button class="chip '+(S.set.fon===false?'on':'')+'" data-v="off">Paused</button></div></div>'+
-    '<div class="sub" style="margin:-4px 0 10px">FreeLLMAPI runs on your own computer or server, so the address must be an https:// link your phone can open (for example through a Cloudflare Tunnel or Tailscale Funnel) and it must allow this website. “auto”, “auto:fast” and “auto:smart” let it choose the model. Free models are weaker than Claude for long exams: use “Reading jobs only” if you notice it.</div>'+
-    '<div class="field"><label>Gemini API key (free)</label><input id="s-gk" type="text" name="aether-gemini-key" style="-webkit-text-security:disc" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="'+(gk?'Saved on this phone — paste to replace':'aistudio.google.com/apikey')+'"></div>'+
+    openSheet('<h2 class="sh">AI settings</h2><div class="field"><label>AI provider</label><div class="chips" id="s-p"><button class="chip on" data-v="auto">Auto: free providers → Gemini → Claude</button><button class="chip" data-v="gemini">Gemini only</button><button class="chip" data-v="claude">Claude only</button></div></div>'+
+    '<div class="sub" style="margin:-4px 0 10px">Your free providers are tried first (in the order below), then Gemini (free), then Claude. If one is out of quota, busy or fails, the same job moves to the next automatically, so you are never stuck. Jobs with photos or PDFs skip the free providers (text only). Reading jobs (scans, programmes, cards) use the cheap model; writing jobs (exams, prep sheets, feedback) use the stronger one.</div>'+
+    provHTML()+
     '<div class="field"><label>Anthropic API key (backup, paid)</label><input id="s-ck" type="password" autocomplete="off" autocapitalize="off" placeholder="'+(ck?'Saved on this phone — paste to replace':'sk-ant-…')+'"></div>'+
     '<div class="sub" style="margin:-4px 0 10px">Anthropic: console.anthropic.com → API keys, add a little credit and set a monthly spending limit there. Keys stay on this phone only: not in backups, erased with “Forgot PIN”. Free Gemini may use what you send to improve Google products.</div>'+
     '<div class="field"><label>Anthropic workspace ID (only if Claude asks for it)</label><input id="s-ws" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="wrkspc_…" value="'+esc(S.set.ws||'')+'"></div>'+
@@ -4150,19 +4354,21 @@ function settings(){
     '<div class="field"><label>Claude for writing jobs</label><select id="s-mw"><option value="claude-sonnet-5-5">Sonnet 5.5 — balanced (recommended)</option><option value="claude-haiku-5-5">Haiku 5.5 — cheaper</option><option value="claude-opus-5-5">Opus 5.5 — best, costs more</option></select></div>'+
     '<div class="field"><label>Meridian folder name</label><input id="s-n" value="'+esc(S.set.news)+'" autocapitalize="off"></div><button class="btn primary" id="s-s">Save</button><button class="btn" id="s-t">Test the key</button><div class="sub" id="s-r" style="margin-top:8px">Used so far: '+S.usage.n+' requests · '+S.usage.i.toLocaleString('en-GB')+' tokens in · '+S.usage.o.toLocaleString('en-GB')+' out</div><div class="sec2"><div class="lbl" style="margin:0">Calendar feed (iPhone)</div></div><div class="sub">Your colles and DS are already in Aether\'s calendar. To also get alerts from the iPhone Calendar app: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, then paste:</div><input id="s-u" readonly value="'+esc(icsUrl())+'" style="margin-top:8px"><button class="btn" id="s-c">Copy the link</button><button class="btn" id="s-re">Restore schedule events I deleted</button>'+(has?'<button class="btn danger" id="s-d">Remove my API key</button>':''));
     $('s-mr').value=S.set.mread;$('s-mw').value=S.set.mwrite;
-    const store=()=>{const a=$('s-gk').value.replace(/\s+/g,''),b=$('s-ck').value.replace(/\s+/g,'');{const u=$('s-fb').value.trim(),k=$('s-fk').value.trim();if(u&&!/^https?:\/\//i.test(u))toast('The address must start with https://');if(u)localStorage.setItem('p_fbase',u);else localStorage.removeItem('p_fbase');if(k)localStorage.setItem('p_fkey',k);S.set.fmodel=$('s-fm').value.trim()||'auto';const fu=document.querySelector('#s-fu .on');S.set.fuse=fu&&fu.dataset.v==='read'?'read':'all';S.set.fon=!(fu&&fu.dataset.v==='off')}if(b&&!/^sk-ant-/.test(b))toast('That does not look like an Anthropic key (it starts with sk-ant-)');if(a)localStorage.setItem('p_gkey',a);if(b)localStorage.setItem('p_key',b);S.set.ws=$('s-ws').value.replace(/\s+/g,'');S.set.mread=$('s-mr').value;S.set.mwrite=$('s-mw').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
-    bindChips('s-fu',()=>{});
+    const store=()=>{const a='',b=$('s-ck').value.replace(/\s+/g,'');readProvs();if(b&&!/^sk-ant-/.test(b))toast('That does not look like an Anthropic key (it starts with sk-ant-)');if(a)localStorage.setItem('p_gkey',a);if(b)localStorage.setItem('p_key',b);S.set.ws=$('s-ws').value.replace(/\s+/g,'');S.set.mread=$('s-mr').value;S.set.mwrite=$('s-mw').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
+    $('s-pv').onclick=ev=>{const t=ev.target.closest('[data-pa]');if(!t)return;readProvs();const i=+t.dataset.pi,a=t.dataset.pa,L=C.provs();
+      if(a==='up'&&i>0)[L[i-1],L[i]]=[L[i],L[i-1]];else if(a==='dn'&&i<L.length-1)[L[i+1],L[i]]=[L[i],L[i+1]];else if(a==='del'){const x=L.splice(i,1)[0];localStorage.removeItem('p_pk_'+x.id)}else if(a==='on')L[i].on=L[i].on===false;else if(a==='use')L[i].use=L[i].use==='read'?'all':'read';else if(a==='add'){const pr=PRESETS[+t.dataset.k];L.push({id:'p'+Date.now().toString(36),name:pr[0],base:pr[1],model:pr[2],use:'read',on:true})}
+      save.set();draw()};
     bindChips('s-p',v=>{store();S.set.prov=v;save.set();draw()});
     $('s-s').onclick=()=>{store();closeSheet();toast('Saved');render()};
     $('s-t').onclick=async()=>{
       store();const r=$('s-r');
-      if(!C.hasKey()){r.textContent='Add the free router address or a key first.';return}
+      if(!C.hasKey()){r.textContent='Add a provider or a key first.';return}
       r.textContent='Testing…';
-      try{const x=await C.ai({system:'Reply with the single word OK.',content:[{type:'text',text:'ping'}],max:20});r.textContent='Works ✓ ('+(x.via==='free'?'free router answered':x.fallback?'backup answered: the first one failed':'Gemini answered')+')'}catch(e){r.textContent=e.message}
+      try{const x=await C.ai({system:'Reply with the single word OK.',content:[{type:'text',text:'ping'}],max:20});r.textContent='Works ✓ ('+((x.via||'The AI')+' answered'+(x.fallback?' (the first ones failed)':''))+')'}catch(e){r.textContent=e.message}
     };
     $('s-c').onclick=async()=>{try{await navigator.clipboard.writeText(icsUrl());toast('Link copied')}catch(e){$('s-u').select();toast('Select and copy the link')}};
     $('s-re').onclick=()=>{S.removed.length=0;save.removed();const n=C.syncSched();closeSheet();toast(n?n+' events restored':'Nothing to restore');if(cur==='calendar')rCal();render()};
-    if(has)$('s-d').onclick=async()=>{if(await ask({title:'Remove all keys and the router address?',ok:'Remove',danger:1})){localStorage.removeItem('p_gkey');localStorage.removeItem('p_key');localStorage.removeItem('p_fkey');localStorage.removeItem('p_fbase');closeSheet();render()}};
+    if(has)$('s-d').onclick=async()=>{if(await ask({title:'Remove all keys and the router address?',ok:'Remove',danger:1})){localStorage.removeItem('p_gkey');localStorage.removeItem('p_key');Object.keys(localStorage).filter(k=>/^p_pk_/.test(k)).forEach(k=>localStorage.removeItem(k));closeSheet();render()}};
   }
   const draw=()=>{
     if(S.set.prov==='auto')return drawAuto();
@@ -4244,14 +4450,14 @@ function calHint(){
   el.onclick=()=>{selD=nx.date;stripWeek='';rCal(1)};
 }
 function openEvent(id){A.evOpen(id);show('prepa')}
-window.P={recs:()=>allRecs(),progs:()=>S.progs,addTime:(ref,m)=>{try{const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o){o.min=(o.min||0)+m;(ref.k==='td'?save.tds:save.progs)()}}catch(e){}},focusItems:k=>(k==='td'?S.tds.map(t=>({id:t.id,title:t.title||SUBJ[t.subj].n+' TD',sub:SUBJ[t.subj].n+' · '+fdl(t.date),folder:t.folder||'',subj:t.subj})):S.progs.map(p=>({id:p.id,title:p.title||SUBJ[p.subj].n+' programme',sub:SUBJ[p.subj].n+' · '+fdl(p.date),folder:p.folder||'',subj:p.subj}))).sort((a,b)=>a.folder.localeCompare(b.folder)||a.title.localeCompare(b.title)),render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
+window.P={xmPlan,mistN:()=>mistOpen().length,recs:()=>allRecs(),progs:()=>S.progs,addTime:(ref,m)=>{try{const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o){o.min=(o.min||0)+m;(ref.k==='td'?save.tds:save.progs)()}}catch(e){}},focusItems:k=>(k==='td'?S.tds.map(t=>({id:t.id,title:t.title||SUBJ[t.subj].n+' TD',sub:SUBJ[t.subj].n+' · '+fdl(t.date),folder:t.folder||'',subj:t.subj})):S.progs.map(p=>({id:p.id,title:p.title||SUBJ[p.subj].n+' programme',sub:SUBJ[p.subj].n+' · '+fdl(p.date),folder:p.folder||'',subj:p.subj}))).sort((a,b)=>a.folder.localeCompare(b.folder)||a.title.localeCompare(b.title)),render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
 })();
 
 P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_mist','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
@@ -4323,7 +4529,7 @@ P.boot();
   forgotB.addEventListener('click',function(){
     ask({title:'Forgot your PIN?',msg:'The only way back in is to erase this app\'s data on this phone. You can then restore it from a backup file.',ok:'Erase everything',danger:true}).then(function(ok){
       if(!ok)return;
-      KEYS.forEach(del);del('hhome');del('p_key');del('p_gkey');del('p_fkey');del('p_fbase');try{indexedDB.deleteDatabase('aether-prepa');}catch(e){}
+      KEYS.forEach(del);del('hhome');del('p_key');del('p_gkey');Object.keys(localStorage).filter(k=>/^p_pk_/.test(k)).forEach(k=>localStorage.removeItem(k));try{indexedDB.deleteDatabase('aether-prepa');}catch(e){}
       ['hash','salt','fails','until'].forEach(function(s){del(K+s);});
       location.reload();
     });
