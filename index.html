@@ -749,6 +749,18 @@ textarea::placeholder{color:var(--dim)}
 .afold summary span{text-transform:none;letter-spacing:0}
 .afold summary em{padding-left:10px}
 
+.doc .co{border:1px solid var(--line2);border-left:4px solid var(--c,#8a8f9c);border-radius:14px;padding:10px 14px;margin:12px 0;background:color-mix(in srgb,var(--c,#8a8f9c) 9%,transparent);color:var(--text)}
+.doc .co .cot{font-size:11.5px;letter-spacing:.7px;text-transform:uppercase;color:var(--c,#8a8f9c);font-weight:700;margin-bottom:5px}
+.doc .co .cot span{margin-right:6px;font-size:14px}.doc .co .cot b{text-transform:none;letter-spacing:0;color:var(--text);font-size:14px}
+.doc .co-DEF{--c:#4d8dff}.doc .co-THM{--c:#9b8cff}.doc .co-METH{--c:#34c98a}.doc .co-TRAP{--c:#ff9f0a}.doc .co-EX{--c:#4fd1ff}.doc .co-KEY{--c:#ffd60a}.doc .co-USE{--c:#ff6fb0}
+.doc .flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0}
+.doc .flow span{padding:7px 12px;border-radius:12px;background:var(--inset,rgba(128,128,128,.14));border:1px solid var(--line2);font-size:13.5px;font-weight:600}
+.doc .flow i{font-style:normal;color:var(--muted);font-size:16px}
+.kb{display:inline-block;padding:1px 7px;border-radius:99px;font-size:11.5px;font-weight:800;color:#0b0d12;vertical-align:1px;margin:0 1px}
+.kb.k0{background:#4d8dff}.kb.k1{background:#34c98a}.kb.k2{background:#ff9f0a}.kb.k3{background:#ff6fb0}.kb.k4{background:#9b8cff}.kb.k5{background:#4fd1ff}
+.doc.vcdoc h3{margin-top:22px}
+.doc.vcdoc table{width:100%}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 
@@ -890,6 +902,15 @@ button,.card.tap,.prow,.chip,.btn,.nb,.ptab,.pev,.dk,.goal,.task,.tprow{touch-ac
 .bar-fill,#hbar,.pbar i{transition:width .9s var(--ease)}
 .toast,#toast{transition:transform .45s var(--spring),opacity .3s}
 @media (prefers-reduced-motion:reduce){.nb.on svg,.chk.pop,.chip.on,.ptab.on,#sheet.show .sbox #sbody>*{animation:none!important}}
+
+/* v57: light mode fixes */
+[data-theme="light"] .ptab{background:rgba(255,255,255,.88);color:var(--muted);border-color:var(--line2)}
+[data-theme="light"] .ptab.on{background:var(--lime);color:#fff}
+[data-theme="light"] .chip.on,[data-theme="light"] .btn.on,[data-theme="light"] .pill.on{background:var(--lime);color:#fff;border-color:transparent}
+[data-theme="light"] .chip.on *{color:inherit}
+[data-theme="light"] #fx .ft{color:#1f5fd6;text-shadow:0 1px 0 #fff,0 0 10px rgba(255,255,255,.9);font-weight:800}
+[data-theme="light"] .bcol .bb{background:linear-gradient(180deg,#c3d1f3,#9db2e6)}
+[data-theme="light"] .bcol.today .bb{background:linear-gradient(180deg,var(--lime),#2f6fe8)}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -2911,6 +2932,7 @@ const SYS_DIGEST=(others)=>"You build a compact MEMORY NOTE of one lesson from a
 const SYS_RESUME=(what,subj)=>"You are an excellent teacher in a French classe préparatoire (first year, "+subj+"). Write the student's REVISION RÉSUMÉ for "+what+": everything he or she needs to know and be able to do to get the best possible result, built ONLY from the student's own course below (their notations and results) and, for the order and emphasis, from the PROGRAMME or the list of main lessons. Write in French, Markdown, LaTeX between $...$ and $$...$$. Dense, scannable, no filler: at most about 1400 words. Structure:\n\n## Les priorités\nThe 5 to 8 things that earn the most points (what examiners always ask), ordered by importance.\n\n## Chapitre par chapitre\nFor each chapter or lesson (as a ### heading): **À savoir par cœur** (definitions, theorems with their hypotheses, key formulas), **Méthodes types** (how to attack the standard exercises, in 2 to 4 steps), **Pièges** (classic mistakes, units, signs, conditions forgotten).\n\n## Liens entre les chapitres\nHow chapters feed each other (a few bullets).\n\n## Check-list de dernière minute\nA short list of 8 to 12 checkboxes (- [ ]) the student can tick before the test.\n\nIf a STUDENT PROFILE is given, add a short '⚠️ Mes points faibles' section at the top aiming at his or her recurring mistakes, without quoting the profile. If the PROGRAMME gives an exact list of questions de cours, the priorities and chapters must follow that list and its exercise theme, and nothing outside it. Never invent results absent from the course: if something essential is missing from the course, list it under '## À compléter' as 'rappel' with the standard statement. Do not reveal or reuse any exam or exercise sheet text. No introduction or closing sentence.";
 const SYS_VOCAB_TEXT="You read the text of a vocabulary file for a French student (for example general vocabulary, linking words such as connectors, useful expressions, word lists with or without translations). Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list\",\"langA\":\"language of the entries, e.g. French\",\"langB\":\"the other language, e.g. English\",\"pairs\":[{\"a\":\"word or expression\",\"b\":\"translation or short meaning\"}]}. Rules: extract EVERY entry in reading order and keep spelling and accents exactly; if the file already gives a translation or definition, keep it as b; if it only lists words or expressions in one language, write b yourself as the short, natural equivalent in the other language (French <-> English by default; for a connector give the connector, e.g. 'néanmoins' -> 'nevertheless / however'); if an entry has several meanings join them with ' / '; ignore page numbers, headings and decoration; skip anything unclear. Inside JSON strings escape backslashes and double quotes.";
 const METH_FMT="For EVERY method use exactly this layout (Markdown, French, LaTeX between $...$ and $$...$$):\n\n### Nom de la méthode\n**Quand l'utiliser :** the typical statements or situations where it applies (recognise it from the wording).\n**Pourquoi ça marche :** the idea in one or two sentences.\n**Rédaction :** the model write-up exactly as it should appear on a graded copy (full sentences, the standard phrases and connectors a teacher expects, every step in order: for example for a proof by induction the statement P(n), initialisation, hérédité with the hypothesis written out, conclusion). THIS IS THE MOST IMPORTANT PART: write it completely, with blanks like $\\dots$ only where the content depends on the problem.\n**Exemple :** a short concrete example, fully written up with that rédaction.\n**Piège :** the classic mistake to avoid (one line).\n\n";
+const SYS_VISUAL=(subj,title,rules,others)=>"You are the best teacher of a French classe préparatoire (first year, MPSI, "+subj+"). Write the VISUAL COURSE of the lesson '"+title+"': the most important content of the lesson, but COMPLETE enough that a student who reads only this can understand it, remember it and solve the standard exercises. It is built ONLY from the student's own lesson below (same notation, same names of theorems, same order); never use a result the lesson does not contain without marking it 'admis'. Write in French (English only for the English subject), Markdown, LaTeX between $...$ and $$...$$. Dense and scannable, never long-winded: about 1200 to 1800 words.\n\nVISUAL VOCABULARY (use exactly these, the app renders them as coloured boxes):\n- A callout is a block of lines starting with '> ' whose first line begins with a tag: '> [!DEF] Title' (definition), '> [!THM] Name' (theorem or property, with its hypotheses), '> [!METH] Name' (method in 2 to 4 numbered steps written as '1)' '2)'), '> [!TRAP] ...' (classic trap), '> [!EX] ...' (tiny example), '> [!KEY] ...' (the one thing to remember), '> [!USE] ...' (where this knowledge is used in the exercise).\n- A flow is ONE line starting with '=> ' with steps separated by ' | ' (for example '=> Énoncé | [K1] borne | [K3] encadrement | Conclusion'); the app draws it as a chain of boxes with arrows.\n- Every piece of knowledge ('brique') gets a number tag [K1], [K2], ... used everywhere it appears, so the student SEES where each one is used.\n\nSTRUCTURE (exactly this, nothing else):\n# 🧭 <lesson title>\n> [!KEY] The lesson in 3 lines: what it is for, what it lets you do, the main idea.\n\n## 🗺️ La carte\nOne flow line '=> ...' showing how the bricks chain together from the data of a typical problem to the conclusion, and under it the list of all bricks: '- [K1] name: one-line purpose'.\n\n## 🧱 Les briques\nFor each brick in the order of the lesson, a '### [Kn] Name' heading, then the callouts: [!DEF] or [!THM] (the exact statement with its hypotheses), a one-line intuition ('Idée :'), for the 2 or 3 key results the shortest honest proof or the key step of it ('Preuve en 3 lignes :'), a [!METH] when the brick is a technique, a [!TRAP] when there is a classic mistake, and a [!USE] line announcing in which step of the fil rouge exercise it will be used ('Utilisé à l'étape 2 du fil rouge'). Skip anything secondary (remarks, variants) or put it in one line.\n\n## 🎯 L'exercice fil rouge\nOne typical, complete exercise of the level of the course (the kind that appears in a DS or at the colle), stated fully. Then its solution as a table '| Étape | Ce qu'on écrit ou calcule | Brique |' where every step names the brick used ([K2], [K1]...) and why it applies (check the hypotheses!). End with a flow line '=> ...' of the path followed and a [!KEY] with the general pattern to recognise this kind of exercise.\n\n## 🔗 Quelle brique pour quel exercice\nA table '| Si l'énoncé dit... | Pense à... | Brique |' with 5 to 8 rows (the signals that trigger each brick).\n\n## ✅ Auto-test\n6 short questions (one line each) covering all the bricks, then '<!--REPONSES-->' on its own line, then the answers in one line each.\n\nRULES: recompute every calculation; every brick must appear at least once in the fil rouge or in the table of signals; no introduction or closing sentence; if the lesson is too short or has no real content, say so in one line instead of inventing."+(rules&&rules.length?"\nThe student's style rules for lessons (apply them): "+rules.join('; ')+".":"")+(others?"\nOther lessons already seen by the student (you may rely on them): "+others+".":"");
 const SYS_COMPLETE=(subj,title,rules,others)=>"You are an excellent teacher in a French classe préparatoire aux grandes écoles (first year, scientific stream, lycée Aux Lazaristes in Lyon), with a deep knowledge of the official programme and of the usual style of French prépa lessons in "+subj+". You receive a BLANK lesson (course skeleton): definitions, theorems and propositions stated WITHOUT demonstration, proof, example or comment. Complete it into the full lesson the student will revise from, in French, in Markdown with LaTeX between $...$ (inline) and $$...$$ (display).\n\nRules:\n1. Keep the lesson's structure, numbering, notations, definitions and statements exactly as given. Never reword, reorder or drop what is already there. Insert your additions right after the item they belong to.\n2. After each theorem, proposition, property or formula that has no proof, add a complete and rigorous '**Démonstration.**' written the way a prépa teacher writes it on the board, ending with ∎. If the original says the result is admitted ('admis'), do not prove it. For long or delicate proofs, give the full argument in clear numbered steps.\n3. After the key definitions and theorems, add one or two '**Exemple.**' items (short, classic, with the full computation), and '**Méthode.**' (when and how to use it, with the model write-up) wherever a standard technique exists (double inclusion, récurrence, analyse-synthèse, changement de variable, ...). Add '**Attention.**' for the classic traps and '**Remarque.**' only when it really helps.\n4. In physics and chemistry: add the derivations, the physical justification, orders of magnitude and a dimensional check. In engineering sciences: justify models and relations.\n5. Use only tools that are available at this point of the programme. You may reuse results stated earlier in this lesson. If a statement of the blank lesson looks wrong or imprecise, keep it and add '⚠️ À vérifier :' with the issue.\n6. Mark everything you add so the student sees what was blank: use the bold labels above, and nothing else. No introduction, no closing sentence.\n7. Double-check every computation and every step of every proof. Correctness matters more than length."+(others?"\n\nOther lessons of the student in the same subject (for cross-references and prerequisites only): "+others:"")+(rules&&rules.length?"\n\nTHE STUDENT'S PREFERENCES (learned from how he corrected your earlier work: always follow them, they override your habits):\n"+rules.map((r,i)=>(i+1)+'. '+r).join('\n'):"");
 const SYS_LEARN="You compare an AI-written lesson with the version the student corrected by hand. You receive the lines REMOVED by the student and the lines ADDED by the student. Deduce what he wants for next times. Answer with ONLY a JSON object, no other text: {\"rules\":[\"...\"]} with at most 6 rules. Each rule is a short imperative instruction (English, under 160 characters) for a future writer of lessons, general and reusable (notation, level of detail of proofs, way of writing a method, what to add or leave out, vocabulary, layout), never tied to one specific sentence. Ignore typo fixes and one-off content corrections unless they reveal a general habit. If nothing general can be learned, return {\"rules\":[]}.";
 const SYS_DRILL=(subj)=>"You are an experienced teacher in a French classe préparatoire (first year, "+subj+"). From the list of the student's recurring MISTAKES (what went wrong, the fix, the type of error), write a short personal drill that makes him practise exactly those weaknesses. Write in French, Markdown, LaTeX between $...$ and $$...$$. Structure: '## Entraînement' with 6 exercises of 5 to 10 minutes (2 easy, 3 medium, 1 harder), each titled 'Exercice N', with the statement, a line '**Piège visé :**' naming the mistake it targets, and a one-line '**Indication :**'. Then a line containing only <!--CORRECTIONS--> and '## Corrections' with a complete, rigorous correction of every exercise (heading '#### Exercice N'), stating the final result and the method to remember. Use only tools of the first-year programme and the student's course when it is given. Double-check every calculation. No introduction or closing sentence.";
@@ -2936,14 +2958,14 @@ function mathHtml(m){
   return '<span class="raw">'+esc(m.t)+'</span>';
 }
 function inline(t){
-  return t.replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*\w])\*([^*\n]+)\*(?!\w)/g,'$1<i>$2</i>');
+  return t.replace(/\[K(\d{1,2})\]/g,(m,n)=>'<b class="kb k'+(n%6)+'">K'+n+'</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*\w])\*([^*\n]+)\*(?!\w)/g,'$1<i>$2</i>');
 }
 function md(src){
   const M=[];
   src=String(src||'').replace(/\r/g,'')
     .replace(/\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]/g,(m,a,b)=>{M.push({t:(a||b).trim(),d:true});return '\u0001'+(M.length-1)+'\u0002'})
     .replace(/\\\(([\s\S]+?)\\\)|\$(?!\s)([^\n$]+?)(?<!\s)\$(?!\d)/g,(m,a,b)=>{M.push({t:(a||b).trim(),d:false});return '\u0001'+(M.length-1)+'\u0002'});
-  const lines=esc(src).split('\n');let h='',list=null,para=[],tbl=[],code=null,exOpen=false;
+  const lines=esc(src).split('\n');let h='',list=null,para=[],tbl=[],code=null,exOpen=false,bq=[];
   const flushP=()=>{if(para.length){h+='<p>'+inline(para.join(' '))+'</p>';para=[]}};
   const flushL=()=>{if(list){h+='</'+list+'>';list=null}};
   const flushT=()=>{
@@ -2951,7 +2973,11 @@ function md(src){
     const rows=tbl.filter(r=>!/^\s*\|?\s*:?-{2,}/.test(r)).map(r=>r.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim()));
     h+='<table>'+rows.map((r,i)=>'<tr>'+r.map(c=>'<'+(i?'td':'th')+'>'+inline(c)+'</'+(i?'td':'th')+'>').join('')+'</tr>').join('')+'</table>';tbl=[];
   };
-  const flush=()=>{flushP();flushL();flushT()};
+  const CO={DEF:['📘','Définition'],THM:['🏛️','Théorème'],METH:['🛠️','Méthode'],TRAP:['⚠️','Piège'],EX:['✏️','Exemple'],KEY:['🔑','À retenir'],USE:['🔗','Utilisé dans l’exercice']};
+  const flushB=()=>{if(!bq.length)return;const t=/^\[!(DEF|THM|METH|TRAP|EX|KEY|USE)\]\s*(.*)$/.exec(bq[0]);
+    if(t){h+='<blockquote class="co co-'+t[1]+'"><div class="cot"><span>'+CO[t[1]][0]+'</span>'+CO[t[1]][1]+(t[2]?' · <b>'+inline(t[2])+'</b>':'')+'</div>'+bq.slice(1).map(x=>'<div>'+inline(x)+'</div>').join('')+'</blockquote>'}
+    else h+='<blockquote>'+bq.map(inline).join('<br>')+'</blockquote>';bq=[]};
+  const flush=()=>{flushP();flushL();flushT();flushB()};
   for(const raw of lines){
     if(code!==null){if(/^```/.test(raw)){h+='<pre><code>'+code.join('\n')+'</code></pre>';code=null}else code.push(raw);continue}
     if(/^```/.test(raw)){flush();code=[];continue}
@@ -2965,7 +2991,8 @@ function md(src){
       h+='<h'+n+'>'+inline(m[2])+'</h'+n+'>';continue;
     }
     if(/^\s*(-{3,}|\*{3,})\s*$/.test(l)){flush();h+='<hr>';continue}
-    if((m=/^>\s?(.*)$/.exec(l))){flush();h+='<blockquote>'+inline(m[1])+'</blockquote>';continue}
+    if((m=/^&gt;\s?(.*)$/.exec(l))||(m=/^>\s?(.*)$/.exec(l))){flushP();flushL();if(/^\[!/.test(m[1])&&bq.length)flushB();bq.push(m[1]);continue}else flushB();
+    if((m=/^=&gt;\s+(.*)$/.exec(l))||(m=/^=>\s+(.*)$/.exec(l))){flush();h+='<div class="flow">'+m[1].split(/\s+\|\s+/).map(x=>'<span>'+inline(x)+'</span>').join('<i>→</i>')+'</div>';continue}
     if((m=/^\s*([-*•])\s+(.*)$/.exec(l))){flushP();if(list!=='ul'){flushL();h+='<ul>';list='ul'}h+='<li>'+inline(m[2])+'</li>';continue}
     if((m=/^\s*(\d+)[.)]\s+(.*)$/.exec(l))){flushP();if(list!=='ol'){flushL();h+='<ol>';list='ol'}h+='<li>'+inline(m[2])+'</li>';continue}
     flushL();para.push(l.trim());
@@ -3013,7 +3040,7 @@ async function dump(){return{texts:await dbAll('texts')}}
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
 window.PC={HOUSE,subjCtx,SYS_DRILL,SYS_COMPLETE,SYS_LEARN,provs,SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
-  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_AUDIT,SYS_FORMULAIRE,SYS_DEBRIEF,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_AUDIT,SYS_VISUAL,SYS_FORMULAIRE,SYS_DEBRIEF,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -3323,6 +3350,7 @@ function vLesson(id){
   }else if(!live[k]){
     h+=tsec('Study',tiles([
       T('lc','✍️',l.lc?'Completed lesson':'Complete the lesson',l.lc?'open':'proofs · examples'),
+      T('vc','🧭','Visual course',l.vc?'open':'essentials + exercise'),
       T('meth','📐','Key methods',l.mt?'open':'write them'),
       T('makeCards','🃏','Flashcards','from this lesson'),
       T('printLesson','🖨','Typed PDF','clean copy'),T('mbOpen','📓','Mistakes',(()=>{const n=S.mist.filter(m=>!m.done&&m.lid===id).length;return n?n+' open':'none yet'})(),'wide',l.subj+'|'+id)]));
@@ -3827,7 +3855,7 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):'';
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='vc'?vVC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):'';
   }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='tests'?vTests():st.tab==='colles'?vColles():st.tab==='td'?vTD():st.tab==='grades'?vGrades():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
@@ -3846,6 +3874,7 @@ async function post(top){
   try{
     if(top&&top.v==='lesson'){const l=S.lessons.find(x=>x.id===top.id);if(l&&l.status==='done')into('ltext',(await C.getText('L'+l.id))||'*(empty)*')}
     if(top&&top.v==='sheet'){const p=S.progs.find(x=>x.id===top.id),tx=(await C.getText('S'+top.id))||'',sp=splitSheet(tx);into('sheetdoc',st.seg==='co'?(sp.co||'*No corrections found.*'):sp.ex)}
+    if(top&&top.v==='vc'){const tx=(await C.getText('VC'+top.id))||'',[a,b]=tx.split('<!--REPONSES-->');if(!tx)into('vcdoc','*Nothing yet.*');else{await C.loadKatex();const html=C.md(a)+(b?'<details class="afold"><summary>Answers</summary>'+C.md(b)+'</details>':'');if(t===rtok&&$('vcdoc'))$('vcdoc').innerHTML=html}}
     if(top&&top.v==='lc'){const tx=(await C.getText('LC'+top.id))||'';if($('lcdoc'))into('lcdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='meth'){const tx=(await C.getText('K'+top.id))||'';if($('methdoc'))into('methdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mbook'){const tx=await mbookText(top.id);if($('mbookdoc'))into('mbookdoc',tx||'*Nothing yet.*')}
@@ -4619,6 +4648,7 @@ async function sLoad(){
     const id=String(r.id),tx=r.text||'';if(tx.length<20)return;let m;
     const add=(kind,ref,title,subj,tag)=>out.push({kind,ref,title,subj,tag,text:tx,f:FOLD(tx)});
     if((m=id.match(/^LCB?(.+)$/))&&L[m[1]])add('lc',m[1],L[m[1]].title,L[m[1]].subj,id[2]==='B'?'Lesson completed (fiche)':'Lesson completed');
+    else if((m=id.match(/^VC(.+)$/))&&L[m[1]])add('vc',m[1],L[m[1]].title,L[m[1]].subj,'Visual course');
     else if((m=id.match(/^L(.+)$/))&&L[m[1]])add('lesson',m[1],L[m[1]].title,L[m[1]].subj,'Lesson');
     else if((m=id.match(/^D(.+)$/))&&L[m[1]])add('lesson',m[1],L[m[1]].title,L[m[1]].subj,'Lesson notes');
     else if((m=id.match(/^KT(.+)$/)))add('mbook',m[1],'Methods book',m[1],'Methods');
@@ -4811,6 +4841,44 @@ A.mkFormu=async s=>{
   });
 };
 A.printFormu=async s=>{const t=await C.getText('FM'+s);if(!t){toast('Write it first');return}await C.loadKatex();printHtml('<div style="column-count:2;column-gap:14px;font-size:8.6pt;line-height:1.28">'+C.md(t)+'</div>');toast('Choose "Save to Files" / "Save as PDF" in the share sheet')};
+
+/* ===== Visual course: the essentials of a lesson, complete enough to learn from, with one fil rouge exercise ===== */
+function vVC(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l){st.stack.pop();return ''}
+  const key='VC'+id;
+  let h=backBar('Visual course','');
+  h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(l.title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[l.subj].n+' · the essentials of the lesson, with the bricks of knowledge numbered [K1]… and one complete exercise showing where each one is used.</div>';
+  if(live[key])h+=liveBox(key);
+  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';
+    const T=tl(id);h+=(l.vc?'':'<button class="btn primary" style="margin-top:12px" data-a="mkVC" data-i="'+id+'">Write the visual course</button>')+tiles([l.vc?T('mkVC','🔄','New version','rewrite'):'',l.vc?T('printVC','🖨','Print','PDF'):'',T('promptVC','📋','Prompt for Claude','copy'),T('impVC','⬆','Import one','from Claude')])}
+  h+='</div>';
+  if(l.vc&&!live[key])h+='<div class="card"><div class="doc vcdoc" id="vcdoc"><div class="shim" style="height:200px"></div></div></div>';
+  return h;
+}
+function mkVC(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l)return;
+  return run('VC'+id,'Writing the visual course…',async(lab,txt)=>{
+    lab('Reading the lesson…');const t=(await C.getText('LC'+id))||(await C.getText('L'+id))||'';
+    if(t.length<300)throw new C.AIError('This lesson has no text yet. Read it first.');
+    const others=S.lessons.filter(x=>x.id!==id&&x.subj===l.subj&&x.status==='done').map(x=>x.title).slice(0,25).join(' · ');
+    lab('Choosing the bricks and the fil rouge exercise…');
+    const r=await C.ai({subj:l.subj,system:C.SYS_VISUAL(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others),content:[{type:'text',text:'LESSON: '+l.title+(l.lc?' (completed version)':'')+'\n\n'+t.slice(0,70000)}],max:12000,onText:txt});
+    if(r.text.length<400)throw new C.AIError('The course came out empty. Try again.');
+    await C.setText('VC'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
+    l.vc=Date.now();save.lessons();toast('Visual course ready ✓');
+  });
+}
+A.vc=i=>{const l=S.lessons.find(x=>x.id===i);if(!l)return;go('vc',i)};
+A.mkVC=i=>{if(needKey())mkVC(i)};
+A.printVC=async i=>{await C.loadKatex();printHtml(C.md((await C.getText('VC'+i))||'').replace(/<!--REPONSES-->/g,''))};
+A.promptVC=i=>{
+  const l=S.lessons.find(x=>x.id===i);if(!l)return;
+  const others=S.lessons.filter(x=>x.id!==i&&x.subj===l.subj&&x.status==='done').map(x=>x.title).slice(0,25).join(' · ');
+  copyPrompt('Prompt: visual course',C.SYS_VISUAL(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others)+"\n\nMy lesson is attached ("+l.title+"). Write the visual course now, as ONE Markdown document in French, using exactly the structure and the tags above, so that I can import it in Aether (Visual course > Import one).",l.subj);
+};
+A.impVC=i=>pickFile(IMP_ACC,async f=>{
+  try{const l=S.lessons.find(x=>x.id===i);const t=await impText(f);if(t.length<400)throw new Error('The file is almost empty.');
+    await C.setText('VC'+i,t);l.vc=Date.now();save.lessons();toast('Visual course imported ✓');go('vc',i)}catch(e){toast(e.message||'Import failed')}});
 A.newMock=()=>{
   let subj='maths',main=[],comp=[],dur='2 h',calc=false,title='';
   const ls=()=>S.lessons.filter(l=>l.subj===subj&&l.status==='done');
