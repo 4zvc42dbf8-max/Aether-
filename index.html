@@ -12,6 +12,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <meta name="apple-mobile-web-app-title" content="Aether">
+<script>(function(){try{var m=localStorage.getItem('theme')||'dark',d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=d?'#06070b':'#eef0f5'}catch(e){}})();</script>
 <style>
 :root{
   --bg:#06070b; --surf:#15171d; --surf2:#1d2028; --inset:#0a0b0f;
@@ -727,7 +728,103 @@ textarea::placeholder{color:var(--dim)}
 .tdex .dpill{flex:none;align-self:center;font-size:12px;font-weight:800;color:#ffb340;background:rgba(255,159,10,.12);border-radius:99px;padding:5px 9px;white-space:nowrap}
 .tdex .dpill small{font-size:10.5px;margin-left:5px;color:var(--muted);font-weight:700}.tdex.done .dpill{opacity:.65}
 
+/* ---- action tiles / folds ---- */
+.atiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.atile{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:13px 14px;border-radius:18px;border:1px solid var(--line2);background:var(--surf2);color:var(--text);min-height:78px;transition:transform .22s var(--spring),background .2s;-webkit-tap-highlight-color:transparent}
+.atile:active{transform:scale(.95)}
+.atile b{font-size:21px;line-height:1.1;font-weight:400;margin-bottom:4px}
+.atile span{font-size:14.5px;font-weight:650;line-height:1.2;text-transform:none;letter-spacing:0}
+.atile small{text-transform:none;letter-spacing:0;font-size:11.5px;color:var(--mute,#8d93a3);line-height:1.2}
+.atile.danger{color:var(--red);border-color:rgba(255,77,66,.3);background:rgba(255,77,66,.07)}
+.atile.danger small{color:inherit;opacity:.7}
+.tsec{margin-top:16px}.tsec .lbl{margin-bottom:-4px}
+.afold{margin:14px 0 0;border-radius:22px;background:var(--surf);border:1px solid var(--line);overflow:hidden}
+.afold summary{list-style:none;display:flex;align-items:center;justify-content:space-between;padding:16px 18px;font-size:15px;font-weight:650;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.afold summary::-webkit-details-marker{display:none}
+.afold summary::after{content:'›';font-size:22px;color:var(--mute,#8d93a3);transition:transform .3s var(--spring);margin-left:10px}
+.afold[open] summary::after{transform:rotate(90deg)}
+.afold summary em{font-style:normal;font-size:12.5px;color:var(--mute,#8d93a3);margin-left:auto}
+.afold .afoldb{padding:0 16px 16px}
+.atile.wide{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;gap:12px;padding:12px 16px}.atile.wide b{margin:0}.atile.wide small{margin-left:auto}
+.afold summary span{text-transform:none;letter-spacing:0}
+.afold summary em{padding-left:10px}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* ---- Today plan ---- */
+.tpc{border-color:color-mix(in srgb,var(--lime) 35%,var(--line2))}
+.tprow{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line);animation:rowin .5s var(--ease) both;animation-delay:calc(var(--i,0)*50ms)}
+.tprow:first-of-type{border-top:none}
+.tpt{flex:none;width:44px;font-size:12.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.tpm{flex:1;min-width:0}
+.tpn{font-size:15px;font-weight:650;line-height:1.25}
+.tps{font-size:12.5px;color:var(--muted);margin-top:2px}
+.tpb{flex:none;display:flex;gap:6px}
+.tpb button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:var(--surf2);color:var(--muted);font-size:14px;display:grid;place-items:center;padding:0}
+.tpb button.go{background:var(--lime);color:var(--ink);border-color:transparent}
+.tpb button:active{transform:scale(.88)}
+
+/* ================= Light theme ================= */
+:root[data-theme="light"]{
+  --bg:#eef0f5; --surf:#ffffff; --surf2:#f3f4f8; --inset:#e8eaf0;
+  --line:rgba(20,24,40,.09); --line2:rgba(20,24,40,.17);
+  --text:#14161c; --muted:#5b6171; --dim:#8a8fa0; --ink:#ffffff;
+  color-scheme:light;
+}
+:root[data-theme="light"] html,html[data-theme="light"]{background:#eef0f5}
+[data-theme="light"] #amb{background:linear-gradient(180deg,#f4f6fb 0%,#eceff6 60%,#f1eff8 100%)}
+[data-theme="light"] #amb i:nth-child(1){background:radial-gradient(circle,rgba(79,140,255,.20),transparent 66%)}
+[data-theme="light"] #amb i:nth-child(2){background:radial-gradient(circle,rgba(155,140,255,.14),transparent 66%)}
+[data-theme="light"] header{background:rgba(244,246,251,.78)}
+[data-theme="light"] .nav{background:rgba(255,255,255,.86)}
+[data-theme="light"] .card,[data-theme="light"] .sbox,[data-theme="light"] .pv-box,[data-theme="light"] .dbox{background:var(--surf);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 8px 24px -14px rgba(30,40,80,.25)}
+[data-theme="light"] .btn,[data-theme="light"] .pv-btn{background:rgba(20,24,40,.05)}
+[data-theme="light"] .btn.primary{background:var(--lime);color:#fff}
+[data-theme="light"] .btn.danger{background:rgba(255,77,66,.08)}
+[data-theme="light"] #sheet.show,[data-theme="light"] #pv-sheet{background:rgba(20,24,40,.35)}
+[data-theme="light"] #toast{background:#23262f;color:#f7f8fb}
+[data-theme="light"] .pill.gl{background:rgba(20,24,40,.06)}
+[data-theme="light"] .hero{background:radial-gradient(120% 140% at 0% 0%,rgba(77,141,255,.14),transparent 60%),var(--surf)}
+[data-theme="light"] .chk{border-color:rgba(20,24,40,.28)}
+[data-theme="light"] .logo{background:radial-gradient(circle at 32% 28%,#fff,#c5c9d6 70%);box-shadow:0 0 0 1px rgba(20,24,40,.12) inset,0 4px 14px rgba(77,141,255,.25)}
+[data-theme="light"] .ev{background:linear-gradient(180deg,color-mix(in srgb,var(--c,#4d8dff) 22%,#fff),color-mix(in srgb,var(--c,#4d8dff) 12%,#fff))}
+[data-theme="light"] .ev[data-ghost],[data-theme="light"] .evchip[data-ghost]{box-shadow:0 0 0 1px rgba(20,24,40,.15) inset;border-color:rgba(20,24,40,.2)}
+[data-theme="light"] .sw.ghostsw{background:repeating-linear-gradient(45deg,transparent 0 4px,rgba(20,24,40,.25) 4px 5px)}
+[data-theme="light"] .tile{background:var(--surf)}
+[data-theme="light"] .pill{background:rgba(20,24,40,.06)}
+[data-theme="light"] .nav{box-shadow:0 -10px 30px -14px rgba(30,40,80,.22)}
+[data-theme="light"] .chip{background:rgba(20,24,40,.04)}
+[data-theme="light"] .atile,[data-theme="light"] .afold{background:var(--surf2)}
+[data-theme="light"] #pv-lock{background:radial-gradient(120% 70% at 50% 0%,#dfe8ff,#eef0f5 60%)}
+[data-theme="light"] .device{background:linear-gradient(180deg,#2a2d38,#14161c)}
+[data-theme="light"] .device,[data-theme="light"] .screen,[data-theme="light"] .side{color:#f7f8fb}
+/* the Focus timer keeps its dark device in both themes */
+.hhc.on{} 
+/* theme toggle button */
+.thm{margin-left:auto;margin-right:8px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);background:var(--surf);color:var(--muted);display:flex;align-items:center;justify-content:center;padding:0;transition:transform .5s var(--spring),color .2s}
+.thm+.pv-gear{margin-left:0}
+.thm:active{transform:scale(.88) rotate(25deg);color:var(--text)}
+.thm svg{width:20px;height:20px}
+.thm .sun{display:none}[data-theme="light"] .thm .sun{display:block}[data-theme="light"] .thm .moon{display:none}
+
+/* ================= Landscape on phones: compact side rail ================= */
+@media (orientation:landscape) and (max-height:520px){
+  body{padding-left:calc(84px + env(safe-area-inset-left));padding-right:env(safe-area-inset-right);padding-bottom:24px}
+  header{padding:calc(8px + env(safe-area-inset-top)) 18px 8px;gap:10px}
+  .logo{width:28px;height:28px;border-radius:9px}
+  header h1{font-size:20px}
+  .container{max-width:760px;padding:12px 14px}
+  .nav{top:0;bottom:0;right:auto;left:0;width:calc(84px + env(safe-area-inset-left));flex-direction:column;justify-content:center;gap:6px;padding:8px 6px 8px calc(6px + env(safe-area-inset-left));border-top:none;border-right:1px solid var(--line2);border-radius:0 24px 24px 0}
+  .nav-ind{display:none}
+  .nb{flex:none;min-height:52px;border-radius:16px;padding:6px 0;font-size:10px}
+  .nb.on{background:color-mix(in srgb,var(--lime) 16%,transparent)}
+  .nb svg{width:22px;height:22px}
+  .fab{bottom:16px;right:calc(18px + env(safe-area-inset-right))}
+  #toast{bottom:16px}
+  .sbox,.pv-box{max-width:620px;max-height:94vh}
+  .atiles{grid-template-columns:repeat(4,1fr)}
+}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -749,6 +846,11 @@ textarea::placeholder{color:var(--dim)}
 </div>
 <div id="pv-sheet">
   <div class="pv-box">
+    <div class="pv-h">Appearance</div>
+    <div class="chips" id="pv-theme" style="margin-bottom:14px"><button class="chip" data-v="dark">Dark</button><button class="chip" data-v="light">Light</button><button class="chip" data-v="auto">Auto (iPhone setting)</button></div>
+    <div class="pv-h">Notifications</div>
+    <div class="pv-note" id="pv-nstate">Get a notification when an AI job finishes while you are in another app. iOS pauses web apps in the background, so jobs may need you to come back.</div>
+    <button class="pv-btn" id="pv-notif">Turn on job notifications</button>
     <div class="pv-h">AI & calendar</div>
     <div class="pv-note" id="pv-aistate">Gemini / Claude keys, backup model and the iPhone calendar feed.</div>
     <button class="pv-btn" id="pv-ai">AI settings & calendar feed</button>
@@ -757,6 +859,9 @@ textarea::placeholder{color:var(--dim)}
     <button class="pv-btn" id="pv-setpin">Set PIN</button>
     <button class="pv-btn danger" id="pv-rmpin" style="display:none">Remove PIN</button>
     <div class="pv-h">Backup</div>
+    <div class="pv-h">Data protection</div>
+    <div class="pv-note" id="pv-dpstate">Checking…</div>
+    <button class="pv-btn" id="pv-snaps">Daily snapshots on this phone</button>
     <div class="pv-note">Your data only lives on this phone. Save a backup file (for example to Files) so you can restore it if the data is ever erased. The backup includes your notes, grades and lesson text, but not the PDF or photo files themselves (keep your originals).</div>
     <button class="pv-btn" id="pv-export">Export backup</button>
     <button class="pv-btn" id="pv-import">Import backup</button>
@@ -765,12 +870,13 @@ textarea::placeholder{color:var(--dim)}
   </div>
 </div>
 
-<header><div class="logo"></div><h1 id="pt">Home</h1><button class="pv-gear" id="pv-gear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></header>
+<header><div class="logo"></div><h1 id="pt">Home</h1><button class="thm" id="thm" aria-label="Switch light / dark"><svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button class="pv-gear" id="pv-gear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></header>
 
 <div class="container">
 
 <section id="home" class="view">
   <div class="card hero" id="hero" data-act="lvls"></div>
+  <div class="card tpc" id="tpcard"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
   <div class="card" id="xmcard" style="display:none"></div>
   <div class="card hhc" id="hhcard"></div>
@@ -888,8 +994,8 @@ const fmt=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 function ld(k,def){try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v)}catch(e){return def}}
 function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms||18)}catch(e){}try{const h=$('hap');if(h)h.click()}catch(e){}}
 const COLORS=['#4fd1ff','#5eead4','#ff9f0a','#9b8cff','#ff6fb5','#30d158'];
-const EVC=COLORS.concat(['#ff5d5d','#ffd60a','#4d8dff','#7c6bff','#b6e24a','#d19a66','#ff7a59','#a0a8b8','ghost']);
-const GHOST=EVC.length-1;
+const EVC=COLORS.concat(['#ff5d5d','#ffd60a','#4d8dff','#7c6bff','#b6e24a','#d19a66','#ff7a59','#a0a8b8','ghost','#eef1f8']);
+const GHOST=EVC.indexOf('ghost'),FROST=EVC.indexOf('#eef1f8');
 const PAL=EVC.filter(x=>x!=='ghost');
 const taskCol=t=>t.col||(t.gid&&goals.find(g=>g.id===t.gid)||{}).color||'';
 const isGhost=c=>c&&c.color===GHOST;
@@ -1063,14 +1169,33 @@ function streak(){
   while(act(d)&&n<3650){n++;d.setDate(d.getDate()-1)}
   return n;
 }
+function backupNudge(){
+  try{
+    const lb=+localStorage.getItem('lastBackup')||0,nd=+localStorage.getItem('backupNudge')||0,now=Date.now();
+    if(!lb){localStorage.setItem('lastBackup',String(now));return}
+    if(now-lb>7*864e5&&now-nd>864e5){localStorage.setItem('backupNudge',String(now));toast('It has been over a week since your last backup.',{label:'Back up now',fn:()=>{try{document.getElementById('pv-export').click()}catch(e){}}})}
+  }catch(e){}
+}
+setTimeout(backupNudge,6000);
+function vtSeed(){
+  try{
+    if(!localStorage.vtseed){
+      const have=new Set(cal.map(c=>c.id));let d='2026-09-04';
+      while(d<='2027-06-25'){if(!curHol(d)){const id='s-vt-'+d.replace(/-/g,'');if(!have.has(id))cal.push({id,title:'Vocabulary Test',date:d,time:'',endTime:'',desc:'Weekly English vocabulary test',color:0,kind:'vt',subj:'ang'})}d=shiftD(d,7)}
+      localStorage.vtseed='1';sv();
+    }
+    if(!localStorage.fcol1){cal.forEach(c=>{if(c.kind==='focus'&&c.color===1)c.color=FROST});localStorage.fcol1='1';sv()}
+  }catch(e){}
+}
 function rHome(){
+  vtSeed();
   const now=new Date(),hr=now.getHours();
   const g=hr<5?'Still up?':hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
   const st=streak(),need=needed(lv);
   $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
-  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rXM();rHH();rtRender();svRender();rRescue();rMotiv();
+  rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rXM();rTP();rHH();rtRender();svRender();rRescue();rMotiv();
   if(window.P)P.rHomeCard();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
@@ -1234,8 +1359,10 @@ function dueBadge(t){
   if(t.due===td)return '<span class="pill today">Today</span>';
   return '<span class="pill">'+esc(new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+'</span>';
 }
+const lkEv=t=>t&&t.lk?cal.find(c=>c.id===t.lk):null;
+const lkPill=t=>{const e=lkEv(t);return e?'<span class="pill lk">🔗 '+esc(String(e.title).replace(/\s*\([^)]*\)\s*$/,'').slice(0,26))+' · '+esc(new Date(e.date+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+'</span>':''};
 function taskHTML(t,i,mini,fresh){
-  return `<div class="task ${taskCol(t)?'tcol':''} ${mini?'mini':''} ${fresh?'fresh':''} ${isDone(t)?'done hdone':''}" data-id="${t.id}" data-hold="task" style="--i:${i}${taskCol(t)?';--tc:'+taskCol(t):''}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${t.pin?'<span class="pinned" aria-label="Pinned">📌</span> ':''}${esc(t.text)}</div><div class="tmeta">${xpPill(t)}${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
+  return `<div class="task ${taskCol(t)?'tcol':''} ${mini?'mini':''} ${fresh?'fresh':''} ${isDone(t)?'done hdone':''}" data-id="${t.id}" data-hold="task" style="--i:${i}${taskCol(t)?';--tc:'+taskCol(t):''}"><div class="trow"><button class="chk" data-act="done" data-id="${t.id}" aria-label="Complete"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></button><div class="tmain" data-act="open"><div class="t-title">${t.pin?'<span class="pinned" aria-label="Pinned">📌</span> ':''}${esc(t.text)}</div><div class="tmeta">${xpPill(t)}${lkPill(t)}${mini&&goalOf(t)?`<span class="pill gl"><span class="cdot" style="background:${goalOf(t).color};width:8px;height:8px"></span>${esc(goalOf(t).name)}</span>`:''}${dueBadge(t)}</div></div></div>${mini?'':`<div class="tact"><div><button class="btn sm" style="flex:1" data-act="edit" data-id="${t.id}">Edit</button><button class="btn sm danger" style="flex:1" data-act="del" data-id="${t.id}">Delete</button></div></div>`}</div>`;
 }
 const goalOf=t=>t&&t.gid?goals.find(g=>g.id===t.gid):null;
 const gTasks=gid=>sortedTasks().filter(t=>gid==='_'?!goalOf(t):t.gid===gid);
@@ -1440,13 +1567,28 @@ function examMode(){
   if(!e)return null;
   return{e,days:Math.round((new Date(e.date+'T12:00:00')-new Date(td+'T12:00:00'))/864e5)};
 }
+function rTP(){
+  const el=$('tpcard');if(!el)return;
+  let p=null;try{p=window.P&&P.plan&&P.plan()}catch(e){}
+  if(!window.P||!P.plan){el.style.display='none';return}
+  el.style.display='';
+  if(!p){
+    const tm=evOn(shiftD(iso(),1)).filter(c=>c.kind!=='focus'&&tmin(c.time)!=null).sort(evSort)[0];
+    el.innerHTML=`<div class="cardhead"><div class="lbl">Tomorrow</div></div><div class="tpn" style="margin-top:4px">${tm?`Starts at ${esc(tm.time)} · ${esc(tm.title)}`:'No fixed start tomorrow'}</div><div class="tps" style="margin-top:6px">😴 Sleep now: 7h30 or more earns your sleep bonus${examMode()?' (doubled in exam mode)':''}.</div>`;
+    return;
+  }
+  const h=Math.floor(p.total/60),m=p.total%60,dur=p.total?(h?h+'h'+(m?pad(m):''):m+' min'):'';
+  el.innerHTML=`<div class="cardhead"><div class="lbl">${p.xm?'📚 ':''}${esc(p.title)}</div><span class="sub">${p.items.length?p.items.length+' thing'+(p.items.length>1?'s':'')+' · about '+dur:''}</span></div>`+
+    (p.items.length?p.items.map((it,i)=>`<div class="tprow" style="--i:${i}"><div class="tpt">${it.at?esc(it.at.split(' – ')[0]):'·'}</div><div class="tpm"><div class="tpn">${it.ic} ${esc(it.title)}</div><div class="tps">${esc(it.sub)} · ${it.min} min</div></div><div class="tpb">${i?`<button data-act="tpup" data-id="${esc(it.id)}" aria-label="Move up">↑</button>`:''}<button class="go" data-act="tpgo" data-id="${esc(it.id)}" aria-label="Start">▶</button><button data-act="tpskip" data-id="${esc(it.id)}" aria-label="Skip for today">✕</button></div></div>`).join(''):`<div class="tps" style="margin-top:6px">Nothing urgent right now. Pick a task, or take a break you earned.</div>`)+
+    (p.xm?`<div class="tps" style="margin-top:8px">Exam mode is on: protect your sleep, big rewards wait until after the exam.</div>`:'');
+}
 function rXM(){
   const el=$('xmcard');if(!el)return;const x=examMode();
   if(!x){el.style.display='none';return}
   let plan=[];try{plan=P.xmPlan(x.e)||[]}catch(e){}
   el.style.display='';el.className='card xmc';
   const when=x.days===0?'today':x.days===1?'tomorrow':'in '+x.days+' days';
-  el.innerHTML=`<div class="cardhead"><div class="lbl">📚 Exam mode</div><span class="sub">${esc(x.e.title||'Exam')} · ${when}</span></div><div class="lmsg">${x.days===0?'Today is the day. Light review only, eat, and trust your work.':'Focus on what matters. No new big things, and protect your sleep.'}</div>${plan.map(p=>`<div class="xmrow">▸ ${esc(p)}</div>`).join('')}<div class="xmrow">😴 Sleep 7h30 or more tonight: the sleep bonus is doubled</div><div class="xmrow" style="opacity:.75">🔒 Big rewards (🔥 and 👑) wait until after the exam</div><button class="btn" data-act="xmopen" style="margin-top:8px">Open Prépa</button>`;
+  el.innerHTML=`<div class="cardhead"><div class="lbl">📚 Exam mode</div><span class="sub">${esc(x.e.title||'Exam')} · ${when}</span></div><div class="lmsg">${x.days===0?'Today is the day. Light review only, eat, and trust your work.':'Focus on what matters. No new big things, and protect your sleep.'}</div><div class="xmrow">😴 Sleep 7h30 or more tonight: the sleep bonus is doubled</div><div class="xmrow" style="opacity:.75">🔒 Big rewards (🔥 and 👑) wait until after the exam</div><button class="btn" data-act="xmopen" style="margin-top:8px">Open Prépa</button>`;
 }
 const TIERS=[['🌱','Small treat'],['✨','Nice treat'],['🔥','Big treat'],['👑','Jackpot']];
 const tierOf=c=>c<shs.t1?0:c<shs.t2?1:c<shs.t3?2:3;
@@ -1629,15 +1771,17 @@ function rwSheet(tab){
     const m=e.target.closest('[data-m]');if(m&&!m.disabled){const L=+m.dataset.m;mil[L].c=true;sv();vib(40);burst(innerWidth/2,innerHeight/2,40);toast('Level '+L+' reward unlocked: '+mil[L].t+' 🏅');rwSheet()}
   };
 }
-function gain(n,x,y,gid){
-  n=Math.round(n*hhMult());
+const subjOfT=t=>{try{return window.P&&P.subjOf?P.subjOf(t.text,null,t.id):''}catch(e){return ''}};
+function gain(n,x,y,gid,subj){
+  const bm=(subj&&window.P&&P.boost)?(P.boost(subj)||1):1;
+  n=Math.round(n*hhMult()*bm);
   if(isLazy()){lazy=lazy.filter(d=>d!==iso());sv();setTimeout(()=>{toast('You got to work: lazy day cancelled 💪');if(cur==='home')rLazy()},900)}
   const g=gid&&goals.find(q=>q.id===gid);
   if(g){g.xp+=n;const gb=g.lv;while(g.xp>=needed(g.lv)){g.xp-=needed(g.lv);g.lv++}if(g.lv>gb)setTimeout(()=>toast(g.name+' → level '+g.lv+' 🎉'),1800)}
   const wk0=weekXP();xpd[iso()]=(xpd[iso()]||0)+n;if(wk0<wgoal&&wk0+n>=wgoal)setTimeout(()=>{toast('Weekly XP goal reached 🎉');if(cur==='home')rMotiv()},1200);
   const before=lv;xp+=n;
   while(xp>=needed(lv)){xp-=needed(lv);lv++}
-  if(x!=null)floatText(x,y,(hhMult()>1?'🔥 ':'')+'+'+n+' XP');
+  if(x!=null)floatText(x,y,(hhMult()>1?'🔥 ':'')+(bm>1?'⚡ ':'')+'+'+n+' XP');
   if(lv>before)setTimeout(()=>levelUp(lv),700);
   return lv>before;
 }
@@ -1655,7 +1799,7 @@ function completeTask(id,btn){
     if(isDone(t)){toast('Done for now · '+nextTxt(t));return}
     const c=pkey(t.rep,iso());t.streak=(t.hk===pprev(t.rep,c)||holBridge(t,c))?(t.streak||0)+1:1;t.hk=c;
     row.classList.add('done');vib(30);const x=r.left+r.width/2,y=r.top+r.height/2;burst(x,y,18);
-    donelog.push({d:iso(),xp:t.xp||20,t:Date.now()});gain(t.xp||20,x,y-10,t.gid);sv();
+    donelog.push({d:iso(),xp:t.xp||20,t:Date.now()});gain(t.xp||20,x,y-10,t.gid,subjOfT(t));sv();
     const st=$('hli');if(st){st.classList.remove('pop');void st.offsetWidth;st.classList.add('pop')}
     if(cur==='tasks')rLevel();
     setTimeout(()=>{if(cur==='tasks')rTasks();else if(cur==='home')rHomeTasks()},900);
@@ -1666,7 +1810,7 @@ function completeTask(id,btn){
   burst(x,y,18);
   let pay=xpFor(t);const late=daysLate(t);if(t.due&&t.due>iso()){pay=Math.round(pay*1.2);setTimeout(()=>toast('Done early: +20% XP ⚡'),900)}
   tasks.splice(i,1);donelog.push({d:iso(),xp:pay,t:Date.now()});
-  gain(pay,x,y-10,t.gid);sv();commitWin(t.id);
+  gain(pay,x,y-10,t.gid,subjOfT(t));sv();commitWin(t.id);
   if(late&&pay<(t.xp||20))toast('Late by '+late+' day'+(late>1?'s':'')+' · +'+pay+' XP instead of '+(t.xp||20));
   const st=$('hli');st.classList.remove('pop');void st.offsetWidth;st.classList.add('pop');
   if(cur==='tasks')rLevel();
@@ -1675,12 +1819,13 @@ function completeTask(id,btn){
   if(cur==='tasks'&&false)rTasks();
 }
 function editTask(id,presetG){
-  const t=id?tasks.find(x=>x.id===id):null;let selPin=!!(t&&t.pin);let selCol=t?(t.col||''):'';let selRep=t?(t.rep||''):'';let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
+  const t=id?tasks.find(x=>x.id===id):null;let selPin=!!(t&&t.pin);let selCol=t?(t.col||''):'';let selRep=t?(t.rep||''):'';let selLk=t?(t.lk||''):'';let selG=t?(t.gid||''):(presetG!==undefined?presetG:(tgoal&&tgoal!=='_'?tgoal:''));
   const xps=[10,25,50,100];let sel=t?(t.xp||20):25;if(!xps.includes(sel))xps.push(sel);xps.sort((a,b)=>a-b);
   openSheet(`<h2>${t?'Edit objective':'New objective'}</h2>
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
     <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
     <div class="field"><label>Reward (1–100 XP) · −10%/day when overdue</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
+    <div class="field"><label>Linked to a colle or exam</label><div class="chips" id="e-lk">${(()=>{const td=iso(),l=cal.filter(c=>(c.kind==='ds'||c.kind==='colle')&&(c.date>=td||c.id===selLk)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,8);return '<button class="chip '+(!selLk?'on':'')+'" data-v="">None</button>'+l.map(c=>`<button class="chip ${c.id===selLk?'on':''}" data-v="${c.id}">${c.kind==='ds'?'📝':'🎤'} ${esc(String(c.title).replace(/\s*\([^)]*\)\s*$/,'').slice(0,24))} · ${new Date(c.date+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</button>`).join('')})()}</div></div>
     <div class="field"><label>Colour</label><div class="colrow" id="e-col"><button class="chip auto ${!selCol?'on':''}" data-c="">Auto</button>${PAL.map(c=>`<button class="sw ${c===selCol?'on':''}" data-c="${c}" style="--c:${c}"></button>`).join('')}</div></div>
     <div class="field"><label>Pin</label><div class="chips" id="e-pin"><button class="chip ${selPin?'on':''}" data-v="1">📌 Pinned: always first on Home</button></div></div>
     <div class="field"><label>Repeat</label><div class="chips" id="e-r">${[['','Once'],['daily','Every day'],['weekly','Every week'],['biweekly','Every 2 weeks'],['monthly','Every month']].map(([v,l])=>`<button class="chip ${v===selRep?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="hint" style="margin:8px 0 0">A repeating task is a habit: tick it each period, it comes back on its own and builds a streak.</div></div>
@@ -1693,6 +1838,7 @@ function editTask(id,presetG){
     if(b.dataset.v==='+'){const txt=$('e-t').value;window._afterGoal=gid=>{setTimeout(()=>editTask(id,gid),340);window._keepTxt=txt};editGoal();return}
     selG=b.dataset.v;[...$('e-g').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   if(window._keepTxt&&!t){$('e-t').value=window._keepTxt;window._keepTxt=null}
+  $('e-lk').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selLk=b.dataset.v;[...$('e-lk').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   $('e-col').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;selCol=b.dataset.c;[...$('e-col').children].forEach(c=>c.classList.toggle('on',c===b));vib(10)};
   $('e-r').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selRep=b.dataset.v;[...$('e-r').children].forEach(c=>c.classList.toggle('on',c===b));$('f-due').style.display=selRep?'none':'';vib(10)};
   $('e-pin').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;selPin=!selPin;b.classList.toggle('on',selPin);vib(10)};
@@ -1701,7 +1847,7 @@ function editTask(id,presetG){
     const v=$('e-t').value.trim();
     if(!v){const f=$('f-t');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
     const due=$('e-d').value||'';{const n=Math.round(+$('e-xc').value);if(!(n>=1&&n<=100)){const f=$('e-xc');f.focus();toast('XP must be between 1 and 100');return}sel=n}
-    if(t){t.text=v;t.xp=sel;if(selPin)t.pin=true;else delete t.pin;if(selCol)t.col=selCol;else delete t.col;t.due=selRep?'':due;if(selG)t.gid=selG;else delete t.gid;if(selRep!==(t.rep||'')){if(selRep){t.rep=selRep}else{delete t.rep;delete t.hk;delete t.streak}}}else tasks.push({id:uid(),text:v,xp:sel,due:selRep?'':due,gid:selG||undefined,rep:selRep||undefined,col:selCol||undefined,pin:selPin||undefined});
+    if(t){t.text=v;t.xp=sel;if(selPin)t.pin=true;else delete t.pin;if(selCol)t.col=selCol;else delete t.col;t.due=selRep?'':due;if(selG)t.gid=selG;else delete t.gid;if(selLk)t.lk=selLk;else delete t.lk;if(selRep!==(t.rep||'')){if(selRep){t.rep=selRep}else{delete t.rep;delete t.hk;delete t.streak}}}else tasks.push({id:uid(),text:v,xp:sel,due:selRep?'':due,gid:selG||undefined,rep:selRep||undefined,col:selCol||undefined,pin:selPin||undefined,lk:selLk||undefined});
     sv();closeSheet();vib(15);toast(t?'Saved':'Objective added');
     if(cur==='tasks')rTasks();if(cur==='home')rHomeTasks();
   };
@@ -1971,6 +2117,9 @@ document.addEventListener('click',e=>{
   else if(act==='rbuy')rbuy(a.dataset.id,a)
   else if(act==='rtstop')rtStop()
   else if(act==='xmopen')show('prepa')
+  else if(act==='tpgo'){P.planGo(id)}
+  else if(act==='tpskip'){P.planSkip(id);rTP();vib(8)}
+  else if(act==='tpup'){P.planUp(id);rTP();vib(8)}
   else if(act==='rescuego'){F.mode='short';F.kind='focus';F.task='Smallest win';F.status='idle';show('focus');setTimeout(fStart,350)}
   else if(act==='hhset')hhSheet();
   else if(act==='hhgo'){show('focus')}
@@ -2122,19 +2271,22 @@ function fPickTask(){
       $('ft-s').onclick=()=>{F.ref=null;F.taskId=id;F.task=(txt||'').trim();if(!F.task)F.taskId='';sv();closeSheet();rFtask()};
     }else{
       const sb=$('sbody');
-      sb.querySelectorAll('.ftitem').forEach(b=>b.onclick=()=>{const it=P.focusItems(kind==='td'?'td':'prog').find(x=>x.id===b.dataset.id);if(!it)return;F.ref={k:kind==='td'?'td':'prog',id:it.id};F.taskId='';F.task=(kind==='td'?'TD · ':'Colle · ')+it.title;sv();vib(12);closeSheet();rFtask()});
+      sb.querySelectorAll('.ftitem').forEach(b=>b.onclick=()=>{const it=P.focusItems(kind==='td'?'td':'prog').find(x=>x.id===b.dataset.id);if(!it)return;F.ref={k:kind==='td'?'td':'prog',id:it.id};F.taskId='';F.task=kind==='td'?'TD · '+it.title:(P.trainName(it.id)||'Colle · '+it.title);sv();vib(12);closeSheet();rFtask()});
     }
     if($('ft-n'))$('ft-n').onclick=()=>{F.ref=null;F.task='';F.taskId='';sv();closeSheet();rFtask()};
   };
   draw();
 }
 /* save a focus block to the calendar (start = when it began, end = when it ended) */
+const fTitle=()=>(F.ref&&F.ref.k==='prog'&&window.P&&P.trainName&&P.trainName(F.ref.id))||F.task||'';
+const fSubj=()=>{try{return window.P&&P.subjOf?P.subjOf(fTitle(),F.ref,F.taskId):''}catch(e){return ''}};
 function fLog(endMs,mins){
+  const tt=fTitle();
   const s=F.start||endMs-mins*60000,date=iso(new Date(s));
   let t1=hm(s),t2=hm(endMs);
   if(iso(new Date(endMs))!==date||tmin(t2)<=tmin(t1))t2=tmin(t1)>=23*60+59?'23:59':fmt(Math.min(24*60-1,tmin(t1)+Math.max(1,mins)));
-  cal.push({id:uid(),title:F.task||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:1,kind:'focus'});
-  fhist.push({task:F.task||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1});
+  cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:FROST,kind:'focus'});
+  fhist.push({task:tt||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1,subj:fSubj()});
   if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,mins);
 }
 function fPauseCheck(){
@@ -2154,10 +2306,10 @@ function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
   const M=MODES[F.mode];F.status='done';F.rem=0;
   let resc=false;if(F.kind==='focus'){resc=shs.resc&&nowMin()>=1080&&noWorkToday()}
   if(F.kind==='focus'){
-    fhist.push({task:F.task||'Focus',min:M.min,date:fk(),ts:Date.now(),mode:F.mode});
+    const tt=fTitle();fhist.push({task:tt||'Focus',min:M.min,date:fk(),ts:Date.now(),mode:F.mode,subj:fSubj()});
     if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,M.min);
-    {const s=F.start||Date.now()-M.min*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+M.min));cal.push({id:uid(),title:F.task||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+M.min+' min',color:1,kind:'focus'})}
-    sv();gain(F.mode==='intense'?Math.round(M.xp*1.25):M.xp);if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);if(resc)setTimeout(()=>{gain(15,innerWidth/2,innerHeight*.4);toast('🛟 Smallest win: +15 XP')},1500);
+    {const s=F.start||Date.now()-M.min*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+M.min));cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+M.min+' min',color:FROST,kind:'focus'})}
+    sv();gain(F.mode==='intense'?Math.round(M.xp*1.25):M.xp,null,null,null,fSubj());if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);if(resc)setTimeout(()=>{gain(15,innerWidth/2,innerHeight*.4);toast('🛟 Smallest win: +15 XP')},1500);
   }else sv();
   sv();vib(80);chime();
   if(cur!=='focus')toast(F.kind==='focus'?'Focus session complete · +'+xpn(F.mode==='intense'?Math.round(M.xp*1.25):M.xp)+' XP':'Break is over');
@@ -2261,7 +2413,8 @@ if(F.status==='run'&&fRemain()<=0)fFinish();
 if(typeof ReadableStream!=='undefined'&&!ReadableStream.prototype[Symbol.asyncIterator]){ReadableStream.prototype[Symbol.asyncIterator]=async function*(){const r=this.getReader();try{for(;;){const x=await r.read();if(x.done)return;yield x.value}}finally{try{r.releaseLock()}catch(e){}}};}
 const SUBJ={maths:{n:'Maths',c:0},phys:{n:'Physique',c:3},chim:{n:'Chimie',c:5},ang:{n:'Anglais',c:4},fr:{n:'Français',c:2},ipt:{n:'IPT / SI',c:1}};
 const LSUBJ=Object.keys(SUBJ);
-const sc=s=>COLORS[(SUBJ[s]||{c:0}).c];
+const COLORS_L=['#0a84c8','#0d9c8a','#d97706','#6d5bd0','#d6336c','#1f9d55'];
+const sc=s=>{const i=(SUBJ[s]||{c:0}).c;return document.documentElement.getAttribute('data-theme')==='light'?COLORS_L[i]:COLORS[i]};
 const sn=s=>(SUBJ[s]||{n:'Other'}).n;
 const TAGS=['Calculation','Method','Course knowledge','Time','Misread the question','Presentation','Stress / focus','Rigor / proof'];
 const SCHED=[{"id":"s-ds-20260907","kind":"ds","subj":"ang","title":"DS Anglais","date":"2026-09-07","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20260912","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-09-12","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20260914","kind":"ds","subj":"fr","title":"DS Français","date":"2026-09-14","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-ds-20260919","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-09-19","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-ang-20260921","kind":"colle","subj":"ang","title":"Colle Anglais (110)","date":"2026-09-21","time":"12:00","endTime":"13:00","color":4,"desc":"Thevenin","teacher":"Thevenin","room":"110","v":6},{"id":"s-colle-maths-20260923","kind":"colle","subj":"maths","title":"Colle Maths (105)","date":"2026-09-23","time":"16:45","endTime":"17:45","color":0,"desc":"C Ogabi","teacher":"C Ogabi","room":"105","v":6},{"id":"s-ds-20260926","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-09-26","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20260928","kind":"ds","subj":"chim","title":"DS Chimie","date":"2026-09-28","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-colle-maths-20261001","kind":"colle","subj":"maths","title":"Colle Maths (107)","date":"2026-10-01","time":"12:55","endTime":"13:55","color":0,"desc":"N Bovetto","teacher":"N Bovetto","room":"107","v":6},{"id":"s-colle-phys-20261002","kind":"colle","subj":"phys","title":"Colle Physique (209)","date":"2026-10-02","time":"12:00","endTime":"13:00","color":3,"desc":"B Bissardon","teacher":"B Bissardon","room":"209","v":6},{"id":"s-ds-20261003","kind":"ds","subj":"ipt","title":"DS IPT + SI","date":"2026-10-03","time":"07:45","endTime":"11:45","color":1,"desc":""},{"id":"s-colle-ang-20261006","kind":"colle","subj":"ang","title":"Colle Anglais (107)","date":"2026-10-06","time":"17:45","endTime":"18:45","color":4,"desc":"Kyne","teacher":"Kyne","room":"107","v":6},{"id":"s-colle-maths-20261008","kind":"colle","subj":"maths","title":"Colle Maths (B605)","date":"2026-10-08","time":"17:45","endTime":"18:45","color":0,"desc":"S Visier","teacher":"S Visier","room":"B605","v":6},{"id":"s-ds-20261010","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-10-10","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-maths-20261014","kind":"colle","subj":"maths","title":"Colle Maths (108)","date":"2026-10-14","time":"17:45","endTime":"18:45","color":0,"desc":"N Hamouti","teacher":"N Hamouti","room":"108","v":6},{"id":"s-colle-phys-20261015","kind":"colle","subj":"phys","title":"Colle Physique (106)","date":"2026-10-15","time":"12:00","endTime":"13:00","color":3,"desc":"T Busser Ramseyer","teacher":"T Busser Ramseyer","room":"106","v":6},{"id":"s-ds-20261017","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-10-17","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20261102","kind":"ds","subj":"fr","title":"DS Français","date":"2026-11-02","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-colle-ang-20261103","kind":"colle","subj":"ang","title":"Colle Anglais (209)","date":"2026-11-03","time":"17:45","endTime":"18:45","color":4,"desc":"Morse","teacher":"Morse","room":"209","v":6},{"id":"s-colle-maths-20261105","kind":"colle","subj":"maths","title":"Colle Maths (B505)","date":"2026-11-05","time":"17:45","endTime":"18:45","color":0,"desc":"M Zaegel","teacher":"M Zaegel","room":"B505","v":6},{"id":"s-ds-20261107","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-11-07","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-phys-20261109","kind":"colle","subj":"phys","title":"Colle Physique (100)","date":"2026-11-09","time":"12:00","endTime":"13:00","color":3,"desc":"D Villegas","teacher":"D Villegas","room":"100","v":6},{"id":"s-ds-20261109","kind":"ds","subj":"ang","title":"DS Anglais","date":"2026-11-09","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-colle-maths-20261112","kind":"colle","subj":"maths","title":"Colle Maths (811)","date":"2026-11-12","time":"17:45","endTime":"18:45","color":0,"desc":"B Jeuris","teacher":"B Jeuris","room":"811","v":6},{"id":"s-ds-20261114","kind":"ds","subj":"ipt","title":"DS IPT + SI","date":"2026-11-14","time":"07:45","endTime":"11:45","color":1,"desc":""},{"id":"s-ds-20261116","kind":"ds","subj":"chim","title":"DS Chimie","date":"2026-11-16","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-colle-ang-20261117","kind":"colle","subj":"ang","title":"Colle Anglais (110)","date":"2026-11-17","time":"12:00","endTime":"13:00","color":4,"desc":"Thevenin","teacher":"Thevenin","room":"110","v":6},{"id":"s-colle-maths-20261119","kind":"colle","subj":"maths","title":"Colle Maths (107)","date":"2026-11-19","time":"12:00","endTime":"13:00","color":0,"desc":"N Bovetto","teacher":"N Bovetto","room":"107","v":6},{"id":"s-ds-20261121","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-11-21","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20261128","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-11-28","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-phys-20261201","kind":"colle","subj":"phys","title":"Colle Physique (102)","date":"2026-12-01","time":"12:00","endTime":"13:00","color":3,"desc":"L Favreau","teacher":"L Favreau","room":"102","v":6},{"id":"s-colle-maths-20261203","kind":"colle","subj":"maths","title":"Colle Maths (B405)","date":"2026-12-03","time":"17:45","endTime":"18:45","color":0,"desc":"M Fatou","teacher":"M Fatou","room":"B405","v":6},{"id":"s-ds-20261205","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-12-05","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20261207","kind":"ds","subj":"fr","title":"DS Français","date":"2026-12-07","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-colle-maths-20261209","kind":"colle","subj":"maths","title":"Colle Maths (709)","date":"2026-12-09","time":"16:45","endTime":"17:45","color":0,"desc":"G Mallet","teacher":"G Mallet","room":"709","v":6},{"id":"s-colle-ang-20261211","kind":"colle","subj":"ang","title":"Colle Anglais (106)","date":"2026-12-11","time":"17:45","endTime":"18:45","color":4,"desc":"Singh","teacher":"Singh","room":"106","v":6},{"id":"s-ds-20261212","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-12-12","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-phys-20261214","kind":"colle","subj":"phys","title":"Colle Physique (808)","date":"2026-12-14","time":"12:00","endTime":"13:00","color":3,"desc":"S Leroy","teacher":"S Leroy","room":"808","v":6},{"id":"s-ds-20261214","kind":"ds","subj":"ipt","title":"DS IPT","date":"2026-12-14","time":"15:50","endTime":"17:40","color":1,"desc":""},{"id":"s-colle-maths-20261217","kind":"colle","subj":"maths","title":"Colle Maths (B605)","date":"2026-12-17","time":"18:45","endTime":"19:45","color":0,"desc":"S Visier","teacher":"S Visier","room":"B605","v":6},{"id":"s-ds-20270104","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-01-04","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20270109","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-01-09","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270111","kind":"ds","subj":"fr","title":"DS Français","date":"2027-01-11","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-ds-20270116","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-01-16","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270125","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-01-25","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270130","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-01-30","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270201","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-02-01","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270206","kind":"ds","subj":"ipt","title":"DS IPT","date":"2027-02-06","time":"07:45","endTime":"11:45","color":1,"desc":""},{"id":"s-ds-20270213","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-02-13","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-cb1-20270301","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-01","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270302","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-02","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270303","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-03","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270304","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-04","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270305","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-05","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270306","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-06","time":"","endTime":"","color":1,"desc":""},{"id":"s-ds-20270313","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-03-13","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270315","kind":"ds","subj":"ipt","title":"DS IPT","date":"2027-03-15","time":"15:50","endTime":"17:40","color":1,"desc":""},{"id":"s-ds-20270320","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-03-20","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270322","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-03-22","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270327","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-03-27","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270403","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-04-03","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270405","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-04-05","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20270410","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-04-10","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270426","kind":"ds","subj":"fr","title":"DS Français","date":"2027-04-26","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-ds-20270503","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-05-03","time":"15:50","endTime":"17:40","color":3,"desc":""},{"id":"s-ds-20270510","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-05-10","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20270515","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-05-15","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270522","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-05-22","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270524","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-05-24","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270529","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-05-29","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270531","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-05-31","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270605","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-06-05","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270612","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-06-12","time":"07:45","endTime":"11:45","color":4,"desc":""},{"id":"s-ds-20270614","kind":"ds","subj":"ipt","title":"DS IPT","date":"2027-06-14","time":"15:50","endTime":"17:40","color":1,"desc":""},{"id":"s-cb2-20270618","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-18","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270619","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-19","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270621","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-21","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270622","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-22","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270623","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-23","time":"","endTime":"","color":1,"desc":""}];
@@ -2481,6 +2634,25 @@ async function aiProv(pr,{system,content,max=4096,onText}){
 const READ_JOBS=()=>[SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_CARDS];
 const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s)||/^You read a TD sheet/.test(s)||/^You compare an AI-written lesson/.test(s);
 const textOnly=o=>(o.content||[]).every(c=>c.type==='text');
+/* ---- keep working when the user switches app: if a request dies while Aether was in the background, wait for the user to come back and run it again ---- */
+let hiddenTick=0;
+document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenTick++});
+const whenVisible=()=>new Promise(res=>{if(!document.hidden)return res();const f=()=>{if(!document.hidden){document.removeEventListener('visibilitychange',f);setTimeout(res,500)}};document.addEventListener('visibilitychange',f)});
+async function away(fn,o){
+  let n=0;
+  for(;;){
+    const h0=hiddenTick;
+    try{return await fn()}
+    catch(e){
+      if(n<3&&(hiddenTick!==h0||document.hidden)&&!(e&&e.noRetry)){
+        n++;await whenVisible();
+        try{if(o&&o.onText)o.onText('');if(typeof toast==='function')toast('Welcome back: resuming your job…')}catch(_){}
+        continue;
+      }
+      throw e;
+    }
+  }
+}
 async function aiAuto(o){
   const gk=localStorage.getItem('p_gkey'),ck=localStorage.getItem('p_key');
   const chain=[],txt=textOnly(o);
@@ -2495,7 +2667,7 @@ async function aiAuto(o){
   for(let i=0;i<chain.length;i++){
     try{
       if(i>0&&o.onText)o.onText('');
-      const r=await chain[i][1]();
+      const r=await away(chain[i][1],o);
       if(r.stop==='max_tokens'&&i<chain.length-1){cut=r;errs.push(chain[i][0]+': the answer was cut short.');continue}
       if(i>0){r.fallback=true;r.from=chain[0][0];S.usage.fb=(S.usage.fb||0)+1}
       S.usage.by=S.usage.by||{};if(!r.via){r.via=chain[i][0];S.usage.by[r.via]=(S.usage.by[r.via]||0)+1}
@@ -2509,10 +2681,17 @@ async function aiAuto(o){
   if(cut)return cut;
   throw new AIError(chain.length===1?errs[0].replace(/^[^:]+: /,''):errs.join(' '));
 }
+const HOUSE="\n\nHOUSE RULES (they apply on top of everything above; if one conflicts with the requested output format, keep the format):\n1. Stay inside THIS student's course. When a lesson, programme, exam or TD of his is provided, reuse its exact notation, definitions, theorem names and order of chapters; never rely on a result he has not seen yet without proving it or marking it 'admis'.\n2. Calibrate to a real MPSI class at lycée Aux Lazaristes (Lyon): rigorous, proof-oriented, no university-level shortcuts. Difficulty and length must be doable in the stated time.\n3. Anchor everything in the programme: each exercise or question names the chapter or skill it trains. Follow the style and level of his past exams and TDs when you have them. Never invent exercise numbers, pages or teacher remarks.\n4. Accuracy first: recompute every result before writing it, with units when relevant. If something is uncertain, say so instead of inventing.\n5. Pedagogy: one idea per question, rising difficulty, the classic trap flagged where it matters, and methods he can reuse.\n6. Output only what was asked, in the requested format and language, with no preamble or closing remark.";
+function subjCtx(subj){
+  const p=(S.set.sp||{})[subj]||{},L=[['teacher','Teacher'],['allowed','Allowed / forbidden'],['format','Format of DS and colles'],['notes','Other']].filter(x=>(p[x[0]]||'').trim()).map(x=>'- '+x[1]+': '+p[x[0]].trim());
+  return L.length?"\n\nSUBJECT PROFILE, "+(SUBJ[subj]?SUBJ[subj].n:subj)+" (written by the student: follow it):\n"+L.join('\n'):'';
+}
 async function ai(o){
+  if(o&&o.subj&&o.system)o=Object.assign({},o,{system:o.system+HOUSE+subjCtx(o.subj)});
+  if(o&&o.gemini){if(!localStorage.getItem('p_gkey'))throw new AIError('This needs your Gemini key (Prépa → AI settings): audio is read by Gemini.');return away(()=>aiGemini(Object.assign({},o,{model:undefined})),o)}
   if(S.set.prov==='auto')return aiAuto(o);
-  if(S.set.prov==='gemini')return aiGemini(Object.assign({},o,{model:o.model&&/^gemini/.test(o.model)?o.model:undefined}));
-  return aiClaude(o);
+  if(S.set.prov==='gemini')return away(()=>aiGemini(Object.assign({},o,{model:o.model&&/^gemini/.test(o.model)?o.model:undefined})),o);
+  return away(()=>aiClaude(o),o);
 }
 async function aiClaude({system,content,max=4096,model,onText}){
   const key=localStorage.getItem('p_key');
@@ -2607,7 +2786,10 @@ const SYS_METHODS=(subj,title)=>"You are a rigorous teacher in a French classe p
 const SYS_METHODS_T=(subj)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). Write the sheet of CROSS-CHAPTER METHODS (méthodes transversales) of "+subj+" that a first-year student must master: "+(/math/i.test(subj)?"all the standard reasoning and proof techniques: double inclusion, équivalence (chaîne d'équivalences), implication directe / réciproque, contraposée, raisonnement par l'absurde, récurrence simple, double, forte, récurrence avec hérédité à plusieurs rangs, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, unicité (par l'absurde ou par différence), existence (construction, théorème des valeurs intermédiaires), contre-exemple, négation de quantificateurs, majoration/minoration, encadrement, passage aux inégalités, changement de variable, intégration par parties, symétrie/parité, raisonnement par analyse des cas limites, utilisation de la conjugaison/factorisation de l'angle moitié, etc.":"the standard reasoning habits of the subject: how to set up a problem, justify results, check homogeneity and orders of magnitude, approximations, structure of a clean answer, units and significant figures, and the typical solving methods of the year")+". Order them from the most frequent to the least. "+METH_FMT+"Start with '## Méthodes transversales : "+subj+"'. Every write-up must be correct and complete. No introduction or closing sentence.";
 const SYS_TD="You read a TD sheet (travaux dirigés: a series of exercises) given by a teacher in a French classe préparatoire. Answer with ONLY a JSON object, no other text: {\"title\":\"short title, e.g. TD 4 — Suites\",\"exercises\":[{\"title\":\"short name of the exercise, e.g. Exercice 3 — Suite de Fibonacci\",\"diff\":3,\"summary\":\"one short sentence on what it asks\"}],\"skills\":[{\"title\":\"a skill or thing to know or do to be able to solve this TD\",\"detail\":\"one short sentence\"}]}. Rules: list EVERY exercise in order (maximum 40); 'diff' is an integer from 1 (direct application of the course) to 5 (hard, multi-step or non-standard) judged from the statement and any star marks, 'ex: * or **' in the sheet, which raise the difficulty; 'skills' are 5 to 10 checkable items of the form 'Savoir démontrer ...', 'Maîtriser ...', 'Connaître ...' that a student ticks to say 'I am ready for this TD'. Keep the teacher's wording and language. Inside JSON strings escape backslashes and double quotes.";
 const SYS_TDCORR=(subj)=>"You are an experienced, rigorous teacher in a French classe préparatoire (first year, "+subj+"). You are given a TD sheet (the exercises, as text or pictures) and the student's COURSE as the reference. Write the full corrigé in French, Markdown, LaTeX between $...$ and $$...$$. For each exercise, in order, use a '## Exercice n' heading (use the sheet's own numbering) then: **Idée / méthode** (one or two lines naming the method, e.g. 'récurrence double', 'double inclusion'), then the complete, rigorous solution written exactly as a student should write it on a copy (hypotheses stated, each step justified, quantifiers and conclusions explicit), then **Résultat** clearly stated and, if relevant, **Piège** (a classic mistake). Stay faithful to the notations, definitions and results of the student's course, and cite which result is used ('d'après le théorème de ... du cours'); if a needed result is not in the course, state it as 'rappel'. Double-check every calculation before writing; correctness matters more than length. If a picture or part is unreadable, say so for that exercise instead of guessing. No introduction or closing sentence.";
-const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the PROGRAMME de colles (the teacher's own list: QUESTIONS DE COURS, THEME OF THE EXERCISES, EXCLUDED) and the student's COURSE (their own lesson notes, transcribed) as the reference. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\nOne question per item of the programme's QUESTIONS DE COURS list: same number, same order, same count, same topic. NEVER invent a question that is not in the list and NEVER skip one. Word each as the colleur would ask it, following the programme's own instructions (for example 'énoncer ces points et en démontrer un'). If the list is '(none)', write 6 short questions from the programme's chapters instead. Number them 1, 2, 3...\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes for the harder ones). They must follow the programme's THEME OF THE EXERCISES exactly: only the topics named there, none of the EXCLUDED ones, and only tools already seen in the course (nothing from later chapters). Spread them over the themes named. For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\n### Corrections des questions de cours\nFor EACH question, a heading '#### Question N : <the programme item>' with the same N as above, then the precise statement(s) and the key proof(s) the colleur expects, taken from the student's course. Cover every question. Then '### Corrections des exercices': for each exercise, a heading '#### Exercice N', a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nRules: stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
+const SYS_AUDIT="You are a strict inspector of French classe préparatoire colle sheets. You receive the PROGRAMME (QUESTIONS DE COURS, THEME OF THE EXERCISES, EXCLUDED, CHAPTERS), optionally the student's COURSE, and a generated SHEET. Check: (1) the questions de cours are exactly the programme's list (same count, order, topic); (2) each exercise stays inside the THEME, touches none of the EXCLUDED topics and uses only tools from the listed chapters/course; (3) each exercise is realistic for a colle (about 15-20 min at the board, standard MPSI level, clearly worded); (4) each correction is mathematically correct (recompute the key steps) and consistent with the statement. Answer with ONE line of JSON only, no markdown: {\"ok\":true} or {\"ok\":false,\"issues\":[\"Exercice 3: uses ... (chapter 12 not seen)\", ...]} with at most 6 short issues in French.";
+const SYS_FORMULAIRE=(subj,n)=>"You are a first-year French classe préparatoire (MPSI) teacher making a FORMULAIRE for "+subj+": a dense, printable summary (target: "+(n||2)+" A4 pages, two columns) the student reviews the day before an exam. You receive the student's own LESSONS (transcribed). Write in French, Markdown, LaTeX between $...$ and $$...$$. Structure: one '## <chapter title>' per lesson, in the order given. Under each: short bullet lines only, no prose paragraphs, no proofs: definitions and statements of the theorems and formulas exactly as in the student's course (same notation), the conditions of validity in brackets, the 2 or 3 key methods in one line each ('Méthode :'), and the classic traps in one line ('Piège :'). Never add a result that is not in the lessons; if something important seems missing, do not invent it. Double-check every formula. No introduction or closing sentence.";
+const SYS_DEBRIEF="You turn a French prépa student's spoken or typed debrief of an oral exam (a 'colle') into clean notes. The input may be an audio recording (French or English) or text. Write in French, Markdown, concise, using exactly these sections and nothing else:\n## Ce qui a été demandé\n(bullet list: each question or exercise as the colleur asked it, with the topic)\n## Où j'ai bloqué\n(bullet list: what went wrong or hesitated, and why if the student said)\n## À retravailler\n(bullet list of concrete things to review, each tied to a chapter or skill)\n## Le colleur\n(1 to 3 lines: style, what he insisted on, how he helped or graded; write 'rien de précis' if nothing was said)\nNever invent anything that was not said. If the audio is silent or unintelligible, answer only: AUDIO_VIDE";
+const SYS_SHEET=(subj,n)=>"You are an experienced, demanding but encouraging teacher in a French classe préparatoire (first year) who prepares a student for an oral exam called a 'colle' in "+subj+". You are given the PROGRAMME de colles (the teacher's own list: QUESTIONS DE COURS, THEME OF THE EXERCISES, EXCLUDED) and the student's COURSE (their own lesson notes, transcribed) as the reference. Write a preparation sheet in French, in Markdown, with LaTeX math between $...$ (inline) and $$...$$ (display). Use exactly this structure:\n\n## Questions de cours\nOne question per item of the programme's QUESTIONS DE COURS list: same number, same order, same count, same topic. NEVER invent a question that is not in the list and NEVER skip one. Word each as the colleur would ask it, following the programme's own instructions (for example 'énoncer ces points et en démontrer un'). If the list is '(none)', write 6 short questions from the programme's chapters instead. Number them 1, 2, 3...\n\n## Exercices\n"+n+" exercises of increasing difficulty, typical of a colle (about 15 to 20 minutes at the board for the harder ones, written the way a colleur of this class would give them: a precise statement, one clear goal, no multi-page computations). They must follow the programme's THEME OF THE EXERCISES exactly: only the topics named there, none of the EXCLUDED ones, and only tools already seen in the course (nothing from later chapters). Spread them over the themes named. For each: a title, the statement, and a one-line 'Indication' hint. Number them Exercice 1, 2, ...\n\n<!--CORRECTIONS-->\n## Corrections\n### Corrections des questions de cours\nFor EACH question, a heading '#### Question N : <the programme item>' with the same N as above, then the precise statement(s) and the key proof(s) the colleur expects, taken from the student's course. Cover every question. Then '### Corrections des exercices': for each exercise, a heading '#### Exercice N', a complete, rigorous, step-by-step correction with the final result clearly stated, and a remark on the classic trap or method to remember. Mention which result from the course is used.\n\nIf a COLLEUR PROFILE or PAST DEBRIEFS section is given, use it to pick the style, the kind of questions and the level of insistence of this colleur, but never to leave the programme theme or the exclusions. Rules: every exercise must be something a colleur could really give to a first-year MPSI student on this programme: classic or adapted from the usual colle/TD exercises of the chapter, never a research-style or contest-level problem, never requiring a result from a later chapter. Never invent exercise numbers or sources. Stay faithful to the notations, definitions and results of the student's course; if a needed result is not in the course, say so explicitly and state it as 'rappel'. Double-check every calculation before writing the correction; correctness matters more than length. No introduction or closing sentence.";
 const SYS_CARDS="You make spaced-repetition flashcards from a student's course notes (French classe préparatoire). Output ONLY a JSON array, no other text: [{\"q\":\"...\",\"a\":\"...\"}]. 12 to 20 cards covering the most important definitions, theorem statements (with hypotheses), key formulas and standard methods of the course, in French (or English if the course is in English). Each question must be answerable on its own; keep answers short and precise. Use LaTeX between $...$ for math. Do not invent anything that is not in the course. Inside JSON strings, write every LaTeX backslash doubled (\\\\frac, \\\\ell) so the JSON stays valid.";
 const SYS_ENGLISH="You are an English teacher in a French classe préparatoire (CPGE). The student has an oral English 'colle' about current affairs and must present and discuss a topic. You receive 2 topics, each with 2 recent news items (headline, outlet, short summary only: you do NOT have the full articles, so never invent details that are not in the summaries). For each topic write, in English: 1) 'Why it matters' in 3 sentences; 2) 'Key vocabulary': 10 useful words or expressions with a short definition; 3) 'Questions you may be asked': 5 questions; 4) 'A 2-minute outline': introduction, three points, conclusion, with useful connectors. Use Markdown with ## for each topic and ### for sub-parts. Do not use the dollar sign for currencies.";
 const SYS_VOCAB="You read photos of a vocabulary list from a language textbook (pairs of words or expressions in two languages, for example French and English). Extract EVERY pair in reading order. Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list or unit\",\"langA\":\"first language name in English, e.g. French\",\"langB\":\"second language name, e.g. English\",\"pairs\":[{\"a\":\"text in langA\",\"b\":\"text in langB\"}]}. Rules: keep spelling and accents exactly as printed; keep articles, 'to' before verbs and short qualifiers as printed; if a word has several translations join them with ' / '; ignore page numbers, headings, phonetic transcriptions and example sentences; if two columns are not clearly translations of each other, pair the words that are on the same line; skip anything illegible. Inside JSON strings escape backslashes and double quotes.";
@@ -2698,8 +2880,8 @@ function removed(id,gone){
 async function dump(){return{texts:await dbAll('texts')}}
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
-window.PC={SYS_DRILL,SYS_COMPLETE,SYS_LEARN,provs,SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
-  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+window.PC={HOUSE,subjCtx,SYS_DRILL,SYS_COMPLETE,SYS_LEARN,provs,SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
+  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_AUDIT,SYS_FORMULAIRE,SYS_DEBRIEF,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -2726,6 +2908,11 @@ const hv=()=>{if(typeof vib==='function')vib(8)};
 const ico={trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"/></svg>',chev:'<span class="go">›</span>',x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',ck:'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>'};
 const subjChips=(sel,list,id)=>'<div class="chips" id="'+id+'">'+list.map(s=>'<button class="chip '+(s===sel?'on':'')+'" data-v="'+s+'">'+SUBJ[s].n+'</button>').join('')+'</div>';
 function bindChips(id,fn){const e=$(id);e.onclick=ev=>{const b=ev.target.closest('.chip');if(!b)return;[...e.children].forEach(c=>c.classList.toggle('on',c===b));hv();fn(b.dataset.v)}}
+const tile=(a,i,ic,t,s,c)=>'<button class="atile '+(c||'')+'" data-a="'+a+'" data-i="'+i+'"><b>'+ic+'</b><span>'+t+'</span>'+(s?'<small>'+s+'</small>':'')+'</button>';
+const tiles=arr=>'<div class="atiles">'+arr.filter(Boolean).join('')+'</div>';
+const tl=id=>(a,ic,t,s,c,ii)=>tile(a,ii||id,ic,t,s,c);
+const tsec=(t,inner)=>'<div class="tsec"><div class="lbl">'+t+'</div>'+inner+'</div>';
+const fold=(t,inner,n)=>'<details class="afold"><summary><span>'+t+'</span>'+(n?'<em>'+n+'</em>':'')+'</summary><div class="afoldb">'+inner+'</div></details>';
 const fileRows=(arr,slot,id)=>(arr||[]).map(f=>'<div class="filerow" data-fid="'+f.id+'" data-fn="'+esc(f.name)+'"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+(C.isPdf(f)?' · PDF':' · photo')+'</small></span><button class="pmini" data-a="view" data-i="'+f.id+'" aria-label="Open">'+ico.eye+'</button><button class="pmini" data-a="rmfile" data-i="'+id+'|'+slot+'|'+f.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('');
 
 /* ---------- running background jobs ---------- */
@@ -2735,13 +2922,32 @@ function liveBox(key){
 }
 function liveText(key,t){const l=live[key];if(!l)return;l.text=t;const e=document.querySelector('[data-live="'+key+'"] .stream');if(e)e.textContent=t.slice(-500)}
 function liveLabel(key,t){const l=live[key];if(!l)return;l.label=t;const e=document.querySelector('[data-live="'+key+'"] .lt');if(e)e.textContent=t}
+/* ---- background jobs: keep the screen awake while one runs, tell the user when it finishes in another app, report jobs killed by iOS ---- */
+let WL=null,wlN=0;
+async function wlGet(){try{if(wlN&&!WL&&navigator.wakeLock&&!document.hidden){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null})}}catch(e){WL=null}}
+function wlOn(){wlN++;wlGet()}
+function wlOff(){wlN=Math.max(0,wlN-1);if(!wlN&&WL){try{WL.release()}catch(e){}WL=null}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)wlGet()});
+const jobsLoad=()=>{try{return JSON.parse(localStorage.getItem('p_jobs')||'{}')}catch(e){return{}}};
+const jobsSave=o=>{try{localStorage.setItem('p_jobs',JSON.stringify(o))}catch(e){}};
+async function notifyDone(label,ok){
+  try{
+    if(localStorage.getItem('jnotif')!=='1'||!document.hidden||!window.Notification||Notification.permission!=='granted')return;
+    const body=(ok?'Ready: ':'Stopped: ')+String(label).replace(/…$/,'');
+    const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();
+    if(reg&&reg.showNotification)reg.showNotification('Aether',{body,tag:'aether-job'});else new Notification('Aether',{body});
+  }catch(e){}
+}
 async function run(key,label,fn){
   if(live[key])return false;
   live[key]={label,text:''};delete errs[key];render();
-  try{await fn(t=>liveLabel(key,t),t=>liveText(key,t));return true}
+  {const j=jobsLoad();j[key]={label,t:Date.now()};jobsSave(j)}
+  wlOn();let ok=false;
+  try{await fn(t=>liveLabel(key,t),t=>liveText(key,t));ok=true;return true}
   catch(e){errs[key]=(e&&e.message)||'Something went wrong.';toast(errs[key]);return false}
-  finally{delete live[key];render();if(typeof cur!=='undefined'&&cur==='home'&&window.P)P.rHomeCard()}
+  finally{wlOff();{const j=jobsLoad();delete j[key];jobsSave(j)}notifyDone(label,ok);delete live[key];render();if(typeof cur!=='undefined'&&cur==='home'&&window.P)P.rHomeCard()}
 }
+setTimeout(()=>{const j=jobsLoad(),k=Object.keys(j).filter(x=>Date.now()-j[x].t<6*36e5);if(k.length){toast('“'+String(j[k[0]].label).replace(/…$/,'')+'” was interrupted when the app closed. Open it and run it again.');jobsSave({})}else if(Object.keys(j).length)jobsSave({})},2500);
 const errBox=key=>errs[key]?'<div class="warnbox">'+esc(errs[key])+'</div>':'';
 const needKey=()=>{if(C.hasKey())return true;toast('Add your AI key first');settings();return false};
 
@@ -2780,7 +2986,7 @@ function inFolders(gk,items,fo,row){
 /* ---------- records (exams / colles) ---------- */
 function recOf(kind,id,meta){
   const store=S[kind];
-  if(!store[id]){store[id]={id,subj:meta.subj,title:meta.title,date:meta.date,grade:null,avg:null,sujet:[],corr:[],copy:[],tags:[],wrong:'',why:'',todo:[],fb:''}}
+  if(!store[id]){store[id]={id,subj:meta.subj,title:meta.title,date:meta.date,grade:null,avg:null,coef:null,cat:(meta.ev&&meta.ev.kind==='vt')?'vocab':'',sujet:[],corr:[],copy:[],tags:[],wrong:'',why:'',todo:[],fb:''}}
   return store[id];
 }
 function metaOf(kind,id){
@@ -2853,6 +3059,7 @@ const TABS=[['home','Overview'],['lessons','Lessons'],['exams','Exams'],['colles
 function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px"><button data-a="back" aria-label="Back">‹</button><b style="font-size:19px;flex:1;text-align:center;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(title)+'</b>'+(right||'<span style="width:36px"></span>')+'</div>'}
 
 /* ----- OVERVIEW (the calendar itself lives in the Calendar tab) ----- */
+function wkNudge(){const d=new Date(),dw=d.getDay(),hr=d.getHours();if(!((dw===0&&hr>=17)||(dw===1&&hr<12)))return '';return '<button class="prow" data-a="week" style="--c:var(--lime)"><i class="dot"></i><span class="m"><div class="t">Your weekly review is ready</div><div class="s">Time worked, grades, what is coming</div></span>'+ico.chev+'</button>'}
 function vOver(){
   const td=iso(),now=new Date().toTimeString().slice(0,5);
   const nx=cal.filter(e=>e.date>td||(e.date===td&&(e.endTime||e.time||'23:59')>=now)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,5);
@@ -2872,15 +3079,18 @@ function vOver(){
   h+='<div class="qa"><button data-a="qaLesson"><b>+</b>Lesson</button><button data-a="qaProg"><b>+</b>Programme</button><button data-a="qaVocab"><b>+</b>Vocab photo</button></div>';
   const due=dueCards().length,vk=S.vocab.length;
   h+='<button class="prow" data-a="tab" data-i="cards" style="--c:var(--lime)"><i class="dot"></i><span class="m"><div class="t">Flashcards & vocabulary</div><div class="s">'+(due?due+' course cards due today':S.cards.length||vk?'All caught up':'Create cards from a lesson or a book photo')+'</div></span>'+ico.chev+'</button>';
+  h+=wkNudge()+'<div class="qa" style="margin-bottom:10px"><button data-a="search"><b>🔍</b>Search</button><button data-a="week"><b>📅</b>Week review</button><button data-a="colleurs"><b>👤</b>Colleurs</button></div>'+boostLine();
+  h+=tsec('Subjects',tiles(C.LSUBJ.map(x=>tile('subj',x,'<i class="dot" style="background:'+C.sc(x)+';display:inline-block;width:12px;height:12px;border-radius:50%"></i>',SUBJ[x].n,''))));
+  h+=tsec('AI & subjects',tiles([tile('sprofs','x','🎓','Subject profiles','teacher · format · rules'),tile('boost','x','⚡','Boost a subject',boostTarget()?SUBJ[boostTarget()].n+' ×'+boostCfg().m:'bonus XP'),tile('settings','x','⚙','AI settings','providers · keys')]));
   return h;
 }
 function evBtn(e,past){
-  const isDs=e.kind==='ds',isCo=e.kind==='colle';
+  const isVt=e.kind==='vt',isDs=e.kind==='ds'||isVt,isCo=e.kind==='colle';
   let r='';
   if(isDs){const x=S.exams[e.id];r=x&&x.grade!=null?gp(x.grade):(past?'<span class="gpill todo">add grade</span>':'')}
   else if(isCo){const x=S.colles[e.id];if(x&&x.grade!=null)r=gp(x.grade);else if(past)r='<span class="gpill todo">debrief</span>'}
   const clk=(isDs||isCo)?'data-a="evOpen" data-i="'+e.id+'"':'data-a="evTap" data-i="'+e.id+'"';
-  return '<button class="pev '+(isDs?'ds':'')+' '+(past?'past':'')+'" style="--c:'+col(e.color)+'" '+clk+'><span><div class="t">'+esc(e.title)+'</div><div class="s">'+(e.time?e.time+(e.endTime?' – '+e.endTime:''):'All day')+(e.desc?' · '+esc(e.desc):'')+'</div></span><span class="r">'+r+'</span></button>';
+  return '<button class="pev '+(e.kind==='ds'?'ds':'')+' '+(past?'past':'')+'" style="--c:'+col(e.color)+'" '+clk+'><span><div class="t">'+esc(e.title)+'</div><div class="s">'+(e.time?e.time+(e.endTime?' – '+e.endTime:''):'All day')+(e.desc?' · '+esc(e.desc):'')+'</div></span><span class="r">'+r+'</span></button>';
 }
 
 /* ----- LESSONS ----- */
@@ -2903,7 +3113,7 @@ function mkMeth(id){
     lab('Reading the lesson…');const t=(await C.getText('L'+id))||'';
     if(t.length<300)throw new C.AIError('This lesson has no text yet. Read it first.');
     lab('Writing the methods and their write-ups…');
-    const r=await C.ai({system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
+    const r=await C.ai({subj:l.subj,system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The methods came out empty. Try again.');
     await C.setText('K'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
     l.mt=Date.now();save.lessons();toast('Key methods ready ✓');
@@ -2911,7 +3121,7 @@ function mkMeth(id){
 }
 function mkMethT(subj){
   return run('KT'+subj,'Writing the cross-chapter methods…',async(lab,txt)=>{
-    const r=await C.ai({system:C.SYS_METHODS_T(SUBJ[subj].n),content:[{type:'text',text:'Write the sheet for '+SUBJ[subj].n+'.'}],max:20000,onText:txt});
+    const r=await C.ai({subj:subj,system:C.SYS_METHODS_T(SUBJ[subj].n),content:[{type:'text',text:'Write the sheet for '+SUBJ[subj].n+'.'}],max:20000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The methods came out empty. Try again.');
     await C.setText('KT'+subj,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
     S.set.kt=Object.assign({},S.set.kt,{[subj]:Date.now()});save.set();toast('Cross-chapter methods ready ✓');
@@ -2971,27 +3181,36 @@ function vLesson(id){
   const l=S.lessons.find(x=>x.id===id);if(!l){st.stack.pop();return vLessons()}
   const k='L'+id;
   let h=backBar(l.title,'<button class="pmini" data-a="delLesson" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  const done=l.status==='done',T=tl(id);
+  const filesBlock='<div class="slot"><div class="hd"><div class="lbl">Files</div><button class="addf" data-a="addLessonFiles" data-i="'+id+'">+ Add pages</button></div>'+fileRows(l.files,'lesson',id)+'</div>';
   h+='<div class="card"><div class="pmeta"><span class="pill" style="color:'+C.sc(l.subj)+'">'+SUBJ[l.subj].n+'</span><span class="pill">'+lessonStatus(l)+'</span>'+folderPill('lessons',id)+'</div>';
-  h+='<div class="slot" style="margin-top:14px"><div class="hd"><div class="lbl">Files</div><button class="addf" data-a="addLessonFiles" data-i="'+id+'">+ Add pages</button></div>'+fileRows(l.files,'lesson',id)+'</div>';
   h+=liveBox(k)+errBox(k);
-  if(!live[k]&&l.status!=='done')h+='<button class="btn" data-a="upText" data-i="'+id+'">⬆ I already have the read file (text PDF or .txt) — upload it</button>';
-  if(!live[k]){
-    h+=l.status==='done'?'<button class="btn" data-a="transcribeAI" data-i="'+id+'">'+(l.how==='text'?'Re-read with AI (better formulas)':'Read again with AI')+'</button>':'<button class="btn primary" data-a="transcribe" data-i="'+id+'">Read this lesson with AI</button><button class="btn" data-a="transcribeText" data-i="'+id+'">Quick read without AI (text PDFs)</button>';
-    if(l.status==='done')h+='<button class="btn" data-a="lc" data-i="'+id+'">'+(l.lc?'✍️ Open the completed lesson':'✍️ Complete this blank lesson (proofs, examples)')+'</button><button class="btn" data-a="meth" data-i="'+id+'">'+(l.mt?'📐 Open the key methods':'📐 Key methods of this chapter')+'</button><button class="btn" data-a="makeCards" data-i="'+id+'">Create flashcards from this lesson</button><button class="btn" data-a="printLesson" data-i="'+id+'">Save as a clean typed PDF</button><button class="btn" data-a="editText" data-i="'+id+'">Fix the text by hand</button>';
+  if(!done){
+    h+='<div style="margin-top:14px">'+filesBlock+'</div>';
+    if(!live[k])h+='<button class="btn primary" data-a="transcribe" data-i="'+id+'">Read this lesson with AI</button>'+tiles([T('transcribeText','⚡','Quick read','no AI · text PDFs'),T('upText','⬆','Upload a read file','text PDF or .txt')]);
+  }else if(!live[k]){
+    h+=tsec('Study',tiles([
+      T('lc','✍️',l.lc?'Completed lesson':'Complete the lesson',l.lc?'open':'proofs · examples'),
+      T('meth','📐','Key methods',l.mt?'open':'write them'),
+      T('makeCards','🃏','Flashcards','from this lesson'),
+      T('printLesson','🖨','Typed PDF','clean copy'),T('mbOpen','📓','Mistakes',(()=>{const n=S.mist.filter(m=>!m.done&&m.lid===id).length;return n?n+' open':'none yet'})(),'wide',l.subj+'|'+id)]));
   }
   h+='</div>';
-  if(l.status==='done')h+='<div class="card"><div class="cardhead"><div class="lbl">Text the AI will use</div><button class="addf" data-a="upText" data-i="'+id+'">⬆ Upload read file</button></div><div class="doc" id="ltext"><div class="shimmer" style="height:120px;border-radius:14px"></div></div></div>';
+  if(done)h+=fold('Source & text',filesBlock+tiles([T('transcribeAI','🔄',l.how==='text'?'Re-read with AI':'Read again','better formulas'),T('editText','✎','Fix by hand','edit the text'),T('upText','⬆','Upload read file','replace the text','wide')])+'<div class="doc" id="ltext" style="margin-top:12px"><div class="shimmer" style="height:120px;border-radius:14px"></div></div>',(l.files||[]).length+' file'+((l.files||[]).length===1?'':'s'));
   return h;
 }
 
 /* ----- EXAMS ----- */
 function examList(){
   const m={};
-  cal.filter(e=>e.kind==='ds'||e.kind==='cb').forEach(e=>{if(e.kind==='ds')m[e.id]={id:e.id,subj:e.subj,title:e.title,date:e.date}});
-  Object.values(S.exams).forEach(r=>{if(!m[r.id])m[r.id]={id:r.id,subj:r.subj,title:r.title,date:r.date}});
+  cal.filter(e=>e.kind==='ds'||e.kind==='vt').forEach(e=>{m[e.id]={id:e.id,subj:e.subj,title:e.title,date:e.date,vt:e.kind==='vt'}});
+  Object.values(S.exams).forEach(r=>{if(!m[r.id])m[r.id]={id:r.id,subj:r.subj,title:r.title,date:r.date,vt:r.cat==='vocab'}});
   return Object.values(m).sort((a,b)=>b.date.localeCompare(a.date));
 }
-function avgOf(recs){const g=recs.filter(r=>r.grade!=null&&r.grade!=='');return g.length?g.reduce((s,r)=>s+(+r.grade),0)/g.length:null}
+const coefOf=r=>(r.coef!=null&&r.coef!==''&&!isNaN(+r.coef)&&+r.coef>=0)?+r.coef:r.cat==='vocab'?1/3:r.kind==='colles'?1:3;
+const fcoef=c=>{const r=Math.round(c*100)/100;return Math.abs(r-1/3)<.006?'1/3':String(r).replace(/\.0+$/,'')};
+function wavg(arr,get){let s=0,w=0;arr.forEach(r=>{const v=get(r);if(v==null||isNaN(v))return;const c=coefOf(r);s+=v*c;w+=c});return w?s/w:null}
+function avgOf(recs){const g=recs.filter(r=>r.grade!=null&&r.grade!=='');return wavg(g,r=>+r.grade)}
 function spark(pts,color){
   if(pts.length<2)return '<span class="sub">'+(pts.length?'1 grade':'—')+'</span>';
   const W=120,H=34,xs=pts.map((p,i)=>4+i*(W-8)/(pts.length-1)),ys=pts.map(p=>H-4-(Math.max(0,Math.min(20,p))/20)*(H-8));
@@ -3009,11 +3228,24 @@ function gradeCard(){
   return h+'</div>';
 }
 function vExams(){
-  const td=iso(),all=examList(),past=all.filter(x=>x.date<=td||S.exams[x.id]),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
-  let h=gradeCard()+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
+  const td=iso(),allx=examList(),all=allx.filter(x=>!x.vt),vts=allx.filter(x=>x.vt&&x.date<=td);
+  const past=all.filter(x=>x.date<=td||S.exams[x.id]),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
+  let h=gradeCard()+vtCard(vts)+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
   if(past.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Past exams</div></div>'+inFolders('exams',past,x=>(S.exams[x.id]||{}).folder||'',x=>exRow('exams',x))}
   if(up.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div><span class="sub">'+up.length+'</span></div>'+up.slice(0,4).map(x=>exRow('exams',x)).join('')}
   return h;
+}
+function linkedCard(evIds){
+  let ts=[];try{ts=tasks.filter(t=>evIds.includes(t.lk))}catch(_){}
+  if(!ts.length)return '';
+  return '<div class="card"><div class="lbl">Linked tasks</div>'+ts.map(t=>{const d=(()=>{try{return isDone(t)}catch(_){return false}})();return '<div class="todo '+(d?'done':'')+'" style="cursor:default"><span class="cb">'+ico.ck+'</span><span class="tx">'+esc(t.text)+'</span></div>'}).join('')+'<div class="sub" style="margin-top:6px">Tick them on the Tasks tab. Link a task from its edit sheet.</div></div>';
+}
+function vtCard(vts){
+  if(!vts.length)return '';
+  const g=vts.map(x=>S.exams[x.id]).filter(r=>r&&r.grade!=null&&r.grade!=='').map(r=>Object.assign({kind:'exams'},r)),a=avgOf(g);
+  const todo=vts.filter(x=>!(S.exams[x.id]&&S.exams[x.id].grade!=null)).length;
+  const rows=vts.slice().sort((p,q)=>q.date.localeCompare(p.date)).map(x=>{const r=S.exams[x.id];return '<button class="prow" style="--c:'+C.sc('ang')+'" data-a="rec" data-i="exams|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+fd(x.date)+'</div><div class="s">coef 1/3</div></span>'+(r&&r.grade!=null?gp(r.grade):'<span class="gpill todo">add grade</span>')+'</button>'}).join('');
+  return fold('Vocabulary Tests',(a!=null?'<div class="sub" style="margin-top:2px">Average '+a.toFixed(1)+'/20 over '+g.length+' test'+(g.length>1?'s':'')+'</div>':'')+rows,(todo?todo+' to grade':vts.length+' tests'));
 }
 function exRow(kind,x){
   const r=S[kind][x.id],n=r?(r.sujet.length+r.corr.length+r.copy.length):0;
@@ -3027,7 +3259,7 @@ function gData(){
   const c=gcfg(),lim=c.per==='all'?'':iso(new Date(Date.now()-(c.per==='30'?30:c.per==='90'?90:180)*864e5));
   return allRecs().filter(r=>{
     const v=c.met==='sat'?r.sat:(r.grade!=null&&r.grade!==''?+r.grade:null);
-    return v!=null&&!isNaN(v)&&(c.subj==='all'||r.subj===c.subj)&&(c.type==='all'||r.kind===c.type)&&(!lim||(r.date||'')>=lim);
+    return v!=null&&!isNaN(v)&&(c.subj==='all'||r.subj===c.subj)&&(c.type==='all'||(c.type==='vocab'?r.cat==='vocab':c.type==='exams'?(r.kind==='exams'&&r.cat!=='vocab'):r.kind===c.type))&&(!lim||(r.date||'')>=lim);
   }).map(r=>Object.assign({},r,{v:c.met==='sat'?r.sat:+r.grade})).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
 }
 function gChart(rs,c){
@@ -3039,7 +3271,7 @@ function gChart(rs,c){
   (sat?[1,2,3,4,5]:[0,5,10,15,20]).forEach(v=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" class="gl"/><text x="'+(L-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" class="gt">'+(sat?SAT[v-1]:v)+'</text>'});
   const groups={};rs.forEach((r,i)=>{(groups[c.subj==='all'?r.subj:'_'+r.type]=groups[c.subj==='all'?r.subj:'_'+r.type]||[]).push({r,x:X(ds[i]),y:Y(r.v)})});
   Object.keys(groups).forEach(k=>{
-    const g=groups[k],col=k[0]==='_'?(c.type==='colles'?'#ff9f0a':c.type==='exams'?'#4d8dff':C.sc(c.subj)):C.sc(k);
+    const g=groups[k],col=k[0]==='_'?(c.type==='colles'?'#ff9f0a':c.type==='exams'?'#4d8dff':c.type==='vocab'?'#5eead4':C.sc(c.subj)):C.sc(k);
     if(g.length>1)s+='<path d="'+g.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
     g.forEach(p=>{s+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="'+(p.r.kind==='colles'?4.2:5)+'" fill="'+(p.r.kind==='colles'?'var(--surf,#14161c)':col)+'" stroke="'+col+'" stroke-width="2.2"/>'});
   });
@@ -3050,19 +3282,21 @@ function gChart(rs,c){
 function vGrades(){
   const c=gcfg(),rs=gData(),sat=c.met==='sat';
   const chips=(k,opts)=>'<div class="chips gc">'+opts.map(o=>'<button class="chip '+(c[k]===o[0]?'on':'')+'" data-a="gcfg" data-i="'+k+'|'+o[0]+'">'+o[1]+'</button>').join('')+'</div>';
-  let h='<div class="card"><div class="cardhead"><div class="lbl">Evolution</div>'+(rs.length?'<div class="gpill '+(sat?'g-mid':gcls(avgOf(rs.map(r=>({grade:r.v}))))) +'">avg '+(rs.reduce((a,r)=>a+r.v,0)/rs.length).toFixed(1)+(sat?'/5':'/20')+'</div>':'')+'</div>';
+  let h='<div class="card"><div class="cardhead"><div class="lbl">Evolution</div>'+(rs.length?'<div class="gpill '+(sat?'g-mid':gcls(avgOf(rs.map(r=>({grade:r.v}))))) +'">avg '+(sat?rs.reduce((a,r)=>a+r.v,0)/rs.length:wavg(rs,r=>r.v)).toFixed(1)+(sat?'/5':'/20')+'</div>':'')+'</div>';
   h+='<div class="sub gh">Measure</div>'+chips('met',[['grade','Grades /20'],['sat','Satisfaction']]);
   h+='<div class="sub gh">Subject</div>'+chips('subj',[['all','All']].concat(C.LSUBJ.map(s=>[s,SUBJ[s].n])));
-  h+='<div class="sub gh">Type</div>'+chips('type',[['all','Exams + colles'],['exams','Exams only'],['colles','Colles only']]);
+  h+='<div class="sub gh">Type</div>'+chips('type',[['all','Everything'],['exams','Exams'],['colles','Colles'],['vocab','Vocabulary tests']]);
   h+='<div class="sub gh">Period</div>'+chips('per',[['all','All time'],['180','6 months'],['90','3 months'],['30','30 days']]);
   h+='<div style="margin-top:14px">'+gChart(rs,c)+'</div>';
   if(c.subj==='all'&&rs.length)h+='<div class="legend" style="flex-wrap:wrap;gap:10px;margin-top:8px">'+C.LSUBJ.filter(s=>rs.some(r=>r.subj===s)).map(s=>'<span><i class="dot" style="background:'+C.sc(s)+';display:inline-block;width:9px;height:9px;border-radius:50%"></i> '+SUBJ[s].n+'</span>').join('')+'</div>';
   h+='<div class="sub" style="margin-top:8px">● exam · ○ colle</div></div>';
   // per-subject summary with trend
-  const sub=C.LSUBJ.map(s=>{const x=rs.filter(r=>r.subj===s);if(!x.length)return '';const a=x.reduce((p,r)=>p+r.v,0)/x.length,k=Math.min(3,Math.floor(x.length/2)),tr=k?(x.slice(-k).reduce((p,r)=>p+r.v,0)/k-x.slice(0,k).reduce((p,r)=>p+r.v,0)/k):null;
-    return '<div class="prow" style="--c:'+C.sc(s)+';cursor:default"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+x.length+' · avg '+a.toFixed(1)+(tr==null?'':' · '+(tr>0.05?'▲ +':tr<-0.05?'▼ ':'= ')+(Math.abs(tr)>0.05?tr.toFixed(1):'steady'))+'</div></span>'+spark(x.map(r=>r.v),C.sc(s))+'</div>'}).join('');
+  const sub=C.LSUBJ.map(s=>{const x=rs.filter(r=>r.subj===s);if(!x.length)return '';const a=sat?x.reduce((p,r)=>p+r.v,0)/x.length:wavg(x,r=>r.v),k=Math.min(3,Math.floor(x.length/2)),tr=k?(x.slice(-k).reduce((p,r)=>p+r.v,0)/k-x.slice(0,k).reduce((p,r)=>p+r.v,0)/k):null;
+    return '<button class="prow" style="--c:'+C.sc(s)+'" data-a="subj" data-i="'+s+'"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+x.length+' · avg '+a.toFixed(1)+(tr==null?'':' · '+(tr>0.05?'▲ +':tr<-0.05?'▼ ':'= ')+(Math.abs(tr)>0.05?tr.toFixed(1):'steady'))+'</div></span>'+spark(x.map(r=>r.v),C.sc(s))+'</button>'}).join('');
+  if(c.subj!=='all'&&!sat){const e2=cal.filter(e=>e.subj===c.subj&&e.date>=iso()&&['ds','colle','vt'].includes(e.kind)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,3);h+=subjProj(c.subj,allRecs().filter(r=>r.subj===c.subj),e2,0)+'<button class="btn" style="margin:0 0 12px" data-a="subj" data-i="'+c.subj+'">Open the '+SUBJ[c.subj].n+' page ›</button>'}
   if(sub)h+='<div class="card"><div class="lbl">By subject</div>'+sub+'</div>';
-  if(rs.length)h+='<div class="card"><div class="lbl">All entries</div>'+rs.slice().reverse().map(r=>'<button class="prow" style="--c:'+C.sc(r.subj)+'" data-a="rec" data-i="'+r.kind+'|'+r.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(r.title)+'</div><div class="s">'+(r.kind==='exams'?'Exam':'Colle')+' · '+fd(r.date)+(r.sat?' · '+SAT[r.sat-1]:'')+'</div></span><span class="gpill '+(sat?'g-mid':gcls(r.v))+'">'+(sat?SAT[r.v-1]:r.v)+'</span>'+ico.chev+'</button>').join('')+'</div>';
+  h+=effortCard();
+  if(rs.length)h+='<div class="card"><div class="lbl">All entries</div>'+rs.slice().reverse().map(r=>'<button class="prow" style="--c:'+C.sc(r.subj)+'" data-a="rec" data-i="'+r.kind+'|'+r.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(r.title)+'</div><div class="s">'+(r.cat==='vocab'?'Vocab test':r.kind==='exams'?'Exam':'Colle')+' · coef '+fcoef(coefOf(r))+' · '+fd(r.date)+(r.sat?' · '+SAT[r.sat-1]:'')+'</div></span><span class="gpill '+(sat?'g-mid':gcls(r.v))+'">'+(sat?SAT[r.v-1]:r.v)+'</span>'+ico.chev+'</button>').join('')+'</div>';
   return h;
 }
 
@@ -3083,7 +3317,7 @@ function vMock(id){
   if(live[k])h+=liveBox(k);
   else{
     if(errs[k]||m.err)h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[k]||m.err)+'</div>';
-    h+='<button class="btn '+(m.fiAt?'':'')+'" style="margin-top:12px" data-a="fiche" data-i="m|'+id+'">📘 '+(m.fiAt?'Open the résumé':'Résumé: what to know for this exam')+'</button><div class="row2" style="margin-top:12px"><button class="btn '+(m.at?'':'primary')+'" data-a="mkMock" data-i="'+id+'">'+(m.at?'Write a new version':'Write the exam')+'</button><button class="btn danger" data-a="delMock" data-i="'+id+'">Delete</button></div>'+folderPill('mocks',id);
+    {const T=tl(id);h+=(m.at?'':'<button class="btn primary" style="margin-top:12px" data-a="mkMock" data-i="'+id+'">Write the exam</button>')+tiles([T('fiche','📘',m.fiAt?'Open the résumé':'Résumé','what to know','','m|'+id),m.at?T('mkMock','🔄','New version','rewrite the exam'):'',T('delMock','🗑','Delete this mock exam','','danger wide')])+folderPill('mocks',id);}
   }
   h+='</div>';
   if(m.at&&!live[k])h+='<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Sujet</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrigé</button></div><div class="card"><div class="doc" id="mockdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
@@ -3146,7 +3380,7 @@ function mkMock(id){
     lab('Looking at your real exams for the style…');
     const sm=await styleModels(m.subj);
     lab('Writing the exam and the corrigé…');
-    const r=await C.ai({system:C.SYS_MOCK(SUBJ[m.subj].n,m.dur,m.calc),content:[
+    const r=await C.ai({subj:m.subj,system:C.SYS_MOCK(SUBJ[m.subj].n,m.dur,m.calc),content:[
       {type:'text',text:'MAIN LESSONS:'+main,cache:true},
       {type:'text',text:'COMPLEMENTARY LESSONS (memory notes):'+(comp||'\n(none)')+'\n\nMODEL EXAMS (style only):'+(sm.txt||'\n(none available: use the usual style of a French MPSI DS)')+profileFor(m.subj)}],max:24000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The exam came out empty. Try again.');
@@ -3195,7 +3429,7 @@ function mkFiche(id){
       body='MAIN LESSONS (the exam is centred on these):'+x.main+'\n\nCOMPLEMENTARY / LINKED LESSONS (memory notes):'+(x.comp||'\n(none)');used=o.main.map(i=>(S.lessons.find(l=>l.id===i)||{}).title).filter(Boolean).join(', ');
     }
     lab('Writing the résumé…');
-    const r=await C.ai({system:C.SYS_RESUME(k==='p'?'the colle programme below':'a '+o.dur+' mock exam on the main lessons below',SUBJ[o.subj].n),content:[{type:'text',text:body,cache:true},{type:'text',text:profileFor(o.subj)||'(no profile yet)'}],max:9000,onText:txt});
+    const r=await C.ai({subj:o.subj,system:C.SYS_RESUME(k==='p'?'the colle programme below':'a '+o.dur+' mock exam on the main lessons below',SUBJ[o.subj].n),content:[{type:'text',text:body,cache:true},{type:'text',text:profileFor(o.subj)||'(no profile yet)'}],max:9000,onText:txt});
     if(r.text.length<300)throw new C.AIError('The résumé came out empty. Try again.');
     await C.setText(key,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
     o.fiAt=Date.now();o.fiUsed=used;(k==='p'?save.progs:save.mocks)();toast('Résumé ready ✓');
@@ -3206,13 +3440,13 @@ function mkFiche(id){
 const XPD=[0,10,20,35,55,80];                   // XP for an exercise, by difficulty 1..5
 const DIFFT=['','★ Direct','★★ Standard','★★★ Medium','★★★★ Hard','★★★★★ Very hard'];
 const tdDone=t=>(t.exos||[]).filter(e=>e.done).length;
-const hmin=m=>{m=Math.round(m||0);return m<60?m+' min':Math.floor(m/60)+' h '+(m%60?String(m%60).padStart(2,'0'):'')};
+const hdur=m=>{m=Math.round(m||0);return m<60?m+' min':Math.floor(m/60)+' h '+(m%60?String(m%60).padStart(2,'0'):'')};
 function vTD(){
   let h='<button class="add" data-a="addTD">+ Add a TD (sheet of exercises)</button>';
   if(!S.tds.length)return h+'<div class="hidecorr">Upload a TD sheet: the AI lists its exercises with their difficulty, a checklist of skills (“Am I ready?”) and, when you ask, the full corrigé. Ticking an exercise gives XP, more for harder ones.</div>';
   h+=inFolders('tds',S.tds.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')),t=>t.folder||'',t=>{
     const n=(t.exos||[]).length,d=tdDone(t),sk=(t.skills||[]).length,r=sk?Math.round(100*t.skills.filter(c=>c.ready).length/sk):null;
-    return '<button class="prow" style="--c:'+C.sc(t.subj)+'" data-a="td" data-i="'+t.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(t.title||SUBJ[t.subj].n+' TD')+'</div><div class="s">'+SUBJ[t.subj].n+' · '+fdl(t.date)+' · '+(live['T'+t.id]?'Reading…':n?d+'/'+n+' exercises':'Not read yet')+(t.min?' · '+hmin(t.min):'')+'</div></span>'+(r!=null?'<span class="gpill '+(r>=70?'g-hi':r>=40?'g-mid':'g-lo')+'">'+r+'%</span>':'')+ico.chev+'</button>';
+    return '<button class="prow" style="--c:'+C.sc(t.subj)+'" data-a="td" data-i="'+t.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(t.title||SUBJ[t.subj].n+' TD')+'</div><div class="s">'+SUBJ[t.subj].n+' · '+fdl(t.date)+' · '+(live['T'+t.id]?'Reading…':n?d+'/'+n+' exercises':'Not read yet')+(t.min?' · '+hdur(t.min):'')+'</div></span>'+(r!=null?'<span class="gpill '+(r>=70?'g-hi':r>=40?'g-mid':'g-lo')+'">'+r+'%</span>':'')+ico.chev+'</button>';
   });
   return h;
 }
@@ -3220,9 +3454,9 @@ function vTDpage(id){
   const t=S.tds.find(x=>x.id===id);if(!t){st.stack.pop();return vTD()}
   const k='T'+id,K='TCO'+id,nx=(t.exos||[]).length,dn=tdDone(t);
   let h=backBar(t.title||SUBJ[t.subj].n+' TD','<button class="pmini" data-a="tdEdit" data-i="'+id+'" aria-label="Rename">✎</button><button class="pmini" data-a="delTD" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
-  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(t.subj)+'">'+SUBJ[t.subj].n+'</span><span class="pill">'+fdl(t.date)+'</span>'+folderPill('tds',id)+(t.min?'<span class="pill">⏱ '+hmin(t.min)+'</span>':'')+'</div>';
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(t.subj)+'">'+SUBJ[t.subj].n+'</span><span class="pill">'+fdl(t.date)+'</span>'+folderPill('tds',id)+(t.min?'<span class="pill">⏱ '+hdur(t.min)+'</span>':'')+'</div>';
   h+='<div class="slot"><div class="hd"><div class="lbl">TD sheet</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|files">+ Add</button></div>'+fileRows(t.files,'td',id)+'</div>';
-  h+='<button class="btn" data-a="logMist" data-i="manual" style="margin-bottom:10px">📓 Log a mistake from this TD</button><div class="slot"><div class="hd"><div class="lbl">My solutions</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|mine">+ Add</button></div>'+(fileRows(t.mine,'tdmine',id)||'<div class="sub">Drop your own work here (photos or PDF) to keep it with the TD.</div>')+'</div>';
+  h+='<button class="btn" data-a="logMist" data-i="td:'+id+'" style="margin-bottom:10px">📓 Log a mistake from this TD</button><div class="slot"><div class="hd"><div class="lbl">My solutions</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|mine">+ Add</button></div>'+(fileRows(t.mine,'tdmine',id)||'<div class="sub">Drop your own work here (photos or PDF) to keep it with the TD.</div>')+'</div>';
   h+=liveBox(k)+errBox(k);
   if(!live[k]&&!nx)h+='<button class="btn primary" data-a="tdRead" data-i="'+id+'">Read the TD</button>';
   h+='</div>';
@@ -3282,7 +3516,7 @@ function mkTdCo(id){
     const fake={subj:t.subj,chapters:[{title:t.title||'',detail:(t.exos||[]).map(e=>e.title+' '+e.summary).join(' ')+' '+(t.skills||[]).map(c=>c.title).join(' ')}]};
     const c=await courseFor(fake);
     lab('Writing the corrections…');
-    const r=await C.ai({system:C.SYS_TDCORR(SUBJ[t.subj].n),content:src.slice(0,24).concat([{type:'text',text:'STUDENT COURSE:'+(c.txt||'\n(No lesson of this subject was read: use the standard French prépa programme and say so in one short note at the top.)'),cache:true},{type:'text',text:profileFor(t.subj)||'(no profile yet)'}]),max:30000,onText:txt});
+    const r=await C.ai({subj:t.subj,system:C.SYS_TDCORR(SUBJ[t.subj].n),content:src.slice(0,24).concat([{type:'text',text:'STUDENT COURSE:'+(c.txt||'\n(No lesson of this subject was read: use the standard French prépa programme and say so in one short note at the top.)'),cache:true},{type:'text',text:profileFor(t.subj)||'(no profile yet)'}]),max:30000,onText:txt});
     if(r.text.length<300)throw new C.AIError('The corrigé came out empty. Try again.');
     await C.setText('TC'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The corrigé was cut: write a new one, or split the TD in two files.]*':''));
     t.coAt=Date.now();t.coNote=c.used.length?'from '+c.used.length+' of your lessons':'no lesson used';save.tds();toast('Corrigé ready ✓');
@@ -3290,10 +3524,10 @@ function mkTdCo(id){
 }
 
 function mistakeCard(){
-  const rs=allRecs(),cnt={};rs.forEach(r=>(r.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
-  const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);if(!ks.length)return '<button class="btn" data-a="mb">📓 Mistake notebook'+(mistOpen().length?' · '+mistOpen().length+' open':'')+'</button>';
-  const mx=cnt[ks[0]];
-  return '<div class="card"><div class="cardhead"><div class="lbl">Mistake notebook · your patterns</div><button class="lnk" data-a="mb">Open ›</button></div>'+ks.map(k=>'<button class="prow" data-a="tagView" data-i="'+esc(k)+'" style="--c:var(--orange,#ff9f0a);margin-bottom:7px"><span class="m"><div class="t" style="font-size:14.5px">'+esc(k)+'</div><div class="pbar" style="margin-top:7px"><i style="width:'+Math.round(100*cnt[k]/mx)+'%"></i></div></span><b>'+cnt[k]+'</b></button>').join('')+'</div>';
+  mistSync();
+  if(!S.mist.length)return '<button class="btn" data-a="mb">📓 Mistake Sheet</button>';
+  const op=mistOpen(),by=C.LSUBJ.filter(s=>op.some(m=>m.subj===s));
+  return '<div class="card"><div class="cardhead"><div class="lbl">Mistake Sheet</div><button class="lnk" data-a="mb">Open ›</button></div>'+(by.length?by.map(s=>'<button class="prow" style="--c:'+C.sc(s)+'" data-a="mbOpen" data-i="'+s+'|"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+mistOpen(s).length+' open</div></span></button>').join(''):'<div class="sub">No open mistake. Nice.</div>')+'</div>';
 }
 
 /* ----- COLLES ----- */
@@ -3322,25 +3556,22 @@ function vRec(kind,id){
   const isEx=kind==='exams',key='R'+id,key2=r.fb?'':'';
   let h=backBar(meta.title,'<button class="pmini" data-a="recEdit" data-i="'+kind+'|'+id+'" aria-label="Edit">✎</button><button class="pmini" data-a="recDel" data-i="'+kind+'|'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(meta.subj)+'">'+SUBJ[meta.subj].n+'</span><span class="pill">'+fd(meta.date)+'</span>'+folderPill(kind,id)+'</div>'+(kind==='colles'?(()=>{const ci=colleInfo(id);return '<div class="colleur" data-a="recEdit" data-i="colles|'+id+'"><span>👤 Colleur</span><b>'+(ci.teacher?esc(ci.teacher):'<i>add the name</i>')+'</b>'+(ci.room?'<span class="rm">📍 '+esc(ci.room)+'</span><small class="rh">'+esc(roomHint(ci.room))+'</small>':'<span class="rm noroom">＋ room</span>')+'</div>'})():'');
-  h+='<div class="'+(isEx?'two2':'')+'"><div class="field"><label>My grade /20</label><input inputmode="decimal" data-in="grade" data-k="'+kind+'|'+id+'" placeholder="e.g. 12.5" value="'+(r.grade==null?'':r.grade)+'"></div>'+(isEx?'<div class="field"><label>Class average</label><input inputmode="decimal" data-in="avg" data-k="'+kind+'|'+id+'" placeholder="optional" value="'+(r.avg==null?'':r.avg)+'"></div>':'')+'</div>'+satRow(kind,id,r.sat)+'</div>';
+  h+='<div class="'+(isEx?'two2':'')+'"><div class="field"><label>My grade /20</label><input inputmode="decimal" data-in="grade" data-k="'+kind+'|'+id+'" placeholder="e.g. 12.5" value="'+(r.grade==null?'':r.grade)+'"></div>'+(isEx?'<div class="field"><label>Class average</label><input inputmode="decimal" data-in="avg" data-k="'+kind+'|'+id+'" placeholder="optional" value="'+(r.avg==null?'':r.avg)+'"></div>':'')+'</div><div class="field"><label>Coefficient <span class="sub">(weight in your averages)</span></label><input inputmode="decimal" data-in="coef" data-k="'+kind+'|'+id+'" placeholder="'+fcoef(coefOf({kind:kind,cat:r.cat}))+'" value="'+(r.coef==null?'':r.coef)+'"></div>'+satRow(kind,id,r.sat)+'</div>';
   h+='<div class="card"><div class="lbl">Files</div>';
   const slot=(sl,label)=>'<div class="slot"><div class="hd"><div class="lbl">'+label+'</div><button class="addf" data-a="addRecFile" data-i="'+kind+'|'+id+'|'+sl+'">+ Add</button></div>'+(fileRows(r[sl],kind+'|'+sl,id)||'<div class="sub">Nothing yet</div>')+'</div>';
   if(isEx)h+=slot('sujet','Sujet (exam paper)')+slot('corr','Correction')+slot('copy','My graded copy');
   else h+=slot('copy','Photos of my notes / the board');
   h+='</div>';
-  h+='<div class="card"><div class="lbl">Improvement Sheet</div>';
-  h+='<div class="field"><label>Where did I lose points?</label><div class="tagrow" id="tags">'+C.TAGS.map(t=>'<button class="tg '+((r.tags||[]).includes(t)?'on':'')+'" data-a="tag" data-i="'+kind+'|'+id+'|'+esc(t)+'">'+esc(t)+'</button>').join('')+'</div></div>';
-  h+='<div class="field"><label>What went wrong</label><textarea data-in="wrong" data-k="'+kind+'|'+id+'" placeholder="Be specific: exercise, step, reason…">'+esc(r.wrong||'')+'</textarea></div>';
-  h+='<div class="field"><label>What to improve</label><textarea data-in="why" data-k="'+kind+'|'+id+'" placeholder="What will I do differently next time?">'+esc(r.why||'')+'</textarea></div>';
-  h+='<div class="lbl" style="margin-top:6px">To redo</div><div id="todos">'+(r.todo||[]).map(t=>'<div class="todo '+(t.done?'done':'')+'" data-a="todo" data-i="'+kind+'|'+id+'|'+t.id+'"><span class="cb">'+ico.ck+'</span><span class="tx">'+esc(t.t)+'</span><button class="pmini" data-a="rmtodo" data-i="'+kind+'|'+id+'|'+t.id+'" aria-label="Remove">'+ico.x+'</button></div>').join('')+'</div>';
-  h+='<div class="two2" style="margin-top:8px"><input id="newtodo" placeholder="e.g. Redo exercise 2"><button class="btn sm" style="flex:none" data-a="addtodo" data-i="'+kind+'|'+id+'">Add</button></div><div class="sub" style="margin-top:6px">Each item also becomes an objective in Aether.</div></div>';
+  if(kind==='colles')h+=debriefCard(id);
+  h+=linkedCard([id]);
+  {const mine=S.mist.filter(m=>m.ref===kind+'|'+id||m.src===kind+'|'+id);
+  h+='<div class="card"><div class="cardhead"><div class="lbl">Mistakes from this paper</div><span class="sub">'+mine.length+'</span></div>'+(mine.length?mine.slice(0,4).map(m=>'<div class="sub" style="padding:5px 0;color:var(--text)">• '+esc(m.text.slice(0,110))+'</div>').join(''):'<div class="sub">None logged yet. Mistakes are filed in your Mistake Sheet, by subject and lesson, not on this page.</div>')+tiles([tile('logMist','ref:'+kind+'|'+id,'📝','Log a mistake','from this paper'),tile('mbOpen',meta.subj+'|','📓','Mistake Sheet',SUBJ[meta.subj].n)])+'</div>';}
   if(r.copy&&r.copy.length||(isEx&&r.corr.length)){
     h+='<div class="card"><div class="lbl">AI review of my copy</div>'+liveBox(key)+errBox(key);
     if(r.fb)h+='<div class="doc" id="fbtext"></div>';
     if(!live[key])h+='<button class="btn" data-a="feedback" data-i="'+kind+'|'+id+'">'+(r.fb?'Redo the AI review':'Ask the AI to find my mistakes')+'</button>';
     h+='</div>';
   }
-  h+='<button class="btn" data-a="printRec" data-i="'+kind+'|'+id+'">Print / save my Improvement Sheet as PDF</button>';
   return h;
 }
 
@@ -3349,7 +3580,7 @@ function vProg(id){
   const p=S.progs.find(x=>x.id===id);if(!p){st.stack.pop();return vColles()}
   const k='P'+id;
   let h=backBar(p.title||SUBJ[p.subj].n+' programme','<button class="pmini" data-a="delProg" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
-  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span>'+folderPill('progs',id)+(p.min?'<span class="pill">⏱ '+hmin(p.min)+'</span>':'')+'</div>';
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span>'+folderPill('progs',id)+(p.min?'<span class="pill">⏱ '+hdur(p.min)+'</span>':'')+'</div>';
   h+=fileRows(p.files,'prog',id)+liveBox(k)+errBox(k)+(p.err&&!errs[k]?'<div class="warnbox">'+esc(p.err)+'</div>':'');
   if(!live[k]){
     if(!p.chapters||!p.chapters.length)h+='<button class="btn primary" data-a="parseProg" data-i="'+id+'">Read the programme and build my sheet</button>';
@@ -3361,14 +3592,15 @@ function vProg(id){
     h+=p.chapters.map(c=>'<div class="todo '+(c.ready?'done':'')+'" data-a="ready" data-i="'+id+'|'+c.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(c.title)+'</b>'+(c.detail?'<div class="sub">'+esc(c.detail)+'</div>':'')+'</span></div>').join('');
     if(p.remarks)h+='<div class="sub" style="margin-top:8px">Note from the teacher: '+esc(p.remarks)+'</div>';
     h+='</div>';
+    h+=linkedCard(cal.filter(c=>c.kind==='colle'&&c.subj===p.subj&&c.date===p.date).map(c=>c.id));
     h+='<div class="card"><div class="lbl">Prep sheet</div>';
     if(p.sheetAt){
       h+='<div class="sub" style="margin-bottom:6px">Made '+new Date(p.sheetAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+(p.noCourse?'':' from '+(p.used||[]).length+' of your lesson'+((p.used||[]).length>1?'s':''))+'</div>';
+      if(p.audit)h+='<div class="sub" style="margin-bottom:8px">'+(p.audit.fixed?'✓ Checked against your programme: '+p.audit.fixed+' point'+(p.audit.fixed>1?'s':'')+' fixed ('+esc(p.audit.issues.join(' · ')).slice(0,220)+')':p.audit.ok?'✓ Checked against your programme: theme, exclusions and format OK':'⚠︎ Could not fix: '+esc((p.audit.issues||[]).join(' · ')).slice(0,260)+'. Regenerate if it matters.')+'</div>';
       if(p.noCourse)h+='<div class="warnbox">'+(S.lessons.some(l=>l.subj===p.subj)?'Your '+SUBJ[p.subj].n+' lessons were not read yet, so this sheet uses general prépa knowledge, not your course. Open Lessons → “Read all now”, then generate a new sheet.':'No lesson of '+SUBJ[p.subj].n+' was uploaded, so this sheet uses general prépa knowledge, not your course.')+'</div>';
       h+='<button class="btn primary" data-a="openSheet" data-i="'+id+'">Open exercises & corrections</button>';
     }
-    if(!live[k])h+='<button class="btn '+(p.sheetAt?'':'primary')+'" data-a="mkSheet" data-i="'+id+'">'+(p.sheetAt?'Generate a new sheet':'Generate the sheet')+'</button>';
-    h+='<div class="row2" style="margin-top:8px"><button class="btn" data-a="impSheet" data-i="'+id+'">⬆ Import a sheet</button><button class="btn" data-a="promptSheet" data-i="'+id+'">📋 Prompt for Claude</button></div>';
+    if(!live[k]){const T=tl(id);if(!p.sheetAt)h+='<button class="btn primary" data-a="mkSheet" data-i="'+id+'">Generate the sheet</button>';h+=tiles([p.sheetAt?T('mkSheet','🔄','New sheet','regenerate'):'',T('impSheet','⬆','Import a sheet','from a file'),T('promptSheet','📋','Prompt for Claude','copy')])}
     h+='</div>';
     h+='<div class="card"><div class="lbl">Revision résumé</div><div class="sub" style="margin-bottom:10px">Everything to know for this programme, built from your lessons: priorities, definitions and formulas, methods, traps, and a last-minute checklist.</div>'+liveBox('F'+id)+errBox('F'+id)+(live['F'+id]?'':'<button class="btn '+(p.fiAt?'':'primary')+'" data-a="fiche" data-i="p|'+id+'">'+(p.fiAt?'Open the résumé':'Generate the résumé')+'</button>')+'</div>';
   }
@@ -3451,7 +3683,7 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():'';
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):'';
   }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():st.tab==='td'?vTD():st.tab==='grades'?vGrades():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
@@ -3572,7 +3804,7 @@ A.makeCards=id=>{
   if(!needKey())return;const l=S.lessons.find(x=>x.id===id),k='L'+id;
   run(k,'Writing flashcards…',async(lab,txt)=>{
     const t=(await C.getText(k)).slice(0,150000);
-    const r=await C.ai({system:C.SYS_CARDS,content:[{type:'text',text:'Subject: '+SUBJ[l.subj].n+'\nLesson: '+l.title+'\n\nCOURSE:\n'+t}],max:8000,onText:txt});
+    const r=await C.ai({subj:l.subj,system:C.SYS_CARDS,content:[{type:'text',text:'Subject: '+SUBJ[l.subj].n+'\nLesson: '+l.title+'\n\nCOURSE:\n'+t}],max:8000,onText:txt});
     const arr=C.parseJson(r.text);if(!Array.isArray(arr)||!arr.length)throw new C.AIError('No cards came out. Try again.');
     arr.filter(c=>c&&c.q&&c.a).forEach(c=>S.cards.push({id:uid(),lid:id,subj:l.subj,q:String(c.q),a:String(c.a),box:0,due:iso()}));
     save.cards();toast(arr.length+' cards added');
@@ -3703,7 +3935,7 @@ A.feedback=i=>{
     const parts=(await C.filesToParts(r.copy,lab)).concat(await C.filesToParts(r.corr||[],lab)).slice(0,4);
     if(!parts.length)throw new C.AIError('Add a photo or PDF of your copy first.');
     const blocks=[];parts.forEach(p=>p.blocks.forEach(b=>blocks.push(b)));
-    const res=await C.ai({system:C.SYS_FEEDBACK,content:blocks.concat([{type:'text',text:'Subject: '+SUBJ[meta.subj].n+'. '+meta.title+(r.grade!=null?'. Grade: '+r.grade+'/20':'')+'. Student notes: '+(r.wrong||'none')+'. The first files are the student copy, the last ones (if any) the correction.'}]),max:6000,onText:txt});
+    const res=await C.ai({subj:meta.subj,system:C.SYS_FEEDBACK,content:blocks.concat([{type:'text',text:'Subject: '+SUBJ[meta.subj].n+'. '+meta.title+(r.grade!=null?'. Grade: '+r.grade+'/20':'')+'. Student notes: '+(r.wrong||'none')+'. The first files are the student copy, the last ones (if any) the correction.'}]),max:6000,onText:txt});
     r.fb=res.text.trim();save[kind]();
   });
 };
@@ -3775,10 +4007,21 @@ async function mkSheet(id,n){
     lab('Collecting your lessons…');const c=await courseFor(p);
     const prog='QUESTIONS DE COURS (the programme\'s own list, copy this list):\n'+((p.cours||[]).length?p.cours.map((x,i)=>(i+1)+'. '+x).join('\n'):'(none)')+'\n\nTHEME OF THE EXERCISES:\n'+(p.theme||'(not specified: use the chapters below)')+'\n\nEXCLUDED:\n'+(p.excl||'(none)')+'\n\nCHAPTERS:\n'+p.chapters.map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n');
     lab('Writing exercises and corrections…');
-    const r=await C.ai({system:C.SYS_SHEET(SUBJ[p.subj].n,n||6),content:[{type:'text',text:'PROGRAMME DE COLLES ('+SUBJ[p.subj].n+'):\n'+prog+(p.remarks?'\nTeacher note: '+p.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject. Use the standard French prépa programme and say so in a short note at the top.)'),cache:true},{type:'text',text:profileFor(p.subj)||'(no profile yet)'}],max:24000,onText:txt});
+    const r=await C.ai({subj:p.subj,system:C.SYS_SHEET(SUBJ[p.subj].n,n||6),content:[{type:'text',text:'PROGRAMME DE COLLES ('+SUBJ[p.subj].n+'):\n'+prog+(p.remarks?'\nTeacher note: '+p.remarks:'')+'\n\nSTUDENT COURSE:'+(c.txt||'\n(No lesson uploaded for this subject. Use the standard French prépa programme and say so in a short note at the top.)'),cache:true},{type:'text',text:(profileFor(p.subj)||'(no profile yet)')+colleurCtx(p)}],max:24000,onText:txt});
     if(r.text.length<200)throw new C.AIError('The sheet came out empty. Try again.');
-    await C.setText('S'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The sheet was cut: generate again for a shorter one.]*':''));
-    p.sheetAt=Date.now();p.used=c.used;p.noCourse=!c.used.length;save.progs();toast('Prep sheet ready ✓');
+    let doc=r.text.trim(),cut=r.stop==='max_tokens',audit={ok:true,fixed:0};
+    if(!cut){try{
+      lab('Checking it against the programme…');
+      const ck=async d=>{const q=await C.ai({subj:p.subj,system:C.SYS_AUDIT,content:[{type:'text',text:'PROGRAMME:\n'+prog+'\n\nSHEET:\n'+d}],max:700});const m=q.text.match(/\{[\s\S]*\}/);return m?JSON.parse(m[0]):{ok:true}};
+      let v=await ck(doc);
+      if(v.ok===false&&(v.issues||[]).length){
+        lab('Fixing '+v.issues.length+' point'+(v.issues.length>1?'s':'')+'…');
+        const f=await C.ai({subj:p.subj,system:C.SYS_SHEET(SUBJ[p.subj].n,n||6),content:[{type:'text',text:'PROGRAMME DE COLLES:\n'+prog+'\n\nHere is a draft sheet an inspector found faulty. Rewrite the COMPLETE sheet (same structure and marker) fixing exactly these issues and keeping the rest:\n'+v.issues.map(x=>'- '+x).join('\n')+'\n\nDRAFT:\n'+doc}],max:12000,onText:txt});
+        if(f.text.length>=200&&f.stop!=='max_tokens'){doc=f.text.trim();audit={ok:true,fixed:v.issues.length,issues:v.issues}}else audit={ok:false,issues:v.issues}
+      }
+    }catch(e){audit=null}}
+    await C.setText('S'+id,doc+(cut?'\n\n*[The sheet was cut: generate again for a shorter one.]*':''));
+    p.audit=audit;p.sheetAt=Date.now();p.used=c.used;p.noCourse=!c.used.length;save.progs();toast(audit&&audit.fixed?'Prep sheet ready ✓ ('+audit.fixed+' fixed after checking)':'Prep sheet ready ✓');
   });
 }
 A.mkSheet=async id=>{if(await askUnread(id)===false)return;if(needKey())mkSheet(id)};
@@ -3809,7 +4052,7 @@ A.tdAddFile=async i=>{const[id,sl]=i.split('|'),t=S.tds.find(x=>x.id===id),fs=aw
 A.tdEx=(i,el,e)=>{
   const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;
   x.done=!x.done;let msg='';
-  if(x.done&&!x.got){x.got=true;const n=XPD[x.diff||3];if(window.gain){gain(n,e&&e.clientX||200,e&&e.clientY||300);if(window.sv)sv();msg='+'+(window.xpn?xpn(n):n)+' XP'}}
+  if(x.done&&!x.got){x.got=true;const n=XPD[x.diff||3];if(window.gain){gain(n,e&&e.clientX||200,e&&e.clientY||300,undefined,t.subj);if(window.sv)sv();msg='+'+(window.xpn?xpn(n):n)+' XP'}}
   save.tds();render('card');if(msg)toast(msg+' · '+x.title);
 };
 A.tdDiff=(i,el,e)=>{if(e)e.stopPropagation();const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;if(x.got){toast('XP already earned for this exercise');return}x.diff=(x.diff||3)%5+1;save.tds();render('card')};
@@ -3831,7 +4074,7 @@ A.mkMethAll=()=>{if(!needKey())return;
     const todo=S.lessons.filter(l=>l.status==='done'&&!l.mt);let i=0,bad=0;
     for(const l of todo){lab('Chapter '+(++i)+' of '+todo.length+': '+l.title);
       try{const t=(await C.getText('L'+l.id))||'';if(t.length<300)continue;
-        const r=await C.ai({system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
+        const r=await C.ai({subj:l.subj,system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
         if(r.text.length>=400){await C.setText('K'+l.id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));l.mt=Date.now();save.lessons()}}
       catch(e){bad++;if(bad>=2)throw e}}
     toast('Key methods updated ✓');
@@ -3874,14 +4117,15 @@ A.impMock=()=>{
   openSheet('');draw();
 };
 const PR_FMT="Output ONE Markdown document and nothing else (no introduction, no closing sentence), with LaTeX between $...$ and $$...$$. Use exactly this structure: '## Questions de cours', then '## Exercices' (Exercice 1, 2, ... each with a statement and a one-line 'Indication'), then the line <!--CORRECTIONS--> alone, then '## Corrections' with a complete, rigorous correction of every question de cours (heading '#### Question N') and every exercise (heading '#### Exercice N'). Double-check every calculation.";
-function copyPrompt(title,text){
+function copyPrompt(title,text,subj){
+  if(!/HOUSE RULES/.test(text))text+=C.HOUSE+(subj?C.subjCtx(subj):'');
   openSheet('<h2>'+esc(title)+'</h2><div class="hint" style="text-align:left">Open a NEW conversation with Claude, attach your lesson PDFs'+'(and your real exams for the style), paste this prompt, then import the result in Aether.</div><textarea id="cp-t" readonly style="width:100%;height:240px;font-size:12px;border-radius:12px;padding:10px;background:var(--surf2);color:var(--text);border:1px solid var(--line)">'+esc(text)+'</textarea><button class="btn primary" id="cp-b">Copy the prompt</button>');
   $('cp-b').onclick=async()=>{try{await navigator.clipboard.writeText(text)}catch(e){$('cp-t').select();document.execCommand('copy')}toast('Prompt copied ✓');vib(15)};
 }
 A.promptSheet=id=>{
   const p=S.progs.find(x=>x.id===id);if(!p)return;
   const prog='QUESTIONS DE COURS (exact list from the teacher):\n'+((p.cours||[]).length?p.cours.map((x,i)=>(i+1)+'. '+x).join('\n'):'(none given: write 6 short questions)')+'\n\nTHEME OF THE EXERCISES:\n'+(p.theme||'(see chapters)')+'\n\nEXCLUDED:\n'+(p.excl||'(none)')+'\n\nCHAPTERS:\n'+(p.chapters||[]).map((x,i)=>(i+1)+'. '+x.title+(x.detail?' — '+x.detail:'')).join('\n')+(p.remarks?'\n\nTeacher note: '+p.remarks:'');
-  copyPrompt('Prompt: prep sheet',"You are an experienced, demanding teacher in a French classe préparatoire (first year, "+SUBJ[p.subj].n+") preparing me for a 'colle'. My lessons are attached: they are the reference for notations, definitions and results.\n\n"+prog+"\n\nWrite my prep sheet in French. One question de cours per item of the list above: same number, same order, same count, never invent or skip one. Then 6 exercises of increasing difficulty that follow the theme exactly, none of the excluded topics, and only tools seen in my lessons. "+PR_FMT);
+  copyPrompt('Prompt: prep sheet',"You are an experienced, demanding teacher in a French classe préparatoire (first year, "+SUBJ[p.subj].n+") preparing me for a 'colle'. My lessons are attached: they are the reference for notations, definitions and results.\n\n"+prog+"\n\nWrite my prep sheet in French. One question de cours per item of the list above: same number, same order, same count, never invent or skip one. Then 6 exercises of increasing difficulty that follow the theme exactly, none of the excluded topics, and only tools seen in my lessons. "+PR_FMT,p.subj);
 };
 A.promptMock=()=>{
   copyPrompt('Prompt: mock exam',"You are a teacher in a French classe préparatoire (first year, lycée Aux Lazaristes) writing a 'devoir surveillé' (DS blanc). Attached: my MAIN LESSONS (the exam is centred on these: 75–85% of the points), optionally COMPLEMENTARY LESSONS (smaller parts), and my teachers' real past exams (copy their style, level, length, point scale and layout). Subject: [subject]. Duration: [2 h]. Calculator: [not allowed].\n\nWrite in French, Markdown, LaTeX between $...$ and $$...$$: '# DS blanc — [subject]', a line 'Durée : … — Calculatrice : …', short instructions like the model exams, then 3 or 4 independent exercises titled 'I. Title (n pts)' with numbered questions (I.1), (I.2)… of increasing difficulty, total 20 points. Then the line <!--CORRECTIONS--> alone and '## Corrigé' with a complete, rigorous correction of every question and a point scale. Double-check every calculation. No introduction or closing sentence.");
@@ -3896,9 +4140,7 @@ function vLC(id){
   h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(l.title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[l.subj].n+' · your blank lesson completed with proofs, examples, methods and traps. Your corrections teach the app your style.</div>';
   if(live[key])h+=liveBox(key);
   else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';
-    h+='<button class="btn '+(l.lc?'':'primary')+'" style="margin-top:12px" data-a="mkLC" data-i="'+id+'">'+(l.lc?'Write a new version':'Complete this lesson')+'</button>';
-    if(l.lc)h+='<div class="row2" style="margin-top:8px"><button class="btn" data-a="editLC" data-i="'+id+'">✎ Edit the text</button><button class="btn" data-a="printLC" data-i="'+id+'">⎙ Print</button></div>';
-    h+='<div class="row2" style="margin-top:8px"><button class="btn" data-a="promptLC" data-i="'+id+'">📋 Prompt for Claude</button><button class="btn" data-a="impLC" data-i="'+id+'">⬆ Import one</button></div><button class="btn" data-a="lstyle" style="margin-top:8px">🧠 My lesson style · '+lrules().length+' rule'+(lrules().length===1?'':'s')+'</button>'}
+    {const T=tl(id);h+=(l.lc?'':'<button class="btn primary" style="margin-top:12px" data-a="mkLC" data-i="'+id+'">Complete this lesson</button>')+tiles([l.lc?T('mkLC','🔄','New version','rewrite'):'',l.lc?T('editLC','✎','Edit the text','by hand'):'',l.lc?T('printLC','🖨','Print','PDF'):'',T('promptLC','📋','Prompt for Claude','copy'),T('impLC','⬆','Import one','a finished lesson'),T('lstyle','🧠','My lesson style',lrules().length+' rule'+(lrules().length===1?'':'s'),'wide','x')])}}
   h+='</div>';
   if(l.lc&&!live[key])h+='<div class="card"><div class="doc" id="lcdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
   return h;
@@ -3912,7 +4154,7 @@ function mkLC(id){
     let ex='';const prev=S.lessons.filter(x=>x.id!==id&&x.lcEdit).sort((a,b)=>b.lcEdit-a.lcEdit)[0];
     if(prev){const pt=(await C.getText('LC'+prev.id))||'';if(pt)ex='\n\nSTYLE EXAMPLE: an excerpt of a lesson you completed earlier that the student corrected and approved, to match its voice, level of detail and layout:\n'+pt.slice(0,3500)}
     lab('Writing proofs, examples and methods…');
-    const r=await C.ai({system:C.SYS_COMPLETE(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others)+ex,content:[{type:'text',text:'BLANK LESSON: '+l.title+'\n\n'+t.slice(0,70000)}],max:30000,onText:txt});
+    const r=await C.ai({subj:l.subj,system:C.SYS_COMPLETE(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others)+ex,content:[{type:'text',text:'BLANK LESSON: '+l.title+'\n\n'+t.slice(0,70000)}],max:30000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The lesson came out empty. Try again.');
     const out=r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: the lesson is long. Write a new version.]*':'');
     await C.setText('LC'+id,out);await C.setText('LCB'+id,out);
@@ -3961,52 +4203,86 @@ A.lstyle=()=>{
   };draw();
 };
 
-/* ===== Mistake notebook: every error in one list + a drill built from the open ones ===== */
-const mistOpen=subj=>S.mist.filter(m=>!m.done&&(!subj||m.subj===subj));
+/* ===== Mistake Sheet: every mistake, organised by subject and lesson (never on the exam / colle pages) ===== */
+const mistOpen=subj=>S.mist.filter(m=>!m.done&&(!subj||subj==='all'||m.subj===subj));
+const mfil=()=>Object.assign({subj:'all',lid:'',tag:''},st.mf||{});
+const lessonTitle=id=>{const l=S.lessons.find(x=>x.id===id);return l?l.title:''};
 function mistSync(){
+  if(S.set.mmig)return;
   let ch=0;
   allRecs().forEach(r=>{const key=r.kind+'|'+r.id;
-    if((r.wrong||'').trim().length>3&&!S.mist.some(m=>m.src===key)){S.mist.push({id:uid(),subj:r.subj,src:key,from:(r.kind==='colles'?'Colle':'DS')+' · '+(r.title||''),date:r.date||iso(),text:r.wrong.trim().slice(0,500),fix:((r.why||'')+(r.todo&&r.todo.length?' → '+r.todo.map(x=>x.t||x).join('; '):'')).trim().slice(0,400),tags:(r.tags||[]).slice(0,4),done:0});ch=1}});
-  if(ch)save.mist();
+    if(((r.wrong||'').trim().length>3||(r.why||'').trim().length>3)&&!S.mist.some(m=>m.src===key)){S.mist.push({id:uid(),subj:r.subj,lid:'',src:key,ref:key,from:(r.kind==='colles'?'Colle':'DS')+' · '+(r.title||''),date:r.date||iso(),text:((r.wrong||'').trim()||(r.why||'').trim()).slice(0,500),fix:(r.wrong&&r.why?r.why:'').trim().slice(0,400),tags:(r.tags||[]).slice(0,4),done:0});ch=1}});
+  S.set.mmig=1;save.set();if(ch)save.mist();
+}
+function mistCard(m,showSubj){
+  return '<div class="card" style="padding:14px"><div class="pmeta" style="margin:0 0 8px">'+(showSubj?'<span class="pill" style="color:'+C.sc(m.subj)+'">'+SUBJ[m.subj].n+'</span>':'')+(m.from?'<span class="pill">'+esc(m.from)+'</span>':'')+(m.tags||[]).map(t=>'<span class="pill">'+esc(t)+'</span>').join('')+'</div><div style="font-size:14.5px">'+esc(m.text)+'</div>'+(m.fix?'<div class="sub" style="margin-top:6px">Right way: '+esc(m.fix)+'</div>':'')+'<div class="row2" style="margin-top:10px">'+(m.done?'':'<button class="btn sm primary" data-a="mistOk" data-i="'+m.id+'">✓ Mastered</button>')+'<button class="btn sm" data-a="logMist" data-i="'+m.id+'">✎ Edit</button><button class="btn sm danger" data-a="mistDel" data-i="'+m.id+'">✕</button></div></div>';
 }
 function vMB(){
-  mistSync();
-  const op=mistOpen(),dn=S.mist.filter(m=>m.done);
-  let h=backBar('Mistake notebook','<button class="pmini" data-a="logMist" data-i="manual" aria-label="Add">＋</button>');
-  h+='<div class="card"><div class="sub">Every mistake from your exams, colles and TD in one place. Tick one when you have really mastered it (+10 XP), or build a drill from the open ones.</div>';
-  const subs=C.LSUBJ.filter(s=>op.some(m=>m.subj===s));
-  if(subs.length){h+='<div class="lbl" style="margin-top:12px">Drill from my open mistakes</div><div class="chips" style="margin-top:6px">'+subs.map(s=>'<button class="chip" data-a="mkDrill" data-i="'+s+'">'+SUBJ[s].n+' · '+mistOpen(s).length+'</button>').join('')+'</div>'}
-  h+='</div>';
-  C.LSUBJ.forEach(sj=>{
+  mistSync();const f=mfil();
+  const all=S.mist.filter(m=>(f.subj==='all'||m.subj===f.subj)&&(!f.lid||m.lid===f.lid)&&(!f.tag||(m.tags||[]).includes(f.tag)));
+  const op=all.filter(m=>!m.done),dn=all.filter(m=>m.done);
+  let h=backBar('Mistake Sheet','<button class="pmini" data-a="logMist" data-i="manual" aria-label="Add">＋</button>');
+  h+='<div class="chips" style="margin:2px 0 12px">'+['all'].concat(C.LSUBJ).map(s=>{const n=mistOpen(s).length;return '<button class="chip '+(f.subj===s?'on':'')+'" data-a="mbf" data-i="subj|'+s+'">'+(s==='all'?'All':SUBJ[s].n)+(n?' · '+n:'')+'</button>'}).join('')+'</div>';
+  if(f.lid||f.tag)h+='<div class="chips" style="margin:-4px 0 12px">'+(f.lid?'<button class="chip on" data-a="mbf" data-i="lid|">Lesson: '+esc(lessonTitle(f.lid)||'?')+' ✕</button>':'')+(f.tag?'<button class="chip on" data-a="mbf" data-i="tag|'+esc(f.tag)+'">'+esc(f.tag)+' ✕</button>':'')+'</div>';
+  const cnt={};op.forEach(m=>(m.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);
+  h+='<div class="card"><div class="sub">Everything that went wrong, filed by subject and lesson. Tick a mistake when you have really mastered it (+10 XP). Nothing here is written on your exam or colle pages.</div>'+
+    (ks.length&&!f.tag?'<div class="lbl" style="margin-top:12px">Where it comes from</div><div class="chips" style="margin-top:6px">'+ks.slice(0,6).map(k=>'<button class="chip" data-a="mbf" data-i="tag|'+esc(k)+'">'+esc(k)+' · '+cnt[k]+'</button>').join('')+'</div>':'')+
+    tiles([f.subj!=='all'&&op.length?tile('mkDrill',f.subj,'🎯','Build a drill',op.length+' mistake'+(op.length>1?'s':'')+(f.lid?' · this lesson':'')):'',op.length?tile('printMB',f.subj,'🖨','Print this sheet','PDF'):''])+'</div>';
+  C.LSUBJ.filter(s=>f.subj==='all'||f.subj===s).forEach(sj=>{
     const dr=(S.set.drill||{})[sj];
     if(live['MD'+sj])h+='<div class="card">'+liveBox('MD'+sj)+'</div>';
     else if(dr)h+='<div class="card"><div class="cardhead"><div class="lbl">Drill · '+SUBJ[sj].n+'</div><span class="sub">'+fdl(iso(new Date(dr.at)))+'</span></div><button class="btn" data-a="openDrill" data-i="'+sj+'">Open the drill</button>'+(dr.paid?'<div class="sub" style="margin-top:6px">Done ✓</div>':'<button class="btn primary" data-a="drillDone" data-i="'+sj+'" style="margin-top:8px">I did the drill (+20 XP)</button>')+'</div>';
     if(errs['MD'+sj])h+='<div class="warnbox">'+esc(errs['MD'+sj])+'</div>';
   });
-  if(!op.length)h+='<div class="hidecorr" style="padding:14px">No open mistake. Add one with ＋, or fill “What went wrong” after a DS or a colle.</div>';
-  op.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).forEach(m=>{
-    h+='<div class="card" style="padding:14px"><div class="pmeta" style="margin:0 0 8px"><span class="pill" style="color:'+C.sc(m.subj)+'">'+SUBJ[m.subj].n+'</span><span class="pill">'+esc(m.from||'Manual')+'</span>'+(m.tags||[]).map(t=>'<span class="pill">'+esc(t)+'</span>').join('')+'</div><div style="font-size:14.5px">'+esc(m.text)+'</div>'+(m.fix?'<div class="sub" style="margin-top:6px">Fix: '+esc(m.fix)+'</div>':'')+'<div class="row2" style="margin-top:10px"><button class="btn sm primary" data-a="mistOk" data-i="'+m.id+'">✓ Mastered</button><button class="btn sm" data-a="logMist" data-i="'+m.id+'">✎</button><button class="btn sm danger" data-a="mistDel" data-i="'+m.id+'">✕</button></div></div>'});
-  if(dn.length)h+='<div class="sub" style="margin:14px 0 6px">Mastered · '+dn.length+'</div>'+dn.slice(-6).reverse().map(m=>'<div class="sub" style="padding:4px 0">✓ '+esc(m.text.slice(0,90))+'</div>').join('');
+  if(!op.length)h+='<div class="hidecorr" style="padding:14px">Nothing open here. Add a mistake with ＋, or from an exam, a colle, a TD or a lesson page.</div>';
+  const groups={};op.forEach(m=>{const k=m.subj+'|'+(S.lessons.some(l=>l.id===m.lid)?m.lid:'');(groups[k]=groups[k]||[]).push(m)});
+  Object.keys(groups).sort((a,b)=>{const[sa,la]=a.split('|'),[sb,lb]=b.split('|');return C.LSUBJ.indexOf(sa)-C.LSUBJ.indexOf(sb)||(la===''?1:0)-(lb===''?1:0)||lessonTitle(la).localeCompare(lessonTitle(lb))}).forEach(k=>{
+    const[sj,lid]=k.split('|');
+    h+='<div class="sec2"><div class="lbl" style="margin:0;color:'+C.sc(sj)+'">'+(f.subj==='all'?SUBJ[sj].n+' · ':'')+(lid?esc(lessonTitle(lid)):'No lesson linked')+'</div><span class="sub">'+groups[k].length+'</span></div>'+groups[k].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>mistCard(m,false)).join('');
+  });
+  if(dn.length)h+=fold('Mastered',dn.slice().reverse().map(m=>mistCard(m,f.subj==='all')).join(''),dn.length);
   return h;
 }
-A.mb=()=>go('mb','x');
+A.mb=()=>{st.mf={subj:'all',lid:'',tag:''};go('mb','x')};
+A.mbOpen=i=>{const q=String(i).split('|');st.mf={subj:q[0]||'all',lid:q[1]||'',tag:''};go('mb','x')};
+A.mbTag=t=>{st.mf={subj:'all',lid:'',tag:t};go('mb','x')};
+A.mbf=i=>{const q=String(i).split('|'),k=q[0],v=q.slice(1).join('|'),f=mfil();if(k==='subj'){f.subj=v;f.lid=''}else if(k==='tag')f.tag=f.tag===v?'':v;else if(k==='lid')f.lid='';st.mf=f;render()};
 A.logMist=i=>{
-  const m=i==='manual'?null:S.mist.find(x=>x.id===i);let sj=m?m.subj:'maths';
-  const draw=()=>{openSheet('<h2 class="sh">'+(m?'Edit the mistake':'Log a mistake')+'</h2><div class="field"><label>Subject</label>'+subjChips(sj,C.LSUBJ.filter(s=>s!=='ang'),'mi-s')+'</div><div class="field"><label>What went wrong</label><textarea id="mi-t" placeholder="Be specific: exercise, step, reason…">'+esc(m?m.text:(window.__mi||''))+'</textarea></div><div class="field"><label>The right way (optional)</label><textarea id="mi-f">'+esc(m?m.fix:'')+'</textarea></div><button class="btn primary" id="mi-s">Save</button>');
-    bindChips('mi-s',v=>{window.__mi=$('mi-t').value;sj=v;draw()});
-    $('mi-s').onclick=()=>{const t=$('mi-t').value.trim();if(t.length<4){toast('Describe it first');return}window.__mi='';if(m){m.subj=sj;m.text=t;m.fix=$('mi-f').value.trim()}else S.mist.push({id:uid(),subj:sj,src:'manual|'+uid(),from:'Added by hand',date:iso(),text:t,fix:$('mi-f').value.trim(),tags:[],done:0});save.mist();closeSheet();if(st.stack.length&&st.stack[st.stack.length-1].v!=='mb')go('mb','x');else render();toast('Saved')};
+  let m=null,ref='',sj='maths',lid='';
+  if(i&&i.startsWith('ref:')){ref=i.slice(4);const q=ref.split('|'),mt=metaOf(q[0],q[1]);if(mt)sj=mt.subj}
+  else if(i&&i.startsWith('td:')){ref=i;const t=S.tds.find(x=>x.id===i.slice(3));if(t)sj=t.subj}
+  else if(i&&i!=='manual')m=S.mist.find(x=>x.id===i);
+  if(m){sj=m.subj;lid=m.lid||''}else{const f=mfil();if(f.subj!=='all'&&!ref)sj=f.subj;if(!ref)lid=f.lid||''}
+  const tags=new Set(m?(m.tags||[]):[]);let txt=m?m.text:'',fx=m?m.fix:'';
+  const keep=()=>{if($('mi-t')){txt=$('mi-t').value;fx=$('mi-f').value;lid=$('mi-l').value}};
+  const draw=()=>{
+    const ls=S.lessons.filter(l=>l.subj===sj);if(lid&&!ls.some(l=>l.id===lid))lid='';
+    openSheet('<h2 class="sh">'+(m?'Edit the mistake':'Log a mistake')+'</h2><div class="field"><label>Subject</label>'+subjChips(sj,C.LSUBJ,'mi-s')+'</div><div class="field"><label>Lesson</label><select id="mi-l"><option value="">No lesson / general</option>'+ls.map(l=>'<option value="'+l.id+'"'+(l.id===lid?' selected':'')+'>'+esc(l.title)+'</option>').join('')+'</select></div><div class="field"><label>Where did I lose points?</label><div class="tagrow" id="mi-g">'+C.TAGS.map(t=>'<button class="tg '+(tags.has(t)?'on':'')+'" data-t="'+esc(t)+'">'+esc(t)+'</button>').join('')+'</div></div><div class="field"><label>What went wrong</label><textarea id="mi-t" placeholder="Be specific: exercise, step, reason…">'+esc(txt)+'</textarea></div><div class="field"><label>The right way (optional)</label><textarea id="mi-f">'+esc(fx)+'</textarea></div><button class="btn primary" id="mi-s">Save</button>');
+    bindChips('mi-s',v=>{keep();sj=v;draw()});
+    $('mi-g').onclick=e=>{const b=e.target.closest('.tg');if(!b)return;const t=b.dataset.t;tags.has(t)?tags.delete(t):tags.add(t);b.classList.toggle('on',tags.has(t));hv()};
+    $('mi-s').onclick=()=>{keep();const t=txt.trim();if(t.length<4){toast('Describe it first');return}
+      let from='Added by hand';if(ref.startsWith('td:')){const td=S.tds.find(x=>x.id===ref.slice(3));from='TD · '+(td?td.title||SUBJ[td.subj].n:'')}else if(ref){const q=ref.split('|'),mt=metaOf(q[0],q[1]);from=(q[0]==='colles'?'Colle':'DS')+' · '+(mt?mt.title:'')}
+      if(m){m.subj=sj;m.lid=lid;m.text=t;m.fix=fx.trim();m.tags=[...tags]}else S.mist.push({id:uid(),subj:sj,lid,src:'manual|'+uid(),ref,from,date:iso(),text:t,fix:fx.trim(),tags:[...tags],done:0});
+      save.mist();closeSheet();render();toast(m?'Saved':'Added to your Mistake Sheet')};
   };draw();
 };
 A.mistOk=i=>{const m=S.mist.find(x=>x.id===i);if(!m||m.done)return;m.done=Date.now();save.mist();if(typeof gain==='function')gain(10,innerWidth/2,innerHeight*.4);toast('Mastered ✓ +10 XP');render()};
 A.mistDel=async i=>{if(!await ask({title:'Remove this mistake?',ok:'Remove',danger:1}))return;S.mist=S.mist.filter(x=>x.id!==i);save.mist();render()};
+A.printMB=s=>{
+  const f=mfil(),op=S.mist.filter(m=>!m.done&&(s==='all'||m.subj===s)&&(!f.lid||m.lid===f.lid));if(!op.length)return;
+  const g={};op.forEach(m=>{const k=m.subj+'|'+(S.lessons.some(l=>l.id===m.lid)?m.lid:'');(g[k]=g[k]||[]).push(m)});
+  let h='<h1>Mistake Sheet'+(s==='all'?'':' — '+SUBJ[s].n)+'</h1><p>'+fd(iso())+' · '+op.length+' open mistake'+(op.length>1?'s':'')+'</p>';
+  Object.keys(g).sort().forEach(k=>{const[sj,lid]=k.split('|');h+='<h2>'+(s==='all'?SUBJ[sj].n+' · ':'')+(lid?esc(lessonTitle(lid)):'General')+'</h2><ul>'+g[k].map(m=>'<li><b>'+esc(m.text)+'</b>'+(m.fix?'<br>Right way: '+esc(m.fix):'')+'<br><i>'+esc(m.from||'')+(m.tags&&m.tags.length?' · '+m.tags.map(esc).join(', '):'')+'</i></li>').join('')+'</ul>'});
+  printHtml(h);toast('Choose "Save to Files" / "Save as PDF" in the share sheet');
+};
 function mkDrill(sj){
-  const op=mistOpen(sj).slice(0,15);if(!op.length)return;
+  const f=mfil();const op=mistOpen(sj).filter(m=>!f.lid||m.lid===f.lid).slice(0,15);if(!op.length)return;
   return run('MD'+sj,'Building your drill…',async(lab,txt)=>{
     lab('Reading your mistakes…');
-    const list=op.map((m,k)=>(k+1)+'. '+m.text+(m.fix?' | Fix: '+m.fix:'')+((m.tags||[]).length?' | Type: '+m.tags.join(', '):'')).join('\n');
+    const list=op.map((m,k)=>(k+1)+'. '+m.text+(m.fix?' | Fix: '+m.fix:'')+(m.lid?' | Lesson: '+lessonTitle(m.lid):'')+((m.tags||[]).length?' | Type: '+m.tags.join(', '):'')).join('\n');
     const prof=profileFor(sj)||'';
     lab('Writing the exercises and corrections…');
-    const r=await C.ai({system:C.SYS_DRILL(SUBJ[sj].n),content:[{type:'text',text:'MISTAKES:\n'+list+(prof?'\n\nSTUDENT PROFILE:\n'+prof:'')}],max:16000,onText:txt});
+    const r=await C.ai({subj:sj,system:C.SYS_DRILL(SUBJ[sj].n),content:[{type:'text',text:'MISTAKES:\n'+list+(prof?'\n\nSTUDENT PROFILE:\n'+prof:'')}],max:16000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The drill came out empty. Try again.');
     await C.setText('MD'+sj,r.text.trim());(S.set.drill||(S.set.drill={}))[sj]={at:Date.now(),paid:0,n:op.length};save.set();toast('Drill ready ✓');
   });
@@ -4022,19 +4298,375 @@ function xmPlan(e){
   const nr=S.progs.filter(p=>p.subj===e.subj&&(p.date||'')>=iso()).reduce((a,p)=>a+(p.chapters||[]).filter(c=>!c.ready).length,0);
   if(nr)out.push('Tick the '+nr+' chapter'+(nr>1?'s':'')+' you are not ready on yet');
   if(e.kind==='ds'){const mk=S.mocks.filter(m=>m.subj===e.subj);out.push(mk.length?'Redo the weak parts of your last mock exam':'Do one mock exam in '+SUBJ[e.subj].n)}
-  const mo=mistOpen(e.subj).length;if(mo)out.push('Re-read your '+mo+' open mistake'+(mo>1?'s':'')+' in '+SUBJ[e.subj].n);
-  return out.slice(0,4);
+  try{const lt=tasks.filter(t=>t.lk===e.id&&!isDone(t));if(lt.length)out.unshift('Finish: '+lt.slice(0,2).map(t=>t.text).join(' · ')+(lt.length>2?' +'+(lt.length-2):''))}catch(_){}
+  return out.slice(0,5);
 }
 /* ===== Prompt for Claude + import for a blank lesson ===== */
 A.promptLC=i=>{
   const l=S.lessons.find(x=>x.id===i);if(!l)return;
   const others=S.lessons.filter(x=>x.id!==i&&x.subj===l.subj&&x.status==='done').map(x=>x.title).slice(0,25).join(' · ');
   const sys=C.SYS_COMPLETE(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others);
-  copyPrompt('Prompt: complete a lesson',sys+"\n\nMy blank lesson is attached ("+l.title+"). Write the completed lesson now. Output ONE Markdown document in French and nothing else, so that I can import it in Aether. Keep my headings and numbering.");
+  copyPrompt('Prompt: complete a lesson',sys+"\n\nMy blank lesson is attached ("+l.title+"). Write the completed lesson now. Output ONE Markdown document in French and nothing else, so that I can import it in Aether. Keep my headings and numbering.",l.subj);
 };
 A.impLC=i=>pickFile(IMP_ACC,async f=>{
   try{const l=S.lessons.find(x=>x.id===i);const t=await impText(f);if(t.length<400)throw new Error('The file is almost empty.');
     await C.setText('LC'+i,t);await C.setText('LCB'+i,t);l.lc=Date.now();save.lessons();toast('Completed lesson imported ✓');go('lc',i)}catch(e){toast(e.message||'Import failed')}});
+
+/* ===== Subject profiles (what makes each subject's prompts specific) ===== */
+const SPF=[['teacher',"My teacher's style and habits","e.g. Very rigorous on proofs, loves limits with ε, asks for the statement of theorems before using them"],['allowed',"What is allowed / forbidden","e.g. No calculator, no notes; formulaire given for trigonometry"],['format',"Format of DS and colles","e.g. DS 4h: 1 problem + 3 exercises, graded /20; colle 20 min: question de cours then 1 exercise"],['notes',"Anything else the AI must respect","e.g. Always write vectors with an arrow; ‖·‖ for norms; never use Taylor-Lagrange before the chapter on it"]];
+A.sprofs=()=>openSheet('<h2 class="sh">Subject profiles</h2><div class="sub" style="margin-bottom:10px">Everything you write here is given to the AI each time it makes something for that subject (mock exams, prep sheets, résumés, corrections, drills, lessons…), so the result matches your teacher and your course.</div>'+C.LSUBJ.map(s=>{const p=(S.set.sp||{})[s]||{},n=SPF.filter(f=>(p[f[0]]||'').trim()).length;return '<button class="prow" style="--c:'+C.sc(s)+'" data-a="sprof" data-i="'+s+'"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+(n?n+' of '+SPF.length+' filled':'Not filled yet')+'</div></span></button>'}).join(''));
+A.sprof=s=>{
+  const p=(S.set.sp||{})[s]||{};
+  openSheet('<h2 class="sh">'+SUBJ[s].n+'</h2>'+SPF.map(f=>'<div class="field"><label>'+f[1]+'</label><textarea id="sp-'+f[0]+'" placeholder="'+esc(f[2])+'">'+esc(p[f[0]]||'')+'</textarea></div>').join('')+'<button class="btn primary" id="sp-s">Save</button>');
+  $('sp-s').onclick=()=>{const o={};SPF.forEach(f=>{o[f[0]]=$('sp-'+f[0]).value.trim()});(S.set.sp||(S.set.sp={}))[s]=o;save.set();closeSheet();A.sprofs();toast('Saved')};
+};
+
+/* ===== Today plan: what is worth doing now, ranked and fitted into the free time left today ===== */
+function planItems(){
+  const td=iso(),items=[],H=new Date().getHours();
+  const dd=d=>Math.round((new Date(d+'T12:00:00')-new Date(td+'T12:00:00'))/864e5);
+  const push=o=>items.push(Object.assign({pri:50,min:20},o));
+  let xm=null;try{xm=examMode()}catch(_){}
+  const boost=e=>xm&&xm.e&&e&&xm.e.id===e.id?30:0;
+  // exams and colles ahead
+  cal.filter(e=>(e.kind==='ds'||e.kind==='colle')&&e.date>=td&&dd(e.date)<=10).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4).forEach(e=>{
+    const d=dd(e.date),base=100-d*7+boost(e),sub=(e.kind==='ds'?'DS':'Colle')+' '+SUBJ[e.subj].n+' · '+(d===0?'today':d===1?'tomorrow':'in '+d+' days');
+    const p=S.progs.find(x=>x.subj===e.subj&&x.date===e.date);
+    if(p&&p.chapters&&p.chapters.length){const nr=p.chapters.filter(c=>!c.ready).length;if(nr)push({id:'ch:'+p.id,ic:'📖',title:'Revise '+nr+' chapter'+(nr>1?'s':'')+' for the colle',sub,min:Math.min(60,nr*15+10),pri:base,subj:e.subj,go:{k:'prog',id:p.id}});
+      if(p.sheetAt&&nr===0)push({id:'sh:'+p.id,ic:'📝',title:'Work through the prep sheet',sub,min:40,pri:base-5,subj:e.subj,go:{k:'prog',id:p.id}})}
+    if(e.kind==='ds'&&d<=6){const mk=S.mocks.filter(m=>m.subj===e.subj);push({id:'mk:'+e.id,ic:'🧪',title:mk.length?'Redo a mock exam in '+SUBJ[e.subj].n:'Do a mock exam in '+SUBJ[e.subj].n,sub,min:90,pri:base-12,subj:e.subj,go:{k:'tab',id:'exams'}})}
+  });
+  // flashcards
+  const nc=dueCards().length;if(nc)push({id:'cd',ic:'🃏',title:nc+' flashcard'+(nc>1?'s':'')+' to review',sub:'Spaced repetition',min:Math.min(25,Math.ceil(nc*1.2)+3),pri:nc>20?62:52,go:{k:'cards'}});
+  // vocabulary test (Fridays)
+  cal.filter(e=>e.kind==='vt'&&(e.date===td||e.date===shiftD(td,1))&&!(S.exams[e.id]&&S.exams[e.id].grade!=null)).slice(0,1).forEach(e=>push({id:'vt:'+e.id,ic:'🔤',title:'Revise your vocabulary',sub:'Vocabulary Test '+(e.date===td?'today':'tomorrow'),min:15,pri:e.date===td?88:70,subj:'ang',go:{k:'vocab'}}));
+  // tasks: overdue, due today, pinned, or linked to something coming up
+  tasks.filter(isOpen).forEach(t=>{
+    let pri=0,sub='';const lk=t.lk&&cal.find(c=>c.id===t.lk);
+    if(t.due&&t.due<td){pri=90;sub='Overdue'}else if(t.due===td){pri=84;sub='Due today'}else if(t.pin){pri=66;sub='Pinned'}
+    if(lk&&lk.date>=td){const d=dd(lk.date),p2=70+Math.max(0,8-d)*3+boost(lk);if(p2>pri){pri=p2;sub='For '+String(lk.title).replace(/\s*\([^)]*\)\s*$/,'')}}
+    if(pri)push({id:'t:'+t.id,ic:'✅',title:t.text,sub,min:25,pri,go:{k:'task',id:t.id}});
+  });
+  // nothing planned: gentle fallback
+  const seen=new Set();let l=items.filter(x=>!seen.has(x.id)&&seen.add(x.id));
+  const tp=tplanLoad();l=l.filter(x=>!tp.skip.includes(x.id));
+  l.sort((a,b)=>{const ia=tp.order.indexOf(a.id),ib=tp.order.indexOf(b.id);if(ia>-1&&ib>-1)return ia-ib;return b.pri-a.pri});
+  return l.slice(0,5);
+}
+function tplanLoad(){const td=iso();let o={};try{o=JSON.parse(localStorage.getItem('tplan')||'{}')}catch(e){}if(o.d!==td)o={d:td,skip:[],order:[]};o.skip=o.skip||[];o.order=o.order||[];return o}
+function tplanSave(o){try{localStorage.setItem('tplan',JSON.stringify(o))}catch(e){}}
+/* free windows today (now → 21:30) minus timed events, then fill them in order */
+function planSlots(items){
+  const td=iso(),now=new Date();let t=now.getHours()*60+now.getMinutes();t=Math.ceil(t/5)*5;const end=21*60+30;
+  const busy=evOn(td).filter(c=>c.kind!=='focus'&&tmin(c.time)!=null).map(c=>[tmin(c.time),c.endTime?tmin(c.endTime):tmin(c.time)+60]).sort((a,b)=>a[0]-b[0]);
+  const gaps=[];let cur=t;busy.forEach(b=>{if(b[1]<=cur)return;if(b[0]>cur)gaps.push([cur,Math.min(b[0],end)]);cur=Math.max(cur,b[1])});if(cur<end)gaps.push([cur,end]);
+  let gi=0,pos=gaps.length?gaps[0][0]:null;
+  return items.map(it=>{
+    while(gi<gaps.length&&(gaps[gi][1]-pos<Math.min(it.min,20))){gi++;pos=gi<gaps.length?gaps[gi][0]:null}
+    if(gi>=gaps.length)return Object.assign({},it,{at:null});
+    const len=Math.min(it.min,gaps[gi][1]-pos),s=pos;pos+=len+5;
+    return Object.assign({},it,{at:fmt(s)+' – '+fmt(s+len)});
+  });
+}
+function planGo(id){
+  const it=planItems().find(x=>x.id===id)||{go:null};const g=it.go;if(!g)return;
+  if(g.k==='task'){F.ref=null;F.taskId=g.id;const t=tasks.find(x=>x.id===g.id);F.task=t?t.text:'';sv();show('focus');return}
+  show('prepa');
+  if(g.k==='prog'){A.tab('colles');A.prog(g.id)}
+  else if(g.k==='tab')A.tab(g.id);
+  else if(g.k==='cards'){A.tab('cards');A.review()}
+  else if(g.k==='mb')A.mbOpen(g.id+'|');
+  else if(g.k==='vocab')A.eng();
+}
+function planSkip(id){const o=tplanLoad();if(!o.skip.includes(id))o.skip.push(id);tplanSave(o)}
+function planUp(id){const l=planItems().map(x=>x.id),i=l.indexOf(id);if(i<1)return;[l[i-1],l[i]]=[l[i],l[i-1]];const o=tplanLoad();o.order=l;tplanSave(o)}
+function planCard(){
+  const hr=new Date().getHours(),td=iso();
+  if(hr>=22||hr<5)return null;
+  const l=planSlots(planItems());
+  let xm=null;try{xm=examMode()}catch(_){}
+  const total=l.reduce((a,x)=>a+x.min,0);
+  return{items:l,total,xm,title:hr>=21?'Wind down':hr<12?'Today · morning':hr<18?'Today · afternoon':'Today · evening'};
+}
+
+/* ===== One page per subject + grade projections ===== */
+const tgtOf=s=>{const t=(S.set.tgt||{})[s];return t!=null&&!isNaN(+t)?+t:14};
+/* grade needed on a new entry of coefficient c to reach target T; null if no data */
+function projNeed(rs,T,c){let sum=0,w=0;rs.forEach(r=>{const v=+r.grade,k=coefOf(r);if(r.grade==null||r.grade===''||isNaN(v))return;sum+=v*k;w+=k});if(!c)return null;return{need:(T*(w+c)-sum)/c,w,cur:w?sum/w:null}}
+function projAfter(rs,g,c){let sum=0,w=0;rs.forEach(r=>{const v=+r.grade,k=coefOf(r);if(r.grade==null||r.grade===''||isNaN(v))return;sum+=v*k;w+=k});return(sum+g*c)/(w+c)}
+function projText(n){if(!n)return '';const x=n.need;return x>20.0001?'out of reach in one go ('+x.toFixed(1)+')':x<=0?'already safe':'<b>'+(Math.ceil(x*10)/10).toFixed(1)+'</b>/20'}
+function subjProj(subj,rs,evs,wrap){
+  const T=tgtOf(subj);
+  const rows=evs.map(e=>{const c=coefOf({kind:e.kind==='colle'?'colles':'exams',coef:(S.exams[e.id]||S.colles[e.id]||{}).coef,cat:e.kind==='vt'?'vocab':''}),n=projNeed(rs,T,c);if(!n)return '';
+    return '<div class="prow" style="cursor:default;--c:'+col(e.color)+'"><i class="dot"></i><span class="m"><div class="t">'+esc(e.title)+'</div><div class="s">'+fd(e.date)+' · coef '+(c===1/3?'1/3':c)+' · need '+projText(n)+'</div></span></div>'}).join('');
+  const base=projAfter(rs,0,0);
+  let h='<div class="card"><div class="cardhead"><div class="lbl">Target average</div></div><div class="chips" style="margin:4px 0 8px">'+[10,12,14,16,18].map(v=>'<button class="chip '+(T===v?'on':'')+'" data-a="tgt" data-i="'+subj+'|'+v+'">'+v+'</button>').join('')+'</div>';
+  if(!rs.length)h+='<div class="sub">No grade yet in '+SUBJ[subj].n+': the projection starts with your first one.</div>';
+  else{const cur=wavg(rs,r=>+r.grade);h+='<div class="sub" style="margin-bottom:6px">Now <b>'+cur.toFixed(1)+'</b>/20 (weighted by coefficients). '+(cur>=T?'You are above your target.':'Gap: '+(T-cur).toFixed(1)+' points.')+'</div>'+(rows||'<div class="sub">No upcoming DS or colle in the calendar.</div>');
+    if(evs.length){const e=evs[0],k=coefOf({kind:e.kind==='colle'?'colles':'exams',cat:e.kind==='vt'?'vocab':''});h+='<div class="sub" style="margin-top:8px">If you get '+[10,14,18].map(g=>g+' on the next one → <b>'+projAfter(rs,g,k).toFixed(1)+'</b>').join(' · ')+'</div>'}}
+  return h+'</div>';
+}
+function vSubj(s){
+  if(!SUBJ[s]){st.stack.pop();return ''}
+  const td=iso(),T=tl(s);
+  const rs=allRecs().filter(r=>r.subj===s&&r.grade!=null&&r.grade!==''&&!isNaN(+r.grade)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const evs=cal.filter(e=>e.subj===s&&e.date>=td&&['ds','colle','vt'].includes(e.kind)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));
+  const avg=rs.length?wavg(rs,r=>+r.grade):null,k=Math.min(3,Math.floor(rs.length/2)),tr=k?rs.slice(-k).reduce((a,r)=>a+ +r.grade,0)/k-rs.slice(0,k).reduce((a,r)=>a+ +r.grade,0)/k:null;
+  let h=backBar(SUBJ[s].n);
+  const nx=evs[0],dd=nx?Math.round((new Date(nx.date+'T12:00:00')-new Date(td+'T12:00:00'))/864e5):null,r0=nx&&nx.kind==='colle'&&OWN.includes(s)?readiness(s,nx.date):null;
+  h+='<div class="card" style="--c:'+C.sc(s)+'"><div class="two" style="align-items:center"><div style="flex:1"><div class="sub">Weighted average</div><div style="font-size:30px;font-weight:800">'+(avg==null?'—':avg.toFixed(1))+'<span class="sub" style="font-size:14px"> /20</span></div></div>'+(tr==null?'':'<div class="gpill '+(tr>0.05?'g-hi':tr<-0.05?'g-lo':'g-mid')+'">'+(tr>0.05?'▲ +'+tr.toFixed(1):tr<-0.05?'▼ '+tr.toFixed(1):'steady')+'</div>')+'</div>'+
+    (nx?'<button class="prow" style="margin-top:10px;--c:'+col(nx.color)+'" data-a="evOpen" data-i="'+nx.id+'"><i class="dot"></i><span class="m"><div class="t">Next: '+esc(nx.title)+'</div><div class="s">'+(dd===0?'Today':dd===1?'Tomorrow':'in '+dd+' days')+' · '+fd(nx.date)+(r0?' · '+r0.n+'/'+r0.t+' chapters ready':'')+'</div></span>'+ico.chev+'</button>':'<div class="sub" style="margin-top:8px">No DS or colle planned.</div>')+'</div>';
+  h+=subjProj(s,rs,evs.slice(0,3),0);
+  const ls=S.lessons.filter(l=>l.subj===s);
+  h+='<div class="card"><div class="cardhead"><div class="lbl">Lessons</div><span class="sub">'+ls.length+'</span></div>'+(ls.length?ls.slice(0,8).map(l=>'<button class="prow" style="--c:'+C.sc(s)+'" data-a="lesson" data-i="'+l.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(l.title)+'</div><div class="s">'+lessonStatus(l)+'</div></span>'+ico.chev+'</button>').join('')+(ls.length>8?'<div class="sub">+ '+(ls.length-8)+' more in the Lessons tab</div>':''):'<div class="sub">No lesson yet.</div>')+'</div>';
+  const pg=S.progs.filter(p=>p.subj===s).sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,4);
+  if(pg.length)h+='<div class="card"><div class="lbl">Colle programmes</div>'+pg.map(p=>{const n=(p.chapters||[]).filter(c=>c.ready).length,t=(p.chapters||[]).length;return '<button class="prow" style="--c:'+C.sc(s)+'" data-a="prog" data-i="'+p.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(p.title||'Programme')+'</div><div class="s">'+fdl(p.date)+(t?' · '+n+'/'+t+' ready':'')+(p.sheetAt?' · sheet ready':'')+'</div></span>'+ico.chev+'</button>'}).join('')+'</div>';
+  const tds=S.tds.filter(t=>t.subj===s),mk=S.mocks.filter(m=>m.subj===s);
+  if(tds.length||mk.length)h+='<div class="card"><div class="lbl">TD & mock exams</div>'+tds.slice(0,4).map(t=>'<button class="prow" style="--c:'+C.sc(s)+'" data-a="td" data-i="'+t.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(t.title||'TD')+'</div><div class="s">TD · '+tdDone(t)+'/'+(t.exos||[]).length+' exercises</div></span>'+ico.chev+'</button>').join('')+mk.slice(0,4).map(m=>'<button class="prow" style="--c:'+C.sc(s)+'" data-a="mock" data-i="'+m.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(m.title)+'</div><div class="s">Mock exam · '+(m.at?'ready':'not written')+'</div></span>'+ico.chev+'</button>').join('')+'</div>';
+  if(rs.length)h+='<div class="card"><div class="lbl">Grades</div>'+rs.slice().reverse().slice(0,8).map(r=>'<button class="prow" style="--c:'+C.sc(s)+'" data-a="rec" data-i="'+r.kind+'|'+r.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(r.title||'')+'</div><div class="s">'+fdl(r.date)+' · coef '+(coefOf(r)===1/3?'1/3':coefOf(r))+'</div></span>'+gp(+r.grade)+'</button>').join('')+'</div>';
+  const dc=S.cards.filter(c=>c.subj===s&&c.due<=td).length;
+  h+=tsec('Quick actions',tiles([T('addLesson','＋','Add a lesson','PDF or photos'),dc?tile('tab','cards','🃏',dc+' cards due','review now'):'',tile('mbOpen',s+'|','📓','Mistake Sheet',SUBJ[s].n),tile('formu',s,'📄','Formulaire','printable summary'),tile('sprof',s,'🎓','Subject profile','teacher · rules')]));
+  return h;
+}
+A.subj=s=>go('subj',s);
+A.tgt=i=>{const[s,v]=i.split('|');S.set.tgt=Object.assign({},S.set.tgt,{[s]:+v});save.set();render()};
+
+/* ===== v52: search · weekly review · effort · colleurs · debrief · formulaire · boost ===== */
+const FOLD=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const SUBJ_RX=[['maths',/\b(maths?|mathematiques?|alg[eè]bre|analyse)\b/],['phys',/\b(physique|phys)\b/],['chim',/\b(chimie|chim)\b/],['ang',/\b(anglais|english|vocab(ulary)?)\b/],['fr',/\b(francais|fran[cç]ais|philo|lettres?)\b/],['ipt',/\b(ipt|si|informatique|python|sii)\b/]];
+function subjOf(title,ref,taskId){
+  try{
+    if(ref&&ref.id){const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o&&o.subj)return o.subj}
+    if(taskId){const t=tasks.find(x=>x.id===taskId);if(t&&t.lk){const e=cal.find(c=>c.id===t.lk);if(e&&e.subj)return e.subj}}
+    const f=FOLD(title);for(const[k,rx]of SUBJ_RX)if(rx.test(f))return k;
+  }catch(_){}
+  return '';
+}
+/* ---- boost ---- */
+const boostCfg=()=>Object.assign({mode:'off',m:1.5,until:''},S.set.boost||{});
+function weakestSubj(){
+  const by={};allRecs().forEach(r=>{if(r.grade==null||r.grade===''||isNaN(+r.grade))return;(by[r.subj]=by[r.subj]||[]).push(r)});
+  let best='',bv=99;Object.keys(by).forEach(s=>{const a=wavg(by[s],r=>+r.grade);if(a<bv){bv=a;best=s}});return best;
+}
+function boostTarget(){const b=boostCfg();if(b.mode==='off')return '';if(b.until&&iso()>b.until)return '';return b.mode==='weak'?weakestSubj():b.mode}
+function boostFor(subj){const t=boostTarget();return t&&subj===t?boostCfg().m:1}
+A.boost=()=>{
+  const b=boostCfg(),t=boostTarget();
+  openSheet('<h2 class="sh">⚡ Boost a subject</h2><div class="sub" style="margin-bottom:10px">Bonus XP on everything you do for one subject: focus sessions, tasks, TD exercises. It stacks with Happy Hour. No streak, no penalty: it is just a nudge to where it matters.</div>'+
+   '<div class="field"><label>Which subject</label><div class="chips" id="bo-m">'+[['off','Off'],['weak','Weakest (auto)']].concat(C.LSUBJ.map(x=>[x,SUBJ[x].n])).map(o=>'<button class="chip '+(b.mode===o[0]?'on':'')+'" data-v="'+o[0]+'">'+o[1]+'</button>').join('')+'</div>'+(b.mode==='weak'?'<div class="sub" style="margin-top:6px">'+(weakestSubj()?'Right now: <b>'+SUBJ[weakestSubj()].n+'</b> (lowest weighted average)':'No grade yet: nothing is boosted until you have one.')+'</div>':'')+'</div>'+
+   '<div class="field"><label>Bonus</label><div class="chips" id="bo-x">'+[1.25,1.5,2].map(v=>'<button class="chip '+(b.m===v?'on':'')+'" data-v="'+v+'">×'+v+'</button>').join('')+'</div></div>'+
+   '<div class="field"><label>For how long</label><div class="chips" id="bo-d">'+[['d','Today'],['w','This week'],['','Until I stop it']].map(o=>'<button class="chip '+(((b.until===''&&o[0]==='')||(b.until&&o[0]!==''&&(o[0]==='d')===(b.until===iso())))?'on':'')+'" data-v="'+o[0]+'">'+o[1]+'</button>').join('')+'</div></div>'+
+   '<button class="btn primary" id="bo-go">Save</button>');
+  let mode=b.mode,m=b.m,du=b.until===''?'':(b.until===iso()?'d':'w');
+  bindChips('bo-m',v=>{mode=v});bindChips('bo-x',v=>{m=+v});bindChips('bo-d',v=>{du=v});
+  $('bo-go').onclick=()=>{const until=du==='d'?iso():du==='w'?iso(addD(new Date(),7-((new Date().getDay()+6)%7)-1)):'';S.set.boost={mode,m,until};save.set();closeSheet();toast(mode==='off'?'Boost off':'⚡ Boost on: ×'+m+' on '+(mode==='weak'?'your weakest subject':SUBJ[mode].n));render()};
+};
+const boostLine=()=>{const t=boostTarget();return t?'<div class="sub" style="margin:0 0 8px">⚡ Boost ×'+boostCfg().m+' on <b>'+SUBJ[t].n+'</b></div>':''};
+
+/* ---- global search ---- */
+let sidx=null,sidxAt=0;
+async function sLoad(){
+  if(sidx&&Date.now()-sidxAt<60000)return sidx;
+  const rows=await C.dbAll('texts');
+  const T={};
+  const L=Object.fromEntries(S.lessons.map(l=>[l.id,l])),P=Object.fromEntries(S.progs.map(p=>[p.id,p])),M=Object.fromEntries(S.mocks.map(m=>[m.id,m])),D=Object.fromEntries(S.tds.map(t=>[t.id,t]));
+  const out=[];
+  rows.forEach(r=>{
+    const id=String(r.id),tx=r.text||'';if(tx.length<20)return;let m;
+    const add=(kind,ref,title,subj,tag)=>out.push({kind,ref,title,subj,tag,text:tx,f:FOLD(tx)});
+    if((m=id.match(/^LCB?(.+)$/))&&L[m[1]])add('lc',m[1],L[m[1]].title,L[m[1]].subj,id[2]==='B'?'Lesson completed (fiche)':'Lesson completed');
+    else if((m=id.match(/^L(.+)$/))&&L[m[1]])add('lesson',m[1],L[m[1]].title,L[m[1]].subj,'Lesson');
+    else if((m=id.match(/^D(.+)$/))&&L[m[1]])add('lesson',m[1],L[m[1]].title,L[m[1]].subj,'Lesson notes');
+    else if((m=id.match(/^KT(.+)$/)))add('mbook',m[1],'Methods book',m[1],'Methods');
+    else if((m=id.match(/^K(.+)$/))&&L[m[1]])add('meth',m[1],L[m[1]].title,L[m[1]].subj,'Key methods');
+    else if((m=id.match(/^S(.+)$/))&&P[m[1]])add('sheet',m[1],P[m[1]].title||'Prep sheet',P[m[1]].subj,'Prep sheet');
+    else if((m=id.match(/^M(.+)$/))&&M[m[1]])add('mock',m[1],M[m[1]].title,M[m[1]].subj,'Mock exam');
+    else if((m=id.match(/^TC(.+)$/))&&D[m[1]])add('tdco',m[1],D[m[1]].title||'TD',D[m[1]].subj,'TD corrigé');
+    else if((m=id.match(/^F(.+)$/))){if(P[m[1]])add('fiche','p|'+m[1],P[m[1]].title||'Programme',P[m[1]].subj,'Résumé');else if(M[m[1]])add('fiche','m|'+m[1],M[m[1]].title,M[m[1]].subj,'Résumé')}
+    else if((m=id.match(/^FM(.+)$/)))add('formu',m[1],'Formulaire',m[1],'Formulaire');
+  });
+  sidx=out;sidxAt=Date.now();return out;
+}
+function sSearch(q){
+  const f=FOLD(q).trim();if(f.length<2)return [];
+  const words=f.split(/\s+/).filter(Boolean),res=[];
+  (sidx||[]).forEach(d=>{
+    if(!words.every(w=>d.f.includes(w)))return;
+    let at=d.f.indexOf(words[0]);if(at<0)return;
+    const a=Math.max(0,at-60),sn=d.text.slice(a,at+120).replace(/\s+/g,' ');
+    let n=0,p=-1;while((p=d.f.indexOf(words[0],p+1))>=0&&n<50)n++;
+    res.push({d,sn:(a>0?'…':'')+sn+'…',score:n+(FOLD(d.title).includes(words[0])?20:0)});
+  });
+  return res.sort((a,b)=>b.score-a.score).slice(0,30);
+}
+function sHtml(q){
+  if(FOLD(q).trim().length<2)return '<div class="sub" style="padding:8px 2px">Type at least 2 letters. It searches the text of every lesson, résumé, methods sheet, prep sheet, mock exam, TD corrigé and formulaire.</div>';
+  const r=sSearch(q);if(!r.length)return '<div class="hidecorr">Nothing found for “'+esc(q)+'”.</div>';
+  const hl=t=>{let o=esc(t);FOLD(q).trim().split(/\s+/).forEach(w=>{try{o=o.replace(new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>')}catch(_){}});return o};
+  return r.map(x=>'<button class="prow" style="--c:'+C.sc(x.d.subj)+'" data-a="sgo" data-i="'+x.d.kind+'|'+x.d.ref+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.d.title)+'</div><div class="s">'+(SUBJ[x.d.subj]?SUBJ[x.d.subj].n+' · ':'')+x.d.tag+'</div><div class="s" style="margin-top:3px;white-space:normal">'+hl(x.sn)+'</div></span>'+ico.chev+'</button>').join('');
+}
+function vSearch(){
+  return backBar('Search')+'<div class="card"><input id="qs" type="search" placeholder="e.g. théorème de Rolle, loi de Lenz…" autocomplete="off" autocapitalize="off" value="'+esc(st.q||'')+'" style="width:100%"></div><div id="sres">'+(sidx?sHtml(st.q||''):'<div class="sub">Indexing your lessons…</div>')+'</div>';
+}
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='qs'){st.q=e.target.value;const r=$('sres');if(r)r.innerHTML=sHtml(st.q)}});
+A.search=async()=>{go('search','x');try{await sLoad()}catch(_){sidx=[]}const r=$('sres');if(r)r.innerHTML=sHtml(st.q||'');const q=$('qs');if(q)q.focus()};
+A.sgo=i=>{const k=i.indexOf('|'),kind=i.slice(0,k),ref=i.slice(k+1);
+  if(kind==='mbook')return go('mbook',ref);if(kind==='formu')return go('formu',ref);go(kind,ref)};
+
+/* ---- weekly review + effort ---- */
+const monOf=d=>{const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
+function focusMin(from,to){
+  const by={};let tot=0;
+  (typeof fhist!=='undefined'?fhist:[]).forEach(h=>{const d=h.date||'';if(d<from||d>to)return;const k=h.subj||subjOf(h.task)||'other';by[k]=(by[k]||0)+(h.min||0);tot+=h.min||0});
+  return{by,tot};
+}
+function evalMass(from,to){
+  const by={};let tot=0;
+  cal.forEach(e=>{if(!e.subj||!['ds','colle','vt'].includes(e.kind)||e.date<from||e.date>to)return;const x=S.exams[e.id]||S.colles[e.id]||{};const c=coefOf({kind:e.kind==='colle'?'colles':'exams',coef:x.coef,cat:e.kind==='vt'?'vocab':''});by[e.subj]=(by[e.subj]||0)+c;tot+=c});
+  return{by,tot};
+}
+function effortCard(){
+  const t=iso(),a=iso(addD(new Date(),-28)),b=iso(addD(new Date(),14));
+  const f=focusMin(a,t),m=evalMass(a,b);
+  if(!f.tot&&!m.tot)return '';
+  const rows=C.LSUBJ.filter(s=>(f.by[s]||0)>0||(m.by[s]||0)>0).map(s=>{
+    const tp=f.tot?Math.round(100*(f.by[s]||0)/f.tot):0,wp=m.tot?Math.round(100*(m.by[s]||0)/m.tot):0;
+    return{s,tp,wp,gap:wp-tp,min:f.by[s]||0};
+  });
+  const flag=rows.filter(r=>r.gap>=15).sort((x,y)=>y.gap-x.gap)[0];
+  return '<div class="card"><div class="cardhead"><div class="lbl">Effort vs what is graded</div></div><div class="sub" style="margin-bottom:8px">Your focus time of the last 4 weeks, against the weight (coefficients) of the DS, colles and vocabulary tests from 4 weeks ago to 2 weeks ahead.</div>'+
+   rows.map(r=>'<div style="margin:9px 0"><div class="two" style="align-items:center"><b style="flex:1;font-size:14px">'+SUBJ[r.s].n+'</b><span class="sub">'+hdur(r.min)+'</span></div>'+
+     '<div style="display:flex;align-items:center;gap:8px;margin-top:3px"><span class="sub" style="width:54px">your time</span><div style="flex:1;height:8px;border-radius:5px;background:rgba(128,128,128,.18)"><div style="width:'+r.tp+'%;height:100%;border-radius:5px;background:'+C.sc(r.s)+'"></div></div><span class="sub" style="width:34px;text-align:right">'+r.tp+'%</span></div>'+
+     '<div style="display:flex;align-items:center;gap:8px;margin-top:3px"><span class="sub" style="width:54px">graded</span><div style="flex:1;height:8px;border-radius:5px;background:rgba(128,128,128,.18)"><div style="width:'+r.wp+'%;height:100%;border-radius:5px;background:'+C.sc(r.s)+';opacity:.45"></div></div><span class="sub" style="width:34px;text-align:right">'+r.wp+'%</span></div></div>').join('')+
+   (flag?'<div class="warnbox" style="margin-top:8px">'+SUBJ[flag.s].n+': '+flag.tp+'% of your time for '+flag.wp+'% of what is graded.</div>':'<div class="sub" style="margin-top:6px">Your time roughly follows what is graded.</div>')+
+   (f.tot?'':'<div class="sub">No focus session tagged by subject yet: start a Focus from a task or a programme.</div>')+'</div>';
+}
+function vWeek(){
+  const off=st.wk||0,mon=monOf(addD(new Date(),off*7)),sun=addD(mon,6),a=iso(mon),b=iso(sun);
+  const fm=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  let h=backBar('Weekly review');
+  h+='<div class="two" style="align-items:center;margin-bottom:10px"><button class="btn sm" data-a="wkNav" data-i="-1" style="flex:none">‹</button><div style="flex:1;text-align:center;font-weight:700">'+(off===0?'This week':off===-1?'Last week':'Week of')+' · '+fm(mon)+' – '+fm(sun)+'</div><button class="btn sm" data-a="wkNav" data-i="1" style="flex:none" '+(off>=0?'disabled':'')+'>›</button></div>';
+  const f=focusMin(a,b),subs=Object.keys(f.by).sort((x,y)=>f.by[y]-f.by[x]);
+  h+='<div class="card"><div class="cardhead"><div class="lbl">Time worked</div><div class="gpill g-mid">'+hdur(f.tot)+'</div></div>'+(subs.length?subs.map(k=>'<div style="margin:8px 0"><div class="two"><b style="flex:1;font-size:14px">'+(SUBJ[k]?SUBJ[k].n:'Other')+'</b><span class="sub">'+hdur(f.by[k])+'</span></div><div style="height:8px;border-radius:5px;background:rgba(128,128,128,.18);margin-top:3px"><div style="width:'+Math.round(100*f.by[k]/f.tot)+'%;height:100%;border-radius:5px;background:'+(SUBJ[k]?C.sc(k):'#888')+'"></div></div></div>').join(''):'<div class="sub">No focus session this week.</div>')+'</div>';
+  const gr=allRecs().filter(r=>r.grade!=null&&r.grade!==''&&!isNaN(+r.grade)&&r.date>=a&&r.date<=b).sort((x,y)=>x.date.localeCompare(y.date));
+  h+='<div class="card"><div class="lbl">Grades this week</div>'+(gr.length?gr.map(r=>'<button class="prow" style="--c:'+C.sc(r.subj)+'" data-a="rec" data-i="'+r.kind+'|'+r.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(r.title||'')+'</div><div class="s">'+SUBJ[r.subj].n+' · coef '+(coefOf(r)===1/3?'1/3':coefOf(r))+'</div></span>'+gp(+r.grade)+'</button>').join(''):'<div class="sub">None.</div>')+'</div>';
+  const na=iso(addD(sun,1)),nb=iso(addD(sun,14));
+  const up=cal.filter(e=>['ds','colle','vt'].includes(e.kind)&&e.date>=(off===0?iso():na)&&e.date<=(off===0?iso(addD(new Date(),14)):nb)).sort((x,y)=>(x.date+(x.time||'')).localeCompare(y.date+(y.time||''))).slice(0,8);
+  h+='<div class="card"><div class="lbl">Coming up (next 2 weeks)</div>'+(up.length?up.map(e=>{const r=e.subj&&OWN.includes(e.subj)&&e.kind==='colle'?readiness(e.subj,e.date):null,lt=tasks.filter(t=>t.lk===e.id).length;
+    return '<button class="prow" style="--c:'+col(e.color)+'" data-a="evOpen" data-i="'+e.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(e.title)+'</div><div class="s">'+fd(e.date)+(e.time?' · '+e.time:'')+(r?' · '+r.n+'/'+r.t+' chapters ready':'')+(lt?' · '+lt+' linked task'+(lt>1?'s':''):'')+'</div></span>'+ico.chev+'</button>'}).join(''):'<div class="sub">Nothing planned.</div>')+'</div>';
+  h+=effortCard();
+  return h;
+}
+A.week=()=>{st.wk=0;go('week','x')};
+A.wkNav=i=>{st.wk=Math.min(0,(st.wk||0)+ +i);render('card')};
+
+/* ---- colleurs ---- */
+const cprofs=()=>S.set.cprof||{};
+function colleurList(){
+  const m={};
+  cal.filter(e=>e.kind==='colle').forEach(e=>{const t=colleInfo(e.id).teacher;if(!t)return;const k=normT(t);if(!k)return;const o=m[k]=m[k]||{key:k,name:t,subj:e.subj,ids:[]};o.ids.push(e.id)});
+  Object.keys(S.colles).forEach(id=>{const r=S.colles[id];if(!r.teacher)return;const k=normT(r.teacher);if(!k)return;const o=m[k]=m[k]||{key:k,name:r.teacher,subj:r.subj,ids:[]};if(!o.ids.includes(id))o.ids.push(id)});
+  Object.keys(cprofs()).forEach(k=>{if(!m[k])m[k]={key:k,name:cprofs()[k].name||k,subj:cprofs()[k].subj||'',ids:[]}});
+  return Object.values(m).map(o=>{const gr=o.ids.map(i=>S.colles[i]).filter(r=>r&&r.grade!=null&&r.grade!==''&&!isNaN(+r.grade));return Object.assign(o,{n:o.ids.length,graded:gr.length,avg:gr.length?gr.reduce((a,r)=>a+ +r.grade,0)/gr.length:null})}).sort((a,b)=>b.n-a.n);
+}
+function vColleurs(){
+  const L=colleurList();
+  let h=backBar('Colleurs');
+  h+='<div class="sub" style="margin:0 0 12px">Write down how each colleur works. The prep sheet for a colle uses it, together with your past debriefs, so the exercises look like what this colleur gives.</div>';
+  h+=L.length?L.map(o=>{const p=cprofs()[o.key]||{},fl=['style','asks','grading','notes'].filter(f=>(p[f]||'').trim()).length;
+    return '<button class="prow" style="--c:'+C.sc(o.subj||'maths')+'" data-a="cprof" data-i="'+o.key+'"><i class="dot"></i><span class="m"><div class="t">'+esc(o.name)+'</div><div class="s">'+(o.subj&&SUBJ[o.subj]?SUBJ[o.subj].n+' · ':'')+o.n+' colle'+(o.n>1?'s':'')+(o.avg!=null?' · avg '+o.avg.toFixed(1):'')+' · '+(fl?'profile '+fl+'/4':'no profile yet')+'</div></span>'+ico.chev+'</button>'}).join(''):'<div class="hidecorr">No colleur yet. Add the colleur’s name on a colle (open it → Colleur).</div>';
+  return h;
+}
+A.colleurs=()=>go('colleurs','x');
+A.cprof=key=>{
+  const o=colleurList().find(x=>x.key===key);if(!o)return;const p=cprofs()[key]||{};
+  const db=o.ids.map(i=>({id:i,r:S.colles[i]})).filter(x=>x.r&&x.r.debrief).slice(-3);
+  openSheet('<h2 class="sh">'+esc(o.name)+'</h2><div class="sub" style="margin-bottom:8px">'+o.n+' colle'+(o.n>1?'s':'')+(o.avg!=null?' · average '+o.avg.toFixed(1)+'/20':'')+'</div>'+
+   [['style','Style','e.g. calm, lets me search 5 minutes then gives a hint'],['asks','What he/she tends to ask','e.g. always one proof from the cours, then a computation exercise'],['grading','How he/she grades','e.g. rigour on quantifiers, values speed'],['notes','Other notes','']].map(f=>'<div class="field"><label>'+f[1]+'</label><textarea id="cp-'+f[0]+'" rows="2" maxlength="600" placeholder="'+f[2]+'">'+esc(p[f[0]]||'')+'</textarea></div>').join('')+
+   (db.length?'<div class="sub" style="margin:4px 0">Past debriefs are used too ('+db.length+').</div>':'')+'<button class="btn primary" id="cp-go">Save</button>');
+  $('cp-go').onclick=()=>{S.set.cprof=Object.assign({},cprofs(),{[key]:{name:o.name,subj:o.subj,style:$('cp-style').value.trim(),asks:$('cp-asks').value.trim(),grading:$('cp-grading').value.trim(),notes:$('cp-notes').value.trim()}});save.set();closeSheet();toast('Saved ✓');render()};
+};
+function colleurCtx(p){
+  try{
+    const ev=cal.find(e=>e.kind==='colle'&&e.subj===p.subj&&e.date===p.date);if(!ev)return '';
+    const t=colleInfo(ev.id).teacher;if(!t)return '';const k=normT(t),pr=cprofs()[k]||{};
+    const past=Object.keys(S.colles).map(i=>S.colles[i]).filter(r=>r&&r.debrief&&normT(r.teacher||'')===k).slice(-3);
+    const lines=[['Style',pr.style],['Tends to ask',pr.asks],['Grading',pr.grading],['Notes',pr.notes]].filter(x=>(x[1]||'').trim());
+    if(!lines.length&&!past.length)return '';
+    return '\n\nCOLLEUR PROFILE ('+t+'):\n'+lines.map(x=>x[0]+': '+x[1]).join('\n')+(past.length?'\n\nPAST DEBRIEFS WITH THIS COLLEUR (what he/she really asked):\n'+past.map(r=>r.debrief.slice(0,900)).join('\n---\n'):'');
+  }catch(_){return ''}
+}
+
+/* ---- voice / text debrief of a colle ---- */
+let rec=null;
+const b64=blob=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=ko;r.readAsDataURL(blob)});
+async function debriefRun(id,parts){
+  const r=S.colles[id]||(S.colles[id]={});
+  const ev=cal.find(c=>c.id===id),subj=(ev&&ev.subj)||r.subj||'maths';
+  return run('DB'+id,'Writing your debrief…',async(lab,txt)=>{
+    lab('Listening…');
+    const q=await C.ai({subj,gemini:parts.some(x=>x.type!=='text'),system:C.SYS_DEBRIEF,content:parts.concat([{type:'text',text:'Colle: '+((ev&&ev.title)||'')+' ('+SUBJ[subj].n+')'}]),max:2500,onText:txt});
+    const t=q.text.trim();if(/^AUDIO_VIDE/.test(t))throw new C.AIError('I could not hear anything. Try again closer to the microphone, or type it.');
+    S.colles[id]=Object.assign(S.colles[id]||{},{debrief:t,debriefAt:Date.now()});save.colles();toast('Debrief saved ✓');
+  });
+}
+A.debrief=id=>{
+  let chunks=[],mr=null,t0=0,tick=null;
+  openSheet('<h2 class="sh">🎙 Debrief</h2><div class="sub" style="margin-bottom:10px">Tell it in your own words, about a minute: what was asked, where you got stuck, how the colleur was. I turn it into notes.</div>'+
+   '<button class="btn primary" id="db-rec">● Start recording</button><div class="sub" id="db-t" style="text-align:center;margin:8px 0"></div>'+
+   '<div class="field" style="margin-top:10px"><label>Or type / dictate it (keyboard microphone)</label><textarea id="db-x" rows="4" maxlength="3000" placeholder="They asked me… I blocked on…"></textarea></div><button class="btn" id="db-send">Make my notes from the text</button>');
+  const stop=()=>{clearInterval(tick);try{rec&&rec.stream.getTracks().forEach(t=>t.stop())}catch(_){}};
+  $('db-rec').onclick=async()=>{
+    if(mr&&mr.state==='recording'){mr.stop();return}
+    if(!localStorage.getItem('p_gkey')){toast('Audio needs your Gemini key. You can type instead.');return}
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||'';
+      mr=new MediaRecorder(stream,mt?{mimeType:mt}:{});rec={stream};chunks=[];
+      mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+      mr.onstop=async()=>{stop();const blob=new Blob(chunks,{type:(mr.mimeType||mt||'audio/mp4').split(';')[0]});closeSheet();
+        if(blob.size<2000){toast('Nothing recorded');return}
+        debriefRun(id,[{type:'audio',source:{type:'base64',media_type:blob.type,data:await b64(blob)}},{type:'text',text:'(The recording is the student\'s debrief.)'}])};
+      mr.start(1000);t0=Date.now();$('db-rec').textContent='■ Stop and make my notes';
+      tick=setInterval(()=>{const s=Math.round((Date.now()-t0)/1000);if($('db-t'))$('db-t').textContent='Recording… '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');else stop()},500);
+    }catch(e){toast('Microphone not allowed. You can type it instead.')}
+  };
+  $('db-send').onclick=()=>{const v=$('db-x').value.trim();if(v.length<15){toast('Write a few lines first');return}stop();closeSheet();debriefRun(id,[{type:'text',text:'STUDENT DEBRIEF (text):\n'+v}])};
+};
+const debriefCard=id=>{
+  const r=S.colles[id]||{};
+  return '<div class="card"><div class="cardhead"><div class="lbl">Debrief</div><button class="lnk" data-a="debrief" data-i="'+id+'">'+(r.debrief?'Redo':'🎙 Record')+'</button></div>'+(live['DB'+id]?liveBox('DB'+id):errBox('DB'+id))+(r.debrief?'<div class="doc" style="margin-top:6px">'+C.md(r.debrief)+'</div>':'<div class="sub">Right after the colle, talk for a minute. The notes feed your next prep sheets with this colleur.</div>')+'</div>';
+};
+
+/* ---- formulaire ---- */
+function vFormu(subj){
+  if(!SUBJ[subj]){st.stack.pop();return ''}
+  const key='FM'+subj,ls=S.lessons.filter(l=>l.subj===subj),ex=(S.set.fmex||{})[subj]||[],fm=(S.set.fm||{})[subj]||{};
+  let h=backBar('Formulaire','<button class="pmini" data-a="printFormu" data-i="'+subj+'" aria-label="Print">⎙</button>');
+  h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+SUBJ[subj].n+'</div><div class="sub" style="margin-top:6px">A dense, printable summary (definitions, theorems, formulas, key methods, traps) built only from your own lessons.</div>';
+  h+='<div class="lbl" style="margin-top:12px">Lessons included</div><div class="chips" style="margin-top:6px">'+(ls.length?ls.map(l=>'<button class="chip '+(ex.includes(l.id)?'':'on')+'" data-a="fmTog" data-i="'+subj+'|'+l.id+'">'+esc(l.title)+'</button>').join(''):'<span class="sub">No lesson yet.</span>')+'</div>';
+  if(live[key])h+=liveBox(key);else{h+=errBox(key);if(ls.length)h+='<button class="btn primary" style="margin-top:12px" data-a="mkFormu" data-i="'+subj+'">'+(fm.at?'Rewrite the formulaire':'Write the formulaire')+'</button>'}
+  h+='</div><div class="card"><div class="doc" id="fmdoc"><div class="sub">Loading…</div></div></div>';
+  setTimeout(async()=>{const d=$('fmdoc');if(!d)return;const t=await C.getText(key);if(!t){d.innerHTML='<div class="sub">Not written yet.</div>';return}await C.loadKatex();d.innerHTML=C.md(t)},0);
+  return h;
+}
+A.formu=s=>go('formu',s);
+A.fmTog=i=>{const[s,id]=i.split('|'),ex=((S.set.fmex||{})[s]||[]).slice(),k=ex.indexOf(id);k<0?ex.push(id):ex.splice(k,1);S.set.fmex=Object.assign({},S.set.fmex,{[s]:ex});save.set();render('card')};
+A.mkFormu=async s=>{
+  if(!needKey())return;
+  const ls=S.lessons.filter(l=>l.subj===s&&!(((S.set.fmex||{})[s])||[]).includes(l.id));
+  if(!ls.length){toast('Select at least one lesson');return}
+  return run('FM'+s,'Writing your formulaire…',async(lab,txt)=>{
+    lab('Collecting your lessons…');let tx='';const per=Math.floor(110000/ls.length);let used=0;
+    for(const l of ls){const t=(await C.getText('L'+l.id))||'';if(!t)continue;used++;tx+='\n\n=== LESSON: '+l.title+' ===\n'+t.slice(0,per)}
+    if(!used)throw new C.AIError('Your lessons are not read yet. Open Lessons → “Read all now”.');
+    lab('Writing…');
+    const r=await C.ai({subj:s,system:C.SYS_FORMULAIRE(SUBJ[s].n,Math.max(1,Math.min(4,Math.ceil(used/4)))),content:[{type:'text',text:tx}],max:16000,onText:txt});
+    if(r.text.length<300)throw new C.AIError('The formulaire came out empty. Try again.');
+    await C.setText('FM'+s,r.text.trim());S.set.fm=Object.assign({},S.set.fm,{[s]:{at:Date.now(),n:used}});save.set();toast('Formulaire ready ✓');
+  });
+};
+A.printFormu=async s=>{const t=await C.getText('FM'+s);if(!t){toast('Write it first');return}await C.loadKatex();printHtml('<div style="column-count:2;column-gap:14px;font-size:8.6pt;line-height:1.28">'+C.md(t)+'</div>');toast('Choose "Save to Files" / "Save as PDF" in the share sheet')};
 A.newMock=()=>{
   let subj='maths',main=[],comp=[],dur='2 h',calc=false,title='';
   const ls=()=>S.lessons.filter(l=>l.subj===subj&&l.status==='done');
@@ -4418,7 +5050,8 @@ function wire(){
     if(!t.dataset||!t.dataset.in)return;
     const[kind,id]=t.dataset.k.split('|'),meta=metaOf(kind,id);if(!meta)return;
     const r=recOf(kind,id,meta),f=t.dataset.in;
-    if(f==='grade'||f==='avg'){const v=t.value.replace(',','.').trim();r[f]=v===''||isNaN(+v)?null:Math.max(0,Math.min(20,+v))}
+    if(f==='coef'){const v=t.value.replace(',','.').trim();r.coef=v===''||isNaN(+v)?null:Math.max(0,+v)}
+    else if(f==='grade'||f==='avg'){const v=t.value.replace(',','.').trim();r[f]=v===''||isNaN(+v)?null:Math.max(0,Math.min(20,+v))}
     else r[f]=t.value;
     save[kind]();
   });
@@ -4450,7 +5083,7 @@ function calHint(){
   el.onclick=()=>{selD=nx.date;stripWeek='';rCal(1)};
 }
 function openEvent(id){A.evOpen(id);show('prepa')}
-window.P={xmPlan,mistN:()=>mistOpen().length,recs:()=>allRecs(),progs:()=>S.progs,addTime:(ref,m)=>{try{const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o){o.min=(o.min||0)+m;(ref.k==='td'?save.tds:save.progs)()}}catch(e){}},focusItems:k=>(k==='td'?S.tds.map(t=>({id:t.id,title:t.title||SUBJ[t.subj].n+' TD',sub:SUBJ[t.subj].n+' · '+fdl(t.date),folder:t.folder||'',subj:t.subj})):S.progs.map(p=>({id:p.id,title:p.title||SUBJ[p.subj].n+' programme',sub:SUBJ[p.subj].n+' · '+fdl(p.date),folder:p.folder||'',subj:p.subj}))).sort((a,b)=>a.folder.localeCompare(b.folder)||a.title.localeCompare(b.title)),render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
+window.P={_t:{st,A,go,render},mkSheet,subjOf,boost:boostFor,mkFormu:A.mkFormu,plan:()=>planCard(),planGo,planSkip,planUp,trainName:id=>{const p=S.progs.find(x=>x.id===id);return p?'Colle '+SUBJ[p.subj].n+' - Training '+((p.tr||0)+1):''},xmPlan,mistN:()=>mistOpen().length,recs:()=>allRecs(),progs:()=>S.progs,addTime:(ref,m)=>{try{const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o){o.min=(o.min||0)+m;if(ref.k!=='td')o.tr=(o.tr||0)+1;(ref.k==='td'?save.tds:save.progs)()}}catch(e){}},focusItems:k=>(k==='td'?S.tds.map(t=>({id:t.id,title:t.title||SUBJ[t.subj].n+' TD',sub:SUBJ[t.subj].n+' · '+fdl(t.date),folder:t.folder||'',subj:t.subj})):S.progs.map(p=>({id:p.id,title:p.title||SUBJ[p.subj].n+' programme',sub:SUBJ[p.subj].n+' · '+fdl(p.date),folder:p.folder||'',subj:p.subj}))).sort((a,b)=>a.folder.localeCompare(b.folder)||a.title.localeCompare(b.title)),render,rHomeCard,removed:C.removed,dump:C.dump,load:C.load,boot,calHint,openEvent,_st:st,_A:A};
 })();
 
 P.boot();
@@ -4535,6 +5168,67 @@ P.boot();
     });
   });
 
+
+  /* ---------- appearance ---------- */
+  function themeMode(){return localStorage.getItem('theme')||'dark'}
+  function applyTheme(){var m=themeMode(),d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=d?'#06070b':'#eef0f5';var cs=document.querySelector('meta[name=color-scheme]');if(cs)cs.content=d?'dark':'light'}
+  window.setTheme=function(m){try{localStorage.setItem('theme',m)}catch(e){}applyTheme();drawTheme();try{show(cur)}catch(e){}try{window.P&&P.render&&P.render()}catch(e){}};
+  function drawTheme(){var m=themeMode();document.querySelectorAll('#pv-theme .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===m)})}
+  $('thm').addEventListener('click',function(){var dark=document.documentElement.getAttribute('data-theme')!=='light';setTheme(dark?'light':'dark');try{vib(8)}catch(e){}});
+  if(window.matchMedia)try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(themeMode()==='auto')applyTheme()})}catch(e){}
+  document.querySelectorAll('#pv-theme .chip').forEach(function(c){c.addEventListener('click',function(){setTheme(c.dataset.v)})});
+
+  /* ---------- job notifications ---------- */
+  function drawNotif(){var on=localStorage.getItem('jnotif')==='1'&&window.Notification&&Notification.permission==='granted';var b=$('pv-notif');if(!b)return;b.textContent=on?'Job notifications are on (tap to turn off)':'Turn on job notifications';if(!window.Notification){$('pv-nstate').textContent='This iPhone setup does not allow notifications for web apps. Add Aether to the Home Screen first (iOS 16.4 or later).'}}
+  $('pv-notif').addEventListener('click',async function(){
+    if(!window.Notification){note('Notifications are not available here');return}
+    if(localStorage.getItem('jnotif')==='1'){localStorage.setItem('jnotif','0');drawNotif();return}
+    var p=Notification.permission;if(p!=='granted'){try{p=await Notification.requestPermission()}catch(e){}}
+    if(p==='granted'){localStorage.setItem('jnotif','1');note('Notifications are on')}else note('Permission was not given');
+    drawNotif();
+  });
+
+  /* ---------- data protection: persistent storage + daily snapshots ---------- */
+  var SNAPDB=null;
+  function snapDb(){return new Promise(function(res,rej){if(SNAPDB)return res(SNAPDB);var q=indexedDB.open('aether_snap',1);q.onupgradeneeded=function(){q.result.createObjectStore('s')};q.onsuccess=function(){SNAPDB=q.result;res(SNAPDB)};q.onerror=function(){rej(q.error)}})}
+  function snapTx(mode,fn){return snapDb().then(function(db){return new Promise(function(res,rej){var t=db.transaction('s',mode),s=t.objectStore('s'),r=fn(s);t.oncomplete=function(){res(r&&r.result)};t.onerror=function(){rej(t.error)}})})}
+  async function snapBuild(){var out={app:APP,version:1,exported:new Date().toISOString(),data:{}};KEYS.forEach(function(k){var v=get(k);if(v!==null)out.data[k]=v});if(window.P&&P.dump){try{out.idb=await P.dump()}catch(e){}}return out}
+  async function snapNow(force){
+    try{
+      var d=new Date().toISOString().slice(0,10);if(!force&&localStorage.getItem('lastSnap')===d)return;
+      var o=await snapBuild();await snapTx('readwrite',function(s){return s.put(JSON.stringify(o),d)});
+      var keys=await snapTx('readonly',function(s){return s.getAllKeys()});keys=(keys||[]).sort();
+      if(keys.length>5)await snapTx('readwrite',function(s){keys.slice(0,keys.length-5).forEach(function(k){s.delete(k)})});
+      localStorage.setItem('lastSnap',d);
+    }catch(e){}
+  }
+  async function snapList(){try{var k=await snapTx('readonly',function(s){return s.getAllKeys()});return (k||[]).sort().reverse()}catch(e){return []}}
+  async function persistStatus(){
+    var st='unknown';try{if(navigator.storage&&navigator.storage.persisted){st=(await navigator.storage.persisted())?'yes':'no'}}catch(e){}
+    return st;
+  }
+  async function drawDP(){
+    var el=$('pv-dpstate');if(!el)return;
+    var p=await persistStatus(),sn=await snapList(),lb=+localStorage.getItem('lastBackup')||0;
+    var days=lb?Math.floor((Date.now()-lb)/864e5):null;
+    el.textContent=(p==='yes'?'✓ iOS will not clear this app\'s storage automatically. ':p==='no'?'iOS may clear this app\'s storage if the phone runs low on space. Adding Aether to the Home Screen helps. ':'')+
+      (sn.length?sn.length+' daily snapshot'+(sn.length>1?'s':'')+' kept on this phone (latest '+sn[0]+'). ':'No snapshot yet. ')+
+      (days==null?'No file backup yet: use Export backup below.':days===0?'File backup: today.':'Last file backup: '+days+' day'+(days>1?'s':'')+' ago.');
+  }
+  $('pv-snaps').addEventListener('click',async function(){
+    var sn=await snapList();
+    if(!sn.length){note('No snapshot yet. The first one is taken at the next launch.');return}
+    var pick=sn[0];
+    ask({title:'Restore a snapshot?',msg:'Snapshots protect you from mistakes and bugs inside the app (they live on this phone, so they do not replace a file backup). Restore the one from '+pick+'? This replaces ALL current data. Older ones: '+(sn.slice(1).join(', ')||'none')+'.',ok:'Restore '+pick,danger:true}).then(async function(ok){
+      if(!ok)return;
+      var raw=await snapTx('readonly',function(s){return s.get(pick)});var o;try{o=JSON.parse(raw)}catch(e){note('Snapshot unreadable');return}
+      KEYS.forEach(del);Object.keys(o.data).forEach(function(k){if(KEYS.indexOf(k)>-1&&typeof o.data[k]==='string')set(k,o.data[k])});
+      if(o.idb&&window.P&&P.load){P.load(o.idb).then(function(){location.reload()},function(){location.reload()})}else location.reload();
+    });
+  });
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+  setTimeout(snapNow,4000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(snapNow,1500)});
   /* ---------- PIN management ---------- */
   function newPin(){
     showPad('Choose a PIN','4 digits',true,function(p1){
@@ -4557,6 +5251,7 @@ P.boot();
   }
   var sheet=$('pv-sheet'), setB=$('pv-setpin'), rmB=$('pv-rmpin'), stateEl=$('pv-pinstate');
   function refresh(){
+    drawTheme();drawNotif();drawDP();
     if(has()){stateEl.textContent='PIN is on. The app locks after 30 seconds away.';setB.textContent='Change PIN';rmB.style.display='';}
     else{stateEl.textContent='No PIN set. Anyone who opens this app can see your data.';setB.textContent='Set PIN';rmB.style.display='none';}
   }
@@ -4575,6 +5270,7 @@ P.boot();
     var out={app:APP,version:1,exported:new Date().toISOString(),data:{}};
     KEYS.forEach(function(k){var v=get(k);if(v!==null)out.data[k]=v;});
     if(window.P&&P.dump){try{out.idb=await P.dump();}catch(e){}}
+    try{localStorage.setItem('lastBackup',String(Date.now()))}catch(e){}
     var json=JSON.stringify(out), name=APP+'-backup-'+new Date().toISOString().slice(0,10)+'.json';
     setBusy();
     try{
@@ -4627,6 +5323,6 @@ P.boot();
   refresh();
 })();
 </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){try{navigator.serviceWorker.register('./sw.js').catch(function(){});}catch(e){}});}</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){try{var had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register('./sw.js').catch(function(){});navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&typeof toast==='function')toast('Aether was updated.',{label:'Reload',fn:function(){location.reload()}})});navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.type==='update'&&typeof toast==='function')toast('A new version of Aether is ready.',{label:'Reload',fn:function(){location.reload()}})});}catch(e){}});}</script>
 </body>
 </html>
