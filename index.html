@@ -825,6 +825,47 @@ textarea::placeholder{color:var(--dim)}
   .sbox,.pv-box{max-width:620px;max-height:94vh}
   .atiles{grid-template-columns:repeat(4,1fr)}
 }
+
+/* v54: top-anchored sheets, screen-corner glow, home dock */
+:root{--scr:55px}
+#sheet,#pv-sheet{inset:auto;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100%);align-items:flex-start}
+.sbox,.pv-box{margin-top:calc(env(safe-area-inset-top) + 6px);border:1px solid var(--line2);border-radius:28px;max-height:calc(var(--vvh,100dvh) - env(safe-area-inset-top) - 16px);box-shadow:0 30px 60px rgba(0,0,0,.55)}
+.sbox{display:flex;flex-direction:column;padding:20px 20px 12px;overflow-y:auto}
+.sbox #sbody{flex:none}
+.sbox .grab{order:2;flex:none;margin:16px auto 6px}
+.pv-box{padding:22px 20px 18px}
+.sbox,.pv-box{width:calc(100% - 16px)}
+@keyframes sheetup{from{transform:translateY(-110%)}to{transform:none}}
+@keyframes sheetdown{to{transform:translateY(-110%)}}
+#hhglow{border-radius:var(--scr)}
+#hdock{display:flex;gap:10px;margin:0 0 12px;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none}
+#hdock:empty{display:none}
+#hdock::-webkit-scrollbar{display:none}
+.dk{flex:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line2);background:var(--surf);display:grid;place-items:center;font-size:21px;position:relative;color:var(--text);animation:dkin .45s var(--spring) both}
+.dk.hh{border-color:rgba(255,159,10,.6);animation:dkin .45s var(--spring) both,dkpulse 2.4s ease-in-out infinite .5s}
+.dk i{position:absolute;top:3px;right:3px;width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 2px var(--bg,#0b0d12)}
+@keyframes dkin{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+@keyframes dkpulse{50%{box-shadow:0 0 0 6px rgba(255,159,10,.18)}}
+.swp{position:relative;transition:transform .28s var(--ease),opacity .28s;touch-action:pan-y}
+.swp.collapsed{display:none!important}
+.swp.bye{transform:translateX(-90%);opacity:0}
+.swp .cardhead{padding-right:30px}
+.swx{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(128,128,128,.16);color:var(--muted);font-size:13px;line-height:1;display:grid;place-items:center;padding:0;min-height:0}
+.hhc.on.swp{padding:12px 16px}
+.hhb{display:flex;align-items:center;gap:12px}
+.hhb .fl{font-size:28px;animation:hhfl 1.6s ease-in-out infinite}
+@keyframes hhfl{50%{transform:scale(1.18) rotate(-6deg)}}
+.hhb b{font-size:15px;white-space:nowrap}.hhb .sub{margin-left:auto;white-space:nowrap;font-size:12.5px}.hhb .btn{padding:8px 14px;min-height:0;font-size:14px}
+.xmc{padding:12px 16px}
+.xmh{display:flex;align-items:center;gap:10px}
+.xmh .ic{font-size:24px;animation:xmfl 3s ease-in-out infinite}
+@keyframes xmfl{50%{transform:translateY(-2px) rotate(-5deg)}}
+.xmh b{font-size:15px}
+.xmh .sub{margin-left:auto;margin-right:26px;font-size:12.5px}
+.xmch{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.xmch span{font-size:13px;padding:4px 10px;border-radius:99px;background:rgba(79,209,255,.12);border:1px solid rgba(79,209,255,.25)}
+.xmdet{display:none;margin-top:8px}.xmc.open .xmdet{display:block}
+.tmr{display:flex;align-items:center;gap:10px}.tmr b{font-size:15px}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -847,7 +888,7 @@ textarea::placeholder{color:var(--dim)}
 <div id="pv-sheet">
   <div class="pv-box">
     <div class="pv-h">Appearance</div>
-    <div class="chips" id="pv-theme" style="margin-bottom:14px"><button class="chip" data-v="dark">Dark</button><button class="chip" data-v="light">Light</button><button class="chip" data-v="auto">Auto (iPhone setting)</button></div>
+    <div class="chips" id="pv-scr" style="margin-bottom:10px"><button class="chip" data-v="0">Square</button><button class="chip" data-v="47">iPhone 12–14</button><button class="chip" data-v="55">iPhone 15 / Pro</button><button class="chip" data-v="62">iPhone 16 Pro</button></div><div class="chips" id="pv-theme" style="margin-bottom:14px"><button class="chip" data-v="dark">Dark</button><button class="chip" data-v="light">Light</button><button class="chip" data-v="auto">Auto (iPhone setting)</button></div>
     <div class="pv-h">Notifications</div>
     <div class="pv-note" id="pv-nstate">Get a notification when an AI job finishes while you are in another app. iOS pauses web apps in the background, so jobs may need you to come back.</div>
     <button class="pv-btn" id="pv-notif">Turn on job notifications</button>
@@ -875,6 +916,7 @@ textarea::placeholder{color:var(--dim)}
 <div class="container">
 
 <section id="home" class="view">
+  <div id="hdock"></div>
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tpc" id="tpcard"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
@@ -884,7 +926,6 @@ textarea::placeholder{color:var(--dim)}
   <div class="card" id="rescue" style="display:none"></div>
   <div class="card" id="svcard" style="display:none"></div>
   <div class="card motiv" id="motiv"></div>
-  <div class="card lazycard" id="lazycard"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
   <div class="card"><div class="lbl">Focus today</div><div id="focus-bar"></div></div>
@@ -896,6 +937,7 @@ textarea::placeholder{color:var(--dim)}
   <div class="card"><div class="lbl" id="revl">Daily review</div><div id="rev"></div></div>
   <div class="card tap" onclick="showJournal()"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Journal</div><div class="sub">Last 14 days</div></div><span class="chev">›</span></div></div>
   <div class="card tap" onclick="show('stats')"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Stats</div><div class="sub">Streak, focus time, mood</div></div><span class="chev">›</span></div></div>
+  <div class="card lazycard" id="lazycard"></div>
 </section>
 
 <section id="calendar" class="view hidden">
@@ -1069,34 +1111,35 @@ function closeSheet(){const s=$('sheet');if(!s.classList.contains('show'))return
   const s=$('sheet'),box=s.querySelector('.sbox');
   s.addEventListener('click',e=>{if(e.target===s)closeSheet()});
   s.addEventListener('touchmove',e=>{if(!e.target.closest('.sbox'))e.preventDefault()},{passive:false});
-  /* swipe down anywhere on the sheet (when it is scrolled to the top) to dismiss; the top handle always works */
+  /* swipe UP on the sheet (when it is scrolled to its end) or on the handle to dismiss */
   let y0=0,x0=0,t0=0,dy=0,drag=false,armed=false,fromGrab=false;
   const reset=()=>{box.style.transition='';box.style.transform='';box.style.animation='';s.style.background=''};
+  const atEnd=()=>box.scrollTop+box.clientHeight>=box.scrollHeight-2;
   box.addEventListener('touchstart',e=>{
     if(e.touches.length!==1||!s.classList.contains('show')||s.classList.contains('closing'))return;
     const t=e.touches[0];y0=t.clientY;x0=t.clientX;t0=Date.now();dy=0;drag=false;
-    fromGrab=!!e.target.closest('.grab')||(y0-box.getBoundingClientRect().top)<44;
-    armed=box.scrollTop<=0||fromGrab;
+    fromGrab=!!e.target.closest('.grab');
+    armed=atEnd()||fromGrab;
   },{passive:true});
   box.addEventListener('touchmove',e=>{
     if(!armed)return;
     const t=e.touches[0],ddy=t.clientY-y0,ddx=t.clientX-x0;
     if(!drag){
-      if(ddy>8&&Math.abs(ddy)>Math.abs(ddx)*1.2&&(box.scrollTop<=0||fromGrab)&&!e.target.closest('input[type=range],input[type=time],input[type=date]')){drag=true;box.style.animation='none';box.style.transition='none'}
-      else if(Math.abs(ddx)>12||ddy<-8){armed=false;return}
+      if(ddy<-8&&Math.abs(ddy)>Math.abs(ddx)*1.2&&(atEnd()||fromGrab)&&!e.target.closest('input[type=range],input[type=time],input[type=date]')){drag=true;box.style.animation='none';box.style.transition='none'}
+      else if(Math.abs(ddx)>12||ddy>8){armed=false;return}
       else return;
     }
     e.preventDefault();
-    dy=Math.max(0,ddy);
+    dy=Math.min(0,ddy);
     box.style.transform='translateY('+dy+'px)';
-    s.style.background='rgba(0,0,0,'+Math.max(0,.62*(1-dy/(box.offsetHeight||500)))+')';
+    s.style.background='rgba(0,0,0,'+Math.max(0,.62*(1+dy/(box.offsetHeight||500)))+')';
   },{passive:false});
   const end=()=>{
     if(!drag){armed=false;return}
     drag=false;armed=false;
-    const v=dy/Math.max(1,Date.now()-t0);
-    if(dy>110||(v>.4&&dy>50)){
-      box.style.transition='transform .26s ease-in';box.style.transform='translateY(100%)';s.style.transition='background .26s';s.style.background='rgba(0,0,0,0)';vib(10);
+    const v=-dy/Math.max(1,Date.now()-t0);
+    if(-dy>110||(v>.4&&-dy>50)){
+      box.style.transition='transform .26s ease-in';box.style.transform='translateY(-110%)';s.style.transition='background .26s';s.style.background='rgba(0,0,0,0)';vib(10);
       setTimeout(()=>{s.classList.remove('show','closing');box.style.transition='';box.style.transform='';box.style.animation='';s.style.background='';s.style.transition=''},270);
     }else{
       box.style.transition='transform .35s var(--spring)';box.style.transform='';s.style.background='';
@@ -1104,11 +1147,11 @@ function closeSheet(){const s=$('sheet');if(!s.classList.contains('show'))return
     }
   };
   box.addEventListener('touchend',end);box.addEventListener('touchcancel',end);
-  /* mouse / desktop: drag the handle */
+  /* mouse / desktop: drag the handle up */
   const g=$('grab');let my=null,md=0;
   g.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')return;my=e.clientY;md=0;g.setPointerCapture(e.pointerId);box.style.animation='none'});
-  g.addEventListener('pointermove',e=>{if(my==null)return;md=Math.max(0,e.clientY-my);box.style.transform='translateY('+md+'px)'});
-  const mend=()=>{if(my==null)return;my=null;if(md>90){box.style.transform='';box.style.animation='';closeSheet()}else{box.style.transition='transform .3s var(--spring)';box.style.transform='';setTimeout(reset,320)}};
+  g.addEventListener('pointermove',e=>{if(my==null)return;md=Math.min(0,e.clientY-my);box.style.transform='translateY('+md+'px)'});
+  const mend=()=>{if(my==null)return;my=null;if(md<-90){box.style.transform='';box.style.animation='';closeSheet()}else{box.style.transition='transform .3s var(--spring)';box.style.transform='';setTimeout(reset,320)}};
   g.addEventListener('pointerup',mend);g.addEventListener('pointercancel',mend);
 })();
 function ask(o){return new Promise(res=>{
@@ -1181,12 +1224,64 @@ function vtSeed(){
   try{
     if(!localStorage.vtseed){
       const have=new Set(cal.map(c=>c.id));let d='2026-09-04';
-      while(d<='2027-06-25'){if(!curHol(d)){const id='s-vt-'+d.replace(/-/g,'');if(!have.has(id))cal.push({id,title:'Vocabulary Test',date:d,time:'',endTime:'',desc:'Weekly English vocabulary test',color:0,kind:'vt',subj:'ang'})}d=shiftD(d,7)}
+      while(d<='2027-06-25'){if(!curHol(d)){const id='s-vt-'+d.replace(/-/g,'');if(!have.has(id))cal.push({id,title:'Vocabulary Test',date:d,time:'13:40',endTime:'13:45',desc:'Weekly English vocabulary test',color:0,kind:'vt',subj:'ang'})}d=shiftD(d,7)}
       localStorage.vtseed='1';sv();
     }
+    if(!localStorage.vtime1){cal.forEach(c=>{if(c.kind==='vt'&&!c.time){c.time='13:40';c.endTime='13:45'}});localStorage.vtime1='1';sv()}
     if(!localStorage.fcol1){cal.forEach(c=>{if(c.kind==='focus'&&c.color===1)c.color=FROST});localStorage.fcol1='1';sv()}
   }catch(e){}
 }
+
+/* ===== v54: home dock: swipe an info card left (or tap its ⌃) to shrink it to an icon; tap the icon to bring it back ===== */
+const DOCK=[['hhcard','🎉','Happy Hour'],['xmcard','📚','Exam mode'],['tpcard','🌙','Plan'],['hprepa','📖','Prépa'],['rtcard','⏳','Timer'],['rescue','🛟','Smallest win'],['svcard','📌','Saved reward'],['motiv','🎯','Goals']];
+function dkLoad(){try{const o=JSON.parse(localStorage.getItem('hdock')||'{}');return o.d===iso()?o:{d:iso(),c:[],o:[]}}catch(e){return{d:iso(),c:[],o:[]}}}
+function dkSave(o){try{localStorage.setItem('hdock',JSON.stringify(o))}catch(e){}}
+function dkCollapsed(id,o){return o.c.includes(id)||(id==='hhcard'&&!hhState()&&!o.o.includes(id))}
+let dkSig='';
+function dockRefresh(){
+  const box=$('hdock');if(!box)return;const o=dkLoad(),chips=[];
+  DOCK.forEach(([id,ic,lb])=>{
+    const el=$(id);if(!el)return;
+    el.classList.add('swp');
+    if(!el.querySelector(':scope>.swx')&&el.style.display!=='none'&&el.innerHTML.trim())el.insertAdjacentHTML('beforeend','<button class="swx" data-dkc="'+id+'" aria-label="Shrink to an icon">⌃</button>');
+    const hidden=el.style.display==='none'||!el.innerHTML.trim();
+    const col=!hidden&&dkCollapsed(id,o);
+    el.classList.toggle('collapsed',col);
+    if(col)chips.push([id,ic,lb]);
+  });
+  const sig=chips.map(c=>c[0]).join()+'|'+(typeof hhState==='function'&&hhState()?1:0);
+  if(sig===dkSig)return;dkSig=sig;
+  box.innerHTML=chips.map(([id,ic,lb])=>`<button class="dk ${id==='hhcard'?'hh':''}" data-dk="${id}" aria-label="${lb}" title="${lb}"><span>${ic}</span>${id==='hhcard'&&hhState()?'<i></i>':''}</button>`).join('');
+}
+function dkCollapse(id){
+  const o=dkLoad(),el=$(id);if(!el)return;
+  o.o=o.o.filter(x=>x!==id);if(!o.c.includes(id))o.c.push(id);dkSave(o);
+  el.classList.add('bye');setTimeout(()=>{el.classList.remove('bye');dkSig='';dockRefresh()},260);vib(10);
+}
+function dkExpand(id){
+  const o=dkLoad();o.c=o.c.filter(x=>x!==id);if(id==='hhcard'&&!hhState()&&!o.o.includes(id))o.o.push(id);dkSave(o);dkSig='';dockRefresh();
+  const el=$(id);if(el){el.scrollIntoView({block:'center',behavior:'smooth'})}vib(10);
+}
+(function(){
+  document.addEventListener('click',e=>{
+    const x=e.target.closest('[data-dkc]');if(x){e.stopPropagation();dkCollapse(x.dataset.dkc);return}
+    const d=e.target.closest('[data-dk]');if(d){dkExpand(d.dataset.dk)}
+  },true);
+  let sx=0,sy=0,el=null,dx=0,on=false;
+  document.addEventListener('touchstart',e=>{const c=e.target.closest&&e.target.closest('#home .swp');if(!c||e.touches.length!==1||e.target.closest('.chips,input,textarea,select,button.btn,[data-noswipe]')){el=null;return}el=c;sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;on=false},{passive:true});
+  document.addEventListener('touchmove',e=>{if(!el)return;const t=e.touches[0],mx=t.clientX-sx,my=t.clientY-sy;
+    if(!on){if(Math.abs(my)>10&&Math.abs(my)>Math.abs(mx)){el=null;return}if(mx<-12&&Math.abs(mx)>Math.abs(my)*1.4){on=true;el.style.transition='none'}else return}
+    dx=Math.min(0,mx);el.style.transform='translateX('+dx+'px)';el.style.opacity=String(Math.max(.25,1+dx/320))},{passive:true});
+  const end=()=>{if(!el)return;const c=el;el=null;c.style.transition='';
+    if(on&&dx<-80){c.style.transform='';c.style.opacity='';dkCollapse(c.id)}else{c.style.transform='';c.style.opacity=''}on=false};
+  document.addEventListener('touchend',end);document.addEventListener('touchcancel',end);
+})();
+/* the visible area (iPhone keyboard) drives the sheets: they always sit at the top of what you can see */
+(function(){const vv=window.visualViewport,r=document.documentElement.style;
+  function sync(){if(vv){r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px')}}
+  if(vv){vv.addEventListener('resize',sync);vv.addEventListener('scroll',sync)}sync();
+  try{const sc=localStorage.getItem('scr');if(sc)r.setProperty('--scr',sc+'px')}catch(e){}
+})();
 function rHome(){
   vtSeed();
   const now=new Date(),hr=now.getHours();
@@ -1197,6 +1292,7 @@ function rHome(){
   countTo($('hxn'),xp,900);
   rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rXM();rTP();rHH();rtRender();svRender();rRescue();rMotiv();
   if(window.P)P.rHomeCard();
+  dockRefresh();
 }
 /* ---- repeating events: stored once (c.rep/c.until/c.skip), expanded per day ---- */
 const EREP={daily:'Every day',weekdays:'Mon–Fri',weekly:'Every week',biweekly:'Every 2 weeks',monthly:'Every month'};
@@ -1466,7 +1562,7 @@ let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:
 let hols=ld('hols',null)||HOL0.map(x=>({...x}));
 let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
 let rcat=ld('rcat',['🍕 Food','🎮 Games','📺 Leisure','🛍 Other']),rcf='',rsub=null;
-let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,xm:true,xd:3,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
+let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,vthr:16,vxp:15,xm:true,xd:3,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
 let commits=ld('commits',[]),rtimer=ld('rtimer',null),rsave=ld('rsave',''),bnd=ld('bnd',{g:null,p:[],s:[]}),alw=ld('alw',{wk:'',left:0}),cmSel={tid:'',stake:50,due:''};
 let hhome=ld('hhome',null),homeNow=null;
 const curHol=(d=iso())=>hols.find(h=>h.s<=d&&d<=h.e)||null;
@@ -1511,9 +1607,10 @@ function hhLoc(force){
 function rHH(){
   const el=$('hhcard');if(!el)return;
   const s=hhState(),h=curHol(),nx=hhNext();
-  el.className='card hhc'+(s?' on':'');
+  el.className='card hhc swp'+(s?' on':'');
+  {const h=$('hhcard'),hero=$('hero'),dk=$('hdock');if(s&&hero&&dk&&dk.previousElementSibling!==h)dk.before(h);else if(!s&&h.parentNode&&$('rtcard')&&h.nextElementSibling!==$('rtcard'))$('rtcard').before(h)}
   let t;
-  if(s)t=`<div class="cardhead"><div class="lbl">🎉 Happy Hour · ×${s.m}</div><span class="sub">until ${s.end}</span></div><div class="lmsg">${s.k==='lunch'?'You are home for lunch: everything you complete now earns ×'+s.m+' XP.':'You are home: everything you complete now earns ×'+s.m+' XP. Start now, even 20 minutes counts.'}</div><button class="btn primary" data-act="hhgo">Start a focus session</button>`;
+  if(s)t=`<div class="hhb"><span class="fl">🎉</span><b>Happy Hour ×${s.m}</b><span class="sub">until ${s.end}</span><button class="btn primary sm" data-act="hhgo" style="margin:0 38px 0 4px;flex:none">Focus</button></div>`;
   else t=`<div class="cardhead"><div class="lbl">Happy Hour</div><button class="lnk" data-act="hhset">Settings</button></div><div class="hint" style="text-align:left;margin:0">${h?'Holidays · '+esc(h.n)+' · habits are paused until '+new Date(dAddDays(h.e,1)+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'.':nx?'Next: '+nx+' · ×'+hh.mult+' XP':'No more Happy Hour today.'}</div>${hh.aft&&!hhome?'<button class="btn sm" data-act="hhhere">📍 Set my home location</button>':''}${hh.aft&&!(hh.ses&&hh.ses.d===iso())&&nowMin()>=tmin(hh.a1)&&nowMin()<tmin(hh.a2)?'<button class="btn sm" data-act="hhman">🏠 I\'m home now</button>':''}`;
   el.innerHTML=t;
 }
@@ -1574,7 +1671,7 @@ function rTP(){
   el.style.display='';
   if(!p){
     const tm=evOn(shiftD(iso(),1)).filter(c=>c.kind!=='focus'&&tmin(c.time)!=null).sort(evSort)[0];
-    el.innerHTML=`<div class="cardhead"><div class="lbl">Tomorrow</div></div><div class="tpn" style="margin-top:4px">${tm?`Starts at ${esc(tm.time)} · ${esc(tm.title)}`:'No fixed start tomorrow'}</div><div class="tps" style="margin-top:6px">😴 Sleep now: 7h30 or more earns your sleep bonus${examMode()?' (doubled in exam mode)':''}.</div>`;
+    el.innerHTML=`<div class="tmr"><span style="font-size:22px">🌙</span><div style="flex:1;min-width:0"><div class="lbl" style="margin:0">Tomorrow</div><b>${tm?`${esc(tm.time)} · ${esc(tm.title)}`:'No fixed start'}</b></div>${examMode()?'':'<span class="xmch" style="margin:0 26px 0 0"><span title="Sleep bonus">😴 7h30</span></span>'}</div>`;
     return;
   }
   const h=Math.floor(p.total/60),m=p.total%60,dur=p.total?(h?h+'h'+(m?pad(m):''):m+' min'):'';
@@ -1586,16 +1683,17 @@ function rXM(){
   const el=$('xmcard');if(!el)return;const x=examMode();
   if(!x){el.style.display='none';return}
   let plan=[];try{plan=P.xmPlan(x.e)||[]}catch(e){}
-  el.style.display='';el.className='card xmc';
+  const keep=el.classList.contains('open');
+  el.style.display='';el.className='card xmc swp'+(keep?' open':'');
   const when=x.days===0?'today':x.days===1?'tomorrow':'in '+x.days+' days';
-  el.innerHTML=`<div class="cardhead"><div class="lbl">📚 Exam mode</div><span class="sub">${esc(x.e.title||'Exam')} · ${when}</span></div><div class="lmsg">${x.days===0?'Today is the day. Light review only, eat, and trust your work.':'Focus on what matters. No new big things, and protect your sleep.'}</div><div class="xmrow">😴 Sleep 7h30 or more tonight: the sleep bonus is doubled</div><div class="xmrow" style="opacity:.75">🔒 Big rewards (🔥 and 👑) wait until after the exam</div><button class="btn" data-act="xmopen" style="margin-top:8px">Open Prépa</button>`;
+  el.innerHTML=`<div class="xmh" data-act="xmx"><span class="ic">📚</span><b>Exam mode</b><span class="sub">${esc(x.e.title||'Exam')} · ${when}</span></div><div class="xmch"><span title="Sleep bonus doubled">😴 ×2</span><span title="Big rewards wait">🔒</span>${plan.length?`<span>📝 ${plan.length}</span>`:''}</div><div class="xmdet">${plan.map(l=>`<div class="xmrow">${esc(l)}</div>`).join('')}</div>`;
 }
 const TIERS=[['🌱','Small treat'],['✨','Nice treat'],['🔥','Big treat'],['👑','Jackpot']];
 const tierOf=c=>c<shs.t1?0:c<shs.t2?1:c<shs.t3?2:3;
 const worthTxt=c=>{const m=Math.round(c/30*60);return m<60?m+' min':Math.floor(m/60)+'h'+(m%60?pad(m%60):'')};
 const fdm=d=>new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 function allowLeft(){if(!shs.al)return Infinity;const wk=mondayOf(iso());if(alw.wk!==wk){const prev=alw.wk?Math.max(0,alw.left):0;alw={wk,left:shs.amt+Math.floor(prev*shs.roll/100)};sv()}return alw.left}
-function recsRecent(k){try{const lim=shiftD(iso(),-21);return(P.recs()||[]).filter(r=>(r.date||'')>=lim&&r.grade!=null&&r.grade!==''&&(!k||r.kind===k))}catch(e){return[]}}
+function recsRecent(k){try{const lim=shiftD(iso(),-21);return(P.recs()||[]).filter(r=>(r.date||'')>=lim&&r.grade!=null&&r.grade!==''&&(!k||(r.cat==='vocab'?'tests':r.kind)===k))}catch(e){return[]}}
 const focusToday=()=>fhist.filter(h=>h.date===fk()).reduce((a,h)=>a+(h.min||0),0);
 function rcheck(r){
   const td=iso(),wk=mondayOf(td),buys=rlog.filter(x=>x.id===r.id);
@@ -1603,7 +1701,7 @@ function rcheck(r){
   if(r.minLv&&lv<r.minLv)return'Reach level '+r.minLv;
   {const x=examMode();if(x&&tierOf(r.c)>=2)return'After your exam ('+fdm(x.e.date)+')'}
   if(r.fm&&focusToday()<r.fm)return'Focus '+(r.fm-focusToday())+' more min today';
-  if(r.gr&&!recsRecent(r.grk).some(x=>+x.grade>=r.gr))return'Needs '+(r.grk==='colles'?'a colle':r.grk==='exams'?'an exam':'a')+' grade ≥ '+r.gr+' (last 3 weeks)';
+  if(r.gr&&!recsRecent(r.grk).some(x=>+x.grade>=r.gr))return'Needs '+(r.grk==='colles'?'a colle':r.grk==='exams'?'an exam or DS':r.grk==='tests'?'a vocabulary test':'a')+' grade ≥ '+r.gr+' (last 3 weeks)';
   if(r.lim&&buys.filter(x=>iso(new Date(x.t))>=wk).length>=r.lim)return'Weekly limit reached';
   if(r.cd&&buys.length){const d=(Date.now()-buys[buys.length-1].t)/864e5;if(d<r.cd)return'Back in '+Math.ceil(r.cd-d)+' d'}
   if(shs.al&&r.c>allowLeft())return'Allowance: '+allowLeft()+' XP left this week';
@@ -1617,7 +1715,7 @@ function bonusSweep(){
   let ch=0;const aw=(n,m)=>{if(n>0){gain(n,innerWidth/2,innerHeight*.35);setTimeout(()=>toast(m+' +'+n+' XP'),500)}ch=1};
   try{
     const rs=(P.recs()||[]).filter(r=>r.grade!=null&&r.grade!==''),key=r=>r.id||r.eid||(r.title+'|'+r.date);
-    if(bnd.g===null){bnd.g=rs.map(key);ch=1}else rs.forEach(r=>{if(!bnd.g.includes(key(r))){bnd.g.push(key(r));{const col=r.kind==='colles',th=col?shs.cthr:shs.gthr,x=col?shs.cxp:shs.gxp;if(+r.grade>=th)aw(x,(col?'🗣 Great colle':'🎓 Great exam')+' ('+r.grade+'/20)');else ch=1}}});
+    if(bnd.g===null){bnd.g=rs.map(key);ch=1}else rs.forEach(r=>{if(!bnd.g.includes(key(r))){bnd.g.push(key(r));{const col=r.kind==='colles',vt=r.cat==='vocab',th=vt?shs.vthr:col?shs.cthr:shs.gthr,x=vt?shs.vxp:col?shs.cxp:shs.gxp;if(+r.grade>=th)aw(x,(vt?'🔤 Great test':col?'🗣 Great colle':'🎓 Great exam')+' ('+r.grade+'/20)');else ch=1}}});
     (P.progs()||[]).forEach(p=>{if(p.chapters&&p.chapters.length&&p.chapters.every(c=>c.ready)&&(p.date||'')>=iso()&&!bnd.p.includes(p.id)){bnd.p.push(p.id);aw(shs.pxp,'📘 Fully prepared')}});
   }catch(e){}
   const d=dayh[iso()];if(d&&+d.s>=shs.sth&&!bnd.s.includes(iso())){bnd.s.push(iso());aw(shs.sxp*(examMode()?2:1),'😴 Good night')}
@@ -1630,6 +1728,7 @@ function rtRender(){
   const left=Math.max(0,rtimer.end-Date.now());el.style.display='';
   const m=Math.floor(left/6e4),s=Math.floor(left%6e4/1e3);
   el.innerHTML=`<div class="cardhead"><div class="lbl">⏳ ${esc(rtimer.n)}</div><span class="sub">${m}:${pad(s)}</span></div><div class="bar"><div class="bar-fill" style="width:${100-left/(rtimer.mins*6e4)*100}%;background:#ff9f0a;box-shadow:none"></div></div><button class="btn sm" data-act="rtstop" style="margin-top:8px">Stop now · refund ${shs.ref}% of the unused time</button>`;
+  dockRefresh();
   if(left<=0){const n=rtimer.n;rtimer=null;sv();rtRender();toast('⏰ Time is up: '+n+'. Back to it!');vib(80);chime()}
 }
 function rtStop(){if(!rtimer)return;const f=Math.max(0,(rtimer.end-Date.now())/(rtimer.mins*6e4)),back=Math.floor(rtimer.c*f*shs.ref/100);spent=Math.max(0,spent-back);const n=rtimer.n;rtimer=null;sv();rtRender();rMotiv();toast('Stopped '+n+(back?' · +'+back+' XP refunded':''))}
@@ -1702,13 +1801,13 @@ function rwSettings(){
   <div class="two" style="margin:8px 0">${N('ss-amt','XP per week',shs.amt)}<div><label class="hint">Unspent carried over</label><div class="chips" id="ss-roll">${[0,50,100].map(v=>`<button class="chip ${shs.roll===v?'on':''}" data-v="${v}">${v}%</button>`).join('')}</div></div></div>
   <div class="lbl" style="margin-top:12px">Treat sizes (by cost)</div><div class="two">${N('ss-t1','🌱→✨ from',shs.t1)}${N('ss-t2','✨→🔥 from',shs.t2)}${N('ss-t3','🔥→👑 from',shs.t3)}</div>
   <div class="lbl" style="margin-top:12px">Commitments and timers</div><div class="two">${N('ss-cb','Bonus when kept (%)',shs.cb)}${N('ss-ref','Timer refund (%)',shs.ref)}</div>
-  <div class="lbl" style="margin-top:12px">Bonus XP (0 = off)</div><div class="hint" style="text-align:left">Exams and DS</div><div class="two">${N('ss-gthr','Grade ≥ /20',shs.gthr)}${N('ss-gxp','gives XP',shs.gxp)}</div><div class="hint" style="text-align:left;margin-top:6px">Colles</div><div class="two">${N('ss-cthr','Grade ≥ /20',shs.cthr)}${N('ss-cxp','gives XP',shs.cxp)}</div><div class="two" style="margin-top:6px">${N('ss-pxp','Fully prepared for a colle',shs.pxp)}${N('ss-sxp','Slept ≥ h gives XP',shs.sxp)}</div><div class="two" style="margin-top:6px">${N('ss-sth','Sleep threshold (h)',shs.sth)}<div></div></div>
+  <div class="lbl" style="margin-top:12px">Bonus XP (0 = off)</div><div class="hint" style="text-align:left">Exams and DS</div><div class="two">${N('ss-gthr','Grade ≥ /20',shs.gthr)}${N('ss-gxp','gives XP',shs.gxp)}</div><div class="hint" style="text-align:left;margin-top:6px">Colles</div><div class="two">${N('ss-cthr','Grade ≥ /20',shs.cthr)}${N('ss-cxp','gives XP',shs.cxp)}</div><div class="hint" style="text-align:left;margin-top:6px">Vocabulary tests (not counted as exams)</div><div class="two">${N('ss-vthr','Grade ≥ /20',shs.vthr)}${N('ss-vxp','gives XP',shs.vxp)}</div><div class="two" style="margin-top:6px">${N('ss-pxp','Fully prepared for a colle',shs.pxp)}${N('ss-sxp','Slept ≥ h gives XP',shs.sxp)}</div><div class="two" style="margin-top:6px">${N('ss-sth','Sleep threshold (h)',shs.sth)}<div></div></div>
   <div class="lbl" style="margin-top:12px">Exam mode</div><div class="chips">${T('ss-xm','Switch to recovery mode before a DS or colle',shs.xm)}</div><div class="two" style="margin-top:6px">${N('ss-xd','Days before',shs.xd)}<div></div></div><div class="lbl" style="margin-top:12px">Behaviour</div><div class="chips">${T('ss-arr','Ask what to do when I get home',shs.arr)}${T('ss-resc','Evening "smallest win" nudge',shs.resc)}${T('ss-snd','Sounds',shs.snd)}${T('ss-hap','Vibrations',shs.hap)}</div>
   <button class="btn primary" id="ss-save" style="margin-top:14px">Save</button>`);
   const B=$('sbody');
   B.onclick=e=>{const c=e.target.closest('.chip');if(c){if(c.parentElement.id==='ss-roll'){[...c.parentElement.children].forEach(x=>x.classList.toggle('on',x===c))}else c.classList.toggle('on')}if(e.target.closest('[data-sb]')){rsub=null;rwSheet()}};
   $('ss-save').onclick=()=>{const g=i=>+$(i).value||0,on=i=>$(i).classList.contains('on');const old=shs.al?shs.amt:0;
-    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),cthr:g('ss-cthr')||14,cxp:g('ss-cxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),xm:on('ss-xm'),xd:Math.max(1,Math.min(14,g('ss-xd')||3)),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
+    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),cthr:g('ss-cthr')||14,cxp:g('ss-cxp'),vthr:g('ss-vthr')||16,vxp:g('ss-vxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),xm:on('ss-xm'),xd:Math.max(1,Math.min(14,g('ss-xd')||3)),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
     if(shs.al&&shs.amt!==old)alw.wk='';sv();rsub=null;rwSheet();rRescue();toast('Saved')};
 }
 let rtab='shop';
@@ -1725,7 +1824,7 @@ function rwSheet(tab){
       b=`<button class="btn sm" data-sb="1">‹ Back</button><div class="field"><label>Reward</label><div class="two"><input id="re-i" value="${esc(d.ico||'🎁')}" maxlength="4" style="max-width:62px;text-align:center;font-size:22px"><input id="re-n" value="${esc(d.n)}" placeholder="e.g. Cinema evening" maxlength="50"></div></div><div class="field"><label>Cost (XP) · you have ${balance()}</label><input id="re-c" type="number" inputmode="numeric" value="${d.c}"></div><div class="field"><label>Category</label><div class="chips" id="re-k"><button class="chip ${!d.cat?'on':''}" data-v="">No category</button>${rcat.map(c=>`<button class="chip ${c===d.cat?'on':''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div></div><details class="rwrules" style="margin:6px 0 10px"${(d.lim||d.cd||d.minLv||d.fm||d.gr||d.mins||d.from||d.to)?' open':''}><summary class="btn sm" style="display:inline-block">⚙ Rules (all optional)</summary><div class="hint" style="text-align:left">Leave empty or 0 for no rule.</div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Max per week</label><input id="re-lim" type="number" inputmode="numeric" value="${d.lim||''}"></div><div><label class="hint">Cooldown (days)</label><input id="re-cd" type="number" inputmode="numeric" value="${d.cd||''}"></div></div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Min. level</label><input id="re-lv" type="number" inputmode="numeric" value="${d.minLv||''}"></div><div><label class="hint">Focus min today first</label><input id="re-fm" type="number" inputmode="numeric" value="${d.fm||''}"></div></div>
-<div class="two" style="margin:6px 0"><div><label class="hint">Needs a grade ≥ /20</label><input id="re-gr" type="number" inputmode="decimal" value="${d.gr||''}"></div><div><label class="hint">Timer (minutes)</label><input id="re-mn" type="number" inputmode="numeric" value="${d.mins||''}"></div></div><div class="chips" id="re-gk" style="margin:4px 0">${[['','Any grade'],['exams','Exam / DS only'],['colles','Colle only']].map(([v,l])=>`<button class="chip ${(d.grk||'')===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div>
+<div class="two" style="margin:6px 0"><div><label class="hint">Needs a grade ≥ /20</label><input id="re-gr" type="number" inputmode="decimal" value="${d.gr||''}"></div><div><label class="hint">Timer (minutes)</label><input id="re-mn" type="number" inputmode="numeric" value="${d.mins||''}"></div></div><div class="chips" id="re-gk" style="margin:4px 0">${[['','Any grade'],['exams','Exam / DS only'],['colles','Colle only'],['tests','Test only']].map(([v,l])=>`<button class="chip ${(d.grk||'')===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Available from</label><input id="re-fr" type="date" value="${d.from||''}"></div><div><label class="hint">Until</label><input id="re-to" type="date" value="${d.to||''}"></div></div></details>
 <div class="chips" style="margin-bottom:10px"><button class="chip ${rsub.id&&rsave===rsub.id?'on':''}" id="re-sv">📌 Save for this (shown on Home)</button></div><button class="btn primary" id="re-s">${r?'Save':'Add reward'}</button>${r?'<button class="btn danger" id="re-d">Delete</button>':''}`;
     }else{
@@ -2123,6 +2222,7 @@ document.addEventListener('click',e=>{
   else if(act==='rescuego'){F.mode='short';F.kind='focus';F.task='Smallest win';F.status='idle';show('focus');setTimeout(fStart,350)}
   else if(act==='hhset')hhSheet();
   else if(act==='hhgo'){show('focus')}
+  else if(act==='xmx'){const c=$('xmcard');if(c)c.classList.toggle('open')}
   else if(act==='hhhere'){hhSheet()}
   else if(act==='hhman'){if(hhStart()){toast('Happy Hour: 1 hour of ×'+hh.mult+' XP 🎉');setTimeout(arrivePrompt,1200)}else toast('Already used today');rHH()}
   else if(act==='whyedit')whyEdit();
@@ -3055,7 +3155,7 @@ function back(){st.stack.pop();render('pop');window.scrollTo(0,0)}
 function tab(t){st.tab=t;st.stack=[];render('tab');window.scrollTo(0,0)}
 
 /* ================= SCREENS ================= */
-const TABS=[['home','Overview'],['lessons','Lessons'],['exams','Exams'],['colles','Colles'],['td','TD'],['grades','Grades'],['cards','Cards']];
+const TABS=[['home','Overview'],['lessons','Lessons'],['exams','Exams'],['tests','Tests'],['colles','Colles'],['td','TD'],['grades','Grades'],['cards','Cards']];
 function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px"><button data-a="back" aria-label="Back">‹</button><b style="font-size:19px;flex:1;text-align:center;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(title)+'</b>'+(right||'<span style="width:36px"></span>')+'</div>'}
 
 /* ----- OVERVIEW (the calendar itself lives in the Calendar tab) ----- */
@@ -3228,9 +3328,9 @@ function gradeCard(){
   return h+'</div>';
 }
 function vExams(){
-  const td=iso(),allx=examList(),all=allx.filter(x=>!x.vt),vts=allx.filter(x=>x.vt&&x.date<=td);
+  const td=iso(),allx=examList(),all=allx.filter(x=>!x.vt);
   const past=all.filter(x=>x.date<=td||S.exams[x.id]),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
-  let h=gradeCard()+vtCard(vts)+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
+  let h=gradeCard()+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
   if(past.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Past exams</div></div>'+inFolders('exams',past,x=>(S.exams[x.id]||{}).folder||'',x=>exRow('exams',x))}
   if(up.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div><span class="sub">'+up.length+'</span></div>'+up.slice(0,4).map(x=>exRow('exams',x)).join('')}
   return h;
@@ -3245,7 +3345,19 @@ function vtCard(vts){
   const g=vts.map(x=>S.exams[x.id]).filter(r=>r&&r.grade!=null&&r.grade!=='').map(r=>Object.assign({kind:'exams'},r)),a=avgOf(g);
   const todo=vts.filter(x=>!(S.exams[x.id]&&S.exams[x.id].grade!=null)).length;
   const rows=vts.slice().sort((p,q)=>q.date.localeCompare(p.date)).map(x=>{const r=S.exams[x.id];return '<button class="prow" style="--c:'+C.sc('ang')+'" data-a="rec" data-i="exams|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+fd(x.date)+'</div><div class="s">coef 1/3</div></span>'+(r&&r.grade!=null?gp(r.grade):'<span class="gpill todo">add grade</span>')+'</button>'}).join('');
-  return fold('Vocabulary Tests',(a!=null?'<div class="sub" style="margin-top:2px">Average '+a.toFixed(1)+'/20 over '+g.length+' test'+(g.length>1?'s':'')+'</div>':'')+rows,(todo?todo+' to grade':vts.length+' tests'));
+  return fold('Tests',(a!=null?'<div class="sub" style="margin-top:2px">Average '+a.toFixed(1)+'/20 over '+g.length+' test'+(g.length>1?'s':'')+'</div>':'')+rows,(todo?todo+' to grade':vts.length+' tests'));
+}
+
+/* ----- TESTS (weekly vocabulary tests): their own tab, not exams ----- */
+function vTests(){
+  const td=iso(),all=examList().filter(x=>x.vt),past=all.filter(x=>x.date<=td||(S.exams[x.id]&&S.exams[x.id].grade!=null)),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
+  const g=past.map(x=>S.exams[x.id]).filter(r=>r&&r.grade!=null&&r.grade!==''&&!isNaN(+r.grade)).map(r=>Object.assign({kind:'exams'},r));
+  const a=g.length?wavg(g,r=>+r.grade):null,todo=past.filter(x=>!(S.exams[x.id]&&S.exams[x.id].grade!=null)).length;
+  const row=x=>{const r=S.exams[x.id],e=cal.find(c=>c.id===x.id);return '<button class="prow" style="--c:'+C.sc(x.subj||'ang')+'" data-a="rec" data-i="exams|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.title||'Vocabulary Test')+'</div><div class="s">'+fd(x.date)+(e&&e.time?' · '+e.time+(e.endTime?'–'+e.endTime:''):'')+' · coef '+fcoef(coefOf(Object.assign({cat:'vocab',kind:'exams'},r||{})))+'</div></span>'+(r&&r.grade!=null&&r.grade!==''?gp(r.grade):x.date<=td?'<span class="gpill todo">add grade</span>':'')+'</button>'};
+  let h='<div class="card"><div class="cardhead"><div class="lbl">Vocabulary tests</div>'+(a!=null?'<div class="gpill '+gcls(a)+'">avg '+a.toFixed(1)+'/20</div>':'')+'</div><div class="sub">Every Friday · 13:40–13:45 · coefficient 1/3 of the English grade. They are counted apart from exams and colles.'+(todo?'<br><b>'+todo+'</b> to grade':'')+'</div>'+(g.length>1?'<div style="margin-top:10px">'+spark(g.sort((p,q)=>(p.date||'').localeCompare(q.date||'')).map(r=>+r.grade),C.sc('ang'))+'</div>':'')+'</div>';
+  h+='<div class="card"><div class="lbl">Upcoming</div>'+(up.length?up.slice(0,3).map(row).join(''):'<div class="sub">Nothing planned.</div>')+'</div>';
+  h+='<div class="card"><div class="lbl">Past</div>'+(past.length?past.slice(0,16).map(row).join('')+(past.length>16?'<div class="sub">+ '+(past.length-16)+' older in Grades</div>':''):'<div class="sub">No test yet.</div>')+'</div>';
+  return h;
 }
 function exRow(kind,x){
   const r=S[kind][x.id],n=r?(r.sujet.length+r.corr.length+r.copy.length):0;
@@ -3285,7 +3397,7 @@ function vGrades(){
   let h='<div class="card"><div class="cardhead"><div class="lbl">Evolution</div>'+(rs.length?'<div class="gpill '+(sat?'g-mid':gcls(avgOf(rs.map(r=>({grade:r.v}))))) +'">avg '+(sat?rs.reduce((a,r)=>a+r.v,0)/rs.length:wavg(rs,r=>r.v)).toFixed(1)+(sat?'/5':'/20')+'</div>':'')+'</div>';
   h+='<div class="sub gh">Measure</div>'+chips('met',[['grade','Grades /20'],['sat','Satisfaction']]);
   h+='<div class="sub gh">Subject</div>'+chips('subj',[['all','All']].concat(C.LSUBJ.map(s=>[s,SUBJ[s].n])));
-  h+='<div class="sub gh">Type</div>'+chips('type',[['all','Everything'],['exams','Exams'],['colles','Colles'],['vocab','Vocabulary tests']]);
+  h+='<div class="sub gh">Type</div>'+chips('type',[['all','Everything'],['exams','Exams'],['colles','Colles'],['vocab','Tests']]);
   h+='<div class="sub gh">Period</div>'+chips('per',[['all','All time'],['180','6 months'],['90','3 months'],['30','30 days']]);
   h+='<div style="margin-top:14px">'+gChart(rs,c)+'</div>';
   if(c.subj==='all'&&rs.length)h+='<div class="legend" style="flex-wrap:wrap;gap:10px;margin-top:8px">'+C.LSUBJ.filter(s=>rs.some(r=>r.subj===s)).map(s=>'<span><i class="dot" style="background:'+C.sc(s)+';display:inline-block;width:9px;height:9px;border-radius:50%"></i> '+SUBJ[s].n+'</span>').join('')+'</div>';
@@ -3324,7 +3436,7 @@ function vMock(id){
   return h;
 }
 async function styleModels(subj){
-  const rs=Object.values(S.exams).filter(r=>r.subj===subj&&(r.sujet||[]).length).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const rs=Object.values(S.exams).filter(r=>r.cat!=='vocab'&&r.subj===subj&&(r.sujet||[]).length).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   let txt='',used=[],budget=24000;
   for(const r of rs){
     for(const f of r.sujet){
@@ -3684,7 +3796,7 @@ function render(kind){
   if(top){
     const v=top.v;
     h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):'';
-  }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='colles'?vColles():st.tab==='td'?vTD():st.tab==='grades'?vGrades():vCards();
+  }else h=st.tab==='home'?vOver():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='tests'?vTests():st.tab==='colles'?vColles():st.tab==='td'?vTD():st.tab==='grades'?vGrades():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
   post(top);
@@ -3720,7 +3832,7 @@ A.tab=i=>tab(i);A.back=()=>back();
 A.openCal=()=>show('calendar');
 A.qaLesson=()=>{tab('lessons');A.addLesson()};A.qaProg=()=>{tab('colles');A.addProg()};A.qaVocab=()=>{st.ctab='vocab';tab('cards');A.addVocab()};
 A.settings=()=>settings();
-A.evOpen=id=>{const e=cal.find(c=>c.id===id);if(!e)return;if(e.kind==='colle'){colleGo(id)}else{st.tab='exams';go('rec','exams|'+id)}};
+A.evOpen=id=>{const e=cal.find(c=>c.id===id);if(!e)return;if(e.kind==='colle'){colleGo(id)}else{st.tab=e.kind==='vt'?'tests':'exams';go('rec','exams|'+id)}};
 A.evTap=id=>{const e=cal.find(c=>c.id===id);if(!e)return;selD=e.date;stripWeek='';cmode='day';show('calendar')};
 A.colleGo=id=>colleGo(id);
 function colleGo(id){
@@ -5177,6 +5289,7 @@ P.boot();
   $('thm').addEventListener('click',function(){var dark=document.documentElement.getAttribute('data-theme')!=='light';setTheme(dark?'light':'dark');try{vib(8)}catch(e){}});
   if(window.matchMedia)try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(themeMode()==='auto')applyTheme()})}catch(e){}
   document.querySelectorAll('#pv-theme .chip').forEach(function(c){c.addEventListener('click',function(){setTheme(c.dataset.v)})});
+  (function(){function cur(){try{return localStorage.getItem('scr')||'55'}catch(e){return '55'}}function d(){document.querySelectorAll('#pv-scr .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===cur())})}d();document.querySelectorAll('#pv-scr .chip').forEach(function(c){c.addEventListener('click',function(){try{localStorage.setItem('scr',c.dataset.v)}catch(e){}document.documentElement.style.setProperty('--scr',c.dataset.v+'px');d()})})})();
 
   /* ---------- job notifications ---------- */
   function drawNotif(){var on=localStorage.getItem('jnotif')==='1'&&window.Notification&&Notification.permission==='granted';var b=$('pv-notif');if(!b)return;b.textContent=on?'Job notifications are on (tap to turn off)':'Turn on job notifications';if(!window.Notification){$('pv-nstate').textContent='This iPhone setup does not allow notifications for web apps. Add Aether to the Home Screen first (iOS 16.4 or later).'}}
