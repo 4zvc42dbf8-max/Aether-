@@ -5557,7 +5557,7 @@ function gotoTarget(g){
 /* bad result + unhappy face => the bounce-back icon */
 function rbCands(){
   const td=iso(),lim=shiftD(td,-4),dn=shs.rbd||[];
-  return allRecs().filter(r=>r.cat!=='vocab'&&r.grade!=null&&r.grade!==''&&!isNaN(+r.grade)&&+r.grade<10&&r.sat>=1&&r.sat<=2&&(r.date||'')>=lim&&(r.date||'')<=td&&!dn.includes(r.id))
+  return allRecs().filter(r=>r.cat!=='vocab'&&r.sat>=1&&r.sat<=2&&(r.date||'')>=lim&&(r.date||'')<=td&&!dn.includes(r.id))
     .sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(r=>{const c=cal.find(x=>x.id===r.id);return{id:r.id,kind:r.kind,subj:r.subj,date:r.date,grade:r.grade,title:(c&&c.title)||r.title||(SUBJ[r.subj]?SUBJ[r.subj].n:'')+(r.kind==='colles'?' colle':' DS')}});
 }
 function rbIdeas(id){
