@@ -911,6 +911,24 @@ button,.card.tap,.prow,.chip,.btn,.nb,.ptab,.pev,.dk,.goal,.task,.tprow{touch-ac
 [data-theme="light"] #fx .ft{color:#1f5fd6;text-shadow:0 1px 0 #fff,0 0 10px rgba(255,255,255,.9);font-weight:800}
 [data-theme="light"] .bcol .bb{background:linear-gradient(180deg,#c3d1f3,#9db2e6)}
 [data-theme="light"] .bcol.today .bb{background:linear-gradient(180deg,var(--lime),#2f6fe8)}
+
+/* v58: focus sounds */
+.snd-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.snd{position:relative;overflow:hidden;border:1px solid var(--line2);background:var(--surf2,rgba(255,255,255,.04));border-radius:18px;padding:14px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text);font-size:12.5px;font-weight:600;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.snd .e{font-size:26px;position:relative;z-index:1}.snd span{position:relative;z-index:1;text-align:center}
+.snd .fill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,rgba(77,141,255,.55),rgba(77,141,255,.18));transition:height .05s linear}
+.snd.hold .fill{height:100%;transition:height .6s linear}
+.snd.armed{border-color:var(--lime);box-shadow:0 0 0 3px rgba(77,141,255,.25)}
+.snd.on{border-color:var(--lime);background:color-mix(in srgb,var(--lime) 14%,transparent)}
+.snd.on .e{animation:sndp 1.6s ease-in-out infinite}
+@keyframes sndp{50%{transform:scale(1.18)}}
+.sndnow{display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 12px;border-radius:16px;background:color-mix(in srgb,var(--lime) 12%,transparent);border:1px solid color-mix(in srgb,var(--lime) 35%,transparent)}
+.sndnow .eq{display:flex;gap:3px;align-items:flex-end;height:22px}.sndnow .eq i{width:4px;background:var(--lime);border-radius:2px;animation:eq 1s ease-in-out infinite}
+.sndnow .eq i:nth-child(2){animation-delay:.2s}.sndnow .eq i:nth-child(3){animation-delay:.4s}.sndnow .eq i:nth-child(4){animation-delay:.6s}
+@keyframes eq{0%,100%{height:5px}50%{height:22px}}
+.sndhint{font-size:12px;color:var(--muted);margin-top:8px}
+.spl{display:flex;gap:8px;overflow-x:auto;margin:10px -2px 0;padding:2px;scrollbar-width:none}.spl::-webkit-scrollbar{display:none}
+.spl .snd{flex:none;width:112px;padding:10px 6px}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -1035,6 +1053,8 @@ button,.card.tap,.prow,.chip,.btn,.nb,.ptab,.pev,.dk,.goal,.task,.tprow{touch-ac
   <div class="card"><div class="lbl">Consistency · 12 weeks</div><div class="heat" id="heat"></div><div class="legend">Less <i style="background:var(--inset)"></i><i style="background:rgba(77,141,255,.2)"></i><i style="background:rgba(77,141,255,.42)"></i><i style="background:rgba(77,141,255,.7)"></i><i style="background:var(--lime)"></i> More</div></div>
   <div class="card"><div class="lbl">Mood · last 14 days</div><div id="spark"></div></div>
   <div class="card"><div class="lbl">Focus · weekly trend</div><div class="bars" id="bars6"></div></div>
+  <div class="lbl" id="sndh" style="margin:30px 4px 14px">Focus sounds</div>
+  <div class="card" id="sndcard"></div>
 </section>
 
 
@@ -1334,6 +1354,85 @@ function dkExpand(id){
   function sync(){if(vv){r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px')}}
   if(vv){vv.addEventListener('resize',sync);vv.addEventListener('scroll',sync)}sync();
   try{const sc=localStorage.getItem('scr');if(sc)r.setProperty('--scr',sc+'px')}catch(e){}
+})();
+
+/* ===== v58: focus sounds, synthesised on the phone (no download), hold to play ===== */
+const SND=[['brown','🌰','Brown noise'],['pink','🌸','Pink noise'],['white','☁️','White noise'],['rain','🌧️','Rain'],['ocean','🌊','Ocean'],['fire','🔥','Fireplace'],['wind','🍃','Wind'],['alpha','🧠','Alpha 10 Hz'],['gamma','⚡','Gamma 40 Hz']];
+const SPOT=[['Brown noise','🌰'],['Deep focus','🎧'],['Lofi beats','☕'],['Piano for studying','🎹'],['Rain sounds','🌧️']];
+let snd={au:null,id:null,url:null,t0:0,end:0,cache:{}};
+function sndGen(kind){
+  const sr=22050,sec=24,cf=sr,n=sec*sr+cf,st=kind==='alpha'||kind==='gamma',L=new Float32Array(n),R=st?new Float32Array(n):null;
+  const rnd=()=>Math.random()*2-1;let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0,br=0,lp=0,lp2=0,hp=0,tail=0;
+  const pink=()=>{const w=rnd();b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.96900*b2+w*.1538520;b3=.86650*b3+w*.3104856;b4=.55000*b4+w*.5329522;b5=-.7616*b5-w*.0168980;const o=b0+b1+b2+b3+b4+b5+b6+w*.5362;b6=w*.115926;return o*.11};
+  const brown=()=>{br=(br+.02*rnd())/1.02;return br*3.5};
+  const TAU=Math.PI*2;
+  for(let i=0;i<n;i++){const t=i/sr;let v=0;
+    switch(kind){
+      case 'white':v=rnd()*.5;break;
+      case 'pink':v=pink();break;
+      case 'brown':v=brown();break;
+      case 'rain':{hp=.92*hp+.08*rnd();const hiss=(rnd()-hp)*.22;if(Math.random()<.0007)tail=.5+Math.random()*.5;tail*=.992;v=hiss+tail*rnd()*.35+pink()*.25;break}
+      case 'ocean':{const e=Math.pow(.5-.5*Math.cos(TAU*t/8),1.6),e2=Math.pow(.5-.5*Math.cos(TAU*(t-.8)/8),2.2);v=brown()*(.25+.9*e)+pink()*.55*e2;break}
+      case 'fire':{if(Math.random()<.0005)tail=.4+Math.random()*.9;tail*=.975;v=brown()*.55+rnd()*tail*.5+pink()*.08;break}
+      case 'wind':{const a=.015+.05*(.5+.5*Math.sin(TAU*t/12)),e=.45+.55*(.5+.5*Math.sin(TAU*t/8+1));lp+=a*(pink()*3-lp);lp2+=.3*(lp-lp2);v=lp2*e*2.2;break}
+      case 'alpha':{const f=kind==='alpha'?[200,210]:[200,240];L[i]=Math.sin(TAU*f[0]*t)*.28+pink()*.06;R[i]=Math.sin(TAU*f[1]*t)*.28+pink()*.06;continue}
+      case 'gamma':{L[i]=Math.sin(TAU*200*t)*.28+pink()*.06;R[i]=Math.sin(TAU*240*t)*.28+pink()*.06;continue}
+    }
+    L[i]=v}
+  const out=n-cf,loop=a=>{const o=new Float32Array(out);for(let i=0;i<out;i++)o[i]=a[i];for(let i=0;i<cf;i++){const w=i/cf;o[i]=a[i]*w+a[out+i]*(1-w)}return o};
+  const ch=st?[L.subarray(0,out),R.subarray(0,out)]:[loop(L)];
+  let pk=0;ch.forEach(c=>{for(let i=0;i<c.length;i+=7)pk=Math.max(pk,Math.abs(c[i]))});const g=pk?.55/pk:1;
+  const nc=ch.length,len=out,buf=new ArrayBuffer(44+len*nc*2),dv=new DataView(buf),W=(o,t)=>{for(let i=0;i<t.length;i++)dv.setUint8(o+i,t.charCodeAt(i))};
+  W(0,'RIFF');dv.setUint32(4,36+len*nc*2,true);W(8,'WAVEfmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,nc,true);dv.setUint32(24,sr,true);dv.setUint32(28,sr*nc*2,true);dv.setUint16(32,nc*2,true);dv.setUint16(34,16,true);W(36,'data');dv.setUint32(40,len*nc*2,true);
+  let o=44;for(let i=0;i<len;i++)for(let c=0;c<nc;c++){dv.setInt16(o,Math.max(-1,Math.min(1,ch[c][i]*g))*32767,true);o+=2}
+  return URL.createObjectURL(new Blob([buf],{type:'audio/wav'}));
+}
+function sndPlay(id){
+  sndStop(true);
+  const url=snd.cache[id]||(snd.cache[id]=sndGen(id));
+  const au=snd.au||(snd.au=new Audio());au.loop=true;au.src=url;au.setAttribute('playsinline','');
+  snd.id=id;snd.t0=Date.now();snd.end=0;
+  const p=au.play();if(p&&p.catch)p.catch(()=>{toast('Tap and hold again to start the sound');snd.id=null;sndRender()});
+  try{const nm=SND.find(x=>x[0]===id);if(navigator.mediaSession){navigator.mediaSession.metadata=new MediaMetadata({title:nm[2],artist:'Aether · Focus'});navigator.mediaSession.setActionHandler('pause',()=>sndStop());navigator.mediaSession.setActionHandler('stop',()=>sndStop())}}catch(e){}
+  au.ontimeupdate=()=>{if(snd.end&&Date.now()>=snd.end){sndStop();toast('Sound timer finished')}};
+  sndRender();
+}
+function sndStop(silent){const au=snd.au;if(au){try{au.pause()}catch(e){}au.ontimeupdate=null}snd.id=null;snd.end=0;if(!silent)sndRender()}
+function sndTimer(m){snd.end=m?Date.now()+m*60000:0;sndRender()}
+function sndSpot(q){const u=q?'https://open.spotify.com/search/'+encodeURIComponent(q):(localStorage.getItem('spot')||'');if(!u){toast('Paste your Spotify link first');return}
+  try{location.href=u}catch(e){window.open(u,'_blank')}}
+function sndRender(){
+  const el=$('sndcard');if(!el)return;
+  const now=snd.id?SND.find(x=>x[0]===snd.id):null,link=localStorage.getItem('spot')||'';
+  el.innerHTML='<div class="lbl">Sounds</div><div class="sndhint">Press and hold a sound for a second, then let go. A tap does nothing, so you never start one by accident.</div>'+
+   (now?'<div class="sndnow"><div class="eq"><i></i><i></i><i></i><i></i></div><div style="flex:1;min-width:0"><b>'+now[2]+'</b><div class="sub" style="margin-top:2px">'+(snd.end?'stops in '+Math.max(1,Math.round((snd.end-Date.now())/60000))+' min':'plays until you stop it')+'</div></div><button class="btn sm" id="snd-stop" style="flex:none">Stop</button></div><div class="chips" style="margin-top:10px">'+[[0,'No timer'],[25,'25 min'],[50,'50 min'],[90,'90 min']].map(([m,l])=>'<button class="chip '+((!snd.end&&!m)||(snd.end&&m&&Math.abs(Math.round((snd.end-Date.now())/60000)-m)<=1)?'on':'')+'" data-sm="'+m+'">'+l+'</button>').join('')+'</div>':'')+
+   '<div class="snd-g">'+SND.map(([id,e,n])=>'<div class="snd'+(snd.id===id?' on':'')+'" data-snd="'+id+'"><div class="fill"></div><div class="e">'+e+'</div><span>'+n+'</span></div>').join('')+'</div>'+
+   ((snd.id==='alpha'||snd.id==='gamma'||!snd.id)?'<div class="sndhint">Alpha and Gamma are tones for headphones (two slightly different pitches, one per ear). They are an ambience, not a treatment.</div>':'')+
+   '<div class="lbl" style="margin-top:18px">Spotify</div><div class="sndhint">Hold, then let go, to open Spotify.</div><div class="spl">'+
+   (link?'<div class="snd" data-sp="*"><div class="fill"></div><div class="e">🟢</div><span>My playlist</span></div>':'')+SPOT.map(([q,e])=>'<div class="snd" data-sp="'+q+'"><div class="fill"></div><div class="e">'+e+'</div><span>'+q+'</span></div>').join('')+'</div>'+
+   '<div class="field" style="margin-top:12px"><label>My playlist or song (paste the Spotify link)</label><input id="spot-in" placeholder="https://open.spotify.com/playlist/…" value="'+(link.replace(/"/g,'&quot;'))+'" autocapitalize="off" autocorrect="off"></div>';
+}
+(function(){
+  let ph=null;
+  document.addEventListener('pointerdown',e=>{
+    const t=e.target.closest&&e.target.closest('#sndcard [data-snd],#sndcard [data-sp]');if(!t)return;
+    ph={t,armed:false,x:e.clientX,y:e.clientY};t.classList.add('hold');
+    ph.timer=setTimeout(()=>{if(!ph)return;ph.armed=true;t.classList.add('armed');vib(25);
+      if(t.dataset.snd&&!snd.cache[t.dataset.snd]){try{snd.cache[t.dataset.snd]=sndGen(t.dataset.snd)}catch(_){}}},650);
+  });
+  const end=e=>{if(!ph)return;const p=ph;ph=null;clearTimeout(p.timer);p.t.classList.remove('hold','armed');
+    if(!p.armed||e.type==='pointercancel')return;
+    if(p.t.dataset.snd){if(snd.id===p.t.dataset.snd)sndStop();else sndPlay(p.t.dataset.snd)}
+    else if(p.t.dataset.sp)sndSpot(p.t.dataset.sp==='*'?'':p.t.dataset.sp)};
+  document.addEventListener('pointerup',end);document.addEventListener('pointercancel',end);
+  document.addEventListener('pointermove',e=>{if(ph&&(Math.abs(e.clientX-ph.x)>12||Math.abs(e.clientY-ph.y)>12)){clearTimeout(ph.timer);ph.t.classList.remove('hold','armed');ph=null}});
+  document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#sndcard .snd'))e.preventDefault()});
+  document.addEventListener('click',e=>{
+    if(e.target.id==='snd-stop'){sndStop();return}
+    const c=e.target.closest&&e.target.closest('#sndcard [data-sm]');if(c)sndTimer(+c.dataset.sm)});
+  document.addEventListener('input',e=>{if(e.target.id==='spot-in'){const v=e.target.value.trim();try{v?localStorage.setItem('spot',v):localStorage.removeItem('spot')}catch(_){}}});
+  document.addEventListener('change',e=>{if(e.target.id==='spot-in')sndRender()});
+  sndRender();
 })();
 function rHome(){
   vtSeed();
