@@ -930,7 +930,7 @@ button,.card.tap,.prow,.chip,.btn,.nb,.ptab,.pev,.dk,.goal,.task,.tprow{touch-ac
 @keyframes eq{0%,100%{height:5px}50%{height:22px}}
 .sndhint{font-size:12px;color:var(--muted);margin-top:8px}
 .spl{display:flex;gap:8px;overflow-x:auto;margin:10px -2px 0;padding:2px;scrollbar-width:none}.spl::-webkit-scrollbar{display:none}
-.spl .snd{flex:none;width:112px;padding:10px 6px}
+.spl .snd{flex:none;width:112px;padding:10px 6px}.spl.edit .snd{outline:1.5px dashed var(--line,rgba(127,127,127,.4))}.spl .snd span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -1401,18 +1401,37 @@ function sndPlay(id){
 }
 function sndStop(silent){const au=snd.au;if(au){try{au.pause()}catch(e){}au.ontimeupdate=null}snd.id=null;snd.end=0;if(!silent)sndRender()}
 function sndTimer(m){snd.end=m?Date.now()+m*60000:0;sndRender()}
-function sndSpot(q){const u=q?'https://open.spotify.com/search/'+encodeURIComponent(q):(localStorage.getItem('spot')||'');if(!u){toast('Paste your Spotify link first');return}
+function spLoad(){let l=null;try{l=JSON.parse(localStorage.getItem('spots')||'null')}catch(_){}
+  if(!Array.isArray(l)){l=SPOT.map(([q,e])=>({id:uid(),n:q,e,q}));let old='';try{old=localStorage.getItem('spot')||''}catch(_){}
+    if(old)l.unshift({id:uid(),n:'My playlist',e:'🟢',u:old});spSave(l)}return l}
+function spSave(l){try{localStorage.setItem('spots',JSON.stringify(l))}catch(_){}}
+function sndSpot(id){const it=spLoad().find(x=>x.id===id);if(!it)return;const u=it.u||('https://open.spotify.com/search/'+encodeURIComponent(it.q||it.n));
   try{location.href=u}catch(e){window.open(u,'_blank')}}
+let spEdit=false;
+function spForm(id){
+  const l=spLoad(),it=id?l.find(x=>x.id===id):null,em=['🟢','🎧','☕','🎹','🌧️','🔥','🧠','🌙','📚','🎻','🌊','⚡'];let pick=it?it.e:'🟢';
+  openSheet(`<h2>${it?'Edit':'Add'} Spotify</h2><div class="field"><label>Name</label><input id="sp-n" maxlength="30" placeholder="e.g. Prépa focus" value="${esc(it?it.n:'')}"></div>
+  <div class="field"><label>Spotify link (playlist or song)</label><input id="sp-u" placeholder="https://open.spotify.com/playlist/…" autocapitalize="off" autocorrect="off" value="${esc(it&&it.u||'')}"><div class="hint" style="text-align:left;margin-top:6px">Leave empty to open a Spotify search for the name instead.</div></div>
+  <div class="field"><label>Icon</label><div class="chips" id="sp-e">${em.map(x=>'<button class="chip'+(x===pick?' on':'')+'" data-e="'+x+'">'+x+'</button>').join('')}</div></div>
+  <button class="btn primary" id="sp-s">Save</button>${it?'<button class="btn" id="sp-d" style="margin-top:8px;width:100%;color:var(--red,#ff5a5f)">Delete</button>':''}`);
+  $('sp-e').onclick=e=>{const b=e.target.closest('[data-e]');if(!b)return;pick=b.dataset.e;[...$('sp-e').children].forEach(c=>c.classList.toggle('on',c===b))};
+  $('sp-s').onclick=()=>{const n=$('sp-n').value.trim();let u=$('sp-u').value.trim();
+    if(!n){const f=$('sp-n');f.classList.remove('err');void f.offsetWidth;f.classList.add('err');return}
+    if(u&&!/^https?:\/\/(open\.)?spotify\.com\/|^spotify:/i.test(u)&&!/^https?:\/\//i.test(u)){toast('That is not a link');return}
+    if(it){it.n=n;it.u=u;it.e=pick;delete it.q}else l.push({id:uid(),n,e:pick,u});
+    spSave(l);closeSheet();vib(15);toast('Saved');sndRender()};
+  if(it)$('sp-d').onclick=()=>{spSave(l.filter(x=>x.id!==it.id));closeSheet();toast('Removed');sndRender()};
+  if(!it)setTimeout(()=>$('sp-n').focus(),50);
+}
 function sndRender(){
   const el=$('sndcard');if(!el)return;
-  const now=snd.id?SND.find(x=>x[0]===snd.id):null,link=localStorage.getItem('spot')||'';
+  const now=snd.id?SND.find(x=>x[0]===snd.id):null;
   el.innerHTML='<div class="lbl">Sounds</div><div class="sndhint">Press and hold a sound for a second, then let go. A tap does nothing, so you never start one by accident.</div>'+
    (now?'<div class="sndnow"><div class="eq"><i></i><i></i><i></i><i></i></div><div style="flex:1;min-width:0"><b>'+now[2]+'</b><div class="sub" style="margin-top:2px">'+(snd.end?'stops in '+Math.max(1,Math.round((snd.end-Date.now())/60000))+' min':'plays until you stop it')+'</div></div><button class="btn sm" id="snd-stop" style="flex:none">Stop</button></div><div class="chips" style="margin-top:10px">'+[[0,'No timer'],[25,'25 min'],[50,'50 min'],[90,'90 min']].map(([m,l])=>'<button class="chip '+((!snd.end&&!m)||(snd.end&&m&&Math.abs(Math.round((snd.end-Date.now())/60000)-m)<=1)?'on':'')+'" data-sm="'+m+'">'+l+'</button>').join('')+'</div>':'')+
    '<div class="snd-g">'+SND.map(([id,e,n])=>'<div class="snd'+(snd.id===id?' on':'')+'" data-snd="'+id+'"><div class="fill"></div><div class="e">'+e+'</div><span>'+n+'</span></div>').join('')+'</div>'+
    ((snd.id==='alpha'||snd.id==='gamma'||!snd.id)?'<div class="sndhint">Alpha and Gamma are tones for headphones (two slightly different pitches, one per ear). They are an ambience, not a treatment.</div>':'')+
-   '<div class="lbl" style="margin-top:18px">Spotify</div><div class="sndhint">Hold, then let go, to open Spotify.</div><div class="spl">'+
-   (link?'<div class="snd" data-sp="*"><div class="fill"></div><div class="e">🟢</div><span>My playlist</span></div>':'')+SPOT.map(([q,e])=>'<div class="snd" data-sp="'+q+'"><div class="fill"></div><div class="e">'+e+'</div><span>'+q+'</span></div>').join('')+'</div>'+
-   '<div class="field" style="margin-top:12px"><label>My playlist or song (paste the Spotify link)</label><input id="spot-in" placeholder="https://open.spotify.com/playlist/…" value="'+(link.replace(/"/g,'&quot;'))+'" autocapitalize="off" autocorrect="off"></div>';
+   '<div class="lbl" style="margin-top:18px;display:flex;align-items:center;justify-content:space-between">Spotify<button class="btn sm" id="sp-edit" style="flex:none">'+(spEdit?'Done':'Edit')+'</button></div><div class="sndhint">'+(spEdit?'Tap one to rename or delete it.':'Hold, then let go, to open Spotify.')+'</div><div class="spl'+(spEdit?' edit':'')+'">'+
+   spLoad().map(x=>'<div class="snd" '+(spEdit?'data-spe="':'data-sp="')+x.id+'"><div class="fill"></div><div class="e">'+esc(x.e)+'</div><span>'+esc(x.n)+'</span></div>').join('')+(spEdit?'<div class="snd" data-spe="new"><div class="fill"></div><div class="e">＋</div><span>Add</span></div>':'')+'</div>';
 }
 (function(){
   let ph=null;
@@ -1425,15 +1444,15 @@ function sndRender(){
   const end=e=>{if(!ph)return;const p=ph;ph=null;clearTimeout(p.timer);p.t.classList.remove('hold','armed');
     if(!p.armed||e.type==='pointercancel')return;
     if(p.t.dataset.snd){if(snd.id===p.t.dataset.snd)sndStop();else sndPlay(p.t.dataset.snd)}
-    else if(p.t.dataset.sp)sndSpot(p.t.dataset.sp==='*'?'':p.t.dataset.sp)};
+    else if(p.t.dataset.sp)sndSpot(p.t.dataset.sp)};
   document.addEventListener('pointerup',end);document.addEventListener('pointercancel',end);
   document.addEventListener('pointermove',e=>{if(ph&&(Math.abs(e.clientX-ph.x)>12||Math.abs(e.clientY-ph.y)>12)){clearTimeout(ph.timer);ph.t.classList.remove('hold','armed');ph=null}});
   document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#sndcard .snd'))e.preventDefault()});
   document.addEventListener('click',e=>{
     if(e.target.id==='snd-stop'){sndStop();return}
+    if(e.target.id==='sp-edit'){spEdit=!spEdit;sndRender();return}
+    const se=e.target.closest&&e.target.closest('#sndcard [data-spe]');if(se){spForm(se.dataset.spe==='new'?null:se.dataset.spe);return}
     const c=e.target.closest&&e.target.closest('#sndcard [data-sm]');if(c)sndTimer(+c.dataset.sm)});
-  document.addEventListener('input',e=>{if(e.target.id==='spot-in'){const v=e.target.value.trim();try{v?localStorage.setItem('spot',v):localStorage.removeItem('spot')}catch(_){}}});
-  document.addEventListener('change',e=>{if(e.target.id==='spot-in')sndRender()});
   sndRender();
 })();
 function rHome(){
