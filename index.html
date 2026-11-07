@@ -873,6 +873,7 @@ textarea::placeholder{color:var(--dim)}
 .rbt:first-of-type{border-top:0}.rbt .x{flex:1;min-width:0;font-size:14px}
 .rbt button{flex:none;min-width:34px;height:34px;border-radius:11px;border:1px solid var(--line2);background:var(--surf2);color:var(--text);font-size:18px}
 .rbbar{height:6px;border-radius:9px;background:var(--inset);overflow:hidden;margin:6px 0 12px}.rbbar i{display:block;height:100%;background:linear-gradient(90deg,#4d8dff,#4fd1ff);border-radius:9px;transition:width .6s}
+.scrbars{display:flex;gap:8px;align-items:flex-end;height:84px;margin-top:12px}.scrb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;font-size:11px;color:var(--muted)}.scrb i{width:100%;max-width:26px;border-radius:7px;background:var(--cyan);opacity:.55}.scrb.t i{opacity:1}.scrb.o i{background:var(--orange)}
 #hhglow{border-radius:var(--scr)}
 #hdock{display:flex;gap:10px;margin:0 0 12px;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none}
 #hdock:empty{display:none}
@@ -1077,6 +1078,8 @@ button,.card.tap,.prow,.chip,.btn,.nb,.ptab,.pev,.dk,.goal,.task,.tprow{touch-ac
   <div class="card"><div class="lbl">Consistency · 12 weeks</div><div class="heat" id="heat"></div><div class="legend">Less <i style="background:var(--inset)"></i><i style="background:rgba(77,141,255,.2)"></i><i style="background:rgba(77,141,255,.42)"></i><i style="background:rgba(77,141,255,.7)"></i><i style="background:var(--lime)"></i> More</div></div>
   <div class="card"><div class="lbl">Mood · last 14 days</div><div id="spark"></div></div>
   <div class="card"><div class="lbl">Focus · weekly trend</div><div class="bars" id="bars6"></div></div>
+  <div class="lbl" style="margin:30px 4px 14px">Screen time</div>
+  <div class="card" id="scrcard"></div>
   <div class="lbl" id="sndh" style="margin:30px 4px 14px">Focus sounds</div>
   <div class="card" id="sndcard"></div>
 </section>
@@ -1458,7 +1461,35 @@ function spForm(id){
   if(it)$('sp-d').onclick=()=>{spSave(l.filter(x=>x.id!==it.id));closeSheet();toast('Removed');sndRender()};
   if(!it)setTimeout(()=>$('sp-n').focus(),50);
 }
+
+/* ===== Screen time sent by Signal (one tap on each side, through the clipboard) ===== */
+function scrLoad(){try{return JSON.parse(localStorage.getItem('sigdata')||'null')}catch(e){return null}}
+function scrParse(t){
+  const m=/AETHER-SIGNAL:(\{.*\})/s.exec(String(t||''));if(!m)return null;
+  try{const d=JSON.parse(m[1]);if(!d||!d.days||typeof d.days!=='object')return null;
+    const days={};Object.keys(d.days).forEach(k=>{if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&isFinite(+d.days[k]))days[k]=Math.max(0,Math.round(+d.days[k]))});
+    return{u:Date.now(),days,lim:{wk:+(d.lim&&d.lim.wk)||0,we:+(d.lim&&d.lim.we)||0}}}catch(e){return null}
+}
+function scrRender(){
+  const el=$('scrcard');if(!el)return;const d=scrLoad();
+  if(!d){el.innerHTML='<div class="sub" style="margin-bottom:10px">See your Signal time here. In Signal, open Settings and tap “Send to Aether”, then come back and paste.</div><button class="btn" id="scr-in">Paste from Signal</button>';return}
+  const td0=iso(),days=[];for(let i=6;i>=0;i--){const k=shiftD(td0,-i);days.push([k,d.days[k]||0])}
+  const g=new Date().getDay(),lim=(g===0||g===6)?d.lim.we:d.lim.wk,today=d.days[td0]||0,avg=Math.round(days.reduce((a,x)=>a+x[1],0)/7),mx=Math.max(30,lim||0,...days.map(x=>x[1]));
+  const ago=Math.max(1,Math.round((Date.now()-d.u)/60000)),agt=ago<60?ago+' min':ago<1440?Math.round(ago/60)+' h':Math.round(ago/1440)+' d';
+  el.innerHTML=`<div style="display:flex;align-items:baseline;gap:8px"><b style="font-size:26px">${today} min</b><span class="sub">today${lim?' of '+lim:''} · avg ${avg} min</span></div>`+
+   `<div class="scrbars">${days.map(([k,v])=>`<div class="scrb${k===td0?' t':''}${lim&&v>lim?' o':''}"><i style="height:${Math.max(3,Math.round(v/mx*64))}px"></i><span>${'SMTWTFS'[new Date(k+'T12:00:00').getDay()]}</span></div>`).join('')}</div>`+
+   `<div class="sub" style="margin:8px 0 10px">Updated ${agt} ago. Open Signal and send again to refresh.</div><div style="display:flex;gap:8px"><button class="btn sm" id="scr-in">Paste from Signal</button><button class="btn sm" id="scr-rm">Forget</button></div>`;
+}
+function scrImport(txt){const d=scrParse(txt);if(!d)return false;try{localStorage.setItem('sigdata',JSON.stringify(d))}catch(e){}scrRender();toast('Screen time updated');vib(15);return true}
+document.addEventListener('click',async e=>{
+  if(e.target.id==='scr-rm'){try{localStorage.removeItem('sigdata')}catch(x){}scrRender();return}
+  if(e.target.id!=='scr-in')return;
+  try{const t=await navigator.clipboard.readText();if(scrImport(t))return}catch(x){}
+  openSheet('<h2>Paste from Signal</h2><div class="sub" style="margin-bottom:10px">Long-press in the box, tap Paste, then Import.</div><div class="field"><textarea id="scr-t" rows="4" style="width:100%" placeholder="AETHER-SIGNAL:…"></textarea></div><button class="btn primary" id="scr-go">Import</button>');
+  $('scr-go').onclick=()=>{if(scrImport($('scr-t').value))closeSheet();else toast('That is not a Signal message')};
+});
 function sndRender(){
+  try{scrRender()}catch(e){}
   const el=$('sndcard');if(!el)return;
   const now=snd.id?SND.find(x=>x[0]===snd.id):null;
   el.innerHTML='<div class="lbl">Sounds</div><div class="sndhint">Press and hold a sound for a second, then let go. A tap does nothing, so you never start one by accident.</div>'+
