@@ -126,6 +126,7 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 /* ---------- home ---------- */
 .hero{display:flex;gap:16px;align-items:center;background:radial-gradient(120% 140% at 0% 0%,rgba(77,141,255,.13),transparent 55%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012)),var(--surf)}
 .hero .hm{flex:1;min-width:0}
+.hbadge{flex:none;cursor:pointer}.hero .lv small{font-family:var(--sans,inherit);font-variant:normal;font-size:12px;font-weight:700;letter-spacing:.4px;margin-left:8px;color:var(--muted);text-transform:uppercase;vertical-align:middle}.hchips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.hch{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:650;background:var(--surf2);border:1px solid var(--line);color:var(--text)}.hch.go{background:linear-gradient(145deg,color-mix(in srgb,var(--lime) 30%,var(--surf2)),var(--surf2));border-color:color-mix(in srgb,var(--lime) 45%,var(--line));cursor:pointer}.hch.rdy{animation:rglow 2.8s ease-in-out infinite}.hch:active{transform:scale(.94)}.lvhero{display:flex;gap:16px;align-items:center;margin:4px 0 14px}.lvn{font-family:var(--serif);font-size:28px;font-weight:700}.lvth{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}.lvth::-webkit-scrollbar{display:none}.lvth button{flex:none;display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surf2);color:var(--text);font-size:13px;font-weight:650}.lvth button.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 22%,var(--surf2))}.lvth button span{font-size:15px}.lvgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;padding:8px 4px;border-radius:16px;background:var(--surf2);border:1px solid var(--line)}.lvgrid button{all:unset;display:grid;place-items:center;padding:2px;border-radius:10px;cursor:pointer}.lvgrid button.cur{background:color-mix(in srgb,var(--acc) 22%,transparent);box-shadow:0 0 0 1.5px var(--acc)}.lvgrid .lvb{width:100%;height:auto}.lvstrip{display:flex;justify-content:space-between;align-items:flex-end;gap:2px;padding:12px 6px;border-radius:16px;background:var(--surf2);border:1px solid var(--line)}.lvstrip>div{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:0}.lvstrip small{font-size:9.5px;color:var(--muted);font-weight:600;white-space:nowrap}.lvstrip .cur small{color:var(--text)}
 .hero .lv{font-family:var(--serif);font-variant:small-caps;font-size:30px;font-weight:700;line-height:1}
 .hero .greet{font-size:13px;color:var(--muted);margin:5px 0 12px}
 .hero .xpl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
@@ -219,6 +220,7 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .ev[data-ghost] b{color:var(--muted);font-weight:600}.ev[data-ghost] span{opacity:.55}
 .evrow[data-ghost]{background:transparent;box-shadow:0 0 0 1px var(--line) inset}
 .evrow[data-ghost] .bar-c{background:rgba(255,255,255,.22);box-shadow:none}.evrow[data-ghost] .et{color:var(--muted);font-weight:500}
+.ev[data-plan]{background:rgba(6,8,14,.58);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 6px 14px -10px rgba(0,0,0,.9);backdrop-filter:blur(6px)}.ev[data-plan]::before{opacity:.7;box-shadow:none}.ev[data-plan] b{font-weight:650}.evrow[data-plan]{background:rgba(6,8,14,.5);box-shadow:0 0 0 1px var(--line) inset}.evchip[data-plan]{background:rgba(6,8,14,.5)}[data-theme="light"] .ev[data-plan],[data-theme="light"] .evrow[data-plan],[data-theme="light"] .evchip[data-plan]{background:rgba(20,24,40,.08);box-shadow:0 0 0 1px rgba(20,24,40,.14) inset}
 .evchip[data-ghost]{background:transparent;opacity:.7}.evchip[data-ghost] i{background:rgba(255,255,255,.3);box-shadow:none}
 .ftask{display:flex;align-items:center;gap:10px;width:100%;margin:12px 0 0;padding:12px 16px;border-radius:16px;border:1px dashed var(--line2);background:transparent;color:var(--muted);font:inherit;font-size:15px;text-align:left}
 .ftask b{color:var(--text);font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.ftask.lock{opacity:.8}
@@ -775,15 +777,17 @@ textarea::placeholder{color:var(--dim)}
 
 /* ---- Today plan ---- */
 .tpc{border-color:color-mix(in srgb,var(--lime) 35%,var(--line2))}
-.tprow{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line);animation:rowin .5s var(--ease) both;animation-delay:calc(var(--i,0)*50ms)}
-.tprow:first-of-type{border-top:none}
-.tpt{flex:none;width:44px;font-size:12.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.tprow{display:flex;align-items:center;gap:11px;padding:11px 10px 11px 16px;margin-top:9px;border-radius:18px;background:linear-gradient(180deg,var(--surf2),color-mix(in srgb,var(--surf2) 80%,#000));border:1px solid var(--line);position:relative;overflow:hidden;animation:rowin .5s var(--ease) both;animation-delay:calc(var(--i,0)*50ms)}
+.tprow::before{content:"";position:absolute;left:6px;top:11px;bottom:11px;width:4px;border-radius:4px;background:var(--rc,var(--acc));box-shadow:0 0 12px -1px var(--rc,var(--acc))}
+.tpt{flex:none;min-width:42px;text-align:left;font-size:14px;font-weight:750;font-variant-numeric:tabular-nums;line-height:1.15}
+.tpt small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:1px}
 .tpm{flex:1;min-width:0}
-.tpn{font-size:15px;font-weight:650;line-height:1.25}
-.tps{font-size:12.5px;color:var(--muted);margin-top:2px}
-.tpb{flex:none;display:flex;gap:6px}
-.tpb button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:var(--surf2);color:var(--muted);font-size:14px;display:grid;place-items:center;padding:0}
-.tpb button.go{background:var(--lime);color:var(--ink);border-color:transparent}
+.tpn{font-size:15px;font-weight:650;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tps{font-size:12px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden}
+.tps .dur{flex:none;padding:1px 7px;border-radius:999px;background:color-mix(in srgb,var(--rc,var(--acc)) 22%,transparent);color:var(--text);font-weight:650;font-size:11.5px}
+.tpb{flex:none;display:flex;gap:4px;align-items:center}
+.tpb button{width:30px;height:30px;border-radius:50%;border:none;background:transparent;color:var(--dim,var(--muted));font-size:13px;display:grid;place-items:center;padding:0}
+.tpb button.go{width:40px;height:40px;font-size:15px;background:linear-gradient(145deg,var(--lime),color-mix(in srgb,var(--lime) 70%,#000));color:var(--ink);box-shadow:0 6px 16px -5px var(--lime),0 0 0 1px rgba(255,255,255,.25) inset;padding-left:2px}
 .tpb button:active{transform:scale(.88)}
 
 /* ================= Light theme ================= */
@@ -1066,17 +1070,17 @@ h2.sh,.sh{letter-spacing:-.015em}
   <div id="hdock"></div>
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tpc" id="tpcard"></div>
-  <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
   <div class="card" id="xmcard" style="display:none"></div>
-  <div class="card" id="wkcard" style="display:none"></div>
   <div class="card hhc" id="hhcard"></div>
   <div class="card" id="rtcard" style="display:none"></div>
   <div class="card" id="rescue" style="display:none"></div>
   <div class="card" id="svcard" style="display:none"></div>
-  <div class="card motiv" id="motiv"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
   <div class="card"><div class="lbl">Focus today</div><div id="focus-bar"></div></div>
+  <div class="card" id="wkcard" style="display:none"></div>
+  <div class="card motiv" id="motiv"></div>
+  <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
   <div class="card"><div class="lbl">How was your day?</div>
     <div class="dnav" id="dnav"></div>
     <div class="moods" id="moods"><button data-act="mood" data-n="1">😞</button><button data-act="mood" data-n="2">😐</button><button data-act="mood" data-n="3">🙂</button><button data-act="mood" data-n="4">😊</button><button data-act="mood" data-n="5">🤩</button></div>
@@ -1171,7 +1175,7 @@ h2.sh,.sh{letter-spacing:-.015em}
 <div id="printarea"></div>
 
 <div id="fx"></div>
-<div id="lvl"><i class="rings"></i><i class="rings"></i><div class="big">Level up</div><div class="num" id="lvnum">2</div><div class="sub" style="margin-top:8px">Tap to continue</div></div>
+<div id="lvl"><i class="rings"></i><i class="rings"></i><div class="big">Level up</div><div id="lvb" style="margin:10px 0 0;text-align:center"></div><div class="num" id="lvnum" style="font-size:80px">2</div><div class="sub" style="margin-top:8px">Tap to continue</div></div>
 <label class="hap" aria-hidden="true"><input type="checkbox" switch id="hap"></label>
 
 <script>
@@ -1191,9 +1195,11 @@ const COLORS=['#4fd1ff','#5eead4','#ff9f0a','#9b8cff','#ff6fb5','#30d158'];
 const EVC=COLORS.concat(['#ff5d5d','#ffd60a','#4d8dff','#7c6bff','#b6e24a','#d19a66','#ff7a59','#a0a8b8','ghost','#eef1f8']);
 const GHOST=EVC.indexOf('ghost'),FROST=EVC.indexOf('#eef1f8');
 const PAL=EVC.filter(x=>x!=='ghost');
-const taskCol=t=>t.col||(t.gid&&goals.find(g=>g.id===t.gid)||{}).color||'';
+const vcol=h=>{h=String(h||'');const m=/^#([0-9a-f]{6})$/i.exec(h);if(!m)return h;const r=parseInt(m[1].slice(0,2),16)/255,g=parseInt(m[1].slice(2,4),16)/255,b=parseInt(m[1].slice(4,6),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(d<.04)return h;let l=(mx+mn)/2,hh=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;hh=(hh*60+360)%360;let sa=Math.max(.9,d/(1-Math.abs(2*l-1)));l=Math.min(.6,Math.max(.52,l));const c=(1-Math.abs(2*l-1))*sa,x=c*(1-Math.abs((hh/60)%2-1)),m0=l-c/2,[R,G,B]=hh<60?[c,x,0]:hh<120?[x,c,0]:hh<180?[0,c,x]:hh<240?[0,x,c]:hh<300?[x,0,c]:[c,0,x];return'#'+[R,G,B].map(v=>Math.round((v+m0)*255).toString(16).padStart(2,'0')).join('')};
+const taskCol=t=>vcol(t.col||(t.gid&&goals.find(g=>g.id===t.gid)||{}).color||'');
 const isGhost=c=>c&&c.color===GHOST;
-const gh=c=>isGhost(c)?'data-ghost="1"':'';
+const isPlan=c=>c&&c.kind==='work'&&!c.prop&&String(c.id).startsWith('tb-')&&!/^✓/.test(c.title||'');
+const gh=c=>isGhost(c)?'data-ghost="1"':isPlan(c)?'data-plan="1"':'';
 const colorOf=c=>c.color!=null&&EVC[c.color]?(EVC[c.color]==='ghost'?'#8b93a7':EVC[c.color]):COLORS[[...String(c.title)].reduce((a,ch)=>a+ch.charCodeAt(0),0)%COLORS.length];
 const dayName=d=>d.toLocaleDateString('en-GB',{weekday:'long'});
 
@@ -1315,6 +1321,48 @@ function ask(o){return new Promise(res=>{
 });}
 
 /* ================= orb mascot ================= */
+
+/* ===== 100 level emblems: palette + shape + decorations grow every 5 levels, the symbol changes every level ===== */
+const LV_P=[['Sprout','#8df0a0','#27ae60'],['Spark','#ffe35c','#ff9f0a'],['Ember','#ffb347','#ff3b30'],['Blaze','#ff7eb6','#c026d3'],['Crystal','#7ee1ff','#3b82f6'],['Royal','#c4a3ff','#7c3aed'],['Lagoon','#5eead4','#0d9488'],['Crimson','#fda4af','#e11d48'],['Ascendant','#ffe27a','#ff5d8f'],['Legend','#fff3b0','#ff9500']];
+const lvC=l=>Math.max(1,Math.min(100,l|0)),lvTier=l=>Math.floor((lvC(l)-1)/5),lvName=(l,th)=>{th=th||lvTheme();const t=lvTier(l),S=LV_100[th.id];return S?S[lvC(l)-1][1]:th.st?th.st[t][1]:LV_P[t>>1][0]+(t&1?' II':'')};
+
+/* ===== emblem themes: the frame evolves every 5 levels, the picture evolves with the theme ===== */
+const LV_TH=[
+ {id:'classic',n:'Classic',ic:'⭐',t:'g'},
+ {id:'garage',n:'Garage',ic:'🏎️',st:[['🚲','Bicycle'],['🛴','Kick scooter'],['🛵','Moped'],['🏍️','Motorbike'],['🚗','Hatchback'],['🚙','SUV'],['🛻','Pickup'],['🚐','Minivan'],['🚕','Taxi'],['🚓','Interceptor'],['🏎️','Sports car'],['🏎️','Grand tourer'],['🏎️','Track special'],['🏎️','Supercar'],['🏁','Racer'],['🏁','Hypercar'],['🚀','Rocket car'],['✈️','Jet car'],['🛸','Concept'],['🌌','Legend']]},
+ {id:'f1',n:'Formula 1',ic:'🏁',st:[['🏁','Rookie kart'],['🛞','Club kart'],['⏱️','Junior kart'],['🥉','Kart champion'],['🏎️','Formula 4'],['🏎️','Formula Regional'],['🏎️','Formula 3'],['🏎️','Formula 2'],['🎓','Academy driver'],['🔧','Test driver'],['🚦','F1 rookie'],['🏎️','Backmarker'],['📈','Midfield'],['🔟','Points finisher'],['🥈','Podium'],['🥇','Race winner'],['⏱️','Pole sitter'],['🔥','Title contender'],['🏆','World champion'],['👑','Legend']]},
+ {id:'dnd',n:'Dungeons',ic:'🐉',st:[['🧑‍🌾','Commoner'],['📜','Apprentice'],['🛡️','Squire'],['🎒','Adventurer'],['⚔️','Fighter'],['🏹','Archer'],['🗝️','Rogue'],['🎻','Bard'],['🙏','Cleric'],['🌿','Druid'],['🦌','Ranger'],['🧙','Wizard'],['⚜️','Paladin'],['🏰','Knight'],['👁️','Warlock'],['🐉','Dragon slayer'],['🏆','Champion'],['🪄','Archmage'],['⚡','Demigod'],['👑','Deity']]},
+ {id:'evo',n:'Evolution',ic:'🦋',st:[['🥚','Egg'],['🐣','Hatchling'],['🐥','Chick'],['🐓','Rooster'],['🦆','Duck'],['🦅','Eagle'],['🦉','Owl'],['🦜','Parrot'],['🐺','Wolf'],['🦊','Fox'],['🐯','Tiger'],['🦁','Lion'],['🐘','Elephant'],['🐋','Whale'],['🐲','Wyvern'],['🐉','Dragon'],['🦄','Unicorn'],['🔥','Phoenix'],['🌟','Star'],['👑','Mythic']]},
+ {id:'maths',n:'Maths',ic:'∑',t:'x',st:[['ℕ','Naturals'],['ℤ','Integers'],['ℚ','Rationals'],['√2','Irrationals'],['ℝ','Reals'],['i','Imaginary'],['ℂ','Complex'],['π','Pi'],['e','Euler'],['φ','Golden ratio'],['Σ','Series'],['∫','Integral'],['∂','Derivative'],['∇','Gradient'],['∞','Infinity'],['ℵ','Aleph'],['∀','For all'],['∃','There exists'],['∮','Contour'],['Ω','Omega']]},
+ {id:'physics',n:'Physics',ic:'⚛️',st:[['⚖️','Lever'],['🧲','Magnet'],['💡','Light'],['⚡','Current'],['🔋','Circuit'],['🌊','Wave'],['🔦','Beam'],['🔬','Microscope'],['⚛️','Atom'],['🧪','Reaction'],['🔭','Telescope'],['🌍','Planet'],['🪐','Gas giant'],['☀️','Star'],['💥','Supernova'],['🌠','Pulsar'],['🛰️','Quasar'],['⚫','Black hole'],['🌀','Galaxy'],['🌌','Universe']]},
+ {id:'chem',n:'Chemistry',ic:'🧪',t:'x',st:[['H','Hydrogen'],['He','Helium'],['Li','Lithium'],['Be','Beryllium'],['B','Boron'],['C','Carbon'],['N','Nitrogen'],['O','Oxygen'],['F','Fluorine'],['Ne','Neon'],['Na','Sodium'],['Mg','Magnesium'],['Al','Aluminium'],['Si','Silicon'],['P','Phosphorus'],['S','Sulfur'],['Cl','Chlorine'],['Ar','Argon'],['K','Potassium'],['Ca','Calcium']]}];
+const LV_100={"garage":[["🚲","Bicycle"],["🛴","Kick scooter"],["🛵","Vespa"],["🛵","Honda Super Cub"],["🚗","Fiat 500 (1957)"],["🚗","Citroën 2CV"],["🚗","Mini Classic"],["🚗","VW Beetle"],["🚗","Renault 4"],["🚗","Renault 5"],["🚗","Fiat Panda"],["🚗","Citroën C1"],["🚗","Renault Twingo"],["🚗","Peugeot 205"],["🚗","Renault Clio"],["🚗","VW Polo"],["🚗","Peugeot 208"],["🚗","Toyota Yaris"],["🚗","Dacia Sandero"],["🚗","Opel Corsa"],["🚗","Ford Fiesta"],["🚗","Citroën DS"],["🚗","Renault Mégane"],["🚗","Peugeot 308"],["🚗","VW Golf"],["⚡","Tesla Model 3"],["🚗","Honda Civic"],["🚗","Toyota Corolla"],["🏎️","Mazda MX-5"],["🚗","Mini Cooper S"],["🚙","Dacia Duster"],["🚙","Renault Captur"],["🚙","Peugeot 3008"],["🚙","Toyota RAV4"],["🚙","Land Rover Defender"],["🚙","Jeep Wrangler"],["🚙","BMW X5"],["🛻","Ford Ranger"],["🛻","Toyota Hilux"],["🚐","VW Transporter"],["🚗","Renault Mégane RS"],["🚗","Peugeot 205 GTI"],["🚗","VW Golf GTI"],["🚗","Ford Focus RS"],["🚗","Honda Civic Type R"],["🏎️","Alpine A110"],["🏎️","Porsche Cayman"],["🚗","BMW M2"],["🏎️","Audi TT RS"],["🚗","BMW M3"],["🚗","Mercedes-AMG C63"],["🚗","Audi RS3"],["🏎️","Porsche 911 Carrera"],["🏎️","Jaguar F-Type"],["🚗","Chevrolet Camaro SS"],["🚗","Ford Mustang GT"],["🚗","Dodge Challenger"],["🏎️","Nissan GT-R"],["🏎️","Audi R8"],["🏎️","Porsche 911 Turbo"],["🏎️","Lotus Exige"],["🏎️","Aston Martin Vantage"],["🏎️","Mercedes-AMG GT"],["⚡","Tesla Model S Plaid"],["⚡","Porsche Taycan Turbo S"],["🚗","Bentley Continental GT"],["🏎️","Maserati MC20"],["🏎️","Ferrari 488"],["🏎️","Ferrari F8"],["🏎️","Lamborghini Huracán"],["🏎️","McLaren 720S"],["🏎️","Ferrari 812 Superfast"],["🏎️","Lamborghini Aventador"],["🏎️","Ferrari F40"],["🏎️","Porsche 918 Spyder"],["🏎️","McLaren P1"],["🏎️","LaFerrari"],["🏎️","Ford GT"],["🏎️","Pagani Huayra"],["🏎️","Aston Martin Valkyrie"],["🏎️","Koenigsegg Agera RS"],["🏎️","Bugatti Veyron"],["🏎️","Veyron Super Sport"],["⚡","Rimac Nevera"],["⚡","Lotus Evija"],["🏎️","Koenigsegg Jesko"],["🏎️","Bugatti Chiron"],["🏎️","Chiron Super Sport 300+"],["🏎️","Bugatti Divo"],["🏎️","Bugatti Mistral"],["🏎️","Bugatti Tourbillon"],["🏎️","Hennessey Venom F5"],["🏎️","SSC Tuatara"],["🏁","Le Mans Hypercar"],["🏁","Formula E"],["🏁","IndyCar"],["🏎️","Top Fuel dragster"],["🏎️","Formula 1 car"],["🚀","ThrustSSC"],["🚀","Bloodhound LSR"]],"f1":[["🛞","Mini kart"],["🛞","Cadet kart"],["🛞","Club kart"],["🏁","OK-Junior"],["🏁","OK senior"],["⚙️","KZ gearbox kart"],["🥉","Karting champion"],["🏎️","Formula 4"],["🏎️","Formula Regional"],["🏎️","Formula 3"],["🏎️","Formula 2"],["📜","Super Licence"],["🎓","Academy driver"],["🔧","Reserve driver"],["🖥️","Simulator driver"],["⏱️","Free practice 1"],["🛠️","Test driver"],["🚦","F1 rookie"],["⏱️","Reaches Q2"],["⏱️","Reaches Q3"],["🔟","First points"],["🥉","First podium"],["🥇","First win"],["🏁","Pole position"],["’50","1950 · Giuseppe Farina"],["’51","1951 · Juan Manuel Fangio"],["’52","1952 · Alberto Ascari"],["’53","1953 · Alberto Ascari"],["’54","1954 · Juan Manuel Fangio"],["’55","1955 · Juan Manuel Fangio"],["’56","1956 · Juan Manuel Fangio"],["’57","1957 · Juan Manuel Fangio"],["’58","1958 · Mike Hawthorn"],["’59","1959 · Jack Brabham"],["’60","1960 · Jack Brabham"],["’61","1961 · Phil Hill"],["’62","1962 · Graham Hill"],["’63","1963 · Jim Clark"],["’64","1964 · John Surtees"],["’65","1965 · Jim Clark"],["’66","1966 · Jack Brabham"],["’67","1967 · Denny Hulme"],["’68","1968 · Graham Hill"],["’69","1969 · Jackie Stewart"],["’70","1970 · Jochen Rindt"],["’71","1971 · Jackie Stewart"],["’72","1972 · Emerson Fittipaldi"],["’73","1973 · Jackie Stewart"],["’74","1974 · Emerson Fittipaldi"],["’75","1975 · Niki Lauda"],["’76","1976 · James Hunt"],["’77","1977 · Niki Lauda"],["’78","1978 · Mario Andretti"],["’79","1979 · Jody Scheckter"],["’80","1980 · Alan Jones"],["’81","1981 · Nelson Piquet"],["’82","1982 · Keke Rosberg"],["’83","1983 · Nelson Piquet"],["’84","1984 · Niki Lauda"],["’85","1985 · Alain Prost"],["’86","1986 · Alain Prost"],["’87","1987 · Nelson Piquet"],["’88","1988 · Ayrton Senna"],["’89","1989 · Alain Prost"],["’90","1990 · Ayrton Senna"],["’91","1991 · Ayrton Senna"],["’92","1992 · Nigel Mansell"],["’93","1993 · Alain Prost"],["’94","1994 · Michael Schumacher"],["’95","1995 · Michael Schumacher"],["’96","1996 · Damon Hill"],["’97","1997 · Jacques Villeneuve"],["’98","1998 · Mika Häkkinen"],["’99","1999 · Mika Häkkinen"],["’00","2000 · Michael Schumacher"],["’01","2001 · Michael Schumacher"],["’02","2002 · Michael Schumacher"],["’03","2003 · Michael Schumacher"],["’04","2004 · Michael Schumacher"],["’05","2005 · Fernando Alonso"],["’06","2006 · Fernando Alonso"],["’07","2007 · Kimi Räikkönen"],["’08","2008 · Lewis Hamilton"],["’09","2009 · Jenson Button"],["’10","2010 · Sebastian Vettel"],["’11","2011 · Sebastian Vettel"],["’12","2012 · Sebastian Vettel"],["’13","2013 · Sebastian Vettel"],["’14","2014 · Lewis Hamilton"],["’15","2015 · Lewis Hamilton"],["’16","2016 · Nico Rosberg"],["’17","2017 · Lewis Hamilton"],["’18","2018 · Lewis Hamilton"],["’19","2019 · Lewis Hamilton"],["’20","2020 · Lewis Hamilton"],["’21","2021 · Max Verstappen"],["’22","2022 · Max Verstappen"],["’23","2023 · Max Verstappen"],["’24","2024 · Max Verstappen"],["’25","2025 · Lando Norris"]],"dnd":[["🐀","Rat · CR 0"],["🐸","Frog · CR 0"],["🦇","Bat · CR 0"],["🧑‍🌾","Commoner · CR 0"],["🦎","Kobold · CR 1/8"],["🥷","Bandit · CR 1/8"],["🕯️","Cultist · CR 1/8"],["💂","Guard · CR 1/8"],["🐍","Poisonous snake · CR 1/8"],["👺","Goblin · CR 1/4"],["💀","Skeleton · CR 1/4"],["🧟","Zombie · CR 1/4"],["🐺","Wolf · CR 1/4"],["🐆","Panther · CR 1/4"],["🕷️","Giant wolf spider · CR 1/4"],["👹","Orc · CR 1/2"],["⚔️","Hobgoblin · CR 1/2"],["🦴","Gnoll · CR 1/2"],["🏹","Scout · CR 1/2"],["👤","Shadow · CR 1/2"],["🐻","Black bear · CR 1/2"],["🐊","Crocodile · CR 1/2"],["🐓","Cockatrice · CR 1/2"],["🐻‍❄️","Brown bear · CR 1"],["🐕‍🦺","Dire wolf · CR 1"],["🧟‍♂️","Ghoul · CR 1"],["👻","Specter · CR 1"],["😈","Imp · CR 1"],["🕵️","Spy · CR 1"],["🦅","Harpy · CR 1"],["🛡️","Animated armor · CR 1"],["🧌","Ogre · CR 2"],["🗿","Gargoyle · CR 2"],["📦","Mimic · CR 2"],["🦁","Griffon · CR 2"],["🐎","Centaur · CR 2"],["🏴‍☠️","Bandit captain · CR 2"],["🟩","Gelatinous cube · CR 2"],["🦉","Owlbear · CR 3"],["🌕","Werewolf · CR 3"],["🐂","Minotaur · CR 3"],["⚰️","Wight · CR 3"],["🎭","Doppelganger · CR 3"],["🧙‍♀️","Green hag · CR 3"],["🏺","Mummy · CR 3"],["🐈‍⬛","Displacer beast · CR 3"],["🗡️","Ettin · CR 4"],["🕯","Banshee · CR 4"],["☠️","Flameskull · CR 4"],["💋","Succubus · CR 4"],["🌿","Shambling mound · CR 5"],["🧌","Troll · CR 5"],["⛰️","Hill giant · CR 5"],["🌫️","Wraith · CR 5"],["🧛","Vampire spawn · CR 5"],["🏛️","Gladiator · CR 5"],["💨","Air elemental · CR 5"],["🌊","Water elemental · CR 5"],["🪨","Earth elemental · CR 5"],["🦄","Unicorn · CR 5"],["🦕","Triceratops · CR 5"],["🐍","Medusa · CR 6"],["🐐","Chimera · CR 6"],["🐲","Wyvern · CR 6"],["🔮","Mage · CR 6"],["👁️","Cyclops · CR 6"],["🦣","Mammoth · CR 6"],["🪓","Stone giant · CR 7"],["👺","Oni · CR 7"],["🦍","Giant ape · CR 7"],["🐉","Young black dragon · CR 7"],["🦑","Mind flayer · CR 7"],["❄️","Frost giant · CR 8"],["🐍","Hydra · CR 8"],["🌋","Fire giant · CR 9"],["🟣","Clay golem · CR 9"],["🌲","Treant · CR 9"],["🐲","Young blue dragon · CR 9"],["🐙","Aboleth · CR 10"],["🪽","Deva · CR 10"],["🦅","Roc · CR 11"],["🧞","Djinni · CR 11"],["🔱","Horned devil · CR 11"],["🧙","Archmage · CR 12"],["👁️‍🗨️","Beholder · CR 13"],["🧛‍♂️","Vampire · CR 13"],["⛈️","Storm giant · CR 13"],["🪱","Purple worm · CR 15"],["⚙️","Iron golem · CR 16"],["🐉","Adult red dragon · CR 17"],["⚰️","Death knight · CR 17"],["🐢","Dragon turtle · CR 17"],["💀","Demilich · CR 18"],["🔥","Balor · CR 19"],["🔱","Pit fiend · CR 20"],["🧙‍♂️","Lich · CR 21"],["🌟","Solar · CR 21"],["🦑","Kraken · CR 23"],["🐉","Ancient red dragon · CR 24"],["🦖","Tarrasque · CR 30"]],"evo":[["🌋","Primordial soup"],["🧬","Self-replicating RNA"],["🦠","First cells"],["🧫","Archaea"],["🔬","Bacteria"],["💚","Cyanobacteria"],["💨","Great Oxidation"],["⚪","Eukaryotes"],["🔋","Mitochondria"],["🧬","Sexual reproduction"],["🫧","Multicellular life"],["🌿","Red algae"],["🧽","Sponges"],["🪼","Ediacaran biota"],["🪸","Cnidarians"],["🪱","Flatworms"],["💥","Cambrian explosion"],["🪲","Trilobites"],["🦐","Anomalocaris"],["🐚","Brachiopods"],["🦑","Cephalopods"],["🐟","First vertebrates"],["🐠","Jawless fish"],["🦈","Placoderms"],["🦈","Sharks"],["🐟","Coelacanth"],["🐡","Bony fish"],["🌱","Land plants"],["🌿","Ferns"],["🐜","First insects"],["🦎","Tiktaalik"],["🐸","Amphibians"],["🌰","Seed plants"],["🌲","Carboniferous forests"],["🦟","Giant dragonflies"],["🥚","Amniotes"],["🦎","Reptiles"],["🦖","Dimetrodon"],["🐕","Therapsids"],["☠️","Permian extinction"],["🐊","Archosaurs"],["🦖","Early dinosaurs"],["🐁","Early mammals"],["🪽","Pterosaurs"],["🦕","Sauropods"],["🦖","Stegosaurus"],["🦖","Allosaurus"],["🪶","Archaeopteryx"],["🌸","Flowering plants"],["🐍","Snakes"],["🐝","Bees"],["🐜","Ants"],["🦖","Tyrannosaurus"],["🦖","Triceratops"],["🦘","Marsupials"],["☄️","K–Pg impact"],["🐦","Birds survive"],["🐀","Placental mammals"],["🦇","Bats"],["🐋","Early whales"],["🐒","Primates"],["🌾","Grasslands"],["🐎","Horses"],["🐘","Elephants"],["🐅","Big cats"],["🦍","Apes"],["🧍","Hominini"],["🦴","Sahelanthropus"],["🦴","Ardipithecus"],["🦴","Australopithecus"],["🚶","Bipedalism"],["🪨","Stone tools"],["🔨","Homo habilis"],["🔥","Homo erectus"],["🪓","Acheulean hand axe"],["🧠","Homo heidelbergensis"],["🦣","Neanderthals"],["🧍‍♂️","Homo sapiens"],["🔥","Control of fire"],["🗣️","Language"],["🎨","Cave art"],["🏹","Ice-age hunters"],["⛵","First boats"],["🐕","Dogs domesticated"],["🌾","Agriculture"],["🏺","Pottery"],["🏘️","First cities"],["✍️","Writing"],["🛞","The wheel"],["🥉","Bronze age"],["⚒️","Iron age"],["🔤","Alphabet"],["📐","Mathematics"],["🏛️","Philosophy"],["📖","Printing press"],["🔭","Scientific method"],["🏭","Industrial revolution"],["⚡","Electricity"],["💻","Computers"],["🚀","Space travel"]],"maths":[["0","Zero"],["1","One"],["+","Addition"],["−","Subtraction"],["×","Multiplication"],["÷","Division"],["=","Equality"],["<","Order"],["%","Percent"],["½","Fractions"],["ℕ","Natural numbers"],["ℤ","Integers"],["ℚ","Rationals"],["√","Square root"],["x²","Powers"],["!","Factorial"],["","x||Absolute value"],["∈","Membership"],["⊂","Inclusion"],["∪","Union"],["∩","Intersection"],["∅","Empty set"],["∀","For all"],["∃","There exists"],["⇒","Implication"],["⇔","Equivalence"],["¬","Negation"],["∧","And"],["∨","Or"],["∴","Therefore"],["ℝ","Real numbers"],["π","Pi"],["e","Euler's number"],["i","Imaginary unit"],["ℂ","Complex numbers"],["Σ","Sum"],["Π","Product"],["ln","Logarithm"],["eˣ","Exponential"],["sin","Sine"],["cos","Cosine"],["tan","Tangent"],["θ","Angle"],["∠","Geometry"],["f","Function"],["∘","Composition"],["f⁻¹","Inverse function"],["lim","Limit"],["ε","Epsilon"],["δ","Delta"],["∞","Infinity"],["f′","Derivative"],["∫","Integral"],["dx","Differential"],["∂","Partial derivative"],["∇","Gradient"],["Δ","Discriminant"],["uₙ","Sequences"],["ℓ","Limit of a sequence"],["Σ∞","Series"],["Tₙ","Taylor expansion"],["O","Big-O"],["o","Little-o"],["~","Equivalents"],["ℝⁿ","Vector space"],["v⃗","Vectors"],["⟨ ⟩","Inner product"],["‖ ‖","Norm"],["⊥","Orthogonality"],["dim","Dimension"],["Mₙ","Matrices"],["det","Determinant"],["A⁻¹","Inverse matrix"],["Aᵀ","Transpose"],["λ","Eigenvalue"],["Tr","Trace"],["Im","Image"],["Ker","Kernel"],["GL","General linear group"],["ℤ/n","Modular arithmetic"],["gcd","Euclid's algorithm"],["p","Prime numbers"],["σ","Permutations"],["Sₙ","Symmetric group"],["G","Groups"],["ℝ[X]","Polynomials"],["⊕","Direct sum"],["ℙ","Probability"],["E","Expectation"],["V","Variance"],["B","Binomial law"],["N","Normal law"],["χ²","Chi-squared"],["∮","Contour integral"],["ℒ","Laplace transform"],["ℱ","Fourier transform"],["ℍ","Hilbert space"],["⊗","Tensor product"],["ζ","Riemann zeta"],["ℵ","Cardinality"]],"physics":[["t","Time"],["x","Position"],["v","Velocity"],["a","Acceleration"],["m","Mass"],["F","Force"],["N1","Newton's 1st law"],["ΣF","Newton's 2nd law"],["N3","Newton's 3rd law"],["g","Gravity"],["W","Work"],["P","Power"],["Eₖ","Kinetic energy"],["Eₚ","Potential energy"],["p","Momentum"],["J","Impulse"],["μ","Friction"],["k","Hooke's law"],["T","Period"],["ω","Angular frequency"],["τ","Torque"],["I","Moment of inertia"],["L","Angular momentum"],["G","Universal gravitation"],["K3","Kepler's laws"],["ρ","Density"],["Pa","Pressure"],["⚓","Archimedes' principle"],["Q","Heat"],["°C","Temperature"],["C","Heat capacity"],["R","Ideal gas constant"],["n","Amount of substance"],["kB","Boltzmann constant"],["U","Internal energy"],["H","Enthalpy"],["S","Entropy"],["ΔG","Gibbs energy"],["ηc","Carnot efficiency"],["λ","Wavelength"],["f","Frequency"],["Δf","Doppler effect"],["dB","Sound level"],["n","Refractive index"],["sin i","Snell–Descartes law"],["f′","Focal length"],["γ","Magnification"],["∥","Interference"],["θ","Diffraction"],["c","Speed of light"],["q","Electric charge"],["e","Elementary charge"],["E","Electric field"],["V","Potential difference"],["C","Capacitance"],["I","Current"],["R","Resistance"],["Ω","Ohm's law"],["B","Magnetic field"],["Φ","Magnetic flux"],["qv×B","Lorentz force"],["Φ′","Faraday induction"],["L","Inductance"],["RLC","Oscillating circuit"],["ε₀","Vacuum permittivity"],["μ₀","Vacuum permeability"],["∇·E","Gauss's law"],["∇×B","Maxwell–Ampère law"],["EM","Electromagnetic wave"],["γ","Lorentz factor"],["mc²","Mass–energy"],["Δt′","Time dilation"],["c","Relativity postulate"],["Gμν","General relativity"],["h","Planck constant"],["ħ","Reduced Planck constant"],["hν","Photon"],["λdB","De Broglie wavelength"],["ΔxΔp","Uncertainty principle"],["ψ","Wave function"],["Ĥ","Schrödinger equation"],["En","Energy levels"],["σ","Spin"],["","0⟩|Superposition"],["⊗","Entanglement"],["e⁻","Electron"],["p⁺","Proton"],["n⁰","Neutron"],["q","Quarks"],["ν","Neutrino"],["W±","Weak force"],["g","Gluon"],["H⁰","Higgs boson"],["α","Fine-structure constant"],["Λ","Cosmological constant"],["H₀","Hubble constant"],["CMB","Cosmic microwave background"],["ΩΛ","Dark energy"],["BB","Big Bang"],["∞","Singularity"]]};
+const lvTheme=()=>{let id='classic';try{id=localStorage.getItem('p_lvth')||'classic'}catch(e){}return LV_TH.find(x=>x.id===id)||LV_TH[0]};
+const LV_G=['<path d="M32 46V31M32 36C25 36 21 31 21 24C28 24 32 29 32 36ZM32 31C32 24 36 20 43 20C43 27 39 31 32 31Z"/>',
+ '<path d="M36 13L22 35H30L27 51L43 27H34Z"/>',
+ '<path d="M32 12C34 21 45 25 43 37C42 45 37 51 32 51C26 51 21 46 22 38C23 32 28 29 29 23C30 19 31 16 32 12Z"/><path d="M32 51C28 51 26 47 28 43C29 41 31 40 32 37C34 40 37 42 36 46C36 49 34 51 32 51Z" fill="rgba(255,255,255,.55)"/>',
+ '<polygon points="32,12 37,25 51,26 40,35 44,49 32,41 20,49 24,35 13,26 27,25"/>',
+ '<path d="M21 27L27 18H37L43 27L32 47Z"/><path d="M21 27H43M27 18L32 27L37 18M32 27V47" stroke="rgba(0,0,0,.22)" stroke-width="1.2" fill="none"/>',
+ '<path d="M18 42L20 22L27 31L32 18L37 31L44 22L46 42Z"/><rect x="18" y="43" width="28" height="4.5" rx="2"/>',
+ '<path d="M32 50C14 38 16 22 26 22C30 22 32 25 32 27C32 25 34 22 38 22C48 22 50 38 32 50Z"/>',
+ '<path d="M39 14A19 19 0 1 0 50 40A15 15 0 1 1 39 14Z"/>',
+ '<path d="M16 21C22 19 28 20 32 24C36 20 42 19 48 21V45C42 43 36 44 32 48C28 44 22 43 16 45Z"/><path d="M32 24V48" stroke="rgba(0,0,0,.25)" stroke-width="1.3" fill="none"/>',
+ '<g fill="none" stroke="#fff" stroke-width="2.6"><ellipse cx="32" cy="32" rx="18" ry="7"/><ellipse cx="32" cy="32" rx="18" ry="7" transform="rotate(60 32 32)"/><ellipse cx="32" cy="32" rx="18" ry="7" transform="rotate(120 32 32)"/></g><circle cx="32" cy="32" r="4.2"/>'];
+const LV_S=(()=>{const bur=(()=>{let p=[];for(let i=0;i<24;i++){const a=i*Math.PI/12-Math.PI/2,r=i%2?24:29;p.push((32+Math.cos(a)*r).toFixed(1)+','+(32+Math.sin(a)*r).toFixed(1))}return'<polygon points="'+p.join(' ')+'" stroke-linejoin="round"/>'})(),sh='<path d="M32 4L55 12V32C55 46 44 56 32 61C20 56 9 46 9 32V12Z" stroke-linejoin="round"/>';
+ return['<circle cx="32" cy="32" r="25"/>','<rect x="9" y="9" width="46" height="46" rx="15"/>','<path d="M32 5L55 18V46L32 59L9 46V18Z" stroke-linejoin="round"/>','<polygon points="21,6 43,6 58,21 58,43 43,58 21,58 6,43 6,21" stroke-linejoin="round"/>','<path d="M32 3L59 32L32 61L5 32Z" stroke-linejoin="round"/>',sh,bur,sh,sh,sh]})();
+let _lbn=0;
+function lvBadge(l,size,dim,th){
+  th=th||lvTheme();l=lvC(l);const t=lvTier(l),g=t>>1,odd=t&1,[nm,c1,c2]=LV_P[g],id='lb'+(++_lbn);let gl=LV_G[(odd?5:0)+(l-1)%5];
+  const S100=LV_100[th.id];
+  if(S100){const gy=S100[l-1][0],em=/\p{Extended_Pictographic}/u.test(gy),n=[...gy].length,fs=em?26:n<2?30:n<3?24:n<4?19:n<5?15:12;gl=em?'<text x="32" y="41" text-anchor="middle" font-size="26">'+gy+'</text>':'<text x="32" y="'+(fs>20?42:38)+'" text-anchor="middle" font-size="'+fs+'" font-weight="800" font-family="Georgia,\'Times New Roman\',serif" fill="#fff" stroke="rgba(0,0,0,.25)" stroke-width=".7">'+gy+'</text>'}
+  else if(th.st){const gy=th.st[t][0],pips=(l-1)%5+1,tx=th.t==='x';gl=(tx?'<text x="32" y="'+(gy.length>1?'40':'42')+'" text-anchor="middle" font-size="'+(gy.length>1?'24':'30')+'" font-weight="800" font-family="Georgia,serif" fill="#fff" stroke="rgba(0,0,0,.25)" stroke-width=".7">'+gy+'</text>':'<text x="32" y="41" text-anchor="middle" font-size="26">'+gy+'</text>')+'<g fill="#fff" stroke="none">'+Array.from({length:pips},(_,i)=>'<circle cx="'+(32+(i-(pips-1)/2)*5.2).toFixed(1)+'" cy="50" r="1.7"/>').join('')+'</g>'}
+  const wing='<path d="M11 26C3 25 -1 17 1 8C9 10 15 16 17 25Z"/>',wings=g>=7?'<g fill="url(#'+id+')" stroke="rgba(255,255,255,.5)" stroke-width="1.2">'+wing+'<g transform="translate(64 0) scale(-1 1)">'+wing+'</g></g>':'';
+  const rays=g>=8?'<g stroke="'+c1+'" stroke-width="2" stroke-linecap="round" opacity=".9">'+Array.from({length:12},(_,i)=>{const a=i*Math.PI/6;return'<line x1="'+(32+Math.cos(a)*30).toFixed(1)+'" y1="'+(32+Math.sin(a)*30).toFixed(1)+'" x2="'+(32+Math.cos(a)*33.5).toFixed(1)+'" y2="'+(32+Math.sin(a)*33.5).toFixed(1)+'"/>'}).join('')+'</g>':'';
+  const top=g>=9?'<path d="M22 7L23.5 -1L28 3.5L32 -3L36 3.5L40.5 -1L42 7Z" fill="url(#'+id+')" stroke="rgba(255,255,255,.65)" stroke-width="1.2" stroke-linejoin="round"/>':'';
+  const ring=odd?'<circle cx="32" cy="32" r="30.5" fill="none" stroke="'+c1+'" stroke-width="1.6" stroke-dasharray="3 3.4" opacity=".95"/><g fill="#fff" opacity=".9"><circle cx="32" cy="-1" r="1.6"/><circle cx="65" cy="32" r="1.6"/><circle cx="32" cy="65" r="1.6"/><circle cx="-1" cy="32" r="1.6"/></g>':'';
+  const k=g===4?.8:g===6?.92:1;
+  return '<svg class="lvb" viewBox="-6 -8 76 76" width="'+size+'" height="'+size+'" role="img" aria-label="Level '+l+' · '+nm+'" style="'+(dim?'filter:grayscale(1) brightness(.55) opacity(.7)':'filter:drop-shadow(0 6px 14px '+c2+'88)')+'"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>'+rays+ring+wings+top+'<g fill="url(#'+id+')" stroke="rgba(255,255,255,.65)" stroke-width="1.6">'+LV_S[g]+'</g><ellipse cx="32" cy="17" rx="15" ry="6" fill="#fff" opacity=".28"/><g transform="translate(32 33) scale('+k+') translate(-32 -32)" fill="#fff" fill-opacity=".96" stroke="rgba(0,0,0,.22)" stroke-width=".8" stroke-linejoin="round">'+gl+'</g></svg>';
+}
 function orb(size,sleepy){
   return `<div class="orbwrap" data-act="orb"><svg class="orb" width="${size}" height="${size}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="url(#og)"/><ellipse cx="50" cy="22" rx="22" ry="9" fill="#fff" opacity=".45"/><g class="eyes"><g class="look">${sleepy?'<path d="M29 47q7 6 14 0M57 47q7 6 14 0" stroke="#10140a" stroke-width="4.5" fill="none" stroke-linecap="round"/>':'<ellipse cx="36" cy="46" rx="5.4" ry="7.6" fill="#10140a"/><ellipse cx="64" cy="46" rx="5.4" ry="7.6" fill="#10140a"/><circle cx="37.8" cy="43" r="1.9" fill="#fff"/><circle cx="65.8" cy="43" r="1.9" fill="#fff"/>'}</g></g><path d="M40 62q10 9 20 0" stroke="#10140a" stroke-width="4.2" fill="none" stroke-linecap="round"/><ellipse cx="26" cy="60" rx="6" ry="4" fill="#ff8aa8" opacity=".45"/><ellipse cx="74" cy="60" rx="6" ry="4" fill="#ff8aa8" opacity=".45"/></svg></div>`;
 }
@@ -1599,7 +1647,7 @@ function rHome(){
   const now=new Date(),hr=now.getHours();
   const g=hr<5?'Still up?':hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
   const st=streak(),need=needed(lv);
-  $('hero').innerHTML=`${orb(84,hr<6||hr>=23)}<div class="hm"><div class="lv">Level <span id="hv">${lv}</span></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div>${st?`<div class="streak"><span>🔥</span>${st} day${st>1?'s':''} streak</div>`:''}</div>`;
+  $('hero').innerHTML=`<div class="orbwrap hbadge" data-act="orb">${lvBadge(lv,78)}</div><div class="hm"><div class="lv">Level <span id="hv">${lv}</span><small>${lvName(lv)}</small></div><div class="greet">${g} · ${esc(now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}))}</div><div class="bar" data-act="lvls"><div class="bar-fill" id="hbar" style="width:0"></div></div><div class="xpl"><span id="hxn">0</span><span>/ ${need} XP</span></div><div class="hchips">${st?`<span class="hch"><span>🔥</span>${st} day${st>1?'s':''}</span>`:''}<button class="hch go" data-act="rewards" aria-label="Rewards">🎁 <b id="hbal">${balance()}</b> XP</button></div></div>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('hbar');if(b)b.style.width=clamp(xp/need*100,0,100)+'%'}));
   countTo($('hxn'),xp,900);
   rToday();rHomeTasks();rFocusBar();rMood();rRev();rLazy();rDnav();rHrs();rXM();rTP();rHH();rtRender();svRender();rRescue();rMotiv();
@@ -1676,12 +1724,12 @@ function rMotiv(){
   const el=$('motiv');if(!el)return;
   const w=weekXP(),g=Math.max(1,wgoal),p=clamp(w/g,0,1),C=2*Math.PI*37,left=7-((new Date().getDay()+6)%7),need=Math.max(0,g-w);
   const dl=whyLeft(),sun=new Date().getDay()===0,has=Object.keys(wrev).some(k=>k>=mondayOf(iso()));
-  el.innerHTML=`<div class="cardhead"><div class="lbl">This week</div><button class="lnk" data-act="wgoalset">Goal ${g} XP</button></div>
+  const ready=sun&&!has;
+  el.innerHTML=`<div class="cardhead"><div class="lbl">This week</div><button class="${ready?'hch go rdy':'lnk'}" data-act="wreview">${ready?'📋 Review ready':'📋 Review ›'}</button></div>
   <div class="fring"><div class="rg"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="37"/><circle class="pg ${w>=g?'done':''}" id="wpg" cx="42" cy="42" r="37" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rn"><span>${Math.round(p*100)}%</span></div></div>
-  <div style="flex:1;min-width:0"><div class="big"><b>${w}</b> <span>/ ${g} XP</span></div><div class="sub" style="margin-top:4px">${w>=g?'Goal reached 🎉 Everything now is a bonus.':`${need} XP to go · about ${Math.ceil(need/left)} a day for ${left} day${left>1?'s':''}`}</div></div></div>
-  <button class="whyrow ${why.t?'':'empty'}" data-act="whyedit"><span class="wl">Why I'm doing this</span><span class="wt">${why.t?esc(why.t):'＋ Add your goal: the school, the grade, the reason'}</span>${dl!=null?`<span class="wd">${dl>0?'D−'+dl:dl===0?'Today!':'Done'}</span>`:''}</button>
-  <button class="btn" data-act="rewards">🎁 Rewards · ${balance()} XP to spend</button>
-  <button class="btn ${sun&&!has?'primary':''}" data-act="wreview">${sun&&!has?'📋 Your weekly review is ready':'📋 Weekly review'}</button>`;
+  <div style="flex:1;min-width:0"><div class="big"><b>${w}</b> <span>/ ${g} XP</span></div><div class="sub" style="margin-top:4px">${w>=g?'Goal reached 🎉 Everything now is a bonus.':`${need} XP to go · about ${Math.ceil(need/left)} a day for ${left} day${left>1?'s':''}`}</div><button class="lnk" data-act="wgoalset" style="margin-top:4px;padding:0">Change goal</button></div></div>
+  <button class="whyrow ${why.t?'':'empty'}" data-act="whyedit"><span class="wl">Why I'm doing this</span><span class="wt">${why.t?esc(why.t):'＋ Add your reason'}</span>${dl!=null?`<span class="wd">${dl>0?'D−'+dl:dl===0?'Today!':'Done'}</span>`:''}</button>`;
+  {const hb=$('hbal');if(hb)hb.textContent=balance()}
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const e=$('wpg');if(e)e.style.strokeDashoffset=C*(1-p)}));
 }
 function whyEdit(){
@@ -1719,7 +1767,7 @@ function weekReview(){
   ${k.next.length?`<div class="rvn">📅 Coming up: ${k.next.map(c=>esc(c.title)+' ('+new Date(c.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric'})+')').join(' · ')}</div>`:''}
   ${why.t?`<div class="rvn">🎯 ${esc(why.t)}${whyLeft()>0?' · D−'+whyLeft():''}</div>`:''}
   <div class="lbl" style="margin-top:14px">Advice for next week</div><div class="revtxt" id="rv-ai" style="white-space:pre-wrap;${saved?'':'display:none'}">${saved?esc(saved):''}</div>
-  <button class="btn primary" id="rv-go">${saved?'Ask again':'Ask the AI for next week\'s plan'}</button><div class="hint" id="rv-h" style="margin-top:6px">Short request, a few cents at most.</div>`);
+  <button class="btn primary" id="rv-go">${saved?'Ask again':'Next week\'s plan'}</button><div class="hint" id="rv-h" style="margin-top:6px">Short request, a few cents at most.</div>`);
   $('rv-go').onclick=async()=>{
     if(!window.PC||!PC.hasKey()){toast('Add your AI key first');closeSheet();setTimeout(()=>{try{P._A.settings()}catch(e){}},300);return}
     const b=$('rv-go');b.disabled=true;b.textContent='Thinking…';
@@ -1784,7 +1832,7 @@ function rTasks(anim){
     const un=gTasks('_');
     let h=goals.map((g,i)=>{
       const n=visTasks().filter(t=>t.gid===g.id&&isOpen(t)).length,need=needed(g.lv);
-      return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="gopen" data-hold="goal" data-id="${g.id}"><div class="gd" style="background:${g.color}">${g.lv}</div><div class="gm"><div class="gn">${esc(g.name)}</div><div class="gs">Level ${g.lv} · ${g.xp}/${need} XP</div><div class="bar"><div class="bar-fill" style="width:${clamp(g.xp/need*100,0,100)}%;background:${g.color};box-shadow:none"></div></div></div>${n?`<div class="gbadge">${n}</div>`:''}</div>`}).join('');
+      return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="gopen" data-hold="goal" data-id="${g.id}"><div class="gd" style="background:linear-gradient(145deg,${vcol(g.color)},color-mix(in srgb,${vcol(g.color)} 62%,#000));box-shadow:0 8px 20px -6px ${vcol(g.color)},0 0 0 1px rgba(255,255,255,.18) inset;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)">${g.lv}</div><div class="gm"><div class="gn">${esc(g.name)}</div><div class="gs">Level ${g.lv} · ${g.xp}/${need} XP</div><div class="bar"><div class="bar-fill" style="width:${clamp(g.xp/need*100,0,100)}%;background:linear-gradient(90deg,${vcol(g.color)},color-mix(in srgb,${vcol(g.color)} 70%,#fff));box-shadow:0 0 12px -2px ${vcol(g.color)}"></div></div></div>${n?`<div class="gbadge">${n}</div>`:''}</div>`}).join('');
     if(un.length)h+=`<div class="goal" data-act="gopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No goal</div><div class="gs">Tasks not in a goal yet</div></div>${un.filter(isOpen).length?`<div class="gbadge">${un.filter(isOpen).length}</div>`:''}</div>`;
     h+=`<button class="btn" data-act="gnew" style="margin-top:4px">+ New goal</button>`;
     if(!goals.length&&!un.length)h=`<div class="orbempty">${orb(86)}<p>Create your first goal<br>(e.g. Maths, Physics, Sport),<br>then add tasks to it.</p></div>`+h;
@@ -1818,9 +1866,14 @@ function editGoal(id){
   };
   setTimeout(()=>{if(!g)$('g-n').focus()},50);
 }
+document.addEventListener('click',e=>{const tb=e.target.closest&&e.target.closest('[data-lvth]');if(tb){try{localStorage.setItem('p_lvth',tb.dataset.lvth)}catch(er){}showLevels();try{rHome()}catch(er){}return}const b=e.target.closest&&e.target.closest('[data-lvi]');if(!b)return;const n=+b.dataset.lvi;toast('Level '+n+' · '+lvName(n)+(n<=lv?' ✓':' · unlocks at level '+n))},true);
 function showLevels(){
-  const row=(name,lvl,x,col,lab)=>`<div class="lvrow"><div class="gd" style="background:${col}">${lvl}</div><div class="gm"><div class="gn"><span>${esc(name)}</span><span>Level ${lvl} · ${x}/${needed(lvl)} XP</span></div><div class="bar"><div class="bar-fill" style="width:${clamp(x/needed(lvl)*100,0,100)}%;background:${col};box-shadow:none"></div></div></div></div>`;
-  openSheet(`<h2>Levels</h2>${row('Overall',lv,xp,'var(--lime)')}<div class="lbl" style="margin:16px 0 10px">Goals</div>${goals.map(g=>row(g.name,g.lv,g.xp,g.color)).join('')||'<div class="hint">No goals yet. Create one in Tasks.</div>'}<div class="hint" style="margin-top:4px">Completing a task gives XP to your overall level and to its goal. Focus sessions only count for the overall level.</div><button class="btn" style="margin-top:12px" onclick="closeSheet()">Close</button>`);
+  const row=(name,lvl,x,col)=>`<div class="lvrow"><div class="gd" style="background:linear-gradient(145deg,${col},color-mix(in srgb,${col} 62%,#000));color:#fff">${lvl}</div><div class="gm"><div class="gn"><span>${esc(name)}</span><span>Level ${lvl} · ${x}/${needed(lvl)} XP</span></div><div class="bar"><div class="bar-fill" style="width:${clamp(x/needed(lvl)*100,0,100)}%;background:${col};box-shadow:none"></div></div></div></div>`;
+  const t=lvTier(lv),nxL=LV_100[lvTheme().id]?lv+1:(t+1)*5+1,col=lvC(lv);
+  openSheet(`<h2>Levels</h2><div class="lvhero">${lvBadge(lv,96)}<div><div class="lvn">${lvName(lv)}</div><div class="sub">Level ${lv} · ${xp}/${needed(lv)} XP</div><div class="sub">${lv>=100?'Every emblem unlocked 👑':`Next: <b>${lvName(nxL)}</b> at level ${nxL} (${nxL-lv} to go)`}</div></div></div>
+  <div class="lbl" style="margin:4px 0 8px">Theme</div><div class="lvth">${LV_TH.map(x=>`<button class="${x.id===lvTheme().id?'on':''}" data-lvth="${x.id}"><span>${x.ic}</span>${x.n}</button>`).join('')}</div>
+  <div class="lbl" style="margin:14px 0 8px">Emblem collection · ${col}/100</div><div class="lvgrid">${Array.from({length:100},(_,i)=>`<button class="${i+1===col?'cur':''}" data-lvi="${i+1}" aria-label="Level ${i+1}">${lvBadge(i+1,32,i+1>col)}</button>`).join('')}</div>
+  <div class="lbl" style="margin:16px 0 10px">Goals</div>${goals.map(g=>row(g.name,g.lv,g.xp,vcol(g.color))).join('')||'<div class="hint">No goals yet. Create one in Tasks.</div>'}<div class="hint" style="margin-top:4px">Tasks give XP to your level and to their goal. Focus sessions only count for your level.</div><button class="btn" style="margin-top:12px" onclick="closeSheet()">Close</button>`);
 }
 function rLevel(anim){
   const need=needed(lv);
@@ -1859,8 +1912,8 @@ function rLazy(){
   let h=`<div class="cardhead"><div class="lbl">Lazy day</div><span class="sub">${n?n+' in a row':'none in a row'}</span></div>`;
   if(m)h+=`<div class="lmsg">${on?'😴 ':''}${esc(m[1])}</div>`;
   else if(!on)h+=`<div class="lmsg" style="color:var(--muted)">Not feeling it today? Taking a lazy day is fine now and then. Press the button and it will be counted.</div>`;
-  h+=on?`<button class="btn" data-act="lazyoff">Cancel · I'll work today</button>`:`<button class="btn" data-act="lazyon">😴 Take a lazy day</button>`;
-  if(on&&n>=3||!on&&n>=2)h+=`<button class="btn primary" data-act="lazygo">Start a short focus session</button>`;
+  h+=on?`<button class="btn" data-act="lazyoff">Work today</button>`:`<button class="btn" data-act="lazyon">😴 Take a lazy day</button>`;
+  if(on&&n>=3||!on&&n>=2)h+=`<button class="btn primary" data-act="lazygo">Quick focus</button>`;
   h+=`<div class="ldots">${last.map(d=>`<i class="${isLazy(d)?'l':''} ${d===td?'t':''}"></i>`).join('')}</div><div class="hint" style="margin:4px 0 0">Last 14 days · ${c30} lazy day${c30===1?'':'s'} in the last 30 · longest streak ${lazyBest()}</div>`;
   el.innerHTML=h;
 }
@@ -1962,7 +2015,7 @@ function rHH(){
   {const h=$('hhcard'),hero=$('hero'),dk=$('hdock');if(s&&hero&&dk&&dk.previousElementSibling!==h)dk.before(h);else if(!s&&h.parentNode&&$('rtcard')&&h.nextElementSibling!==$('rtcard'))$('rtcard').before(h)}
   let t;
   if(s)t=`<div class="hhb"><span class="fl">🎉</span><b>Happy Hour ×${s.m}</b><span class="sub">until ${s.end}</span><button class="btn primary sm" data-act="hhgo" style="margin:0 38px 0 4px;flex:none">Focus</button></div>`;
-  else t=`<div class="cardhead"><div class="lbl">Happy Hour</div><button class="lnk" data-act="hhset">Settings</button></div><div class="hint" style="text-align:left;margin:0">${h?'Holidays · '+esc(h.n)+' · habits are paused until '+new Date(dAddDays(h.e,1)+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'.':nx?'Next: '+nx+' · ×'+hh.mult+' XP':'No more Happy Hour today.'}</div>${hh.aft&&!hhome?'<button class="btn sm" data-act="hhhere">📍 Set my home location</button>':''}${hh.aft&&!(hh.ses&&hh.ses.d===iso())&&nowMin()>=tmin(hh.a1)&&nowMin()<tmin(hh.a2)?'<button class="btn sm" data-act="hhman">🏠 I\'m home now</button>':''}`;
+  else t=`<div class="cardhead"><div class="lbl">Happy Hour</div><button class="lnk" data-act="hhset">Settings</button></div><div class="hint" style="text-align:left;margin:0">${h?'Holidays · '+esc(h.n)+' · habits are paused until '+new Date(dAddDays(h.e,1)+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'.':nx?'Next: '+nx+' · ×'+hh.mult+' XP':'No more Happy Hour today.'}</div>${hh.aft&&!hhome?'<button class="btn sm" data-act="hhhere">📍 Set home</button>':''}${hh.aft&&!(hh.ses&&hh.ses.d===iso())&&nowMin()>=tmin(hh.a1)&&nowMin()<tmin(hh.a2)?'<button class="btn sm" data-act="hhman">🏠 I\'m home now</button>':''}`;
   el.innerHTML=t;
 }
 function hhSheet(){
@@ -1972,7 +2025,7 @@ function hhSheet(){
   <div class="field"><label>Lunch window</label><div class="two"><input id="h-l1" type="time" value="${hh.l1}"><input id="h-l2" type="time" value="${hh.l2}"></div></div>
   <div class="field"><label>Afternoon: starts when you get home in this window, lasts 1 hour</label><div class="two"><input id="h-a1" type="time" value="${hh.a1}"><input id="h-a2" type="time" value="${hh.a2}"></div></div>
   <div class="field"><label>XP multiplier</label><div class="chips" id="h-m">${[1.25,1.5,2].map(v=>`<button class="chip ${v===hh.mult?'on':''}" data-v="${v}">×${v}</button>`).join('')}</div></div>
-  <div class="field"><label>Home location</label><button class="btn sm" id="h-here">📍 ${hhome?'Update: I am home now':'Set: I am home now'}</button>${hhome?'<button class="btn sm danger" id="h-noloc">Forget location</button>':''}<div class="hint" style="text-align:left;margin-top:6px">Stays on this phone only, never in a backup. Checked only while Aether is open (the web app cannot run in the background). Without a location, use the “I'm home now” button.</div></div>
+  <div class="field"><label>Home location</label><button class="btn sm" id="h-here">📍 ${hhome?'Update home':'Set home here'}</button>${hhome?'<button class="btn sm danger" id="h-noloc">Forget location</button>':''}<div class="hint" style="text-align:left;margin-top:6px">Stays on this phone only, never in a backup. Checked only while Aether is open (the web app cannot run in the background). Without a location, use the “I'm home now” button.</div></div>
   <div class="field"><label>School holidays (lunch Happy Hour is off, habits paused)</label><div class="chips"><button class="chip ${hh.pause?'on':''}" data-t="pause">Pause recurring tasks during holidays</button></div><div id="h-hols"></div><button class="btn sm" id="h-add">＋ Add a holiday</button><button class="btn sm" id="h-reset">Reset to Lyon 2026-27</button></div>
   <button class="btn primary" id="h-save">Save</button>`);
   const B=$('sbody');
@@ -2026,8 +2079,8 @@ function rTP(){
     return;
   }
   const h=Math.floor(p.total/60),m=p.total%60,dur=p.total?(h?h+'h'+(m?pad(m):''):m+' min'):'';
-  el.innerHTML=`<div class="cardhead"><div class="lbl">${p.xm?'📚 ':''}${esc(p.title)}</div><span class="sub">${p.items.length?p.items.length+' thing'+(p.items.length>1?'s':'')+' · about '+dur:''}</span></div>`+
-    (p.items.length?p.items.map((it,i)=>`<div class="tprow" style="--i:${i}"><div class="tpt">${it.at?esc(it.at.split(' – ')[0]):'·'}</div><div class="tpm"><div class="tpn">${it.ic} ${esc(it.title)}</div><div class="tps">${esc(it.sub)} · ${it.min} min</div></div><div class="tpb">${i?`<button data-act="tpup" data-id="${esc(it.id)}" aria-label="Move up">↑</button>`:''}<button class="go" data-act="tpgo" data-id="${esc(it.id)}" aria-label="Start">▶</button><button data-act="tpskip" data-id="${esc(it.id)}" aria-label="Skip for today">✕</button></div></div>`).join(''):`<div class="tps" style="margin-top:6px">Nothing urgent right now. Pick a task, or take a break you earned.</div>`)+
+  el.innerHTML=`<div class="cardhead"><div class="lbl">${p.xm?'📚 ':''}${esc(p.title)}</div><span class="sub">${p.items.length?p.items.length+' thing'+(p.items.length>1?'s':'')+' · about '+dur:''}<button class="lnk" data-act="tpcfg" aria-label="Timer settings" style="margin-left:8px">⚙︎</button></span></div>`+
+    (p.items.length?p.items.map((it,i)=>{const a=it.at?it.at.split(' – '):[],sub=[it.sub].filter(Boolean).map(esc).join('');return `<div class="tprow" style="--i:${i}${it.col?';--rc:'+it.col:''}"><div class="tpt">${a[0]?esc(a[0]):'·'}${a[1]?`<small>${esc(a[1])}</small>`:''}</div><div class="tpm"><div class="tpn">${it.ic} ${esc(it.title)}</div><div class="tps"><span class="dur">${it.min} min</span>${sub?`<span style="overflow:hidden;text-overflow:ellipsis">${sub}</span>`:''}</div></div><div class="tpb">${i?`<button data-act="tpup" data-id="${esc(it.id)}" aria-label="Move up">↑</button>`:''}<button data-act="tpskip" data-id="${esc(it.id)}" aria-label="Skip for today">✕</button><button class="go" data-act="tpgo" data-id="${esc(it.id)}" aria-label="Start">▶</button></div></div>`}).join(''):`<div class="tps" style="margin-top:6px">Nothing urgent right now. Pick a task, or take a break you earned.</div>`)+
     (p.xm?`<div class="tps" style="margin-top:8px">Exam mode is on: protect your sleep, big rewards wait until after the exam.</div>`:'');
 }
 function rXM(){
@@ -2088,7 +2141,7 @@ function rtRender(){
   if(!rtimer){el.style.display='none';return}
   const left=Math.max(0,rtimer.end-Date.now());el.style.display='';
   const m=Math.floor(left/6e4),s=Math.floor(left%6e4/1e3);
-  el.innerHTML=`<div class="cardhead"><div class="lbl">⏳ ${esc(rtimer.n)}</div><span class="sub">${m}:${pad(s)}</span></div><div class="bar"><div class="bar-fill" style="width:${100-left/(rtimer.mins*6e4)*100}%;background:#ff9f0a;box-shadow:none"></div></div><button class="btn sm" data-act="rtstop" style="margin-top:8px">Stop now · refund ${shs.ref}% of the unused time</button>`;
+  el.innerHTML=`<div class="cardhead"><div class="lbl">⏳ ${esc(rtimer.n)}</div><span class="sub">${m}:${pad(s)}</span></div><div class="bar"><div class="bar-fill" style="width:${100-left/(rtimer.mins*6e4)*100}%;background:#ff9f0a;box-shadow:none"></div></div><button class="btn sm" data-act="rtstop" style="margin-top:8px">Stop · refund ${shs.ref}%</button>`;
   dockRefresh();
   if(left<=0){const n=rtimer.n;rtimer=null;sv();rtRender();toast('⏰ Time is up: '+n+'. Back to it!');vib(80);chime()}
 }
@@ -2104,7 +2157,7 @@ function svRender(){
 /* arrival prompt */
 function arrivePrompt(){
   if(!shs.arr||!hh.ses||hh.ses.asked)return;hh.ses.asked=true;sv();
-  openSheet(`<h2>Welcome home 🏠</h2><div class="sub" style="margin:-6px 0 12px">Happy Hour is on for one hour. What is the one thing to finish before dinner?</div><div class="field"><input id="ar-t" maxlength="90" placeholder="e.g. Colle 5 exercises 1 and 2"></div><button class="btn primary" id="ar-go">Add it and start a session</button><button class="btn" id="ar-add">Just add it</button><button class="btn" id="ar-no">Not now</button>`);
+  openSheet(`<h2>Welcome home 🏠</h2><div class="sub" style="margin:-6px 0 12px">Happy Hour is on for one hour. What is the one thing to finish before dinner?</div><div class="field"><input id="ar-t" maxlength="90" placeholder="e.g. Colle 5 exercises 1 and 2"></div><button class="btn primary" id="ar-go">Add & start</button><button class="btn" id="ar-add">Just add it</button><button class="btn" id="ar-no">Not now</button>`);
   const mk=()=>{const t=$('ar-t').value.trim();if(!t){toast('Write it first');return null}tasks.unshift({id:uid(),text:t,xp:25,due:iso(),pin:true,gid:''});sv();return t};
   $('ar-add').onclick=()=>{if(mk()){closeSheet();rHomeTasks();toast('Pinned on Home 📌')}};
   $('ar-go').onclick=()=>{const t=mk();if(!t)return;closeSheet();F.mode='short';F.kind='focus';F.task=t;F.status='idle';show('focus');setTimeout(fStart,350)};
@@ -2246,7 +2299,7 @@ function gain(n,x,y,gid,subj){
   return lv>before;
 }
 function levelUp(n){
-  $('lvnum').textContent=n;$('lvl').classList.add('show');vib(40);chime();
+  $('lvnum').textContent=n;{const lb=$('lvb');if(lb)lb.innerHTML=lvBadge(n,120)+'<div class="sub" style="margin-top:6px;color:var(--text)">New emblem · <b>'+lvName(n)+'</b></div>'}$('lvl').classList.add('show');vib(40);chime();
   burst(innerWidth/2,innerHeight*.45,46);
   const c=()=>{$('lvl').classList.remove('show');$('lvl').removeEventListener('click',c);clearTimeout(t)};
   const t=setTimeout(c,3200);$('lvl').addEventListener('click',c);
@@ -2283,7 +2336,7 @@ function editTask(id,presetG){
   const xps=[10,25,50,100];let sel=t?(t.xp||20):25;if(!xps.includes(sel))xps.push(sel);xps.sort((a,b)=>a-b);
   openSheet(`<h2>${t?'Edit objective':'New objective'}</h2>
     <div class="field" id="f-t"><label>Objective</label><input id="e-t" placeholder="e.g. Finish physics exercises" value="${esc(t?t.text:'')}" maxlength="120"></div>
-    <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
+    <div class="field"><label>Goal</label><div class="chips" id="e-g">${goals.map(g=>`<button class="chip ${g.id===selG?'on':''}" data-v="${g.id}"><span class="cdot" style="background:${vcol(g.color)}"></span>${esc(g.name)}</button>`).join('')}<button class="chip ${!selG?'on':''}" data-v="">No goal</button><button class="chip" data-v="+">+ New goal</button></div></div>
     <div class="field"><label>Reward (1–100 XP) · −10%/day when overdue</label><div class="chips" id="e-xp">${xps.map(v=>`<button class="chip ${v===sel?'on':''}" data-v="${v}">+${v} XP</button>`).join('')}</div><div class="two" style="margin-top:10px;align-items:center"><span class="sub" style="flex:none">Custom</span><input id="e-xc" type="number" inputmode="numeric" min="1" max="100" step="1" value="${sel}" style="text-align:center"></div></div>
     <div class="field"><label>Linked to a colle or exam</label><div class="chips" id="e-lk">${(()=>{const td=iso(),l=cal.filter(c=>(c.kind==='ds'||c.kind==='colle')&&(c.date>=td||c.id===selLk)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,8);return '<button class="chip '+(!selLk?'on':'')+'" data-v="">None</button>'+l.map(c=>`<button class="chip ${c.id===selLk?'on':''}" data-v="${c.id}">${c.kind==='ds'?'📝':'🎤'} ${esc(String(c.title).replace(/\s*\([^)]*\)\s*$/,'').slice(0,24))} · ${new Date(c.date+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</button>`).join('')})()}</div></div>
     <div class="field"><label>Colour</label><div class="colrow" id="e-col"><button class="chip auto ${!selCol?'on':''}" data-c="">Auto</button>${PAL.map(c=>`<button class="sw ${c===selCol?'on':''}" data-c="${c}" style="--c:${c}"></button>`).join('')}</div></div>
@@ -2435,7 +2488,7 @@ function delEvent(id,occ){
     const done=msg=>{sv();if(cur==='calendar')rCal();if(cur==='home')rToday();toast(msg,{label:'Undo',fn:()=>{const j=cal.findIndex(x=>x.id===id),o=JSON.parse(snap);if(j>=0)cal[j]=o;else cal.splice(Math.min(i,cal.length),0,o);sv();if(cur==='calendar')rCal();if(cur==='home')rToday()}})};
     openSheet(`<h2>Delete repeating event</h2><div class="sub" style="margin-bottom:12px">${esc(c.title)} · ${esc(EREP[c.rep])}</div>
       <button class="btn danger" id="dr-1">Only this day (${esc(new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))})</button>
-      <button class="btn danger" id="dr-2">This day and all following</button>
+      <button class="btn danger" id="dr-2">This and following</button>
       <button class="btn danger" id="dr-3">The whole series</button>
       <button class="btn" onclick="closeSheet()">Cancel</button>`);
     $('dr-1').onclick=()=>{closeSheet();if(d===c.date&&!c.until&&false){}c.skip=(c.skip||[]).concat(d);done('This day deleted')};
@@ -2639,7 +2692,7 @@ function buildDigits(svg,nd,colon){
   return[...svg.querySelectorAll('g > g')];
 }
 let DG=[],SD=[],dKey='';
-function fDur(){return(F.kind==='break'?MODES[F.mode].brk:MODES[F.mode].min)*60+(F.status==='idle'?0:(F.extra||0))}
+function fDur(){return(F.kind==='break'?MODES[F.mode].brk:(F.cust||MODES[F.mode].min))*60+(F.status==='idle'?0:(F.extra||0))}
 function fRemain(){
   if(F.status==='run')return Math.max(0,Math.round((F.end-Date.now())/1000));
   if(F.status==='pause')return F.rem;
@@ -2759,7 +2812,7 @@ function fPauseCheck(){
   const m=Math.floor((fDur()-F.rem)/60);
   if(F.kind==='focus'&&m>=1){F.start=F.start||F.pAt-m*60000;fLog(F.pAt,m);toast('Paused over 3 min · session saved to your calendar ('+m+' min)')}
   else toast('Paused over 3 min · session ended');
-  F.status='idle';F.kind='focus';F.pAt=0;sv();if(cur==='focus'){fRender(true,true);rStats()}
+  F.status='idle';F.cust=0;F.kind='focus';F.pAt=0;sv();if(cur==='focus'){fRender(true,true);rStats()}
 }
 function fStart(){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){window._ac=window._ac||new AC();window._ac.resume&&window._ac.resume()}}catch(e){}
@@ -2768,13 +2821,13 @@ function fStart(){
 }
 function fElapsedMin(){return Math.floor((fDur()-fRemain())/60)}
 function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
-  const M=MODES[F.mode];F.status='done';F.rem=0;const EM=Math.max(M.min,Math.round(fDur()/60));
+  const M=MODES[F.mode];F.status='done';F.rem=0;const EM=Math.max(F.cust||M.min,Math.round(fDur()/60));
   let resc=false;if(F.kind==='focus'){resc=shs.resc&&nowMin()>=1080&&noWorkToday()}
   if(F.kind==='focus'){
     const tt=fTitle();fhist.push({task:tt||'Focus',min:EM,date:fk(),ts:Date.now(),mode:F.mode,subj:fSubj()});
     if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,EM);
     {const s=F.start||Date.now()-EM*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+EM));cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+EM+' min',color:FROST,kind:'focus'})}
-    sv();gain(F.mode==='intense'?Math.round(M.xp*1.25):M.xp,null,null,null,fSubj());if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);if(resc)setTimeout(()=>{gain(15,innerWidth/2,innerHeight*.4);toast('🛟 Smallest win: +15 XP')},1500);
+    sv();try{window.PW&&PW.focusDone&&PW.focusDone(F.taskId,EM,true)}catch(e){}gain(F.cust?Math.max(5,Math.round(M.xp*F.cust/M.min)):F.mode==='intense'?Math.round(M.xp*1.25):M.xp,null,null,null,fSubj());if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);if(resc)setTimeout(()=>{gain(15,innerWidth/2,innerHeight*.4);toast('🛟 Smallest win: +15 XP')},1500);
   }else sv();
   sv();vib(80);chime();
   if(cur!=='focus')toast(F.kind==='focus'?'Focus session complete · +'+xpn(F.mode==='intense'?Math.round(M.xp*1.25):M.xp)+' XP':'Break is over');
@@ -2788,14 +2841,14 @@ async function fStop(){
   const m=fElapsedMin();
   const ok=await ask({title:'End session?',msg:F.kind==='focus'?(m>=1?m+' min will be logged and added to your calendar.':'Nothing to log yet.'):'The break will end.',ok:'End session',cancel:'Keep going',danger:true});
   if(!ok)return;
-  if(F.kind==='focus'&&m>=1){fLog(F.status==='pause'&&F.pAt?F.pAt:Date.now(),m)}
-  F.status='idle';F.kind='focus';sv();fRender(true,true);
+  if(F.kind==='focus'&&m>=1){fLog(F.status==='pause'&&F.pAt?F.pAt:Date.now(),m);try{window.PW&&PW.focusDone&&PW.focusDone(F.taskId,m,false)}catch(e){}}
+  F.status='idle';F.cust=0;F.kind='focus';sv();fRender(true,true);
 }
 document.addEventListener('click',e=>{
   const mb=e.target.closest('.mode');
   if(mb){
     if(F.status!=='idle'){toast('Stop the session to change mode');vib(10);return}
-    F.mode=mb.dataset.m;F.kind='focus';sv();vib(12);
+    F.mode=mb.dataset.m;F.cust=0;F.kind='focus';sv();vib(12);
     document.querySelectorAll('.mode').forEach(b=>b.classList.toggle('on',b===mb));
     fRender(false,true);drawSide(true);fMsg('Pick a mode, then start when you are ready.');
     return;
@@ -2808,7 +2861,7 @@ document.addEventListener('click',e=>{
   else if(a==='resume'){if(F.pAt&&Date.now()-F.pAt>180000){fPauseCheck();return}F.end=Date.now()+F.rem*1000;F.status='run';F.pAt=0;sv();fRender(true);vib(15)}
   else if(a==='stop')fStop();
   else if(a==='break'){F.kind='break';F.status='idle';sv();fRender(true,true);fStart()}
-  else if(a==='reset'){F.kind='focus';F.status='idle';sv();fRender(true,true)}
+  else if(a==='reset'){F.kind='focus';F.cust=0;F.status='idle';sv();fRender(true,true)}
 });
 setInterval(()=>{try{if(cur==='home'){hhLoc();rHH()}}catch(e){}},60000);
 setInterval(()=>{try{hhTick();rbTick();bonusSweep();commitSweep()}catch(e){}},8000);setInterval(()=>{try{if(rtimer)rtRender()}catch(e){}},1000);setTimeout(()=>{try{bonusSweep();commitSweep();rtRender();svRender();rRescue()}catch(e){}},1500);setTimeout(()=>{try{hhTick()}catch(e){}},600);
@@ -3661,7 +3714,7 @@ function vMeth(id){
   let h=backBar('Key methods','<button class="pmini" data-a="printMeth" data-i="'+id+'" aria-label="Print">⎙</button>');
   h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(l.title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[l.subj].n+' · each method with when to use it, why it works, the model write-up and an example</div>';
   if(live[key])h+=liveBox(key);
-  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';h+='<button class="btn '+(l.mt?'':'primary')+'" style="margin-top:12px" data-a="mkMeth" data-i="'+id+'">'+(l.mt?'Write a new version':'Write the key methods')+'</button>'}
+  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';h+='<button class="btn '+(l.mt?'':'primary')+'" style="margin-top:12px" data-a="mkMeth" data-i="'+id+'">'+(l.mt?'Redo':'Key methods')+'</button>'}
   h+='</div>';
   if(l.mt&&!live[key])h+='<div class="card"><div class="doc" id="methdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
   return h;
@@ -3692,7 +3745,7 @@ function vMBook(subj){
   h+='<div class="card"><div class="sub">'+(ls.length?ls.length+' chapter'+(ls.length>1?'s':''):'No chapter yet')+(kt?' + the cross-chapter methods':'')+'. Open a lesson to write the methods of a chapter.</div>';
   if(live['KT'+subj])h+=liveBox('KT'+subj);
   else{if(errs['KT'+subj])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs['KT'+subj])+'</div>';
-    h+='<button class="btn '+(kt?'':'primary')+'" style="margin-top:12px" data-a="mkMethT" data-i="'+subj+'">'+(kt?'Rewrite the cross-chapter methods':'Add the cross-chapter methods'+(subj==='maths'?' (récurrence, absurde, double inclusion…)':''))+'</button>'}
+    h+='<button class="btn '+(kt?'':'primary')+'" style="margin-top:12px" data-a="mkMethT" data-i="'+subj+'">'+(kt?'Redo cross-chapter methods':'Cross-chapter methods')+'</button>'}
   h+='</div>';
   if(kt||ls.length)h+='<div class="card"><div class="doc" id="mbookdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
   return h;
@@ -3709,7 +3762,7 @@ function methCard(){
   subs.forEach(s=>{const d=S.lessons.filter(l=>l.subj===s&&l.status==='done'),n=d.filter(l=>l.mt).length,miss=d.length-n;
     h+='<button class="prow" style="--c:'+C.sc(s)+'" data-a="mbook" data-i="'+s+'"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+n+' of '+d.length+' chapters'+((S.set.kt||{})[s]?' · cross-chapter ✓':'')+'</div></span>'+ico.chev+'</button>'});
   if(live.KALL)h+=liveBox('KALL');else{if(errs.KALL)h+='<div class="hidecorr">'+esc(errs.KALL)+'</div>';
-    const miss=S.lessons.filter(l=>l.status==='done'&&!l.mt).length;if(miss)h+='<button class="btn" data-a="mkMethAll">Write the missing chapters ('+miss+')</button>'}
+    const miss=S.lessons.filter(l=>l.status==='done'&&!l.mt).length;if(miss)h+='<button class="btn" data-a="mkMethAll">Write chapters ('+miss+')</button>'}
   return h+'</div>';
 }
 
@@ -3719,7 +3772,7 @@ function memCard(){
   let h='<div class="card"><div class="cardhead"><div class="lbl">AI memory</div><div class="gpill '+(memOn()?'g-hi':'g-lo')+'" data-a="memTog" style="cursor:pointer">'+(memOn()?'On':'Off')+'</div></div>';
   h+='<div class="sub" style="margin:-2px 0 10px">'+have+' of '+done.length+' read lessons have a memory note: a short summary with the links between your lessons. The AI reuses it instead of re-reading whole lessons, and it also knows your grades and recurring mistakes, so exams and prep sheets cost fewer tokens and aim at your weak points.</div>';
   if(live.MEM)h+=liveBox('MEM');
-  else{if(errs.MEM)h+='<div class="hidecorr">'+esc(errs.MEM)+'</div>';if(have<done.length)h+='<button class="btn" data-a="buildMem">Build the missing notes ('+(done.length-have)+')</button>'}
+  else{if(errs.MEM)h+='<div class="hidecorr">'+esc(errs.MEM)+'</div>';if(have<done.length)h+='<button class="btn" data-a="buildMem">Build notes ('+(done.length-have)+')</button>'}
   return h+'</div>';
 }
 function vLessons(){
@@ -3790,7 +3843,7 @@ function gradeCard(){
 function vExams(){
   const td=iso(),allx=examList(),all=allx.filter(x=>!x.vt);
   const past=all.filter(x=>x.date<=td||S.exams[x.id]),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
-  let h='<button class="btn primary" data-a="fault" style="margin:0 0 12px">🎯 DS made of my own faults</button>';h+=gradeCard()+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
+  let h='<button class="btn primary" data-a="fault" style="margin:0 0 12px">🎯 DS from my faults</button>';h+=gradeCard()+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ Add an exam by hand</button>';
   if(past.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Past exams</div></div>'+inFolders('exams',past,x=>(S.exams[x.id]||{}).folder||'',x=>exRow('exams',x))}
   if(up.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div><span class="sub">'+up.length+'</span></div>'+up.slice(0,4).map(x=>exRow('exams',x)).join('')}
   return h;
@@ -3865,7 +3918,7 @@ function vGrades(){
   // per-subject summary with trend
   const sub=C.LSUBJ.map(s=>{const x=rs.filter(r=>r.subj===s);if(!x.length)return '';const a=sat?x.reduce((p,r)=>p+r.v,0)/x.length:wavg(x,r=>r.v),k=Math.min(3,Math.floor(x.length/2)),tr=k?(x.slice(-k).reduce((p,r)=>p+r.v,0)/k-x.slice(0,k).reduce((p,r)=>p+r.v,0)/k):null;
     return '<button class="prow" style="--c:'+C.sc(s)+'" data-a="subj" data-i="'+s+'"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+x.length+' · avg '+a.toFixed(1)+(tr==null?'':' · '+(tr>0.05?'▲ +':tr<-0.05?'▼ ':'= ')+(Math.abs(tr)>0.05?tr.toFixed(1):'steady'))+'</div></span>'+spark(x.map(r=>r.v),C.sc(s))+'</button>'}).join('');
-  if(c.subj!=='all'&&!sat){const e2=cal.filter(e=>e.subj===c.subj&&e.date>=iso()&&['ds','colle','vt'].includes(e.kind)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,3);h+=subjProj(c.subj,allRecs().filter(r=>r.subj===c.subj),e2,0)+'<button class="btn" style="margin:0 0 12px" data-a="subj" data-i="'+c.subj+'">Open the '+SUBJ[c.subj].n+' page ›</button>'}
+  if(c.subj!=='all'&&!sat){const e2=cal.filter(e=>e.subj===c.subj&&e.date>=iso()&&['ds','colle','vt'].includes(e.kind)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,3);h+=subjProj(c.subj,allRecs().filter(r=>r.subj===c.subj),e2,0)+'<button class="btn" style="margin:0 0 12px" data-a="subj" data-i="'+c.subj+'">'+SUBJ[c.subj].n+' page ›</button>'}
   if(sub)h+='<div class="card"><div class="lbl">By subject</div>'+sub+'</div>';
   h+=effortCard();
   if(rs.length)h+='<div class="card"><div class="lbl">All entries</div>'+rs.slice().reverse().map(r=>'<button class="prow" style="--c:'+C.sc(r.subj)+'" data-a="rec" data-i="'+r.kind+'|'+r.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(r.title)+'</div><div class="s">'+(r.cat==='vocab'?'Vocab test':r.kind==='exams'?'Exam':'Colle')+' · coef '+fcoef(coefOf(r))+' · '+fd(r.date)+(r.sat?' · '+SAT[r.sat-1]:'')+'</div></span><span class="gpill '+(sat?'g-mid':gcls(r.v))+'">'+(sat?SAT[r.v-1]:r.v)+'</span>'+ico.chev+'</button>').join('')+'</div>';
@@ -3968,7 +4021,7 @@ function vFiche(id){
   let h=backBar('Résumé','<button class="pmini" data-a="printFiche" data-i="'+id+'" aria-label="Print">⎙</button>');
   h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[o.subj].n+' · résumé of what to know'+(o.fiUsed?'<br>From: '+esc(o.fiUsed):'')+'</div>';
   if(live[key])h+=liveBox(key);
-  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';h+='<button class="btn '+(o.fiAt?'':'primary')+'" style="margin-top:12px" data-a="mkFiche" data-i="'+id+'">'+(o.fiAt?'Write a new version':'Write the résumé')+'</button>'}
+  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';h+='<button class="btn '+(o.fiAt?'':'primary')+'" style="margin-top:12px" data-a="mkFiche" data-i="'+id+'">'+(o.fiAt?'Redo':'Make résumé')+'</button>'}
   h+='</div>';
   if(o.fiAt&&!live[key])h+='<div class="card"><div class="doc" id="fichedoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
   return h;
@@ -4028,7 +4081,7 @@ function vTDpage(id){
   let h=backBar(t.title||SUBJ[t.subj].n+' TD','<button class="pmini" data-a="tdEdit" data-i="'+id+'" aria-label="Rename">✎</button><button class="pmini" data-a="delTD" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(t.subj)+'">'+SUBJ[t.subj].n+'</span><span class="pill">'+fdl(t.date)+'</span>'+folderPill('tds',id)+(t.min?'<span class="pill">⏱ '+hdur(t.min)+'</span>':'')+'</div>';
   h+='<div class="slot"><div class="hd"><div class="lbl">TD sheet</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|files">+ Add</button></div>'+fileRows(t.files,'td',id)+'</div>';
-  h+='<button class="btn" data-a="logMist" data-i="td:'+id+'" style="margin-bottom:10px">📓 Log a mistake from this TD</button><div class="slot"><div class="hd"><div class="lbl">My solutions</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|mine">+ Add</button></div>'+(fileRows(t.mine,'tdmine',id)||'<div class="sub">Drop your own work here (photos or PDF) to keep it with the TD.</div>')+'</div>';
+  h+='<button class="btn" data-a="logMist" data-i="td:'+id+'" style="margin-bottom:10px">📓 Log a mistake</button><div class="slot"><div class="hd"><div class="lbl">My solutions</div><button class="addf" data-a="tdAddFile" data-i="'+id+'|mine">+ Add</button></div>'+(fileRows(t.mine,'tdmine',id)||'<div class="sub">Drop your own work here (photos or PDF) to keep it with the TD.</div>')+'</div>';
   h+=liveBox(k)+errBox(k);
   if(!live[k]&&!nx)h+='<button class="btn primary" data-a="tdRead" data-i="'+id+'">Read the TD</button>';
   h+='</div>';
@@ -4046,7 +4099,7 @@ function vTDpage(id){
   }
   if(nx){
     h+='<div class="card"><div class="lbl">Corrigé</div><div class="sub" style="margin-bottom:10px">'+(t.coAt?'Written '+new Date(t.coAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+(t.coNote?' · '+esc(t.coNote):''):'A full, rigorous correction of every exercise, written as on a copy and based on your course.')+'</div>'+liveBox(K)+errBox(K);
-    if(!live[K]){if(t.coAt)h+='<button class="btn primary" data-a="tdCo" data-i="'+id+'">Open the corrigé</button>';h+='<button class="btn '+(t.coAt?'':'primary')+'" data-a="mkTdCo" data-i="'+id+'">'+(t.coAt?'Write a new corrigé':'Generate the corrigé')+'</button>'}
+    if(!live[K]){if(t.coAt)h+='<button class="btn primary" data-a="tdCo" data-i="'+id+'">Open the corrigé</button>';h+='<button class="btn '+(t.coAt?'':'primary')+'" data-a="mkTdCo" data-i="'+id+'">'+(t.coAt?'Redo corrigé':'Make corrigé')+'</button>'}
     h+='</div>';
   }
   return h;
@@ -4104,7 +4157,7 @@ function mistakeCard(){
 
 /* ----- COLLES ----- */
 function vColles(){
-  let h='<button class="btn primary" data-a="live" style="margin:0 0 12px">🎙 Colle Live: be questioned out loud</button><div class="card"><div class="cardhead"><div class="lbl">Programmes de colles</div></div><div class="sub" style="margin:-4px 0 12px">Maths & physics: drop the weekly programme, get a prep sheet built from your lessons.</div>';
+  let h='<button class="btn primary" data-a="live" style="margin:0 0 12px">🎙 Colle Live</button><div class="card"><div class="cardhead"><div class="lbl">Programmes de colles</div></div><div class="sub" style="margin:-4px 0 12px">Maths & physics: drop the weekly programme, get a prep sheet built from your lessons.</div>';
   h+=inFolders('colles',S.progs.slice().sort((a,b)=>b.date.localeCompare(a.date)),p=>p.folder||'',p=>{
     const r=p.chapters&&p.chapters.length?Math.round(100*p.chapters.filter(c=>c.ready).length/p.chapters.length):null;
     const stt=live['P'+p.id]?'Working…':p.sheetAt?'Sheet ready':p.chapters&&p.chapters.length?'Programme read':p.err?'Failed — open to retry':'Not read yet';
@@ -4141,7 +4194,7 @@ function vRec(kind,id){
   if(r.copy&&r.copy.length||(isEx&&r.corr.length)){
     h+='<div class="card"><div class="lbl">AI review of my copy</div>'+liveBox(key)+errBox(key);
     if(r.fb)h+='<div class="doc" id="fbtext"></div>';
-    if(!live[key])h+='<button class="btn" data-a="feedback" data-i="'+kind+'|'+id+'">'+(r.fb?'Redo the AI review':'Ask the AI to find my mistakes')+'</button>';
+    if(!live[key])h+='<button class="btn" data-a="feedback" data-i="'+kind+'|'+id+'">'+(r.fb?'Redo AI review':'Find my mistakes')+'</button>';
     h+='</div>';
   }
   return h;
@@ -4155,7 +4208,7 @@ function vProg(id){
   h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span>'+folderPill('progs',id)+(p.min?'<span class="pill">⏱ '+hdur(p.min)+'</span>':'')+'</div>';
   h+=fileRows(p.files,'prog',id)+liveBox(k)+errBox(k)+(p.err&&!errs[k]?'<div class="warnbox">'+esc(p.err)+'</div>':'');
   if(!live[k]){
-    if(!p.chapters||!p.chapters.length)h+='<button class="btn primary" data-a="parseProg" data-i="'+id+'">Read the programme and build my sheet</button>';
+    if(!p.chapters||!p.chapters.length)h+='<button class="btn primary" data-a="parseProg" data-i="'+id+'">Build my sheet</button>';
   }
   h+='</div>';
   if(p.chapters&&p.chapters.length){
@@ -4170,11 +4223,11 @@ function vProg(id){
       h+='<div class="sub" style="margin-bottom:6px">Made '+new Date(p.sheetAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+(p.noCourse?'':' from '+(p.used||[]).length+' of your lesson'+((p.used||[]).length>1?'s':''))+'</div>';
       if(p.audit)h+='<div class="sub" style="margin-bottom:8px">'+(p.audit.fixed?'✓ Checked against your programme: '+p.audit.fixed+' point'+(p.audit.fixed>1?'s':'')+' fixed ('+esc(p.audit.issues.join(' · ')).slice(0,220)+')':p.audit.ok?'✓ Checked against your programme: theme, exclusions and format OK':'⚠︎ Could not fix: '+esc((p.audit.issues||[]).join(' · ')).slice(0,260)+'. Regenerate if it matters.')+'</div>';
       if(p.noCourse)h+='<div class="warnbox">'+(S.lessons.some(l=>l.subj===p.subj)?'Your '+SUBJ[p.subj].n+' lessons were not read yet, so this sheet uses general prépa knowledge, not your course. Open Lessons → “Read all now”, then generate a new sheet.':'No lesson of '+SUBJ[p.subj].n+' was uploaded, so this sheet uses general prépa knowledge, not your course.')+'</div>';
-      h+='<button class="btn primary" data-a="openSheet" data-i="'+id+'">Open exercises & corrections</button>';
+      h+='<button class="btn primary" data-a="openSheet" data-i="'+id+'">Exercises & corrections</button>';
     }
     if(!live[k]){const T=tl(id);if(!p.sheetAt)h+='<button class="btn primary" data-a="mkSheet" data-i="'+id+'">Generate the sheet</button>';h+=tiles([p.sheetAt?T('mkSheet','🔄','New sheet','regenerate'):'',T('impSheet','⬆','Import a sheet','from a file'),T('promptSheet','📋','Prompt for Claude','copy')])}
     h+='</div>';
-    h+='<div class="card"><div class="lbl">Revision résumé</div><div class="sub" style="margin-bottom:10px">Everything to know for this programme, built from your lessons: priorities, definitions and formulas, methods, traps, and a last-minute checklist.</div>'+liveBox('F'+id)+errBox('F'+id)+(live['F'+id]?'':'<button class="btn '+(p.fiAt?'':'primary')+'" data-a="fiche" data-i="p|'+id+'">'+(p.fiAt?'Open the résumé':'Generate the résumé')+'</button>')+'</div>';
+    h+='<div class="card"><div class="lbl">Revision résumé</div><div class="sub" style="margin-bottom:10px">Everything to know for this programme, built from your lessons: priorities, definitions and formulas, methods, traps, and a last-minute checklist.</div>'+liveBox('F'+id)+errBox('F'+id)+(live['F'+id]?'':'<button class="btn '+(p.fiAt?'':'primary')+'" data-a="fiche" data-i="p|'+id+'">'+(p.fiAt?'Open résumé':'Make résumé')+'</button>')+'</div>';
   }
   return h;
 }
@@ -4480,7 +4533,7 @@ A.folder=i=>{
 A.fold=i=>{st.fc=st.fc||{};st.fc[i]=!st.fc[i];render()};
 A.foldren=i=>{
   const k=i.indexOf('|'),gk=i.slice(0,k),name=i.slice(k+1);
-  openSheet('<h2 class="sh">Rename folder</h2><div class="field"><input id="fo-r" maxlength="40" value="'+esc(name)+'"></div><button class="btn primary" id="fo-rs">Save</button><button class="btn danger" id="fo-rd">Remove folder (keep the items)</button>');
+  openSheet('<h2 class="sh">Rename folder</h2><div class="field"><input id="fo-r" maxlength="40" value="'+esc(name)+'"></div><button class="btn primary" id="fo-rs">Save</button><button class="btn danger" id="fo-rd">Remove folder</button>');
   const go2=nn=>{fItems(gk).forEach(o=>{if(o.folder===name){if(nn)o.folder=nn;else delete o.folder}});saveGk(gk);closeSheet();render()};
   $('fo-rs').onclick=()=>{const v=$('fo-r').value.trim();if(v)go2(v)};$('fo-rd').onclick=()=>go2('');
 };
@@ -4758,7 +4811,7 @@ A.mkLC=i=>{if(needKey())mkLC(i)};
 A.printLC=async i=>{await C.loadKatex();printHtml(C.md((await C.getText('LC'+i))||''))};
 A.editLC=async i=>{
   const l=S.lessons.find(x=>x.id===i);if(!l)return;const cur0=(await C.getText('LC'+i))||'';
-  openSheet('<h2 class="sh">Edit the lesson</h2><div class="sub" style="margin:-4px 0 10px">Change anything you like (Markdown, formulas between $…$). When you save, the app compares with the previous version and learns your preferences for the next lessons.</div><textarea id="lc-t" style="width:100%;height:55vh;font-size:13px;line-height:1.5;border-radius:12px;padding:10px;background:var(--surf2);color:var(--text);border:1px solid var(--line)" spellcheck="false"></textarea><button class="btn primary" id="lc-s" style="margin-top:10px">Save and let the app learn</button>');
+  openSheet('<h2 class="sh">Edit the lesson</h2><div class="sub" style="margin:-4px 0 10px">Change anything you like (Markdown, formulas between $…$). When you save, the app compares with the previous version and learns your preferences for the next lessons.</div><textarea id="lc-t" style="width:100%;height:55vh;font-size:13px;line-height:1.5;border-radius:12px;padding:10px;background:var(--surf2);color:var(--text);border:1px solid var(--line)" spellcheck="false"></textarea><button class="btn primary" id="lc-s" style="margin-top:10px">Save</button>');
   $('lc-t').value=cur0;
   $('lc-s').onclick=async()=>{
     const nt=$('lc-t').value;if(nt.trim().length<100){toast('The text is too short');return}
@@ -4919,8 +4972,10 @@ function planItems(){
   tasks.filter(isOpen).forEach(t=>{
     let pri=0,sub='';const lk=t.lk&&cal.find(c=>c.id===t.lk);
     if(t.due&&t.due<td){pri=90;sub='Overdue'}else if(t.due===td){pri=84;sub='Due today'}else if(t.pin){pri=66;sub='Pinned'}
-    if(lk&&lk.date>=td){const d=dd(lk.date),p2=70+Math.max(0,8-d)*3+boost(lk);if(p2>pri){pri=p2;sub='For '+String(lk.title).replace(/\s*\([^)]*\)\s*$/,'')}}
-    if(pri)push({id:'t:'+t.id,ic:'✅',title:t.text,sub,min:25,pri,go:{k:'task',id:t.id}});
+    const gen=t.gen&&lk,nm=s=>String(s).replace(/^\S+\s/,'').replace(/^✓\s*/,'').replace(/\s*\([^)]*\)\s*$/,'').trim().toLowerCase();
+    if(lk&&lk.date>=td){const d=dd(lk.date),p2=70+Math.max(0,8-d)*3+boost(lk);if(p2>pri){pri=p2;sub=gen?(lk.date===td?'Planned today':'Planned '+fd(lk.date)):(nm(lk.title)===nm(t.text)?'':'For '+String(lk.title).replace(/\s*\([^)]*\)\s*$/,''))}}
+    let mn=25,fix=null;try{if(window.PW&&PW.playMin)mn=PW.playMin(t);if(gen&&lk.date===td&&lk.time)fix=lk.time+' – '+(lk.endTime||lk.time)}catch(e){}
+    if(pri)push({id:'t:'+t.id,ic:'✅',title:t.text,sub,min:mn,pri,fix,subj:t.gen&&lk?lk.subj:'',go:{k:'task',id:t.id}});
   });
   // nothing planned: gentle fallback
   const seen=new Set();let l=items.filter(x=>!seen.has(x.id)&&seen.add(x.id));
@@ -4937,6 +4992,7 @@ function planSlots(items){
   const gaps=[];let cur=t;busy.forEach(b=>{if(b[1]<=cur)return;if(b[0]>cur)gaps.push([cur,Math.min(b[0],end)]);cur=Math.max(cur,b[1])});if(cur<end)gaps.push([cur,end]);
   let gi=0,pos=gaps.length?gaps[0][0]:null;
   return items.map(it=>{
+    if(it.fix)return Object.assign({},it,{at:it.fix});
     while(gi<gaps.length&&(gaps[gi][1]-pos<Math.min(it.min,20))){gi++;pos=gi<gaps.length?gaps[gi][0]:null}
     if(gi>=gaps.length)return Object.assign({},it,{at:null});
     const len=Math.min(it.min,gaps[gi][1]-pos),s=pos;pos+=len+5;
@@ -4945,7 +5001,7 @@ function planSlots(items){
 }
 function planGo(id){
   const it=planItems().find(x=>x.id===id)||{go:null};const g=it.go;if(!g)return;
-  if(g.k==='task'){F.ref=null;F.taskId=g.id;const t=tasks.find(x=>x.id===g.id);F.task=t?t.text:'';sv();show('focus');return}
+  if(g.k==='task'){F.ref=null;F.taskId=g.id;const t=tasks.find(x=>x.id===g.id);F.task=t?t.text:'';sv();show('focus');try{window.PW&&PW.play&&PW.play(t)}catch(e){}return}
   show('prepa');
   if(g.k==='prog'){A.tab('colles');A.prog(g.id)}
   else if(g.k==='tab')A.tab(g.id);
@@ -4958,10 +5014,10 @@ function planUp(id){const l=planItems().map(x=>x.id),i=l.indexOf(id);if(i<1)retu
 function planCard(){
   const hr=new Date().getHours(),td=iso();
   if(hr>=22||hr<5)return null;
-  const l=planSlots(planItems());
+  const l=planSlots(planItems()).map(x=>{let c='';try{if(x.subj&&C.sc)c=C.sc(x.subj)}catch(e){}return Object.assign({},x,{col:c})});
   let xm=null;try{xm=examMode()}catch(_){}
   const total=l.reduce((a,x)=>a+x.min,0);
-  return{items:l,total,xm,title:hr>=21?'Wind down':hr<12?'Today · morning':hr<18?'Today · afternoon':'Today · evening'};
+  return{items:l,total,xm,title:hr>=21?'Wind down':hr<12?'Plan · morning':hr<18?'Plan · afternoon':'Plan · evening'};
 }
 
 /* ===== One page per subject + grade projections ===== */
@@ -5190,7 +5246,7 @@ A.debrief=id=>{
   let chunks=[],mr=null,t0=0,tick=null;
   openSheet('<h2 class="sh">🎙 Debrief</h2><div class="sub" style="margin-bottom:10px">Tell it in your own words, about a minute: what was asked, where you got stuck, how the colleur was. I turn it into notes.</div>'+
    '<button class="btn primary" id="db-rec">● Start recording</button><div class="sub" id="db-t" style="text-align:center;margin:8px 0"></div>'+
-   '<div class="field" style="margin-top:10px"><label>Or type / dictate it (keyboard microphone)</label><textarea id="db-x" rows="4" maxlength="3000" placeholder="They asked me… I blocked on…"></textarea></div><button class="btn" id="db-send">Make my notes from the text</button>');
+   '<div class="field" style="margin-top:10px"><label>Or type / dictate it (keyboard microphone)</label><textarea id="db-x" rows="4" maxlength="3000" placeholder="They asked me… I blocked on…"></textarea></div><button class="btn" id="db-send">Make notes</button>');
   const stop=()=>{clearInterval(tick);try{rec&&rec.stream.getTracks().forEach(t=>t.stop())}catch(_){}};
   $('db-rec').onclick=async()=>{
     if(mr&&mr.state==='recording'){mr.stop();return}
@@ -5221,7 +5277,7 @@ function vFormu(subj){
   let h=backBar('Formulaire','<button class="pmini" data-a="printFormu" data-i="'+subj+'" aria-label="Print">⎙</button>');
   h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+SUBJ[subj].n+'</div><div class="sub" style="margin-top:6px">A dense, printable summary (definitions, theorems, formulas, key methods, traps) built only from your own lessons.</div>';
   h+='<div class="lbl" style="margin-top:12px">Lessons included</div><div class="chips" style="margin-top:6px">'+(ls.length?ls.map(l=>'<button class="chip '+(ex.includes(l.id)?'':'on')+'" data-a="fmTog" data-i="'+subj+'|'+l.id+'">'+esc(l.title)+'</button>').join(''):'<span class="sub">No lesson yet.</span>')+'</div>';
-  if(live[key])h+=liveBox(key);else{h+=errBox(key);if(ls.length)h+='<button class="btn primary" style="margin-top:12px" data-a="mkFormu" data-i="'+subj+'">'+(fm.at?'Rewrite the formulaire':'Write the formulaire')+'</button>'}
+  if(live[key])h+=liveBox(key);else{h+=errBox(key);if(ls.length)h+='<button class="btn primary" style="margin-top:12px" data-a="mkFormu" data-i="'+subj+'">'+(fm.at?'Redo formulaire':'Make formulaire')+'</button>'}
   h+='</div><div class="card"><div class="doc" id="fmdoc"><div class="shim" style="height:64px"></div></div></div>';
   setTimeout(async()=>{const d=$('fmdoc');if(!d)return;const t=await C.getText(key);if(!t){d.innerHTML='<div class="sub">Not written yet.</div>';return}await C.loadKatex();d.innerHTML=C.md(t)},0);
   return h;
@@ -5408,14 +5464,14 @@ function vList(id){
   h+='<div class="card"><div class="pcard-h"><div class="ring2"><svg viewBox="0 0 62 62"><circle class="tr" cx="31" cy="31" r="26"/><circle class="pg" cx="31" cy="31" r="26" stroke-dasharray="163.4" stroke-dashoffset="163.4" data-off="'+(163.4*(1-p)).toFixed(1)+'"/></svg><b>'+Math.round(p*100)+'%</b></div><div style="flex:1"><div style="font-weight:700;font-size:17px">'+k+' of '+n+' known</div><div class="sub">'+esc(l.la)+' ↔ '+esc(l.lb)+'</div></div></div>';
   h+='<div class="field" style="margin-top:14px"><label>Show first</label><div class="chips" id="v-dir"><button class="chip '+(vopt.dir==='ab'?'on':'')+'" data-v="ab">'+esc(l.la)+'</button><button class="chip '+(vopt.dir==='ba'?'on':'')+'" data-v="ba">'+esc(l.lb)+'</button><button class="chip '+(vopt.dir==='mix'?'on':'')+'" data-v="mix">Mixed</button></div></div>';
   h+='<button class="btn primary" data-a="vstart" data-i="'+id+'|all">Study all '+n+' words</button>';
-  if(k&&n-k>0)h+='<button class="btn" data-a="vstart" data-i="'+id+'|new">Only the '+(n-k)+' I don\'t know yet</button>';
+  if(k&&n-k>0)h+='<button class="btn" data-a="vstart" data-i="'+id+'|new">Only the '+(n-k)+' unknown</button>';
   h+='</div>';
   if(l.fresh)h+='<div class="warnbox">The AI read this from your photo. Check the words below and fix or delete anything wrong.</div>';
   h+=liveBox('VOC')+errBox('VOC');
   h+='<div class="card"><div class="cardhead"><div class="lbl">Words</div>'+(l.fav?'':'<button class="addf" data-a="vaddPhoto" data-i="'+id+'">+ More photos</button>')+'</div><div class="vhead"><span>'+esc(l.la)+'</span><span>'+esc(l.lb)+'</span><span></span></div>';
   h+=l.items.map(it=>'<div class="vrow'+(it.k>0?' ok':'')+'"><input data-vin="a" data-k="'+id+'|'+it.id+'" value="'+esc(it.a)+'" autocapitalize="off" autocomplete="off" spellcheck="false"><input data-vin="b" data-k="'+id+'|'+it.id+'" value="'+esc(it.b)+'" autocapitalize="off" autocomplete="off" spellcheck="false"><button class="pmini star '+((l.fav||it.star)?'on':'')+'" data-a="vstar" data-i="'+id+'|'+it.id+'" aria-label="Favorite">'+starSvg(l.fav||it.star)+'</button><button class="pmini" data-a="vdelItem" data-i="'+id+'|'+it.id+'" aria-label="Delete word">'+ico.x+'</button></div>').join('');
   if(!l.fav)h+='<button class="add" style="margin-top:10px" data-a="vaddItem" data-i="'+id+'">+ Add a word</button>';
-  if(k)h+='<button class="btn" data-a="vreset" data-i="'+id+'">Mark everything as unknown</button>';
+  if(k)h+='<button class="btn" data-a="vreset" data-i="'+id+'">All unknown</button>';
   return h+'</div>';
 }
 
@@ -5426,7 +5482,7 @@ function vStudy(){
   const head='<div class="vstats"><span class="a">'+svgNo+v.again.length+'</span><span class="m">'+(v.round>1?'Round '+v.round+' · ':'')+left+' left</span><span class="b">'+svgYes+v.known+'</span></div><div class="vprog"><i data-w="'+Math.round(100*(v.total-left)/Math.max(1,v.total))+'"></i></div>';
   if(!left){
     if(v.again.length){
-      return backBar(l.title)+head+'<div class="card" style="text-align:center;margin-top:14px"><div style="font-size:42px">💪</div><div style="font-size:20px;font-weight:700;margin:6px 0">Round '+v.round+' done</div><div class="sub">'+v.known+' known · '+v.again.length+' still to learn</div><button class="btn primary" data-a="vround">Keep going with the '+v.again.length+' left</button><button class="btn" data-a="back">Stop here</button></div>';
+      return backBar(l.title)+head+'<div class="card" style="text-align:center;margin-top:14px"><div style="font-size:42px">💪</div><div style="font-size:20px;font-weight:700;margin:6px 0">Round '+v.round+' done</div><div class="sub">'+v.known+' known · '+v.again.length+' still to learn</div><button class="btn primary" data-a="vround">Continue ('+v.again.length+' left)</button><button class="btn" data-a="back">Stop here</button></div>';
     }
     return backBar(l.title)+head+'<div class="card" style="text-align:center;margin-top:14px"><div style="font-size:42px">🎉</div><div style="font-size:20px;font-weight:700;margin:6px 0">All '+v.total+' words known</div><div class="sub">Nice. They come back in spaced reviews if you restart.</div><button class="btn primary" data-a="vstart" data-i="'+l.id+'|all">Restart</button><button class="btn" data-a="back">Back to the list</button></div>';
   }
@@ -5555,7 +5611,7 @@ async function vocabFromPhotos(files,lab,txt){
 }
 A.addVocab=()=>{
   let files=[];
-  openSheet('<h2 class="sh">Vocabulary list</h2><div class="sub" style="margin-bottom:12px">Photos of a book page, or a file (PDF, .txt, .csv) with general vocabulary such as linking words and useful expressions. If the file has no translations, the AI adds them. You can add several files.</div><div class="field"><label>Name (optional)</label><input id="v-t" placeholder="e.g. Unit 3 — Politics"></div><div id="v-f"></div><div class="two2"><button class="btn" id="v-cam">Add photos, a PDF or a text file</button></div><button class="btn primary" id="v-go">Make my cards</button>');
+  openSheet('<h2 class="sh">Vocabulary list</h2><div class="sub" style="margin-bottom:12px">Photos of a book page, or a file (PDF, .txt, .csv) with general vocabulary such as linking words and useful expressions. If the file has no translations, the AI adds them. You can add several files.</div><div class="field"><label>Name (optional)</label><input id="v-t" placeholder="e.g. Unit 3 — Politics"></div><div id="v-f"></div><div class="two2"><button class="btn" id="v-cam">Add files</button></div><button class="btn primary" id="v-go">Make my cards</button>');
   const draw=()=>{$('v-f').innerHTML=files.map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+'</small></span></div>').join('')};
   $('v-cam').onclick=async()=>{const fs=await C.pickFiles({accept:VACC});if(fs.length){files=files.concat(fs);draw()}};
   $('v-go').onclick=()=>{
@@ -5607,7 +5663,7 @@ C.hooks.askClaude=info=>new Promise(res=>{
   const d=$('dlg'),b=$('dbox');
   try{if(C.hooks.notify)C.hooks.notify({type:'claude',title:'Claude needs your OK',body:'Every other AI was tried first. Open Aether to allow or refuse.',key:'claude-ask'})}catch(e){}
   const li=(info.tried||[]).map(x=>'<li>'+esc(x)+'</li>').join('')||'<li>No other AI is set up.</li>';
-  b.innerHTML='<h3>Your free APIs are used up</h3><p>Use Claude for this one job? Every other API was tried first:</p><ul style="margin:6px 0 10px 18px;padding:0;font-size:12.5px;line-height:1.5;color:var(--dim);max-height:30vh;overflow:auto">'+li+'</ul><p style="font-size:12.5px;color:var(--dim)">Claude would use <b>'+esc(info.model)+'</b> · about '+info.est.toLocaleString('en')+' tokens in, up to '+info.max.toLocaleString('en')+' out'+(info.files?' · '+info.files+' picture(s)/page(s)':'')+'. This is paid on your Anthropic account.</p><div class="row2" style="margin-top:12px"><button class="btn" data-r="no">No, stop</button><button class="btn primary" data-r="once">Yes, once</button></div><button class="btn" style="margin-top:8px;width:100%" data-r="sess">Yes, and stop asking for 30 minutes</button>';
+  b.innerHTML='<h3>Your free APIs are used up</h3><p>Use Claude for this one job? Every other API was tried first:</p><ul style="margin:6px 0 10px 18px;padding:0;font-size:12.5px;line-height:1.5;color:var(--dim);max-height:30vh;overflow:auto">'+li+'</ul><p style="font-size:12.5px;color:var(--dim)">Claude would use <b>'+esc(info.model)+'</b> · about '+info.est.toLocaleString('en')+' tokens in, up to '+info.max.toLocaleString('en')+' out'+(info.files?' · '+info.files+' picture(s)/page(s)':'')+'. This is paid on your Anthropic account.</p><div class="row2" style="margin-top:12px"><button class="btn" data-r="no">No, stop</button><button class="btn primary" data-r="once">Yes, once</button></div><button class="btn" style="margin-top:8px;width:100%" data-r="sess">Yes · mute 30 min</button>';
   d.classList.add('show');
   b.onclick=e=>{const r=e.target.closest('[data-r]');if(!r)return;d.classList.remove('show');res(r.dataset.r)};
 });
@@ -5635,7 +5691,7 @@ function settings(){
     '<div class="field"><label>Anthropic workspace ID (only if Claude asks for it)</label><input id="s-ws" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="wrkspc_…" value="'+esc(S.set.ws||'')+'"></div>'+
     '<div class="field"><label>Claude for reading jobs</label><select id="s-mr"><option value="claude-haiku-5-5">Haiku 5.5 — cheapest (recommended)</option><option value="claude-sonnet-5-5">Sonnet 5.5</option><option value="claude-opus-5-5">Opus 5.5</option></select></div>'+
     '<div class="field"><label>Claude for writing jobs</label><select id="s-mw"><option value="claude-sonnet-5-5">Sonnet 5.5 — balanced (recommended)</option><option value="claude-haiku-5-5">Haiku 5.5 — cheaper</option><option value="claude-opus-5-5">Opus 5.5 — best, costs more</option></select></div>'+
-    gateHTML()+'<div class="field"><label>Meridian folder name</label><input id="s-n" value="'+esc(S.set.news)+'" autocapitalize="off"></div><button class="btn primary" id="s-s">Save</button><button class="btn" id="s-t">Test the key</button><div class="sub" id="s-r" style="margin-top:8px">Used so far: '+S.usage.n+' requests · '+S.usage.i.toLocaleString('en-GB')+' tokens in · '+S.usage.o.toLocaleString('en-GB')+' out</div><div class="sec2"><div class="lbl" style="margin:0">Calendar feed (iPhone)</div></div><div class="sub">Your colles and DS are already in Aether\'s calendar. To also get alerts from the iPhone Calendar app: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, then paste:</div><input id="s-u" readonly value="'+esc(icsUrl())+'" style="margin-top:8px"><button class="btn" id="s-c">Copy the link</button><button class="btn" id="s-re">Restore schedule events I deleted</button>'+(has?'<button class="btn danger" id="s-d">Remove my API key</button>':''));
+    gateHTML()+'<div class="field"><label>Meridian folder name</label><input id="s-n" value="'+esc(S.set.news)+'" autocapitalize="off"></div><button class="btn primary" id="s-s">Save</button><button class="btn" id="s-t">Test the key</button><div class="sub" id="s-r" style="margin-top:8px">Used so far: '+S.usage.n+' requests · '+S.usage.i.toLocaleString('en-GB')+' tokens in · '+S.usage.o.toLocaleString('en-GB')+' out</div><div class="sec2"><div class="lbl" style="margin:0">Calendar feed (iPhone)</div></div><div class="sub">Your colles and DS are already in Aether\'s calendar. To also get alerts from the iPhone Calendar app: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, then paste:</div><input id="s-u" readonly value="'+esc(icsUrl())+'" style="margin-top:8px"><button class="btn" id="s-c">Copy the link</button><button class="btn" id="s-re">Restore deleted</button>'+(has?'<button class="btn danger" id="s-d">Remove my API key</button>':''));
     $('s-mr').value=S.set.mread;$('s-mw').value=S.set.mwrite;
     const store=()=>{const a='',b=$('s-ck').value.replace(/\s+/g,'');readProvs();if(b&&!/^sk-ant-/.test(b))toast('That does not look like an Anthropic key (it starts with sk-ant-)');if(a)localStorage.setItem('p_gkey',a);if(b)localStorage.setItem('p_key',b);S.set.ws=$('s-ws').value.replace(/\s+/g,'');S.set.mread=$('s-mr').value;S.set.mwrite=$('s-mw').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
     $('s-pv').onclick=ev=>{const t=ev.target.closest('[data-pa]');if(!t)return;readProvs();const i=+t.dataset.pi,a=t.dataset.pa,L=C.provs();
@@ -5660,7 +5716,7 @@ function settings(){
     openSheet('<h2 class="sh">AI settings</h2><div class="field"><label>AI provider</label><div class="chips" id="s-p"><button class="chip '+(S.set.prov==='auto'?'on':'')+'" data-v="auto">Gemini + Claude backup</button><button class="chip '+(g?'on':'')+'" data-v="gemini">Gemini only</button><button class="chip '+(S.set.prov==='claude'?'on':'')+'" data-v="claude">Claude only</button></div></div>'+
     (g?'<div class="field"><label>Gemini API key</label><input id="s-k" type="text" name="aether-gemini-key" style="-webkit-text-security:disc" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="'+(has?'Saved on this phone — paste to replace':'Paste your key')+'"></div><div class="sub" style="margin:-4px 0 10px">Free: go to aistudio.google.com/apikey, sign in with a Google account, tap “Create API key”. No card needed. Free limits are small and can change, and on the free tier Google may use what you send to improve its products (your lessons and copies). The key stays on this phone only: not in backups, erased with “Forgot PIN”.</div><div class="field"><label>Model (you can type another id)</label><input id="s-m" list="s-ml" name="aether-gemini-model" value="'+esc(/^(gemini|gemma)/i.test(S.set.gmodel)?S.set.gmodel:'gemini-flash-latest')+'" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><datalist id="s-ml"><option value="gemini-flash-latest"><option value="gemini-flash-lite-latest"><option value="gemini-2.5-flash"><option value="gemini-2.5-pro"></datalist></div>'
     :'<div class="field"><label>Anthropic API key</label><input id="s-k" type="password" autocomplete="off" autocapitalize="off" placeholder="'+(has?'Saved on this phone — paste to replace':'sk-ant-…')+'"></div><div class="sub" style="margin:-4px 0 10px">Create it at console.anthropic.com → API keys, and add credit (billed separately from a Claude subscription). The key stays on this phone only.</div><div class="field"><label>Workspace ID (only if Claude asks for it)</label><input id="s-ws" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="wrkspc_…" value="'+esc(S.set.ws||'')+'"></div>'+'<div class="field"><label>Model</label><select id="s-m"><option value="claude-sonnet-5-5">Sonnet 5.5 — balanced (recommended)</option><option value="claude-opus-5-5">Opus 5.5 — best quality, costs more</option><option value="claude-haiku-5-5">Haiku 5.5 — cheapest, simpler sheets</option></select></div>')+
-    gateHTML()+'<div class="field"><label>Meridian folder name</label><input id="s-n" value="'+esc(S.set.news)+'" autocapitalize="off"></div><button class="btn primary" id="s-s">Save</button><button class="btn" id="s-t">Test the key</button><div class="sub" id="s-r" style="margin-top:8px">Used so far: '+S.usage.n+' requests · '+S.usage.i.toLocaleString('en-GB')+' tokens in · '+S.usage.o.toLocaleString('en-GB')+' out</div><div class="sec2"><div class="lbl" style="margin:0">Calendar feed (iPhone)</div></div><div class="sub">Your colles and DS are already in Aether\'s calendar. To also get alerts from the iPhone Calendar app: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, then paste:</div><input id="s-u" readonly value="'+esc(icsUrl())+'" style="margin-top:8px"><button class="btn" id="s-c">Copy the link</button><button class="btn" id="s-re">Restore schedule events I deleted</button>'+(has?'<button class="btn danger" id="s-d">Remove my API key</button>':''));
+    gateHTML()+'<div class="field"><label>Meridian folder name</label><input id="s-n" value="'+esc(S.set.news)+'" autocapitalize="off"></div><button class="btn primary" id="s-s">Save</button><button class="btn" id="s-t">Test the key</button><div class="sub" id="s-r" style="margin-top:8px">Used so far: '+S.usage.n+' requests · '+S.usage.i.toLocaleString('en-GB')+' tokens in · '+S.usage.o.toLocaleString('en-GB')+' out</div><div class="sec2"><div class="lbl" style="margin:0">Calendar feed (iPhone)</div></div><div class="sub">Your colles and DS are already in Aether\'s calendar. To also get alerts from the iPhone Calendar app: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, then paste:</div><input id="s-u" readonly value="'+esc(icsUrl())+'" style="margin-top:8px"><button class="btn" id="s-c">Copy the link</button><button class="btn" id="s-re">Restore deleted</button>'+(has?'<button class="btn danger" id="s-d">Remove my API key</button>':''));
     if(!g)$('s-m').value=S.set.model;
     const kn=g?'p_gkey':'p_key';
     const store=()=>{if($('s-ws'))S.set.ws=$('s-ws').value.replace(/\s+/g,'');const k=$('s-k').value.trim();if(k)localStorage.setItem(kn,k);if(g)S.set.gmodel=/^(gemini|gemma)/i.test($('s-m').value.trim())?$('s-m').value.trim():'gemini-flash-latest';else S.set.model=$('s-m').value;S.set.news=$('s-n').value.trim()||'meridian-news';save.set()};
@@ -6006,7 +6062,7 @@ function ntSheet(sub){
   (NT.custom.length?NT.custom.map(c=>'<div class="prow" style="--c:var(--acc);cursor:pointer" data-nc="'+c.id+'"><span class="m"><div class="t">'+esc(c.title)+'</div><div class="s">'+(c.date?c.date:(c.days&&c.days.length?c.days.map(d=>DAYN[d]).join(' '):'Every day'))+' · '+c.time+'</div></span><span class="chip '+(c.on===false?'':'on')+'" data-ncx="'+c.id+'">'+(c.on===false?'Off':'On')+'</span></div>').join(''):'<div class="sub">None yet.</div>')+
   '<button class="btn" id="nt-add" style="margin-top:8px">+ Add a reminder</button>'+
   '<div class="pv-h" style="margin:14px 0 6px">Rings with the app closed</div><div class="sub" style="margin:0 0 8px">Exports your enabled event / countdown / brief / custom rules as alarms into the iPhone Calendar (re-importing updates, no duplicates).</div><div class="chips" id="nt-ics">'+[7,14,30,60].map(d=>'<button class="chip" data-v="'+d+'">Next '+d+' days</button>').join('')+'</div>'+
-  '<button class="btn danger" id="nt-reset" style="margin-top:14px">Reset notification settings</button>';
+  '<button class="btn danger" id="nt-reset" style="margin-top:14px">Reset</button>';
   openSheet(h);
   const rd=()=>ntSheet(sub);
   const body=document.getElementById('sbody');
@@ -6030,7 +6086,7 @@ function ntSheet(sub){
   bindChips('nt-ics',v=>{shareIcs(+v)});
   const qa=document.getElementById('nt-qa'),qb=document.getElementById('nt-qb');qa.onchange=()=>{NT.quiet.from=qa.value||'22:30';ntSave()};qb.onchange=()=>{NT.quiet.to=qb.value||'07:00';ntSave()};
   document.getElementById('nt-add').onclick=()=>customSheet('');
-  document.getElementById('nt-reset').onclick=async()=>{if(await ask({title:'Reset notification settings?',ok:'Reset',danger:1})){NT=NTD();ntSave();rd()}};
+  document.getElementById('nt-reset').onclick=async()=>{if(await ask({title:'Reset?',ok:'Reset',danger:1})){NT=NTD();ntSave();rd()}};
 }
 function ruleSheet(k){
   const def=RULEDEF.find(x=>x[0]===k),R=NT.rules[k],f=def[3].split(' ').filter(Boolean);
@@ -6265,7 +6321,7 @@ function apCands0(){
   });
   C.LSUBJ.forEach(sj=>{
     const n=mistOpen(sj).length;
-    if(n)out.push({id:'mi:'+sj,type:'mist',subj:sj,min:clamp(5+n*3,10,25),title:'Redo '+Math.min(n,6)+' mistake'+(n>1?'s':'')+' in '+SUBJ[sj].n,why:n+' open · the exercises you already lost points on',go:{k:'mist'},s:subjU(sj)*apWeak(sj)*AP_TYPES.mist.base*(1+Math.min(.5,n*.05))});
+    if(0&&n)out.push({id:'mi:'+sj,type:'mist',subj:sj,min:clamp(5+n*3,10,25),title:'Redo '+Math.min(n,6)+' mistake'+(n>1?'s':'')+' in '+SUBJ[sj].n,why:n+' open · the exercises you already lost points on',go:{k:'mist'},s:subjU(sj)*apWeak(sj)*AP_TYPES.mist.base*(1+Math.min(.5,n*.05))});
     const un=S.lessons.filter(l=>l.subj===sj&&l.status!=='done').length;
     if(un&&urg[sj])out.push({id:'rd:'+sj,type:'read',subj:sj,min:15,title:'Read '+un+' lesson'+(un>1?'s':'')+' you have not digested ('+SUBJ[sj].n+')',why:'Exam coming up in '+SUBJ[sj].n,go:{k:'lessons'},s:subjU(sj)*.5});
   });
@@ -6346,7 +6402,7 @@ function apSheet(){
     openSheet('<h2 class="sh">🧭 Autopilot</h2><div class="sub" style="margin:0 0 10px">Aether picks what raises your next grades the most per minute: exam dates and coefficients, your real weak spots, and what you actually finish.</div>'+
     '<div class="field"><label>Time I have</label><div class="chips" id="ap-t">'+[25,45,90].map(x=>'<button class="chip '+(min===x?'on':'')+'" data-v="'+x+'">'+x+' min</button>').join('')+'</div></div>'+
     '<div class="field"><label>Energy</label><div class="chips" id="ap-e">'+[['0','😴 Low'],['1','🙂 Normal'],['2','🔥 On fire']].map(x=>'<button class="chip '+(String(en)===x[0]?'on':'')+'" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div>'+
-    (ms.length?ms.map((m,i)=>'<div class="prow" style="--c:var(--acc);cursor:default"><span class="m"><div class="t">'+(i+1)+'. '+AP_TYPES[m.type].ic+' '+esc(m.title)+'</div><div class="s">'+m.min+' min · +'+m.xp+' XP · '+esc(m.why)+'</div></span></div>').join('')+'<div class="sub" style="margin:8px 0">'+tot+' min planned. It re-plans every time you open it, and learns from what you skip.</div><button class="btn primary" id="ap-go">Start</button><button class="btn" id="ap-pw" style="margin-top:8px">🗓 Plan my whole week into my free time</button>':'<div class="sub">Nothing urgent: add an exam to the calendar, a programme, or flashcards and the Autopilot has something to optimise.</div>'));
+    (ms.length?ms.map((m,i)=>'<div class="prow" style="--c:var(--acc);cursor:default"><span class="m"><div class="t">'+(i+1)+'. '+AP_TYPES[m.type].ic+' '+esc(m.title)+'</div><div class="s">'+m.min+' min · +'+m.xp+' XP · '+esc(m.why)+'</div></span></div>').join('')+'<div class="sub" style="margin:8px 0">'+tot+' min planned. It re-plans every time you open it, and learns from what you skip.</div><button class="btn primary" id="ap-go">Start</button><button class="btn" id="ap-pw" style="margin-top:8px">🗓 Plan my week</button>':'<div class="sub">Nothing urgent: add an exam to the calendar, a programme, or flashcards and the Autopilot has something to optimise.</div>'));
     bindChips('ap-t',v=>{min=+v;draw()});bindChips('ap-e',v=>{en=+v;draw()});
     const g=$('ap-go');if(g)g.onclick=()=>{closeSheet();apStart(min,en)};const pw=$('ap-pw');if(pw)pw.onclick=()=>{closeSheet();setTimeout(tbSheet,300)};
   };
@@ -6428,9 +6484,9 @@ A.mapnode=id=>{
   const ev=[cards.length?cards.length+' card'+(cards.length>1?'s':'')+' (avg level '+(cards.reduce((a,c)=>a+(c.box||0),0)/cards.length).toFixed(1)+'/5)':'no cards yet',n.mist?n.mist+' open mistake'+(n.mist>1?'s':''):'no open mistakes',n.fixed?n.fixed+' trap'+(n.fixed>1?'s':'')+' retired ✓':'',n.type==='ch'?(n.ready?'ticked ready in your programme':'not ticked ready'):'lesson without a programme chapter'].filter(Boolean);
   openSheet('<h2 class="sh">'+esc(n.title)+'</h2><div class="sub" style="margin:0 0 10px">'+SUBJ[n.subj].n+'</div><div class="card" style="text-align:center"><div style="font-size:34px;font-weight:800;color:'+mcol(n.m)+'">'+Math.round(n.m*100)+'%</div><div class="sub">'+ev.join(' · ')+'</div></div>'+
     (n.lids.length?'<button class="btn" id="mn-l">Open the lesson</button>':'')+
-    (cards.length?'<button class="btn primary" id="mn-c" style="margin-top:8px">Review its cards ('+(due.length||cards.length)+')</button>':(n.lids.length?'<button class="btn primary" id="mn-m" style="margin-top:8px">Make flashcards from the lesson</button>':''))+
+    (cards.length?'<button class="btn primary" id="mn-c" style="margin-top:8px">Review cards ('+(due.length||cards.length)+')</button>':(n.lids.length?'<button class="btn primary" id="mn-m" style="margin-top:8px">Make flashcards</button>':''))+
     (n.type==='ch'?'<button class="btn" id="mn-r" style="margin-top:8px">'+(n.ready?'Untick “ready”':'Tick “ready”')+'</button>':'')+
-    '<button class="btn" id="mn-k" style="margin-top:8px">🎙 Colle Live on this subject</button>');
+    '<button class="btn" id="mn-k" style="margin-top:8px">🎙 Colle Live</button>');
   const b=i=>document.getElementById(i);
   if(b('mn-l'))b('mn-l').onclick=()=>{closeSheet();A.lesson(n.lids[0])};
   if(b('mn-c'))b('mn-c').onclick=()=>{closeSheet();const q=(due.length?due:cards).map(c=>c.id).sort(()=>Math.random()-.5);st.tab='cards';st.ctab='course';st.rev={q,total:q.length,done:0,n:0,flip:false};render()};
@@ -6473,7 +6529,7 @@ async function liveStart(subj,mins,speak){
   const ctx=await liveContext(subj);
   LV={subj,mins,speak,ctx,log:[],t0:Date.now(),busy:false,ended:false,q:0,id:uid()};
   let el=document.getElementById('live');if(el)el.remove();
-  el=document.createElement('div');el.id='live';el.style.cssText='position:fixed;inset:0;z-index:9500;background:var(--bg,#0e1018);color:var(--tx,#fff);display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);font:15px/1.45 -apple-system,system-ui';
+  el=document.createElement('div');el.id='live';el.style.cssText='position:fixed;inset:0;z-index:600;background:var(--bg,#0e1018);color:var(--tx,#fff);display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);font:15px/1.45 -apple-system,system-ui';
   el.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #ffffff18"><div style="flex:1;min-width:0"><div style="font-weight:700">🎙 Colle · '+esc(SUBJ[subj].n)+'</div><div id="lv-t" style="font-size:12px;opacity:.6">00:00 / '+mins+' min</div></div><button class="btn" id="lv-end" style="margin:0;padding:8px 14px;width:auto;flex:none">End</button></div><div id="lv-log" style="flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px"></div><div style="padding:10px 12px;border-top:1px solid #ffffff18"><div id="lv-st" style="font-size:12px;opacity:.6;min-height:16px;margin-bottom:6px"></div><div style="display:flex;gap:8px;align-items:flex-end"><textarea id="lv-in" rows="2" placeholder="Your answer…" style="flex:1 1 auto;min-width:0;width:auto;resize:none;min-height:0"></textarea>'+(SR?'<button class="btn" id="lv-mic" style="margin:0;padding:12px 14px;width:auto;flex:none">🎤</button>':'')+'<button class="btn primary" id="lv-send" style="margin:0;padding:12px 16px;width:auto;flex:none">Send</button></div></div>';
   document.body.appendChild(el);
   $('lv-send').onclick=()=>liveSend();
@@ -6587,7 +6643,7 @@ function freeSlots(ds,cfg,fromMin,incWork){
 }
 function tbClear(keepDone){
   const o=tbLoad(),td=iso();
-  for(let i=cal.length-1;i>=0;i--){const c=cal[i];if(String(c.id).startsWith('tb-')&&c.date>=td&&!(keepDone&&(o.blocks[c.id]||{}).done)){const bb=o.blocks[c.id];if(bb&&bb.gt){const k=tasks.findIndex(t=>t.id===bb.gt);if(k>-1)tasks.splice(k,1)}delete o.blocks[c.id];cal.splice(i,1)}}
+  for(let i=cal.length-1;i>=0;i--){const c=cal[i];if(String(c.id).startsWith('tb-')&&c.date>=td&&!(keepDone&&(o.blocks[c.id]||{}).done)&&!(o.blocks[c.id]||{}).flex){const bb=o.blocks[c.id];if(bb&&bb.gt){const k=tasks.findIndex(t=>t.id===bb.gt);if(k>-1)tasks.splice(k,1)}delete o.blocks[c.id];cal.splice(i,1)}}
   tbSave(o);
 }
 function tbPlan(){
@@ -6605,7 +6661,8 @@ function tbPlan(){
   }
   tbSave(o);sv();return made.length;
 }
-function tbDone(id,actual){const o=tbLoad(),b=o.blocks[id],c=cal.find(x=>x.id===id);if(b){b.done=1;if(b.wk&&!b.ct){b.ct=1;try{tbLearnOne(b,c,true,actual)}catch(e){}}}tbSave(o);if(c&&!/^✓/.test(c.title)){c.title='✓ '+c.title.replace(/^\S+\s/,'');sv()}if(b&&!b.pd){b.pd=1;tbSave(o);try{window.PW&&PW.after(id,b)}catch(e){}}}
+function tbDone(id,actual,fromFocus){const o=tbLoad(),b=o.blocks[id],c=cal.find(x=>x.id===id);if(b){b.done=1;if(c)b.snap={title:'✓ '+c.title.replace(/^✓ /,'').replace(/^\S+\s/,''),date:c.date,time:c.time,endTime:c.endTime,subj:c.subj||'',color:c.color===GHOST?2:c.color};if(b.wk&&!b.ct){b.ct=1;try{tbLearnOne(b,c,true,actual)}catch(e){}}}tbSave(o);if(c&&!/^✓/.test(c.title)){c.title='✓ '+c.title.replace(/^\S+\s/,'');sv()}
+  if(c){const i=cal.indexOf(c);if(fromFocus){if(i>-1)cal.splice(i,1)}else{c.kind='focus';c.color=FROST;c.prop=0;c.desc='Mission session · '+(actual||b&&b.pl||'')+' min'}sv()}if(b&&!b.pd){b.pd=1;tbSave(o);try{window.PW&&PW.after(id,b)}catch(e){}}}
 function tbNext(){
   const td=iso(),nowM=new Date().getHours()*60+new Date().getMinutes(),o=tbLoad();
   return cal.filter(c=>c.kind==='work'&&c.date===td&&o.blocks[c.id]&&!o.blocks[c.id].done&&hm(c.endTime)>nowM).sort((a,b)=>hm(a.time)-hm(b.time)).map(c=>({ev:c,ms:o.blocks[c.id].ms,live:hm(c.time)<=nowM}))[0]||null;
@@ -6689,7 +6746,7 @@ function tbMission(w,len,ds,ci){
   if(w.type==='colle'){const p=S.progs.find(x=>x.subj===w.subj&&x.date===w.due)||S.progs.filter(x=>x.subj===w.subj).sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0];return mk('chapter',{title:'Colle prep · '+SUBJ[w.subj].n,go:p?{k:'prog',id:p.id}:{k:'tab',id:'colles'}})}
   if(w.type==='goal'){const l=tasks.filter(t=>isOpen(t)&&(w.gid?t.gid===w.gid:!goalOf(t))).sort((a,b)=>String(a.due||'9').localeCompare(String(b.due||'9')));const t=l[ci%Math.max(1,l.length)];return mk('task',{title:t?t.text:w.label,subj:'',go:t?{k:'task',id:t.id}:{k:'tab',id:'home'}})}
   if(w.type==='cards')return mk('cards',{title:'Review your flashcards',go:{k:'cards'}});
-  return mk('mist',{title:'Redo your mistakes · '+SUBJ[w.subj].n,go:{k:'mist'}});
+  return mk('cards',{title:'Review your flashcards',go:{k:'cards'}});
 }
 function tbPlanWishes(W,cfg,fill){
   tbLearnScan();tbClear(true);const o=tbLoad(),td=iso(),nowM=new Date().getHours()*60+new Date().getMinutes(),L=tbLearn();
@@ -6742,7 +6799,7 @@ function tbSheet(){if(window.PW&&!window._tbOld){PW.open();return}
    '<button class="btn primary" id="tb-go">'+(n?'Re-plan ('+n+' blocks now)':'Plan my week')+'</button>'+
    '<div style="display:flex;gap:8px;margin-top:8px"><button class="btn" id="tb-w" style="margin:0">Time windows</button>'+(n?'<button class="btn danger" id="tb-x" style="margin:0">Remove plan</button>':'')+'</div>'+
    '<div class="field" style="margin-top:12px"><label>Logo in the header</label><div class="chips" id="tb-l"><button class="chip '+(localStorage.p_pl_logo!=='0'?'on':'')+'" data-v="1">Show</button><button class="chip '+(localStorage.p_pl_logo==='0'?'on':'')+'" data-v="0">Hide</button></div></div>'+
-   (N?'<button class="lnk" id="tb-rs" style="margin-top:6px">Forget what Aether learned</button>':''));
+   (N?'<button class="lnk" id="tb-rs" style="margin-top:6px">Reset learning</button>':''));
   const root=document.getElementById('tbw'),find=k=>W.find(w=>w.key===k);
   const redraw=w=>{const r=root.querySelector('.tbw[data-k="'+CSS.escape(w.key)+'"]');r.classList.toggle('on',w.on);r.querySelector('[data-w=min]').textContent=w.min+' min';r.querySelector('[data-w=wh]').textContent=whenTxt(w)};
   if(root){
@@ -6783,33 +6840,34 @@ window.PT={done:tbDone,wishes:tbWishes,planWishes:tbPlanWishes,learn:tbLearn,lea
    then accepted (it becomes a real task in the "Generated" goal with coherent XP). It learns from what you finish or skip. */
 const PWK='p_pw',PWS='p_pws';
 const PWD=()=>({slots:{am:{n:'Morning',from:'08:00',to:'12:00'},lunch:{n:'Lunch',from:'12:00',to:'14:00'},pm:{n:'Afternoon',from:'14:00',to:'18:00'},ev:{n:'Evening',from:'18:00',to:'22:00'}},
-  recipe:{colle:{rev:3,ex:2},exam:{rev:4,ex:3,mock:0,mockMin:90}},review:{on:1,min:30},reread:{on:1,min:30,from:'18:00',skipColle:1},rules:[],learn:1,suggest:1,bonus:1,card:1});
-const pwCfg=()=>{const c=mergeD(PWD(),jl(PWK,null)||{});c.rules=(jl(PWK,{}).rules)||[];return c};
+  recipe:{colle:{rev:3,ex:2},exam:{rev:4,ex:3,mock:0,mockMin:90}},review:{on:1,min:30},reread:{on:1,min:30,from:'18:00',skipColle:1},rules:[],learn:1,suggest:1,bonus:1,card:1,keep:2,play:{len:0,auto:1},dinner:{on:1,from:'20:00',to:'22:00',min:60},minb:{rev:30,ex:20,goal:15},
+  life:[{id:'l1',name:'Lunch',ic:'🍽',days:[0,1,2,3,4,5,6],from:'12:00',to:'13:00',on:1}],lite:[{id:'t1',days:[1,2,3,4,5],from:'13:00',to:'13:45',on:1}],ref:[]});
+const pwCfg=()=>{const st=jl(PWK,null)||{},c=mergeD(PWD(),st),d=PWD();c.rules=st.rules||[];['life','lite','ref'].forEach(k=>{c[k]=Array.isArray(st[k])?st[k]:d[k]});return c};
 const pwSave=c=>js(PWK,c);
 const SLOTN=['am','lunch','pm','ev'];
 const pwWd=ds=>new Date(ds+'T12:00:00').getDay();
 const pwSj=s=>s&&SUBJ[s]?SUBJ[s].n:'';
 const pwSc=s=>s&&SUBJ[s]?SUBJ[s].c:2;
 const pwXp=(kind,len)=>Math.max(10,Math.round(len*({rev:.6,ex:.8,mock:1.2,review:.7,reread:.5,goal:.7,rep:.6,task:.7}[kind]||.6)/5)*5);
-const pwGenGoal=()=>{let g=goals.find(x=>x.id==='g-gen');if(!g){g={id:'g-gen',name:'Generated',color:'#8b93a7',xp:0,lv:1};goals.push(g)}return g};
+const pwGenGoal=()=>{let g=goals.find(x=>x.id==='g-gen');if(!g){g={id:'g-gen',name:'Generated',color:'#ff2d8f',xp:0,lv:1};goals.push(g)}if(g.color==='#8b93a7')g.color='#ff2d8f';return g};
 function pwDesc(m){return '1. '+m.title+' ('+m.min+' min)'}
 /* ---------- the jobs the planner wants to place ---------- */
 function pwJobs(cfg){
   const td=iso(),hz=tbCfg().days,end=shiftD(td,hz-1),J=[],o=tbLoad();
   const dd=d=>Math.round((new Date(d+'T12:00:00')-new Date(td+'T12:00:00'))/864e5);
   const evs=cal.filter(e=>(e.kind==='colle'||e.kind==='ds')&&e.subj&&e.date>=shiftD(td,-1)&&dd(e.date)<=hz+2);
-  const capBefore=(due,tcfg)=>{let c=0;for(let d=0;d<hz&&shiftD(td,d)<=due;d++)c+=tbDayIv(shiftD(td,d),tcfg,d===0?ceil5(new Date().getHours()*60+new Date().getMinutes()+10):0).reduce((s,x)=>s+x[1]-x[0],0);return c};
+  const capBefore=(due,tcfg)=>{let c=0;for(let d=0;d<hz&&shiftD(td,d)<=due;d++)c+=pwDayIv(shiftD(td,d),tcfg,d===0?ceil5(new Date().getHours()*60+new Date().getMinutes()+10):0).filter(x=>!x[2]).reduce((s,x)=>s+x[1]-x[0],0);return c};
   const tcfg=tbCfg();
   evs.forEach(e=>{
     const isC=e.kind==='colle',R=isC?cfg.recipe.colle:cfg.recipe.exam,sj=e.subj,name=(isC?'Colle':'Exam')+' : '+pwSj(sj),ic=isC?'🎤':'📝',d=dd(e.date);
     if(d>=0){
       let rev=Math.round(R.rev*60),ex=Math.round(R.ex*60);const cap=capBefore(e.date,tcfg)*.7,tot=rev+ex;
-      if(tot>cap&&cap>0){const f=Math.max(.25,cap/tot);rev=Math.max(30,Math.round(rev*f/15)*15);ex=Math.max(30,Math.round(ex*f/15)*15)}
+      if(tot>cap&&cap>0){const f=Math.max(.25,cap/tot);rev=Math.max(cfg.minb.rev,Math.round(rev*f/15)*15);ex=Math.max(cfg.minb.ex,Math.round(ex*f/15)*15)}
       const p=S.progs.find(x=>x.subj===sj&&x.date===e.date)||S.progs.filter(x=>x.subj===sj).sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0];
       const go=isC?(p?{k:'prog',id:p.id}:{k:'tab',id:'colles'}):{k:'tab',id:'exams'};
       const base={subj:sj,ic,due:e.date,dueT:e.time||'',sub:'For '+(isC?'colle':'exam')+' '+DAYN[pwWd(e.date)]+' '+(+e.date.slice(8))};
-      if(rev>=15)J.push(Object.assign({},base,{key:(isC?'colle':'exam')+':'+sj+':rev',kind:'rev',label:name+' · Revise',min:rev,bias:'early',pri:100-d*4,mk:(len)=>({type:isC?'chapter':'sheet',title:(isC?'Revise for the colle · ':'Revise for the exam · ')+pwSj(sj),go})}));
-      if(ex>=15)J.push(Object.assign({},base,{key:(isC?'colle':'exam')+':'+sj+':ex',kind:'ex',label:name+' · Exercises',min:ex,bias:'late',pri:96-d*4,mk:(len)=>({type:'mock',title:'Exercises · '+pwSj(sj),go:{k:'tab',id:'exams'}})}));
+      if(rev>=cfg.minb.rev)J.push(Object.assign({},base,{key:(isC?'colle':'exam')+':'+sj+':rev',kind:'rev',label:name+' · Revise',min:rev,bias:'early',pri:100-d*4,mk:(len)=>({type:isC?'chapter':'sheet',title:(isC?'Revise for the colle · ':'Revise for the exam · ')+pwSj(sj),go})}));
+      if(ex>=cfg.minb.ex)J.push(Object.assign({},base,{key:(isC?'colle':'exam')+':'+sj+':ex',kind:'ex',label:name+' · Exercises',min:ex,bias:'late',pri:96-d*4,mk:(len)=>({type:'mock',title:'Exercises · '+pwSj(sj),go:{k:'tab',id:'exams'}})}));
       if(!isC&&R.mock&&d>=2&&tot*1.0+R.mockMin<=cap*1.25){const mm=Math.min(R.mockMin,tcfg.max*2);J.push(Object.assign({},base,{key:'exam:'+sj+':mock',kind:'mock',label:name+' · Mock',min:mm,bias:'late',pri:90-d*4,minDay:Math.max(0,d-3),mk:(len)=>({type:'mock',title:'Mock exam · '+pwSj(sj),go:{k:'tab',id:'exams'}})}))}
     }
     if(isC&&cfg.review.on&&e.date<=end){
@@ -6837,45 +6895,74 @@ function pwJobs(cfg){
     J.push({key:'rule:'+r.id,rid:r.id,kind:r.kind==='goal'?'goal':'rep',type:'task',subj:'',ic:r.kind==='goal'?'🎯':'🔂',label:r.kind==='goal'?'Goal : '+g.name:(r.name||'Routine'),sub:r.kind==='goal'?'Your focus goal':'Routine',min:min*per,per,each:min,days:r.days&&r.days.length?r.days:null,win,bias:'spread',pri:50+w*6,
       mk:(len,ds,ci)=>{const l=lst(),t=l[ci%Math.max(1,l.length)];return r.kind==='goal'?{type:'task',title:t?t.text:(g.name+' · session'),go:t?{k:'task',id:t.id}:{k:'tab',id:'tasks'},tid:t?t.id:''}:{type:'task',title:r.name||'Routine',go:{k:'tab',id:'tasks'}}}});
   });
+  Object.keys(o.blocks).forEach(id=>{const b=o.blocks[id];if(!b||!/^ref:/.test(b.wk||'')||b.done||b.prop||!b.snap||b.snap.date>=td||b.snap.date<shiftD(td,-3))return;
+    if(Object.values(o.blocks).some(x=>x.cuOf===id&&!x.prop))return;const m0=(b.ms||[])[0]||{},isEx=m0.type==='mock';
+    J.push({key:'cu:'+id,cuId:id,kind:isEx?'ex':'rev',type:'task',subj:b.snap.subj||'',ic:'↩️',label:'Catch-up · '+String(b.snap.title).replace(/^\S+\s/,''),sub:'Missed '+DAYN[pwWd(b.snap.date)],min:b.pl||60,due:shiftD(td,4),bias:'early',pri:82,mk:()=>({type:m0.type||'read',title:'Catch-up · '+(m0.title||''),go:m0.go||{k:'tab',id:'tasks'}})})});
   return J;
 }
-/* ---------- placement ---------- */
+/* ---------- v78: week template (life blocks, dinner, light-task windows, reference study blocks, flex) ---------- */
+function pwDayIv(ds,tcfg,from){
+  const cfg=pwCfg(),wd=pwWd(ds),on=l=>l.on!==0&&(l.days||[]).includes(wd),R=l=>[hm(l.from),hm(l.to)];
+  const life=(cfg.life||[]).filter(on).map(R),lite=(cfg.lite||[]).filter(on).map(R);
+  const busy=evOn(ds).filter(e=>e.time&&e.kind!=='focus').map(e=>{const s0=hm(e.time),en=e.endTime?hm(e.endTime):s0+60;return[s0-tcfg.gap,en+tcfg.gap]});
+  const dn=cfg.dinner;let din=[];
+  if(dn&&dn.on){const a=hm(dn.from),b=hm(dn.to),need=dn.min,raw=evOn(ds).filter(e=>e.time&&e.kind!=='focus').map(e=>{const s1=hm(e.time);return[s1,e.endTime?hm(e.endTime):s1+60]}),blk=life.concat(raw);for(let s0=a;s0+need<=b;s0+=5){if(!blk.some(x=>x[0]<s0+need&&x[1]>s0)){din=[[s0,s0+need]];break}}}
+  const nl=life.concat(din),base=subtractIv(tbDayIv(ds,tcfg,0),nl.concat(lite)),lv=subtractIv(subtractIv(lite,busy),nl),cl=x=>[Math.max(x[0],from||0),x[1]];
+  return base.map(cl).filter(x=>x[1]-x[0]>=15).concat(lv.map(cl).map(x=>[x[0],x[1],1]).filter(x=>x[1]-x[0]>=15)).sort((a,b)=>a[0]-b[0]);
+}
+function pwRefs(o,days,nowM){
+  const cfg=pwCfg(),made=[],td=iso();
+  (cfg.ref||[]).filter(r=>r.on!==0&&SUBJ[r.subj]).forEach(r=>days.forEach(ds=>{
+    if(!(r.days||[]).includes(pwWd(ds)))return;const a=hm(r.from),e=hm(r.to);if(e-a<15)return;if(ds===td&&e<=nowM)return;
+    const id='tb-'+ds+'-'+pad(Math.floor(a/60))+pad(a%60);if(cal.some(c=>c.id===id)||(o.blocks[id]&&o.blocks[id].done))return;
+    if(evOn(ds).some(x=>x.time&&x.kind!=='focus'&&hm(x.time)<e&&(x.endTime?hm(x.endTime):hm(x.time)+60)>a))return;
+    const ex=r.type==='ex',len=e-a,name=pwSj(r.subj),title=(ex?'📝 ':'📖 ')+name+' · '+(ex?'Exercises':'Learn'),xp=pwXp(ex?'ex':'rev',len);
+    const m={id:'w:ref:'+r.id+':'+ds+':0',type:ex?'mock':'read',subj:r.subj,min:len,why:'Weekly reference block',xp,title:(ex?'Exercises on the new chapter · ':'Learn the lesson · ')+name,go:ex?{k:'tab',id:'exams'}:{k:'lessons'}};
+    cal.push({id,title,date:ds,time:hmS(a),endTime:hmS(e),kind:'work',subj:r.subj,color:pwSc(r.subj),prop:1,desc:pwDesc(m)});
+    o.blocks[id]={ms:[m],done:0,wk:'ref:'+r.id,pl:len,hr:a,xp,prop:1,snap:{title,date:ds,time:hmS(a),endTime:hmS(e),subj:r.subj,color:pwSc(r.subj)}};made.push(id)}));
+  return made;
+}
+const res0=n=>n;
 function pwPlan(opts){
   opts=opts||{};tbLearnScan();
   const cfg=pwCfg(),tcfg=tbCfg(),td=iso(),nowM=new Date().getHours()*60+new Date().getMinutes(),L=tbLearn();
   tbClear(true);const o=tbLoad();
   const days=[];for(let d=0;d<tcfg.days;d++)days.push(shiftD(td,d));
-  const iv={},load={};days.forEach((ds,i)=>{iv[ds]=tbDayIv(ds,tcfg,i===0?ceil5(nowM+10):0);load[ds]=0});
-  const J=pwJobs(cfg).sort((a,b)=>b.pri-a.pri),res={n:0,miss:[],mins:0,notes:[]};
+  const refIds=pwRefs(o,days,nowM);if(refIds.length){tbSave(o);pwAccept(refIds);o.blocks=tbLoad().blocks}
+  const iv={},load={};days.forEach((ds,i)=>{iv[ds]=pwDayIv(ds,tcfg,i===0?ceil5(nowM+10):0);load[ds]=0});
+  const J=pwJobs(cfg).sort((a,b)=>b.pri-a.pri),res={n:res0(refIds.length),miss:[],mins:0,notes:[]};
   J.forEach(j=>{
+    const lightJ=j.kind==='goal'||j.kind==='rep',jm=lightJ?cfg.minb.goal:(j.kind==='ex'||j.kind==='mock')?cfg.minb.ex:(j.kind==='rev'||j.kind==='review'||j.kind==='reread')?cfg.minb.rev:15;
+    if(j.kind==='rev'||j.kind==='review'||j.kind==='reread')j.min=Math.max(j.min,jm);
     let left=j.min,ci=0;const used={},per=j.per,cnt={};
-    while(left>=15){
+    while(left>=jm){
       const want=Math.min(left,j.each||tcfg.max);let best=null;
       days.forEach((ds,di)=>{
         if(j.dates&&!j.dates.includes(ds))return;
         if(j.days&&!j.days.includes(pwWd(ds)))return;if((j.kind==='goal'||j.kind==='rep')&&used[ds])return;
         if(j.due&&ds>j.due)return;if(j.after&&ds<j.after.date)return;if(j.minDay!=null&&di<j.minDay)return;
         const r=L.k[j.key]||L.k['*'];
-        (iv[ds]||[]).forEach(([a0,b0],ii)=>{
+        (iv[ds]||[]).forEach(([a0,b0,lt],ii)=>{
+          if(lt&&!lightJ)return;
           let a=a0,b=b0;if(j.win){a=Math.max(a,j.win[0]);b=Math.min(b,j.win[1])}
           if(j.after&&ds===j.after.date)a=Math.max(a,j.after.t);
           if(j.due&&ds===j.due&&j.dueT)b=Math.min(b,hm(j.dueT)-tcfg.gap);
-          const len=Math.min(want,b-a);if(len<Math.min(want,20)||len<15)return;
+          const len=Math.min(want,b-a);if(len<Math.min(want,jm))return;
           let sc=(cfg.learn&&!j.win?tbRate(r,partOf(a))*30:0)-(used[ds]||0)*(j.kind==='goal'||j.kind==='rep'?40:14)-load[ds]*3;
-          sc+=j.bias==='early'?-di*1.5:j.bias==='late'?di*1.1:-di*.3;
-          if(!best||sc>best.sc)best={sc,ds,ii,a,len,a0,b0,b};
+          sc+=j.bias==='early'?-di*1.5:j.bias==='late'?di*1.1:-di*.3;if(lt&&lightJ)sc+=60;
+          if(!best||sc>best.sc)best={sc,ds,ii,a,len,a0,b0,b,lt};
         });
       });
       if(!best)break;
-      const{ds,ii,a,len,a0,b0}=best,e=a+len,id='tb-'+ds+'-'+pad(Math.floor(a/60))+pad(a%60);
-      if(cal.some(c=>c.id===id)){iv[ds][ii]=[e+tcfg.gap,b0];continue}
+      const{ds,ii,a,len,a0,b0,lt}=best,e=a+len,id='tb-'+ds+'-'+pad(Math.floor(a/60))+pad(a%60);
+      if(cal.some(c=>c.id===id)){iv[ds][ii]=[e+tcfg.gap,b0,lt];continue}
       const m=Object.assign({id:'w:'+j.key+':'+ds+':'+ci,subj:j.subj||'',min:len,why:j.sub||'',xp:pwXp(j.kind,len)},j.mk(len,ds,ci++));
       cal.push({id,title:j.ic+' '+j.label,date:ds,time:hmS(a),endTime:hmS(e),kind:'work',subj:j.subj||'',color:GHOST,prop:1,desc:pwDesc(m)+'\n'+(j.sub||'')});
-      o.blocks[id]={ms:[m],done:0,wk:j.key,pl:len,hr:a,rk:j.rk||'',tid:m.tid||'',xp:m.xp,prop:1};
-      const rest=[];if(a-a0>=15)rest.push([a0,a-tcfg.gap]);if(b0-e-tcfg.gap>=15)rest.push([e+tcfg.gap,b0]);iv[ds].splice(ii,1,...rest);
+      o.blocks[id]={ms:[m],done:0,wk:j.key,pl:len,hr:a,rk:j.rk||'',tid:m.tid||'',xp:m.xp,prop:1,cuOf:j.cuId||'',snap:{title:j.ic+' '+j.label,date:ds,time:hmS(a),endTime:hmS(e),subj:j.subj||'',color:pwSc(j.subj)}};
+      const rest=[];if(a-a0>=15)rest.push([a0,a-tcfg.gap,lt]);if(b0-e-tcfg.gap>=15)rest.push([e+tcfg.gap,b0,lt]);iv[ds].splice(ii,1,...rest);
       used[ds]=(used[ds]||0)+1;load[ds]++;left-=len;res.n++;res.mins+=len;
     }
-    if(left>=15&&j.kind!=='rep'&&j.kind!=='goal')res.miss.push(j.label);
+    if(left>=jm&&j.kind!=='rep'&&j.kind!=='goal')res.miss.push(j.label);
   });
   tbSave(o);sv();return res;
 }
@@ -6883,10 +6970,45 @@ function pwPlan(opts){
 function pwAccept(ids){
   const o=tbLoad(),all=ids==='all'?Object.keys(o.blocks).filter(k=>o.blocks[k].prop&&cal.some(c=>c.id===k)):ids;let n=0;
   all.forEach(id=>{const b=o.blocks[id],c=cal.find(x=>x.id===id);if(!b||!c||!b.prop)return;
-    b.prop=0;c.prop=0;c.color=pwSc(c.subj);
-    if(!b.tid){const g=pwGenGoal(),t={id:'tg-'+id,text:c.title.replace(/^\S+\s/,''),xp:b.xp||20,due:c.date,gid:g.id,lk:id,gen:1};if(!tasks.some(x=>x.id===t.id))tasks.unshift(t);b.gt=t.id}
+    b.prop=0;c.prop=0;c.color=pwSc(c.subj);b.snap=pwSnap(c);
+    if(!b.tid){const g=pwGenGoal(),t={id:'tg-'+id,text:c.title.replace(/^\S+\s/,''),xp:b.xp||20,due:c.date,gid:g.id,lk:id,gen:1,min:b.pl||0};if(!tasks.some(x=>x.id===t.id))tasks.unshift(t);b.gt=t.id}
     n++});
   tbSave(o);sv();return n;
+}
+const pwSnap=c=>({title:c.title,date:c.date,time:c.time,endTime:c.endTime,subj:c.subj||'',color:c.color===GHOST?pwSc(c.subj):c.color});
+function pwGet(id){const o=tbLoad(),b=o.blocks[id];if(!b)return null;const c=cal.find(x=>x.id===id);if(c)return{c,b,live:1};const s=b.snap;if(!s||!s.date)return null;return{c:{id,title:s.title,date:s.date,time:s.time,endTime:s.endTime,subj:s.subj||'',kind:'work',color:s.color!=null?s.color:2},b,live:0}}
+function pwAll(){const o=tbLoad();return Object.keys(o.blocks).map(pwGet).filter(Boolean)}
+/* planned events leave the calendar after `keep` days (or on demand); the block stays in the Week plan */
+function pwArchive(force){
+  const cfg=pwCfg(),td=iso(),o=tbLoad();let n=0;
+  const lim=force?td:(cfg.keep>0?shiftD(td,-cfg.keep):null);
+  if(lim){for(let i=cal.length-1;i>=0;i--){const c=cal[i],b=o.blocks[c.id];if(!b||!String(c.id).startsWith('tb-'))continue;
+    if(force?c.date<lim:c.date<=lim){if(!b.done){b.snap=pwSnap(c);b.arc=1}cal.splice(i,1);n++}}}
+  Object.keys(o.blocks).forEach(k=>{const b=o.blocks[k];if(b.snap&&b.snap.date<shiftD(td,-21)&&!cal.some(c=>c.id===k))delete o.blocks[k]});
+  if(n){tbSave(o);sv()}return n;
+}
+const pwPastN=()=>{const td=iso(),o=tbLoad();return cal.filter(c=>String(c.id).startsWith('tb-')&&o.blocks[c.id]&&c.date<td).length};
+/* ▶ : how long, and start the focus timer */
+const pwPlayCfg=()=>Object.assign({len:0,auto:1},pwCfg().play||{});
+function playMin(t){const p=pwPlayCfg();if(p.len>0)return p.len;if(p.len<0)return MODES[F.mode].min;if(t&&t.min>0)return t.min;return 25}
+function pwPlayGo(t,blk){
+  const p=pwPlayCfg();if(F.status==='run'||F.status==='pause'){show('focus');toast('A session is already running');return}
+  F.kind='focus';F.blk=blk||'';const mn=playMin(t);F.cust=p.len<0?0:Math.max(5,mn);sv();
+  if(p.auto){fStart()}else{try{fRender(true,true)}catch(e){}}
+}
+function pwPlayTask(t){if(!t)return;F.ref=null;F.taskId=t.id;F.task=t.text;pwPlayGo(t,t.lk||'')}
+function pwPlayBlock(id){
+  const o=tbLoad(),b=o.blocks[id];if(!b)return;if(b.prop){pwAccept([id])}
+  const b2=tbLoad().blocks[id],tid=b2.gt||b2.tid,t=tid&&tasks.find(x=>x.id===tid);
+  F.ref=null;F.taskId=t?t.id:'';const g=pwGet(id);F.task=t?t.text:(g?g.c.title.replace(/^\S+\s/,''):'');
+  const tt=t||{min:b2.pl};show('focus');pwPlayGo(Object.assign({},tt,{min:b2.pl||tt.min}),id);
+}
+function pwFocusDone(taskId,min,full){
+  const id=F.blk;if(!id)return;const o=tbLoad(),b=o.blocks[id];if(!b||b.done)return;
+  if(!taskId||(taskId!==b.gt&&taskId!==b.tid))return;
+  const want=F.cust||b.pl||min;if(!full&&min<want*.8)return;
+  F.blk='';try{tbDone(id,min,true)}catch(e){}
+  try{pwCard()}catch(e){}try{rTP()}catch(e){}try{rHomeTasks()}catch(e){}try{if(cur==='calendar')rCal()}catch(e){}
 }
 function pwRemove(id){
   const o=tbLoad(),b=o.blocks[id];if(b&&b.gt){const i=tasks.findIndex(t=>t.id===b.gt);if(i>-1)tasks.splice(i,1)}
@@ -6920,7 +7042,7 @@ function pwAfterDone(id,b){
   const rm=tid=>{const i=tasks.findIndex(t=>t.id===tid);if(i>-1){const t=tasks[i];tasks.splice(i,1);donelog.push({d:iso(),xp:t.xp||0,t:Date.now()})}};
   if(b.gt)rm(b.gt);if(b.tid)rm(b.tid);
   const cfg=pwCfg(),o=tbLoad(),wk=pwMon(iso()),end=shiftD(wk,6);
-  const L=Object.keys(o.blocks).filter(k=>{const c=cal.find(x=>x.id===k);return c&&c.date>=wk&&c.date<=end&&!o.blocks[k].prop});
+  const L=Object.keys(o.blocks).filter(k=>{const g=pwGet(k);return g&&g.c.date>=wk&&g.c.date<=end&&!o.blocks[k].prop&&!o.blocks[k].arc});
   const done=L.filter(k=>o.blocks[k].done).length,tot=L.length;if(!tot)return;
   const xp=L.reduce((s,k)=>s+(o.blocks[k].xp||0),0),st=jl('p_pwb',{});if(st.w!==wk){st.w=wk;st.a=0;st.b=0}
   const left=tot-done;
@@ -6936,7 +7058,7 @@ function pwCard(){
   const cfg=pwCfg();if(!cfg.card){el.style.display='none';return}
   if(!document.getElementById('pwcss')){const s=document.createElement('style');s.id='pwcss';s.textContent='#wkcard .wkd{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid #ffffff0d}#wkcard .wkd>b{width:50px;flex:none;font-size:12px;opacity:.6;padding-top:7px;font-weight:600}#wkcard .wkc{display:flex;flex-wrap:wrap;gap:6px;flex:1}.wkb{border:1px solid #ffffff1c;background:#ffffff0a;border-radius:12px;padding:7px 10px;font:600 12.5px -apple-system,system-ui;color:inherit;text-align:left;line-height:1.2}.wkb small{display:block;font-weight:500;opacity:.55;font-size:11px}.wkb.p{border-style:dashed;background:#0003;color:#ffffffb0}.wkb.a{border-left:3px solid var(--c,#6c8cff)}.wkb.d{opacity:.45;text-decoration:line-through}#wkcard .wkp{height:5px;border-radius:3px;background:#ffffff14;overflow:hidden;margin:8px 0}#wkcard .wkp i{display:block;height:100%;background:linear-gradient(90deg,#6b6df0,#30d158);border-radius:3px}';document.head.appendChild(s)}
   const o=tbLoad(),td=iso(),wk=pwMon(td),end=shiftD(wk,6);
-  const L=cal.filter(c=>c.kind==='work'&&o.blocks[c.id]&&c.date>=td&&c.date<=shiftD(td,13)||(c.kind==='work'&&o.blocks[c.id]&&c.date>=wk&&c.date<td)).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  pwArchive();const L=pwAll().map(x=>x.c).filter(c=>(c.date>=td&&c.date<=shiftD(td,13))||(c.date>=wk&&c.date<td)).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
   const wkL=L.filter(c=>c.date>=wk&&c.date<=end),done=wkL.filter(c=>o.blocks[c.id].done).length,prop=L.filter(c=>c.date>=td&&o.blocks[c.id].prop);
   const open=localStorage.p_pwx==='1';
   el.style.display='';
@@ -6949,25 +7071,25 @@ function pwCard(){
    (nx?'<div class="prow" style="--c:var(--acc);cursor:default"><span class="m"><div class="t">'+pwEsc(nx.title)+'</div><div class="s">'+nx.time+' – '+nx.endTime+'</div></span><button class="btn primary" data-wk="start" data-i="'+nx.id+'" style="width:auto;margin:0;padding:8px 14px">Start</button></div>':'')+
    days.map(d=>'<div class="wkd"><b>'+(d===td?'Today':DAYN[pwWd(d)]+' '+(+d.slice(8)))+'</b><div class="wkc">'+byDay[d].map(c=>{const b=o.blocks[c.id],cl=b.done?'d':b.prop?'p':'a';return'<button class="wkb '+cl+'" data-wk="blk" data-i="'+c.id+'" style="--c:'+colorOf(c)+'">'+c.time+' '+pwEsc(c.title.replace(/^✓ /,''))+'<small>'+(b.pl||'')+' min</small></button>'}).join('')+'</div></div>').join('')+
    (Object.keys(byDay).length>2?'<button class="lnk" data-wk="more" style="margin-top:6px">'+(open?'Show less':'Show the whole plan')+'</button>':'')+
-   '<div style="display:flex;gap:8px;margin-top:10px">'+(prop.length?'<button class="btn primary" data-wk="all" style="margin:0">Accept all ('+prop.length+')</button>':'')+'<button class="btn" data-wk="plan" style="margin:0">Re-plan</button></div>';
+   '<div style="display:flex;gap:8px;margin-top:10px">'+(prop.length?'<button class="btn primary" data-wk="all" style="margin:0">Accept all ('+prop.length+')</button>':'')+'<button class="btn" data-wk="plan" style="margin:0">Re-plan</button><button class="btn" data-wk="flex" style="margin:0">＋ Flex</button></div>';
 }
 function pwBlock(id){
-  const o=tbLoad(),b=o.blocks[id],c=cal.find(x=>x.id===id);if(!b||!c)return;
+  const o=tbLoad(),b=o.blocks[id],gg=pwGet(id),c=gg&&gg.c;if(!b||!c)return;
   const m=b.ms&&b.ms[0]||{};
   openSheet('<h2 class="sh">'+pwEsc(c.title)+'</h2><div class="sub" style="margin:0 0 10px">'+DAYN[pwWd(c.date)]+' '+(+c.date.slice(8))+' · '+c.time+' – '+c.endTime+' · '+(b.pl||'')+' min'+(b.xp?' · +'+b.xp+' XP':'')+'</div>'+
    (m.title?'<div class="card"><div class="lbl">Mission</div><div style="margin-top:4px">'+pwEsc(m.title)+'</div>'+(m.why?'<div class="sub">'+pwEsc(m.why)+'</div>':'')+'</div>':'')+
-   (b.prop?'<div class="sub" style="margin:8px 0">Proposed: it only becomes a task and a reminder once you accept it.</div><button class="btn primary" id="pb-a">Accept</button>':(b.done?'<div class="sub">Done ✓</div>':'<button class="btn primary" id="pb-s">Start this block now</button>'))+
-   '<button class="btn" id="pb-c" style="margin-top:8px">Open the calendar</button><button class="btn danger" id="pb-x" style="margin-top:8px">Remove this block</button>');
+   (!gg.live&&!b.done?'<div class="sub" style="margin:8px 0">This block left the calendar but stays in your week plan.</div>':'')+(b.prop?'<div class="sub" style="margin:8px 0">Proposed: it only becomes a task and a reminder once you accept it.</div><button class="btn primary" id="pb-a">Accept</button>':(b.done?'<div class="sub">Done ✓</div>':'<button class="btn primary" id="pb-s">▶ Start</button>'))+
+   '<button class="btn" id="pb-c" style="margin-top:8px">Calendar</button><button class="btn danger" id="pb-x" style="margin-top:8px">Remove this block</button>');
   const g=i=>document.getElementById(i);
   if(g('pb-a'))g('pb-a').onclick=()=>{pwAccept([id]);closeSheet();pwCard();toast('Accepted · added to your tasks')};
-  if(g('pb-s'))g('pb-s').onclick=()=>{closeSheet();setTimeout(()=>tbStartBlock(id),250)};
+  if(g('pb-s'))g('pb-s').onclick=()=>{closeSheet();setTimeout(()=>pwPlayBlock(id),250)};
   g('pb-c').onclick=()=>{closeSheet();show('calendar')};
   g('pb-x').onclick=()=>{pwRemove(id);closeSheet();pwCard();toast('Removed')};
 }
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-wk]');if(!b||!b.closest('#wkcard'))return;e.stopPropagation();hv();const a=b.dataset.wk;
-  if(a==='set')pwOpen();else if(a==='plan')pwRun();else if(a==='all'){const n=pwAccept('all');pwCard();toast(n+' blocks accepted · they are now tasks in “Generated”');try{rHomeTasks()}catch(_){}}
+  if(a==='set')pwOpen();else if(a==='flex')pwFlex();else if(a==='plan')pwRun();else if(a==='all'){const n=pwAccept('all');pwCard();toast(n+' blocks accepted · they are now tasks in “Generated”');try{rHomeTasks()}catch(_){}}
   else if(a==='more'){localStorage.p_pwx=localStorage.p_pwx==='1'?'0':'1';pwCard()}
-  else if(a==='blk')pwBlock(b.dataset.i);else if(a==='start')tbStartBlock(b.dataset.i)},true);
+  else if(a==='blk')pwBlock(b.dataset.i);else if(a==='start')pwPlayBlock(b.dataset.i)},true);
 function pwRun(){
   const r=pwPlan();try{render();if(typeof cur!=='undefined'&&cur==='calendar')rCal()}catch(e){}
   pwCard();toast(r.n?r.n+' blocks proposed ('+Math.round(r.mins/6)/10+' h) · review them on Home':'Nothing to plan: add a goal rule, a colle or an exam'+(r.miss.length?' · no room for '+r.miss[0]:''));
@@ -6977,12 +7099,12 @@ const SLN={am:'Morning',lunch:'Lunch',pm:'Afternoon',ev:'Evening'},HRS=[0.5,1,1.
 function pwRuleTxt(r,cfg){const g=r.gid?goals.find(x=>x.id===r.gid):null,sl=r.slot==='custom'?(r.from+'–'+r.to):(cfg.slots[r.slot]?cfg.slots[r.slot].n:'');return(r.kind==='goal'?'🎯 '+(g?g.name:'(goal deleted)'):'🔂 '+(r.name||'Routine'))+' · '+(r.days&&r.days.length?r.days.slice().sort((a,b)=>(a||7)-(b||7)).map(d=>DAYN[d]).join(' '):(r.kind==='repeat'?'every day':(r.per||2)+'× a week'))+' · '+sl+' · '+r.min+' min'}
 function pwOpen(){
   const cfg=pwCfg(),t=tbCfg(),sv_=()=>{pwSave(cfg);js(TBK+'c',t)},o=tbLoad(),np=Object.keys(o.blocks).filter(k=>o.blocks[k].prop).length,nb=cal.filter(c=>String(c.id).startsWith('tb-')&&c.date>=iso()).length;
-  const tin=(id,v)=>'<input type="time" id="'+id+'" value="'+v+'" style="min-width:0;width:100%">';
+  const pl=pwPlayCfg(),tin=(id,v)=>'<input type="time" id="'+id+'" value="'+v+'" style="min-width:0;width:100%">';
   const hrs=(id,v)=>'<div class="chips" id="'+id+'">'+HRS.map(x=>'<button class="chip '+(v===x?'on':'')+'" data-v="'+x+'">'+x+'h</button>').join('')+'</div>';
   const onoff=(id,v)=>'<div class="chips" id="'+id+'"><button class="chip '+(v?'on':'')+'" data-v="1">On</button><button class="chip '+(v?'':'on')+'" data-v="0">Off</button></div>';
   const mins=(id,v,l)=>'<div class="chips" id="'+id+'">'+(l||[15,20,30,45,60]).map(x=>'<button class="chip '+(v===x?'on':'')+'" data-v="'+x+'">'+x+' min</button>').join('')+'</div>';
   openSheet('<h2 class="sh">🗓 Week planner</h2><div class="sub" style="margin:0 0 10px">Tell Aether your hours, goals and routines once. It proposes a week (dark and transparent), you accept what you like. It learns from what you finish or skip.</div>'+
-   '<button class="btn primary" id="pw-go">'+(nb?'Re-plan my week':'Plan my week')+'</button>'+(np?'<button class="btn" id="pw-all" style="margin-top:8px">Accept all ('+np+')</button>':'')+
+   '<button class="btn primary" id="pw-go">'+(nb?'Re-plan my week':'Plan my week')+'</button><button class="btn" id="pw-tp" style="margin-top:8px">📐 Week template</button><button class="btn" id="pw-fx" style="margin-top:8px">🧩 Flex block</button>'+(np?'<button class="btn" id="pw-all" style="margin-top:8px">Accept all ('+np+')</button>':'')+
    '<div class="card" style="margin-top:12px"><div class="lbl">My hours</div>'+
     '<div class="field"><label>Weekdays</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+tin('pw-a',t.wd.from)+tin('pw-b',t.wd.to)+'</div></div>'+
     '<div class="field"><label>Weekend</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+tin('pw-c',t.we.from)+tin('pw-d',t.we.to)+'</div></div>'+
@@ -6996,9 +7118,11 @@ function pwOpen(){
     '<div class="field"><label>Mock exam before an exam (only if the week is not overloaded)</label>'+onoff('pw-mk',cfg.recipe.exam.mock)+'</div>'+(cfg.recipe.exam.mock?'<div class="field"><label>Mock length</label>'+mins('pw-mm',cfg.recipe.exam.mockMin,[60,90,120])+'</div>':'')+
     '<div class="field"><label>After each colle: review it (“Colle review”)</label>'+onoff('pw-rv',cfg.review.on)+'</div>'+(cfg.review.on?'<div class="field"><label>Review length</label>'+mins('pw-rm',cfg.review.min,[20,30,45])+'</div>':'')+'</div>'+
    '<div class="card"><div class="lbl">Every evening</div><div class="field"><label>Re-read the day\'s lessons while they are fresh</label>'+onoff('pw-re',cfg.reread.on)+'</div>'+(cfg.reread.on?'<div class="field"><label>Starts around</label>'+tin('pw-rf',cfg.reread.from)+'</div><div class="field"><label>Length</label>'+mins('pw-rl',cfg.reread.min,[20,30,45])+'</div><div class="field"><label>Skip on days with a colle</label>'+onoff('pw-rs',cfg.reread.skipColle)+'</div>':'')+'</div>'+
+   '<div class="card"><div class="lbl">▶ Focus session</div><div class="sub" style="margin:0 0 8px">What the ▶ buttons do: start a focus timer right away.</div><div class="field"><label>Timer length</label><div class="chips" id="pw-pl">'+[[0,'Block length'],[-1,'Focus mode'],[15,'15'],[25,'25'],[45,'45'],[60,'60'],[90,'90']].map(x=>'<button class="chip '+(pl.len===x[0]?'on':'')+'" data-v="'+x[0]+'">'+x[1]+(x[0]>0?' min':'')+'</button>').join('')+'</div></div><div class="field"><label>Start the timer immediately</label>'+onoff('pw-pa',pl.auto)+'</div></div>'+
+   '<div class="card"><div class="lbl">Calendar clean-up</div><div class="field"><label>Remove past planned events from the calendar after</label><div class="chips" id="pw-kp">'+[[1,'1 day'],[2,'2 days'],[3,'3 days'],[7,'7 days'],[0,'Never']].map(x=>'<button class="chip '+(cfg.keep===x[0]?'on':'')+'" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div><div class="sub">They stay in the Week plan on Home.</div><button class="btn" id="pw-cp" style="margin-top:8px">Clear past'+(pwPastN()?' ('+pwPastN()+')':'')+'</button></div>'+
    '<div class="card"><div class="lbl">Smart</div><div class="field"><label>Learn from what I finish or skip</label>'+onoff('pw-l',cfg.learn)+'</div><div class="field"><label>Offer to add a new task of my goals to the plan</label>'+onoff('pw-s',cfg.suggest)+'</div><div class="field"><label>Weekly bonus XP (70% and 100% of the plan)</label>'+onoff('pw-bn',cfg.bonus)+'</div><div class="field"><label>Week plan card on Home</label>'+onoff('pw-cd',cfg.card)+'</div><div class="field"><label>Logo in the header</label>'+onoff('pw-lg',localStorage.p_pl_logo!=='0')+'</div>'+
     '<div class="sub" style="margin-top:4px">Accepted blocks become tasks in the goal “Generated”, with XP matching their length.</div></div>'+
-   '<button class="btn" id="pw-fg" style="margin-top:4px">Forget what Aether learned</button>'+(nb?'<button class="btn danger" id="pw-x" style="margin-top:8px">Remove my plan</button>':''));
+   '<button class="btn" id="pw-fg" style="margin-top:4px">Reset learning</button>'+(nb?'<button class="btn danger" id="pw-x" style="margin-top:8px">Remove plan</button>':''));
   const g=i=>document.getElementById(i),bc=(id,f)=>bindChips(id,v=>{f(v);sv_()});
   [['pw-a',v=>t.wd.from=v],['pw-b',v=>t.wd.to=v],['pw-c',v=>t.we.from=v],['pw-d',v=>t.we.to=v],['pw-rf',v=>cfg.reread.from=v]].forEach(([i,f])=>{if(g(i))g(i).onchange=()=>{if(g(i).value){f(g(i).value);sv_()}}});
   SLOTN.forEach(k=>{[['f','from'],['t','to']].forEach(([x,p])=>{g('pw-s'+k+x).onchange=()=>{if(g('pw-s'+k+x).value){cfg.slots[k][p]=g('pw-s'+k+x).value;sv_()}}})});
@@ -7007,11 +7131,12 @@ function pwOpen(){
   bindChips('pw-mk',v=>{cfg.recipe.exam.mock=+v;sv_();pwOpen()});if(g('pw-mm'))bc('pw-mm',v=>cfg.recipe.exam.mockMin=+v);
   bindChips('pw-rv',v=>{cfg.review.on=+v;sv_();pwOpen()});if(g('pw-rm'))bc('pw-rm',v=>cfg.review.min=+v);
   bindChips('pw-re',v=>{cfg.reread.on=+v;sv_();pwOpen()});if(g('pw-rl'))bc('pw-rl',v=>cfg.reread.min=+v);if(g('pw-rs'))bc('pw-rs',v=>cfg.reread.skipColle=+v);
+  bc('pw-pl',v=>{cfg.play=Object.assign({},pwPlayCfg(),{len:+v})});bc('pw-pa',v=>{cfg.play=Object.assign({},pwPlayCfg(),{auto:+v})});bc('pw-kp',v=>cfg.keep=+v);g('pw-cp').onclick=()=>{const n=pwArchive(true);toast(n?n+' past event'+(n>1?'s':'')+' removed from the calendar':'Nothing to clear');pwCard();try{if(cur==='calendar')rCal()}catch(e){};pwOpen()};
   bc('pw-l',v=>cfg.learn=+v);bc('pw-s',v=>cfg.suggest=+v);bc('pw-bn',v=>cfg.bonus=+v);
   bindChips('pw-cd',v=>{cfg.card=+v;sv_();pwCard()});bindChips('pw-lg',v=>{try{localStorage.p_pl_logo=v==='1'?'1':'0'}catch(e){}tbLogo()});
   g('pw-r').onclick=e=>{const t1=e.target.closest('[data-rt]');if(t1){const r=cfg.rules.find(x=>x.id===t1.dataset.rt);if(r){r.on=r.on===0?1:0;sv_();pwOpen()}return}const b=e.target.closest('[data-r]');if(b){closeSheet();setTimeout(()=>pwRule(b.dataset.r),300)}};
   g('pw-rg').onclick=()=>{closeSheet();setTimeout(()=>pwRule('',' goal'),300)};g('pw-rr').onclick=()=>{closeSheet();setTimeout(()=>pwRule('','repeat'),300)};
-  g('pw-go').onclick=()=>{sv_();closeSheet();pwRun()};if(g('pw-all'))g('pw-all').onclick=()=>{pwAccept('all');closeSheet();pwCard();toast('Accepted')};
+  g('pw-tp').onclick=()=>{sv_();closeSheet();setTimeout(pwTpl,300)};g('pw-fx').onclick=()=>{sv_();closeSheet();setTimeout(pwFlex,300)};g('pw-go').onclick=()=>{sv_();closeSheet();pwRun()};if(g('pw-all'))g('pw-all').onclick=()=>{pwAccept('all');closeSheet();pwCard();toast('Accepted')};
   g('pw-fg').onclick=()=>{js(TBL,{});toast('Learning reset')};if(g('pw-x'))g('pw-x').onclick=()=>{tbClear(false);sv();closeSheet();pwCard();toast('Plan removed')};
 }
 function pwRule(id,kind){
@@ -7039,7 +7164,79 @@ function pwRule(id,kind){
   };
   draw();
 }
-window.PW={cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
+setTimeout(()=>{try{const gg=goals.find(x=>x.id==='g-gen');if(gg&&gg.color==='#8b93a7'){gg.color='#ff2d8f';sv()}pwArchive();if(typeof rCal==="function"&&cur==="calendar")rCal()}catch(e){}},1500);
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-act="tpcfg"]');if(!b)return;e.stopPropagation();hv();pwOpen()},true);
+
+/* ---------- week template UI + flex blocks ---------- */
+const DORD=[1,2,3,4,5,6,0];
+const dTxt=d=>{d=(d||[]).slice();if(d.length===7)return 'every day';if(d.length===5&&[1,2,3,4,5].every(x=>d.includes(x)))return 'Mon–Fri';return DORD.filter(x=>d.includes(x)).map(x=>DAYN[x]).join(' ')||'no day'};
+function pwTpl(){
+  const cfg=pwCfg(),sv_=()=>pwSave(cfg),g=i=>document.getElementById(i);
+  const row=(k,x,txt)=>'<div class="prow" style="--c:var(--acc)"><button data-tb="'+k+'|'+x.id+'" style="all:unset;flex:1;cursor:pointer;min-width:0;opacity:'+(x.on===0?.45:1)+'"><span class="m"><div class="t" style="white-space:normal">'+pwEsc(txt)+'</div></span></button><button data-tt="'+k+'|'+x.id+'" class="chip '+(x.on===0?'':'on')+'" style="flex:none">'+(x.on===0?'Off':'On')+'</button></div>';
+  const tin=(id,v)=>'<input type="time" id="'+id+'" value="'+v+'" style="min-width:0;width:100%">',chips=(id,v,l,u)=>'<div class="chips" id="'+id+'">'+l.map(x=>'<button class="chip '+(v===x?'on':'')+'" data-v="'+x+'">'+x+(u||' min')+'</button>').join('')+'</div>';
+  openSheet('<h2 class="sh">📐 My week template</h2><div class="sub" style="margin:0 0 10px">The foundation of every week. Aether never plans over it and builds the rest around it.</div>'+
+   '<div class="card"><div class="lbl">Life blocks (never planned over)</div><div class="sub" style="margin:2px 0 6px">Meals, chores, sport, commute…</div>'+(cfg.life.map(x=>row('life',x,(x.ic||'•')+' '+x.name+' · '+dTxt(x.days)+' · '+x.from+'–'+x.to)).join('')||'<div class="sub">None yet.</div>')+'<button class="btn" data-tb="life|" style="margin-top:8px">＋ Life block</button></div>'+
+   '<div class="card"><div class="lbl">🍝 Dinner</div><div class="field"><label>Keep a free stretch for dinner</label><div class="chips" id="tp-do"><button class="chip '+(cfg.dinner.on?'on':'')+'" data-v="1">On</button><button class="chip '+(cfg.dinner.on?'':'on')+'" data-v="0">Off</button></div></div>'+
+    (cfg.dinner.on?'<div class="field"><label>Window</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+tin('tp-df',cfg.dinner.from)+tin('tp-dt',cfg.dinner.to)+'</div></div><div class="field"><label>At least</label>'+chips('tp-dm',cfg.dinner.min,[30,45,60,90])+'</div>':'')+'</div>'+
+   '<div class="card"><div class="lbl">🎯 Light-task windows</div><div class="sub" style="margin:2px 0 6px">Free moments for small goal tasks only: never a colle, never a lesson revision.</div>'+(cfg.lite.map(x=>row('lite',x,dTxt(x.days)+' · '+x.from+'–'+x.to)).join('')||'<div class="sub">None yet.</div>')+'<button class="btn" data-tb="lite|" style="margin-top:8px">＋ Window</button></div>'+
+   '<div class="card"><div class="lbl">📚 Reference study blocks</div><div class="sub" style="margin:2px 0 6px">Your fixed times for each subject, the same every week. Learn the lesson, or do exercises on the new chapter.</div>'+(cfg.ref.map(x=>row('ref',x,(x.type==='ex'?'📝 ':'📖 ')+pwSj(x.subj)+' · '+(x.type==='ex'?'Exercises':'Learn')+' · '+dTxt(x.days)+' · '+x.from+'–'+x.to)).join('')||'<div class="sub">None yet.</div>')+'<button class="btn" data-tb="ref|" style="margin-top:8px">＋ Study block</button><div class="sub" style="margin-top:6px">They are placed first, then on top of that Aether adds colle and exam prep, training, re-reads and goals. A missed block is offered again in a free gap.</div></div>'+
+   '<div class="card"><div class="lbl">⏱ Minimum length</div><div class="field"><label>Revising a lesson</label>'+chips('tp-m1',cfg.minb.rev,[20,30,45,60])+'</div><div class="field"><label>Exercises</label>'+chips('tp-m2',cfg.minb.ex,[15,20,30,45])+'</div><div class="field"><label>Goal tasks</label>'+chips('tp-m3',cfg.minb.goal,[10,15,20,30])+'</div><div class="sub">A gap shorter than this is left free.</div></div>'+
+   '<button class="btn primary" id="tp-fx">🧩 Flex block</button><button class="btn" id="tp-go" style="margin-top:8px">Re-plan</button>');
+  bindChips('tp-do',v=>{cfg.dinner.on=+v;sv_();pwTpl()});
+  [['tp-df','from'],['tp-dt','to']].forEach(([i,k])=>{if(g(i))g(i).onchange=()=>{if(g(i).value){cfg.dinner[k]=g(i).value;sv_()}}});
+  if(g('tp-dm'))bindChips('tp-dm',v=>{cfg.dinner.min=+v;sv_()});bindChips('tp-m1',v=>{cfg.minb.rev=+v;sv_()});bindChips('tp-m2',v=>{cfg.minb.ex=+v;sv_()});bindChips('tp-m3',v=>{cfg.minb.goal=+v;sv_()});
+  g('tp-fx').onclick=()=>{closeSheet();setTimeout(pwFlex,300)};g('tp-go').onclick=()=>{closeSheet();setTimeout(pwRun,250)};
+  const sh=document.getElementById('sheet');
+  sh.onclick=e=>{const t1=e.target.closest&&e.target.closest('[data-tt]');if(t1){const[k,id]=t1.dataset.tt.split('|'),x=cfg[k].find(y=>y.id===id);if(x){x.on=x.on===0?1:0;sv_();pwTpl()}return}const b=e.target.closest&&e.target.closest('[data-tb]');if(b){const[k,id]=b.dataset.tb.split('|');closeSheet();setTimeout(()=>pwTb(k,id),300)}};
+}
+function pwTb(kind,id){
+  const cfg=pwCfg(),L=cfg[kind],old=id?L.find(x=>x.id===id):null,x=old?JSON.parse(JSON.stringify(old)):{id:'x'+Math.random().toString(36).slice(2,7),on:1,days:kind==='lite'?[1,2,3,4,5]:[1,2,3,4,5],from:kind==='ref'?'18:00':'12:00',to:kind==='ref'?'19:30':'13:00',name:kind==='life'?'':'',ic:'',subj:Object.keys(SUBJ)[0],type:'learn'};
+  const sj=Object.keys(SUBJ);
+  openSheet('<h2 class="sh">'+(old?'Edit':'New')+' '+(kind==='life'?'life block':kind==='lite'?'light-task window':'reference block')+'</h2>'+
+   (kind==='life'?'<div class="field"><label>Name</label><input id="tb-n" maxlength="30" placeholder="Lunch, chores, sport…" value="'+pwEsc(x.name||'')+'"></div>':'')+
+   (kind==='ref'?'<div class="field"><label>Subject</label><div class="chips" id="tb-s">'+sj.map(k=>'<button class="chip '+(x.subj===k?'on':'')+'" data-v="'+k+'">'+pwSj(k)+'</button>').join('')+'</div></div><div class="field"><label>What</label><div class="chips" id="tb-t"><button class="chip '+(x.type!=='ex'?'on':'')+'" data-v="learn">📖 Learn the lesson</button><button class="chip '+(x.type==='ex'?'on':'')+'" data-v="ex">📝 Exercises</button></div></div>':'')+
+   '<div class="field"><label>Days</label><div class="chips" id="tb-d">'+DORD.map(d=>'<button class="chip '+(x.days.includes(d)?'on':'')+'" data-d="'+d+'">'+DAYN[d]+'</button>').join('')+'</div></div>'+
+   '<div class="field"><label>From – to</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input type="time" id="tb-f" value="'+x.from+'" style="min-width:0;width:100%"><input type="time" id="tb-t2" value="'+x.to+'" style="min-width:0;width:100%"></div></div>'+
+   '<button class="btn primary" id="tb-ok">Save</button>'+(old?'<button class="btn danger" id="tb-x" style="margin-top:8px">Delete</button>':''));
+  const g=i=>document.getElementById(i);
+  if(g('tb-s'))bindChips('tb-s',v=>{x.subj=v});if(g('tb-t'))bindChips('tb-t',v=>{x.type=v});
+  g('tb-d').onclick=e=>{const b=e.target.closest('[data-d]');if(!b)return;const d=+b.dataset.d;x.days=x.days.includes(d)?x.days.filter(y=>y!==d):x.days.concat(d);b.classList.toggle('on')};
+  g('tb-ok').onclick=()=>{
+    if(!g('tb-f').value||!g('tb-t2').value||hm(g('tb-t2').value)-hm(g('tb-f').value)<15){toast('Pick a start and an end at least 15 min apart');return}
+    if(!x.days.length){toast('Pick at least one day');return}
+    x.from=g('tb-f').value;x.to=g('tb-t2').value;if(kind==='life'){x.name=(g('tb-n').value||'').trim()||'Life block'}
+    const i=L.findIndex(y=>y.id===x.id);if(i>-1)L[i]=x;else L.push(x);pwSave(cfg);closeSheet();setTimeout(pwTpl,300);toast('Saved · applies at your next plan')};
+  if(g('tb-x'))g('tb-x').onclick=()=>{cfg[kind]=L.filter(y=>y.id!==x.id);pwSave(cfg);closeSheet();setTimeout(pwTpl,300)};
+}
+/* Flex block: an unplanned thing (groceries, a random exercise…) placed in the first free gap or at a time you choose. It stays when you re-plan. */
+function pwFlex(){
+  const st={len:30,when:'free',day:iso()},td=iso(),tm=shiftD(td,1);
+  openSheet('<h2 class="sh">🧩 Flex block</h2><div class="sub" style="margin:0 0 10px">Something unplanned: groceries, a random exercise, an errand. Aether finds room for it and plans around it.</div>'+
+   '<div class="field"><label>What</label><input id="fx-n" maxlength="40" placeholder="Groceries, random exercise…"></div>'+
+   '<div class="field"><label>Length</label><div class="chips" id="fx-l">'+[15,30,45,60,90,120].map(x=>'<button class="chip '+(x===30?'on':'')+'" data-v="'+x+'">'+x+' min</button>').join('')+'</div></div>'+
+   '<div class="field"><label>Day</label><div class="chips" id="fx-d"><button class="chip on" data-v="'+td+'">Today</button><button class="chip" data-v="'+tm+'">Tomorrow</button></div></div>'+
+   '<div class="field"><label>When</label><div class="chips" id="fx-w"><button class="chip on" data-v="free">First free gap</button><button class="chip" data-v="at">Pick a time</button></div><input type="time" id="fx-t" value="17:00" style="display:none;margin-top:8px;width:100%"></div>'+
+   '<button class="btn primary" id="fx-ok">Add it</button>');
+  const g=i=>document.getElementById(i);
+  bindChips('fx-l',v=>{st.len=+v});bindChips('fx-d',v=>{st.day=v});bindChips('fx-w',v=>{st.when=v;g('fx-t').style.display=v==='at'?'':'none'});
+  g('fx-ok').onclick=()=>{
+    const name=(g('fx-n').value||'').trim()||'Flex',r=pwAddFlex(name,st.len,st.day,st.when==='at'?g('fx-t').value:'');
+    if(!r){toast('No free gap of '+st.len+' min that day: pick a time or a shorter length');return}
+    closeSheet();toast('Flex block added · '+r.time+(r.n?' · plan reshuffled':''));try{pwCard();if(cur==='calendar')rCal();rTP()}catch(e){}};
+}
+function pwAddFlex(name,len,ds,at){
+  const tcfg=tbCfg(),now=new Date(),nowM=ds===iso()?ceil5(now.getHours()*60+now.getMinutes()+5):0;let a=null;
+  if(at){a=hm(at)}else{const iv=pwDayIv(ds,tcfg,nowM).filter(x=>x[1]-x[0]>=len);if(!iv.length)return null;a=ceil5(iv[0][0])}
+  let id;do{id='tb-'+ds+'-'+pad(Math.floor(a/60))+pad(a%60);if(cal.some(c=>c.id===id))a+=5}while(cal.some(c=>c.id===id));
+  const e=a+len,title='🧩 '+name,xp=pwXp('goal',len),o=tbLoad(),m={id:'w:flex:'+id,type:'task',subj:'',min:len,why:'Flex block',xp,title:name,go:{k:'tab',id:'tasks'}};
+  cal.push({id,title,date:ds,time:hmS(a),endTime:hmS(e),kind:'work',subj:'',color:pwSc(''),prop:1,desc:pwDesc(m)});
+  o.blocks[id]={ms:[m],done:0,wk:'flex',pl:len,hr:a,xp,prop:1,flex:1,snap:{title,date:ds,time:hmS(a),endTime:hmS(e),subj:'',color:pwSc('')}};
+  tbSave(o);pwAccept([id]);sv();let n=0;
+  const pend=Object.keys(tbLoad().blocks).filter(k=>tbLoad().blocks[k].prop).length;if(pend){try{pwPlan();n=1}catch(er){}}
+  return{id,time:hmS(a),n};
+}
+
+window.PW={tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
@@ -7087,10 +7284,10 @@ function homeNow(){
   if(nb&&(nb.live||hm(nb.ev.time)-nowM<=90)){return head('🗓 Work block',nb.ev.time+' – '+nb.ev.endTime)+nb.ms.slice(0,3).map(m=>row(m.title,m.min+' min · '+m.why,AP_TYPES[m.type].ic)).join('')+'<button class="btn primary" data-ap="blk" data-id="'+esc(nb.ev.id)+'">'+(nb.live?'Start the block':'Start early')+'</button>'}
   if(per==='night'){
     const tm=shiftD(td,1),ev=evOn(tm).filter(e=>e.time&&e.kind!=='work').sort((a,b)=>hm(a.time)-hm(b.time));
-    return head('🌙 Tomorrow',briefShort(tm))+row(ev[0]?ev[0].title:'Nothing fixed',ev[0]?ev[0].time+(ev[0].room?' · '+ev[0].room:''):'A free morning')+(tbHas(2)?'':'<button class="btn" data-ap="plan">🗓 Plan my week</button>')
+    return head('🌙 Tomorrow',briefShort(tm))+row(ev[0]?ev[0].title:'Nothing fixed',ev[0]?ev[0].time+(ev[0].room?' · '+ev[0].room:''):'A free morning')+''
   }
   const t=apPlan(45,1)[0];
-  return head('🧭 Now',per==='morning'?'Good morning':'')+(t?row(t.title,'Best move now · '+t.min+' min · '+t.why,AP_TYPES[t.type].ic)+'<button class="btn primary" data-ap="go">Go</button>':'<div class="sub">Nothing urgent. Enjoy it, or add an exam / cards.</div>')+(tbHas(3)?'':'<button class="btn" data-ap="plan" style="margin-top:8px">🗓 Plan my week into my free time</button>');
+  return head('🧭 Now',per==='morning'?'Good morning':'')+(t?row(t.title,'Best move now · '+t.min+' min · '+t.why,AP_TYPES[t.type].ic)+'<button class="btn primary" data-ap="go">Go</button>':'<div class="sub">Nothing urgent. Enjoy it, or add an exam / cards.</div>');
 }
 function briefShort(ds){const ev=evOn(ds).filter(e=>e.time&&e.kind!=='work').length,tk=tasks.filter(t=>t.due&&t.due<=ds).length;return ev+' event'+(ev===1?'':'s')+(tk?' · '+tk+' due':'')}
 window.PH={layout:hLayout,custom:hCustom,now:homeNow};
@@ -7116,7 +7313,7 @@ function faultSetup(sj0){
   let subj=subs.includes(sj0)?sj0:subs[0],nmax=5;
   const draw=()=>{
     const pool=faultPool(subj);
-    openSheet('<h2 class="sh">🎯 DS made of my own faults</h2><div class="sub" style="margin:0 0 10px">A mock exam built only from the traps you already fell into, with new data. You write it on paper, photograph your copy, and each trap you now avoid is retired from your notebook.</div><div class="field"><label>Subject</label>'+subjChips(subj,subs,'fl-s')+'</div><div class="field"><label>Exercises</label><div class="chips" id="fl-n">'+[3,4,5,6].map(x=>'<button class="chip '+(nmax===x?'on':'')+'" data-v="'+x+'">'+x+'</button>').join('')+'</div></div><div class="sub" style="margin:0 0 6px">Your '+Math.min(pool.length,nmax)+' most costly open mistakes in '+SUBJ[subj].n+' will be targeted:</div>'+pool.slice(0,nmax).map(m=>'<div class="prow" style="--c:#e5484d;cursor:default"><span class="m"><div class="t">'+esc((m.text||'').slice(0,90))+'</div><div class="s">'+esc(m.from||'')+(m.fails?' · failed '+m.fails+'×':'')+'</div></span></div>').join('')+'<button class="btn primary" id="fl-go" style="margin-top:10px">Write my exam</button>');
+    openSheet('<h2 class="sh">🎯 DS from my faults</h2><div class="sub" style="margin:0 0 10px">A mock exam built only from the traps you already fell into, with new data. You write it on paper, photograph your copy, and each trap you now avoid is retired from your notebook.</div><div class="field"><label>Subject</label>'+subjChips(subj,subs,'fl-s')+'</div><div class="field"><label>Exercises</label><div class="chips" id="fl-n">'+[3,4,5,6].map(x=>'<button class="chip '+(nmax===x?'on':'')+'" data-v="'+x+'">'+x+'</button>').join('')+'</div></div><div class="sub" style="margin:0 0 6px">Your '+Math.min(pool.length,nmax)+' most costly open mistakes in '+SUBJ[subj].n+' will be targeted:</div>'+pool.slice(0,nmax).map(m=>'<div class="prow" style="--c:#e5484d;cursor:default"><span class="m"><div class="t">'+esc((m.text||'').slice(0,90))+'</div><div class="s">'+esc(m.from||'')+(m.fails?' · failed '+m.fails+'×':'')+'</div></span></div>').join('')+'<button class="btn primary" id="fl-go" style="margin-top:10px">Write my exam</button>');
     bindChips('fl-s',v=>{subj=v;draw()});bindChips('fl-n',v=>{nmax=+v;draw()});
     $('fl-go').onclick=()=>{closeSheet();setTimeout(()=>faultGen(subj,nmax),300)};
   };
@@ -7139,7 +7336,7 @@ async function faultShow(f,withSol){
   await C.loadKatex().catch(()=>{});
   const tot=f.exercises.reduce((a,e)=>a+e.points,0);
   openSheet('<h2 class="sh">'+esc(f.title)+'</h2><div class="sub" style="margin:0 0 10px">'+SUBJ[f.subj].n+' · '+f.minutes+' min · /'+tot+'</div>'+f.exercises.map(e=>'<div class="card"><div class="cardhead"><div class="lbl">Exercise '+e.n+'</div><span class="sub">'+e.points+' pts</span></div><div class="md">'+C.md(e.statement)+'</div>'+(withSol?'<div class="sub" style="margin-top:8px"><b>Trap:</b> '+esc(e.trap)+'</div><div class="md" style="margin-top:6px">'+C.md(e.solution)+'</div>':'')+'</div>').join('')+
-  (f.graded?'':'<button class="btn primary" id="fx-g">I wrote it: grade my copy</button>')+'<button class="btn" id="fx-p" style="margin-top:8px">Print / save as PDF</button>'+(withSol||f.graded?'':'<div class="sub" style="margin:10px 0">Write it on paper under exam conditions, then photograph every page.</div>'));
+  (f.graded?'':'<button class="btn primary" id="fx-g">Grade my copy</button>')+'<button class="btn" id="fx-p" style="margin-top:8px">Print / save as PDF</button>'+(withSol||f.graded?'':'<div class="sub" style="margin:10px 0">Write it on paper under exam conditions, then photograph every page.</div>'));
   const g=document.getElementById('fx-g');if(g)g.onclick=()=>faultGrade(f);
   document.getElementById('fx-p').onclick=()=>{try{printHtml('<h1>'+esc(f.title)+'</h1>'+f.exercises.map(e=>'<h3>Exercise '+e.n+' ('+e.points+' pts)</h3>'+C.md(e.statement)).join(''))}catch(e){toast('Printing is not available here')}};
   if(typeof C.typeset==='function')try{C.typeset(document.getElementById('sbody'))}catch(e){}
@@ -7612,7 +7809,7 @@ async function bdResult(o,pi){
    '<div class="card"><div class="cardhead"><div class="lbl">What I read (edit if wrong)</div></div><textarea id="br-tx" rows="7" style="width:100%">'+esc(o.transcript||'')+'</textarea>'+(o.unreadable?'<div class="sub" style="margin-top:6px">Unreadable: '+esc(o.unreadable)+'</div>':'')+'</div>'+
    (o.lesson?'<div class="card"><div class="cardhead"><div class="lbl">Clean version</div></div><div class="md">'+C.md(o.lesson)+'</div></div>':'')+
    '<button class="btn primary" id="br-ls">Save as a lesson (notes)</button>'+
-   (err.length?'<button class="btn" id="br-er" style="margin-top:8px">Add '+err.length+' mistake'+(err.length>1?'s':'')+' to my notebook</button>':'')+
+   (err.length?'<button class="btn" id="br-er" style="margin-top:8px">Add '+err.length+' mistake'+(err.length>1?'s':'')+' to Mistakes</button>':'')+
    (cards.length?'<button class="btn" id="br-cd" style="margin-top:8px">Make '+cards.length+' flashcard'+(cards.length>1?'s':'')+'</button>':'')+
    '<button class="btn" id="br-cp" style="margin-top:8px">Copy the text</button>');
   const subj=o.subj||'maths',title=o.title||(B&&B.m.title)||'Board',lid0=()=>(S.lessons.find(l=>l.bd===(B&&B.id)&&l.bdp===pi)||{}).id;
@@ -7666,9 +7863,9 @@ function exPage(id){
   if(!live[kc])h+='<button class="btn" data-a="exCheck" data-i="'+id+'"'+((x.mine||[]).length?'':' style="opacity:.55"')+'>✅ Check my attempt</button>';
   if(x.chk)h+='<div class="doc" id="ex-chk" style="margin-top:10px"></div>';
   h+='</div><div class="card"><div class="lbl">Solution</div><div class="sub" style="margin:4px 0 10px">Try first: the hints and the check are worth more than reading it.</div>'+liveBox(ks)+errBox(ks);
-  if(!live[ks]){if(x.sol)h+='<button class="btn primary" data-a="exSol" data-i="'+id+'">Open the solution</button>';h+='<button class="btn '+(x.sol?'':'primary')+'" data-a="exMkSol" data-i="'+id+'">'+(x.sol?'Write it again':'Write the full solution')+'</button>'}
+  if(!live[ks]){if(x.sol)h+='<button class="btn primary" data-a="exSol" data-i="'+id+'">Open the solution</button>';h+='<button class="btn '+(x.sol?'':'primary')+'" data-a="exMkSol" data-i="'+id+'">'+(x.sol?'Redo it':'Full solution')+'</button>'}
   h+='</div>';
-  h+='<button class="btn '+(x.status==='done'?'':'primary')+'" data-a="exDone" data-i="'+id+'" style="margin-bottom:20px">'+(x.status==='done'?'Mark as not done':'✓ I finished this exercise')+'</button>';
+  h+='<button class="btn '+(x.status==='done'?'':'primary')+'" data-a="exDone" data-i="'+id+'" style="margin-bottom:20px">'+(x.status==='done'?'Not done':'✓ Done')+'</button>';
   return h;
 }
 function exSolPage(id){
