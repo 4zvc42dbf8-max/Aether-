@@ -221,7 +221,7 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .ev[data-ghost] b{color:var(--muted);font-weight:600}.ev[data-ghost] span{opacity:.55}
 .evrow[data-ghost]{background:transparent;box-shadow:0 0 0 1px var(--line) inset}
 .evrow[data-ghost] .bar-c{background:rgba(255,255,255,.22);box-shadow:none}.evrow[data-ghost] .et{color:var(--muted);font-weight:500}
-.ev[data-plan]{background:rgba(6,8,14,.58);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 6px 14px -10px rgba(0,0,0,.9);backdrop-filter:blur(6px)}.ev[data-plan]::before{opacity:.7;box-shadow:none}.ev[data-plan] b{font-weight:650}.evrow[data-plan]{background:rgba(6,8,14,.5);box-shadow:0 0 0 1px var(--line) inset}.evchip[data-plan]{background:rgba(6,8,14,.5)}[data-theme="light"] .ev[data-plan],[data-theme="light"] .evrow[data-plan],[data-theme="light"] .evchip[data-plan]{background:rgba(20,24,40,.08);box-shadow:0 0 0 1px rgba(20,24,40,.14) inset}
+.ev[data-plan]{background:rgba(6,8,14,.58);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 6px 14px -10px rgba(0,0,0,.9);backdrop-filter:blur(6px)}.ev[data-plan]::before{background:rgba(255,255,255,.38)!important;opacity:1;box-shadow:none}.evrow[data-plan] .bar-c{background:rgba(255,255,255,.38)!important;box-shadow:none}.evchip[data-plan] i{background:rgba(255,255,255,.4)!important;box-shadow:none}[data-theme="light"] .ev[data-plan]::before,[data-theme="light"] .evrow[data-plan] .bar-c,[data-theme="light"] .evchip[data-plan] i{background:rgba(20,24,40,.32)!important}.ev[data-plan] b{font-weight:650}.evrow[data-plan]{background:rgba(6,8,14,.5);box-shadow:0 0 0 1px var(--line) inset}.evchip[data-plan]{background:rgba(6,8,14,.5)}[data-theme="light"] .ev[data-plan],[data-theme="light"] .evrow[data-plan],[data-theme="light"] .evchip[data-plan]{background:rgba(20,24,40,.08);box-shadow:0 0 0 1px rgba(20,24,40,.14) inset}
 .evchip[data-ghost]{background:transparent;opacity:.7}.evchip[data-ghost] i{background:rgba(255,255,255,.3);box-shadow:none}
 .ftask{display:flex;align-items:center;gap:10px;width:100%;margin:12px 0 0;padding:12px 16px;border-radius:16px;border:1px dashed var(--line2);background:transparent;color:var(--muted);font:inherit;font-size:15px;text-align:left}
 .ftask b{color:var(--text);font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.ftask.lock{opacity:.8}
@@ -2848,13 +2848,14 @@ function fPickTask(){
 }
 /* save a focus block to the calendar (start = when it began, end = when it ended) */
 const fTitle=()=>(F.ref&&F.ref.k==='prog'&&window.P&&P.trainName&&P.trainName(F.ref.id))||F.task||'';
+const fCol=()=>{try{if(F.blk&&window.PW){const g=PW.get(F.blk),sj=(g&&g.c.subj)||fSubj();return PW.sc(sj)}}catch(e){}return FROST};
 const fSubj=()=>{try{return window.P&&P.subjOf?P.subjOf(fTitle(),F.ref,F.taskId):''}catch(e){return ''}};
 function fLog(endMs,mins){
   const tt=fTitle();
   const s=F.start||endMs-mins*60000,date=iso(new Date(s));
   let t1=hm(s),t2=hm(endMs);
   if(iso(new Date(endMs))!==date||tmin(t2)<=tmin(t1))t2=tmin(t1)>=23*60+59?'23:59':fmt(Math.min(24*60-1,tmin(t1)+Math.max(1,mins)));
-  cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:FROST,kind:'focus'});
+  cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:fCol(),kind:'focus'});
   fhist.push({task:tt||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1,subj:fSubj()});
   if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,mins);
 }
@@ -2877,7 +2878,7 @@ function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
   if(F.kind==='focus'){
     const tt=fTitle();fhist.push({task:tt||'Focus',min:EM,date:fk(),ts:Date.now(),mode:F.mode,subj:fSubj()});
     if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,EM);
-    {const s=F.start||Date.now()-EM*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+EM));cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+EM+' min',color:FROST,kind:'focus'})}
+    {const s=F.start||Date.now()-EM*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+EM));cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+EM+' min',color:fCol(),kind:'focus'})}
     sv();try{window.PW&&PW.focusDone&&PW.focusDone(F.taskId,EM,true)}catch(e){}gain(F.cust?Math.max(5,Math.round(M.xp*F.cust/M.min)):F.mode==='intense'?Math.round(M.xp*1.25):M.xp,null,null,null,fSubj());if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);if(resc)setTimeout(()=>{gain(15,innerWidth/2,innerHeight*.4);toast('🛟 Smallest win: +15 XP')},1500);
   }else sv();
   sv();vib(80);chime();
@@ -3727,9 +3728,9 @@ function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px
 function wkNudge(){const d=new Date(),dw=d.getDay(),hr=d.getHours();if(!((dw===0&&hr>=17)||(dw===1&&hr<12)))return '';return '<button class="prow" data-a="week" style="--c:var(--lime)"><i class="dot"></i><span class="m"><div class="t">Your weekly review is ready</div><div class="s">Time worked, grades, what is coming</div></span>'+ico.chev+'</button>'}
 function vOver(){
   const td=iso(),now=new Date().toTimeString().slice(0,5);
-  const nx=cal.filter(e=>e.date>td||(e.date===td&&(e.endTime||e.time||'23:59')>=now)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,5);
+  const nx=cal.filter(e=>(e.kind==='colle'||e.kind==='ds'||e.kind==='vt')&&(e.date>td||(e.date===td&&(e.endTime||e.time||'23:59')>=now))).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,5);
   let h='<div class="card"><div class="cardhead"><div class="lbl">Next up</div><button class="addf" data-a="openCal">Open calendar ›</button></div>';
-  h+=nx.length?nx.map(e=>'<div class="sub" style="margin:8px 2px 4px;font-weight:600">'+(e.date===td?'Today':e.date===iso(addD(new Date(),1))?'Tomorrow':fd(e.date))+'</div>'+evBtn(e,false)).join(''):'<div class="pfree">Nothing planned. Your colles and DS are in the Calendar tab.</div>';
+  h+=nx.length?nx.map(e=>'<div class="sub" style="margin:8px 2px 4px;font-weight:600">'+(e.date===td?'Today':e.date===iso(addD(new Date(),1))?'Tomorrow':fd(e.date))+'</div>'+evBtn(e,false)).join(''):'<div class="pfree">No colle or exam coming up.</div>';
   h+='</div>';
   const ups=cal.filter(e=>e.kind==='colle'&&e.date>=td&&e.date<=iso(addD(new Date(),21))).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,6);
   if(ups.length){
@@ -7306,7 +7307,7 @@ function pwAddFlex(name,len,ds,at){
   return{id,time:hmS(a),n};
 }
 
-window.PW={sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
+window.PW={sc:pwSc,sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
