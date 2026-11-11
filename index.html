@@ -185,6 +185,7 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 /* ---------- tasks ---------- */
 .thead{display:flex;align-items:center;gap:16px}
 .star{width:60px;height:60px;border-radius:20px;display:grid;place-items:center;font-size:30px;background:radial-gradient(circle at 30% 25%,rgba(77,141,255,.35),rgba(77,141,255,.05));border:1px solid rgba(77,141,255,.3);flex:none}
+.star:has(.lvb){background:none;border-color:transparent;overflow:visible}
 .star.pop{animation:starpop .8s var(--spring)}
 @keyframes starpop{30%{transform:scale(1.35) rotate(-14deg)}60%{transform:scale(.92) rotate(8deg)}100%{transform:none}}
 .task{background:var(--surf2);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:10px;transition:transform .3s var(--spring),max-height .45s var(--ease),opacity .35s,margin .45s var(--ease),padding .45s var(--ease),border-color .3s;overflow:hidden}
@@ -512,12 +513,17 @@ html.covered:not(.locked) #pv-lock>*{visibility:hidden}
 .pv-btn:active{transform:scale(.95)}
 .pv-btn.danger{color:var(--red);border-color:rgba(255,77,66,.35);background:rgba(255,77,66,.08)}
 /* ================= PRÉPA ================= */
-.ptabs{display:flex;gap:8px;overflow-x:auto;margin:0 -14px 14px;padding:2px 14px;scrollbar-width:none;position:sticky;top:calc(66px + env(safe-area-inset-top));z-index:30}
+.ptabs{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:0 0 14px;padding:5px;border-radius:22px;border:1px solid var(--line2);background:rgba(12,13,18,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:sticky;top:calc(66px + env(safe-area-inset-top));z-index:30}
 .ptabs::-webkit-scrollbar{display:none}
-.ptab{flex:none;padding:10px 16px;border-radius:999px;border:1px solid var(--line2);background:rgba(12,13,18,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--muted);font-size:14px;font-weight:600;transition:all .3s var(--spring)}
-.ptab.on{background:var(--lime);color:var(--ink);border-color:transparent;transform:scale(1.05);box-shadow:0 8px 22px -8px rgba(77,141,255,.6)}
-.ptab:active{transform:scale(.93)}
-.ptab em{font-style:normal;margin-left:6px;font-size:12px;background:rgba(0,0,0,.18);border-radius:99px;padding:1px 7px}
+.ptabs .ptab{position:relative;height:42px;padding:0;display:grid;place-items:center;border-radius:16px;border:1px solid transparent;background:transparent;color:var(--muted);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;transform:none;transition:all .3s var(--spring)}
+.ptab svg{width:24px;height:24px;display:block;overflow:visible}
+.ptab .ac{fill:var(--tc);fill-opacity:.38;stroke:var(--tc)}
+.ptab .as{stroke:var(--tc)}
+.ptabs .ptab.on{background:color-mix(in srgb,var(--tc) 20%,transparent);border-color:color-mix(in srgb,var(--tc) 55%,transparent);color:var(--tc);box-shadow:0 6px 18px -8px var(--tc)}
+.ptabs .ptab.on svg{filter:drop-shadow(0 0 5px color-mix(in srgb,var(--tc) 60%,transparent))}
+.ptabs .ptab:active{transform:scale(.9)}
+.ptab em{position:absolute;top:1px;right:3px;font-style:normal;font-size:10px;font-weight:800;min-width:16px;text-align:center;background:var(--tc);color:#000;border-radius:99px;padding:1px 4px;margin:0}
+[data-theme="light"] .ptabs{background:rgba(255,255,255,.9)}[data-theme="light"] .ptabs .ptab{background:transparent;color:var(--muted)}[data-theme="light"] .ptabs .ptab.on{background:color-mix(in srgb,var(--tc) 18%,#fff);color:var(--tc)}
 .pview.enter>*{animation:rise .55s var(--ease) both;animation-delay:calc(var(--i,0)*55ms)}
 .pwk{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .pwk b{font-family:var(--serif);font-variant:small-caps;font-size:20px;font-weight:600}
@@ -1922,6 +1928,7 @@ function showLevels(){
 function rLevel(anim){
   const need=needed(lv);
   $('hl').textContent=lv;
+  try{const hi=$('hli');if(hi){const k=lv+'|'+lvTheme().id;if(hi.dataset.k!==k){hi.dataset.k=k;hi.innerHTML=lvBadge(lv,54)}}}catch(e){}
   $('hxp').textContent=xp+' / '+need+' XP';
   const f=$('hxf');
   if(anim){f.style.transition='none';f.style.width='0%';void f.offsetWidth;f.style.transition=''}
@@ -3711,6 +3718,8 @@ function back(){st.stack.pop();render('pop');window.scrollTo(0,0)}
 function tab(t){st.tab=t;st.stack=[];render('tab');window.scrollTo(0,0)}
 
 /* ================= SCREENS ================= */
+const TICO={"home":["#4d8dff","<rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"13.5\" y=\"3.5\" width=\"7\" height=\"5\" rx=\"2\"/><rect x=\"13.5\" y=\"11.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"3.5\" y=\"15.5\" width=\"7\" height=\"5\" rx=\"2\"/>"],"map":["#2ec4b6","<path d=\"M3.5 6.5l5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2z\"/><path d=\"M9 4.5v13M15 6.5v13\"/><circle class=\"ac\" cx=\"12\" cy=\"11\" r=\"2\"/>"],"lessons":["#ffb703","<path d=\"M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5c-3.5-.5-6.5 0-8.5 1.5z\"/><path d=\"M12 6.5v13\"/><path class=\"as\" d=\"M6 9h3M6 12h3M15 9h3M15 12h3\"/>"],"exams":["#ef476f","<path d=\"M6 3.5h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1z\"/><path d=\"M15 3.5v4h4\"/><path class=\"as\" d=\"M8.5 14.5l2.3 2.3 4.7-4.8\"/>"],"tests":["#f78c40","<circle cx=\"12\" cy=\"13.5\" r=\"7.5\"/><path d=\"M9.5 3h5M12 3v3\"/><path class=\"ac\" d=\"M12 13.5V8.3a5.2 5.2 0 0 1 5.2 5.2z\"/>"],"colles":["#b57bff","<rect class=\"ac\" x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6\"/>"],"td":["#4cc9f0","<rect x=\"5\" y=\"4.5\" width=\"14\" height=\"17\" rx=\"2.5\"/><rect class=\"ac\" x=\"9\" y=\"2.5\" width=\"6\" height=\"3.5\" rx=\"1.2\"/><path d=\"M8.5 11h7M8.5 14.5h7M8.5 18h4\"/>"],"exos":["#ff6b6b","<path d=\"M3.5 10v4M20.5 10v4M8 12h8\"/><rect class=\"ac\" x=\"5\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/><rect class=\"ac\" x=\"16\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/>"],"teach":["#7bd88f","<path class=\"ac\" d=\"M2.5 9.5L12 5l9.5 4.5L12 14z\"/><path d=\"M6.5 11.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2M21.5 9.5V15\"/>"],"grades":["#ffd166","<path d=\"M3.5 20.5h17\"/><rect class=\"ac\" x=\"5\" y=\"12.5\" width=\"3.5\" height=\"8\" rx=\"1\"/><rect class=\"ac\" x=\"10.2\" y=\"8.5\" width=\"3.5\" height=\"12\" rx=\"1\"/><rect class=\"ac\" x=\"15.5\" y=\"4.5\" width=\"3.5\" height=\"16\" rx=\"1\"/>"],"boards":["#5ee0b0","<rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 20.5l2-4.5M16 20.5l-2-4.5\"/><path class=\"as\" d=\"M6.5 12.5l3-4 2.5 3 2.5-4 3 3\"/>"],"cards":["#e56bff","<rect x=\"8.5\" y=\"3.5\" width=\"12\" height=\"15\" rx=\"2\" transform=\"rotate(9 14.5 11)\"/><rect class=\"ac\" x=\"3.5\" y=\"6\" width=\"12\" height=\"15\" rx=\"2\"/><path d=\"M7 11h5M7 14.5h3\"/>"]};
+const tabIco=k=>{const t=TICO[k];return t?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+t[1]+'</svg>':''};
 const TABS=[['home','Overview'],['map','Map'],['lessons','Lessons'],['exams','Exams'],['tests','Tests'],['colles','Colles'],['td','TD'],['exos','Exos'],['teach','Teach'],['grades','Grades'],['boards','Boards'],['cards','Cards']];
 function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px"><button data-a="back" aria-label="Back">‹</button><b style="font-size:19px;flex:1;text-align:center;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(title)+'</b>'+(right||'<span style="width:36px"></span>')+'</div>'}
 
@@ -4348,7 +4357,7 @@ function render(kind){
   const b=body();if(!b)return;
   const top=st.stack[st.stack.length-1],y=window.scrollY;
   $('ptabs').style.display=top?'none':'';
-  $('ptabs').innerHTML=TABS.map(t=>'<button class="ptab '+(st.tab===t[0]&&!top?'on':'')+'" data-a="tab" data-i="'+t[0]+'">'+t[1]+(t[0]==='cards'&&dueCards().length?'<em>'+dueCards().length+'</em>':'')+'</button>').join('');
+  $('ptabs').innerHTML=TABS.map(t=>'<button class="ptab '+(st.tab===t[0]&&!top?'on':'')+'" data-a="tab" data-i="'+t[0]+'" aria-label="'+t[1]+'" title="'+t[1]+'" style="--tc:'+(TICO[t[0]]||['#4d8dff'])[0]+'">'+tabIco(t[0])+(t[0]==='cards'&&dueCards().length?'<em>'+dueCards().length+'</em>':'')+'</button>').join('');
   let h='';
   if(top){
     const v=top.v;
@@ -4995,13 +5004,18 @@ A.sprof=s=>{
 
 /* ===== Today plan: what is worth doing now, ranked and fitted into the free time left today ===== */
 function planItems(){
-  const td=iso(),items=[],H=new Date().getHours();
+  const td=iso(),items=[],H=new Date().getHours(),nowM=H*60+new Date().getMinutes();
+  try{window.PW&&PW.sync&&PW.sync()}catch(e){}
   const dd=d=>Math.round((new Date(d+'T12:00:00')-new Date(td+'T12:00:00'))/864e5);
   const push=o=>items.push(Object.assign({pri:50,min:20},o));
   let xm=null;try{xm=examMode()}catch(_){}
   const boost=e=>xm&&xm.e&&e&&xm.e.id===e.id?30:0;
+  // today's planned blocks come first, at their real times: this is the schedule
+  let nb=0;try{const o=tbLoad();cal.filter(c=>String(c.id).startsWith('tb-')&&c.date===td&&o.blocks[c.id]&&!o.blocks[c.id].done&&!o.blocks[c.id].arc&&c.time&&tmin(c.endTime||c.time)>nowM).sort((a,b)=>a.time.localeCompare(b.time)).forEach((c,i)=>{
+    const b=o.blocks[c.id],m=/^(\S+)\s+(.*)$/.exec(String(c.title).replace(/^✓ /,''))||[0,'📌',c.title],ms=b.ms&&b.ms[0]||{};nb++;
+    push({id:'b:'+c.id,ic:m[1],title:m[2],sub:b.prop?'Proposed':(ms.why||''),min:b.pl||Math.max(5,tmin(c.endTime||c.time)-tmin(c.time)),pri:100-i,fix:c.time+' – '+(c.endTime||c.time),subj:c.subj||'',go:{k:'block',id:c.id}})})}catch(e){}
   // exams and colles ahead
-  cal.filter(e=>(e.kind==='ds'||e.kind==='colle')&&e.date>=td&&dd(e.date)<=10).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4).forEach(e=>{
+  (nb?[]:cal).filter(e=>(e.kind==='ds'||e.kind==='colle')&&e.date>=td&&dd(e.date)<=10).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4).forEach(e=>{
     const d=dd(e.date),base=100-d*7+boost(e),sub=(e.kind==='ds'?'DS':'Colle')+' '+SUBJ[e.subj].n+' · '+(d===0?'today':d===1?'tomorrow':'in '+d+' days');
     const p=S.progs.find(x=>x.subj===e.subj&&x.date===e.date);
     if(p&&p.chapters&&p.chapters.length){const nr=p.chapters.filter(c=>!c.ready).length;if(nr)push({id:'ch:'+p.id,ic:'📖',title:'Revise '+nr+' chapter'+(nr>1?'s':'')+' for the colle',sub,min:Math.min(60,nr*15+10),pri:base,subj:e.subj,go:{k:'prog',id:p.id}});
@@ -5014,7 +5028,7 @@ function planItems(){
   cal.filter(e=>e.kind==='vt'&&(e.date===td||e.date===shiftD(td,1))&&!(S.exams[e.id]&&S.exams[e.id].grade!=null)).slice(0,1).forEach(e=>push({id:'vt:'+e.id,ic:'🔤',title:'Revise your vocabulary',sub:'Vocabulary Test '+(e.date===td?'today':'tomorrow'),min:15,pri:e.date===td?88:70,subj:'ang',go:{k:'vocab'}}));
   // tasks: overdue, due today, pinned, or linked to something coming up
   tasks.filter(isOpen).forEach(t=>{
-    let pri=0,sub='';const lk=t.lk&&cal.find(c=>c.id===t.lk);
+    if(t.gen)return;let pri=0,sub='';const lk=t.lk&&cal.find(c=>c.id===t.lk);
     if(t.due&&t.due<td){pri=90;sub='Overdue'}else if(t.due===td){pri=84;sub='Due today'}else if(t.pin){pri=66;sub='Pinned'}
     const gen=t.gen&&lk,nm=s=>String(s).replace(/^\S+\s/,'').replace(/^✓\s*/,'').replace(/\s*\([^)]*\)\s*$/,'').trim().toLowerCase();
     if(lk&&lk.date>=td){const d=dd(lk.date),p2=70+Math.max(0,8-d)*3+boost(lk);if(p2>pri){pri=p2;sub=gen?(lk.date===td?'Planned today':'Planned '+fd(lk.date)):(nm(lk.title)===nm(t.text)?'':'For '+String(lk.title).replace(/\s*\([^)]*\)\s*$/,''))}}
@@ -5025,7 +5039,7 @@ function planItems(){
   const seen=new Set();let l=items.filter(x=>!seen.has(x.id)&&seen.add(x.id));
   const tp=tplanLoad();l=l.filter(x=>!tp.skip.includes(x.id));
   l.sort((a,b)=>{const ia=tp.order.indexOf(a.id),ib=tp.order.indexOf(b.id);if(ia>-1&&ib>-1)return ia-ib;return b.pri-a.pri});
-  return l.slice(0,5);
+  return l.slice(0,6);
 }
 function tplanLoad(){const td=iso();let o={};try{o=JSON.parse(localStorage.getItem('tplan')||'{}')}catch(e){}if(o.d!==td)o={d:td,skip:[],order:[]};o.skip=o.skip||[];o.order=o.order||[];return o}
 function tplanSave(o){try{localStorage.setItem('tplan',JSON.stringify(o))}catch(e){}}
@@ -5037,7 +5051,7 @@ function planSlots(items){
   let gi=0,pos=gaps.length?gaps[0][0]:null;
   return items.map(it=>{
     if(it.fix)return Object.assign({},it,{at:it.fix});
-    while(gi<gaps.length&&(gaps[gi][1]-pos<Math.min(it.min,20))){gi++;pos=gi<gaps.length?gaps[gi][0]:null}
+    while(gi<gaps.length&&(gaps[gi][1]-pos<Math.min(it.min,30))){gi++;pos=gi<gaps.length?gaps[gi][0]:null}
     if(gi>=gaps.length)return Object.assign({},it,{at:null});
     const len=Math.min(it.min,gaps[gi][1]-pos),s=pos;pos+=len+5;
     return Object.assign({},it,{at:fmt(s)+' – '+fmt(s+len)});
@@ -5045,6 +5059,7 @@ function planSlots(items){
 }
 function planGo(id){
   const it=planItems().find(x=>x.id===id)||{go:null};const g=it.go;if(!g)return;
+  if(g.k==='block'){try{PW.playBlock(g.id)}catch(e){}return}
   if(g.k==='task'){F.ref=null;F.taskId=g.id;const t=tasks.find(x=>x.id===g.id);F.task=t?t.text:'';sv();show('focus');try{window.PW&&PW.play&&PW.play(t)}catch(e){}return}
   show('prepa');
   if(g.k==='prog'){A.tab('colles');A.prog(g.id)}
@@ -5059,6 +5074,7 @@ function planCard(){
   const hr=new Date().getHours(),td=iso();
   if(hr>=22||hr<5)return null;
   const l=planSlots(planItems()).map(x=>{let c='';try{if(x.subj&&C.sc)c=C.sc(x.subj)}catch(e){}return Object.assign({},x,{col:c})});
+  try{const tp=tplanLoad();if(!tp.order.length)l.sort((a,b)=>(a.at?tmin(a.at.split(' – ')[0]):9999)-(b.at?tmin(b.at.split(' – ')[0]):9999))}catch(e){}
   let xm=null;try{xm=examMode()}catch(_){}
   const total=l.reduce((a,x)=>a+x.min,0);
   return{items:l,total,xm,title:hr>=21?'Wind down':hr<12?'Plan · morning':hr<18?'Plan · afternoon':'Plan · evening'};
@@ -6970,7 +6986,7 @@ const res0=n=>n;
 function pwPlan(opts){
   opts=opts||{};tbLearnScan();
   const cfg=pwCfg(),tcfg=tbCfg(),td=iso(),nowM=new Date().getHours()*60+new Date().getMinutes(),L=tbLearn();
-  tbClear(true);const o=tbLoad();
+  try{pwSync()}catch(e){}tbClear(true);const o=tbLoad();
   const days=[];for(let d=0;d<tcfg.days;d++)days.push(shiftD(td,d));
   const refIds=pwRefs(o,days,nowM);if(refIds.length){tbSave(o);pwAccept(refIds);o.blocks=tbLoad().blocks}
   const iv={},load={};days.forEach((ds,i)=>{iv[ds]=pwDayIv(ds,tcfg,i===0?ceil5(nowM+10):0);load[ds]=0});
@@ -7003,6 +7019,7 @@ function pwPlan(opts){
       const m=Object.assign({id:'w:'+j.key+':'+ds+':'+ci,subj:j.subj||'',min:len,why:j.sub||'',xp:pwXp(j.kind,len)},j.mk(len,ds,ci++));
       cal.push({id,title:j.ic+' '+j.label,date:ds,time:hmS(a),endTime:hmS(e),kind:'work',subj:j.subj||'',color:GHOST,prop:1,desc:pwDesc(m)+'\n'+(j.sub||'')});
       o.blocks[id]={ms:[m],done:0,wk:j.key,pl:len,hr:a,rk:j.rk||'',tid:m.tid||'',xp:m.xp,prop:1,cuOf:j.cuId||'',snap:{title:j.ic+' '+j.label,date:ds,time:hmS(a),endTime:hmS(e),subj:j.subj||'',color:pwSc(j.subj)}};
+      pwMkTask(id,cal[cal.length-1],o.blocks[id]);
       const rest=[];if(a-a0>=15)rest.push([a0,a-tcfg.gap,lt]);if(b0-e-tcfg.gap>=15)rest.push([e+tcfg.gap,b0,lt]);iv[ds].splice(ii,1,...rest);
       used[ds]=(used[ds]||0)+1;load[ds]++;left-=len;res.n++;res.mins+=len;
     }
@@ -7011,11 +7028,20 @@ function pwPlan(opts){
   tbSave(o);sv();return res;
 }
 /* ---------- accept / remove ---------- */
+const pwMkTask=(id,c,b)=>{if(!b||b.tid||b.gt)return;const g=pwGenGoal(),t={id:'tg-'+id,text:c.title.replace(/^✓ /,'').replace(/^\S+\s/,''),xp:b.xp||20,due:c.date,gid:g.id,lk:id,gen:1,min:b.pl||0};if(!tasks.some(x=>x.id===t.id))tasks.unshift(t);b.gt=t.id};
+/* every planned block (proposed or accepted) has its task in the Generated goal; leftovers from past days are dropped */
+function pwSync(){
+  const td=iso(),o=tbLoad();let n=0;
+  cal.forEach(c=>{const b=o.blocks[c.id];if(b&&String(c.id).startsWith('tb-')&&c.date>=td&&!b.done&&!b.arc&&!b.tid&&!b.gt){pwMkTask(c.id,c,b);n++}});
+  for(let i=tasks.length-1;i>=0;i--){const t=tasks[i];if(t.gen&&t.due&&t.due<td){const b=o.blocks[t.lk];if(!b||!b.done){tasks.splice(i,1);n++}}}
+  Object.keys(o.blocks).forEach(k=>{const b=o.blocks[k];if(b.gt&&!tasks.some(t=>t.id===b.gt)&&!b.done&&!b.arc&&cal.some(c=>c.id===k&&c.date>=td)){b.gt='';pwMkTask(k,cal.find(c=>c.id===k),b);n++}});
+  if(n){tbSave(o);sv()}return n;
+}
 function pwAccept(ids){
   const o=tbLoad(),all=ids==='all'?Object.keys(o.blocks).filter(k=>o.blocks[k].prop&&cal.some(c=>c.id===k)):ids;let n=0;
   all.forEach(id=>{const b=o.blocks[id],c=cal.find(x=>x.id===id);if(!b||!c||!b.prop)return;
     b.prop=0;c.prop=0;c.color=pwSc(c.subj);b.snap=pwSnap(c);
-    if(!b.tid){const g=pwGenGoal(),t={id:'tg-'+id,text:c.title.replace(/^\S+\s/,''),xp:b.xp||20,due:c.date,gid:g.id,lk:id,gen:1,min:b.pl||0};if(!tasks.some(x=>x.id===t.id))tasks.unshift(t);b.gt=t.id}
+    pwMkTask(id,c,b);
     n++});
   tbSave(o);sv();return n;
 }
@@ -7122,7 +7148,7 @@ function pwBlock(id){
   const m=b.ms&&b.ms[0]||{};
   openSheet('<h2 class="sh">'+pwEsc(c.title)+'</h2><div class="sub" style="margin:0 0 10px">'+DAYN[pwWd(c.date)]+' '+(+c.date.slice(8))+' · '+c.time+' – '+c.endTime+' · '+(b.pl||'')+' min'+(b.xp?' · +'+b.xp+' XP':'')+'</div>'+
    (m.title?'<div class="card"><div class="lbl">Mission</div><div style="margin-top:4px">'+pwEsc(m.title)+'</div>'+(m.why?'<div class="sub">'+pwEsc(m.why)+'</div>':'')+'</div>':'')+
-   (!gg.live&&!b.done?'<div class="sub" style="margin:8px 0">This block left the calendar but stays in your week plan.</div>':'')+(b.prop?'<div class="sub" style="margin:8px 0">Proposed: it only becomes a task and a reminder once you accept it.</div><button class="btn primary" id="pb-a">Accept</button>':(b.done?'<div class="sub">Done ✓</div>':'<button class="btn primary" id="pb-s">▶ Start</button>'))+
+   (!gg.live&&!b.done?'<div class="sub" style="margin:8px 0">This block left the calendar but stays in your week plan.</div>':'')+(b.prop?'<div class="sub" style="margin:8px 0">Proposed: it is already a task in “Generated”. Accept it to keep it in your plan, or remove it.</div><button class="btn primary" id="pb-a">Accept</button>':(b.done?'<div class="sub">Done ✓</div>':'<button class="btn primary" id="pb-s">▶ Start</button>'))+
    '<button class="btn" id="pb-c" style="margin-top:8px">Calendar</button><button class="btn danger" id="pb-x" style="margin-top:8px">Remove this block</button>');
   const g=i=>document.getElementById(i);
   if(g('pb-a'))g('pb-a').onclick=()=>{pwAccept([id]);closeSheet();pwCard();toast('Accepted · added to your tasks')};
@@ -7208,7 +7234,7 @@ function pwRule(id,kind){
   };
   draw();
 }
-setTimeout(()=>{try{const gg=goals.find(x=>x.id==='g-gen');if(gg&&gg.color==='#8b93a7'){gg.color='#ff2d8f';sv()}pwArchive();if(typeof rCal==="function"&&cur==="calendar")rCal()}catch(e){}},1500);
+setTimeout(()=>{try{const gg=goals.find(x=>x.id==='g-gen');if(gg&&gg.color==='#8b93a7'){gg.color='#ff2d8f';sv()}pwArchive();pwSync();if(typeof rCal==="function"&&cur==="calendar")rCal()}catch(e){}},1500);
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-act="tpcfg"]');if(!b)return;e.stopPropagation();hv();pwOpen()},true);
 
 /* ---------- week template UI + flex blocks ---------- */
@@ -7280,7 +7306,7 @@ function pwAddFlex(name,len,ds,at){
   return{id,time:hmS(a),n};
 }
 
-window.PW={tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
+window.PW={sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
