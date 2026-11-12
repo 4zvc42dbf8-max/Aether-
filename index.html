@@ -1025,7 +1025,7 @@ h2.sh,.sh{letter-spacing:-.015em}
 /* Relax */
 .rxcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;background:linear-gradient(135deg,rgba(94,224,176,.16),rgba(77,141,255,.10)),var(--surf)!important;border-color:rgba(94,224,176,.32)!important}
 .rxcard .rxi{font-size:28px;flex:none;filter:drop-shadow(0 4px 10px rgba(94,224,176,.4))}.rxcard .rxt{flex:1;display:flex;flex-direction:column;gap:2px}.rxcard b{font-size:16px}.rxcard small{color:var(--muted);font-size:12.5px}.rxcard .rxg{color:var(--muted);font-size:22px}
-#rlx{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(28px,env(safe-area-inset-top)) 28px max(28px,env(safe-area-inset-bottom));background:radial-gradient(120% 90% at 50% 20%,#0f2a2a 0%,#070b12 70%);text-align:center;color:#e8f3f0}
+#rlx{position:fixed;inset:0;z-index:790;touch-action:manipulation;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(28px,env(safe-area-inset-top)) 28px max(28px,env(safe-area-inset-bottom));background:radial-gradient(120% 90% at 50% 20%,#0f2a2a 0%,#070b12 70%);text-align:center;color:#e8f3f0}
 #rlx.on{display:flex}
 #rlx .orb{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(190,255,235,.9),rgba(94,224,176,.5) 45%,rgba(40,120,110,.25) 75%);box-shadow:0 0 80px rgba(94,224,176,.45);animation:rlxb 8s ease-in-out infinite}
 #rlx.done .orb{animation:none;opacity:.6}
@@ -1033,9 +1033,9 @@ h2.sh,.sh{letter-spacing:-.015em}
 #rlx .rt{font-size:54px;font-weight:300;letter-spacing:2px;font-variant-numeric:tabular-nums}
 #rlx .rh{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#8fb9b0;height:16px}
 #rlx .rm{font-size:17px;line-height:1.5;color:#c4dcd6;max-width:290px;min-height:76px}
-#rlxp{position:fixed;left:50%;transform:translateX(-50%);top:max(8px,env(safe-area-inset-top));z-index:8000;display:none;align-items:center;gap:8px;padding:7px 14px;border-radius:99px;background:rgba(10,30,28,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(94,224,176,.4);color:#c9f5e6;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}#rlxp.on{display:flex}#rlxp i{width:8px;height:8px;border-radius:50%;background:#5ee0b0;animation:rlxb 4s ease-in-out infinite}
+#rlxp{position:fixed;left:50%;transform:translateX(-50%);top:max(8px,env(safe-area-inset-top));z-index:780;touch-action:manipulation;display:none;align-items:center;gap:8px;padding:7px 14px;border-radius:99px;background:rgba(10,30,28,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(94,224,176,.4);color:#c9f5e6;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}#rlxp.on{display:flex}#rlxp i{width:8px;height:8px;border-radius:50%;background:#5ee0b0;animation:rlxb 4s ease-in-out infinite}
 #rlx .rb{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px}
-#rlx button{padding:14px;border-radius:99px;border:1px solid rgba(255,255,255,.16);color:#e8f3f0;font-weight:600;font-size:15px}
+#rlx .orb{pointer-events:none}#rlx button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:48px;padding:14px;border-radius:99px;border:1px solid rgba(255,255,255,.16);color:#e8f3f0;font-weight:600;font-size:15px}
 #rlx button.p{background:#5ee0b0;color:#06201a;border-color:transparent}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
