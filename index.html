@@ -835,7 +835,7 @@ textarea::placeholder{color:var(--dim)}
 /* theme toggle button */
 .thm{margin-left:auto;margin-right:8px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);background:var(--surf);color:var(--muted);display:flex;align-items:center;justify-content:center;padding:0;transition:transform .5s var(--spring),color .2s}
 .thm+.pv-gear{margin-left:0}
-#plbtn+.thm{margin-left:0}#plbtn{color:var(--acc,#8b8dff)}#shopbtn{color:#ffc83d}#shopbtn+.thm{margin-left:0}header .thm,header .pv-gear{flex:none}
+#plbtn+.thm{margin-left:0}#plbtn{color:var(--acc,#8b8dff)}#shopbtn{color:#ffc83d}#rlxbtn{color:#5ee0b0}#rlxbtn+.thm{margin-left:0}#plbtn{display:none!important}#shopbtn+.thm{margin-left:0}header .thm,header .pv-gear{flex:none}
 .thm:active{transform:scale(.88) rotate(25deg);color:var(--text)}
 .thm svg{width:20px;height:20px}
 .thm .sun{display:none}[data-theme="light"] .thm .sun{display:block}[data-theme="light"] .thm .moon{display:none}
@@ -1021,6 +1021,21 @@ h2.sh,.sh{letter-spacing:-.015em}
 #ntb .nt-a button{flex:1;height:44px;border-radius:15px;border:0;font:600 15px -apple-system,system-ui;color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.22);transition:transform .2s var(--spring)}
 #ntb .nt-a button:active{transform:scale(.94)}
 #ntb .nt-a button.ok{background:linear-gradient(180deg,var(--blue1),var(--blue2) 60%,var(--blue3));box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 18px -8px rgba(63,125,240,.8)}
+
+/* Relax */
+.rxcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;background:linear-gradient(135deg,rgba(94,224,176,.16),rgba(77,141,255,.10)),var(--surf)!important;border-color:rgba(94,224,176,.32)!important}
+.rxcard .rxi{font-size:28px;flex:none;filter:drop-shadow(0 4px 10px rgba(94,224,176,.4))}.rxcard .rxt{flex:1;display:flex;flex-direction:column;gap:2px}.rxcard b{font-size:16px}.rxcard small{color:var(--muted);font-size:12.5px}.rxcard .rxg{color:var(--muted);font-size:22px}
+#rlx{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(28px,env(safe-area-inset-top)) 28px max(28px,env(safe-area-inset-bottom));background:radial-gradient(120% 90% at 50% 20%,#0f2a2a 0%,#070b12 70%);text-align:center;color:#e8f3f0}
+#rlx.on{display:flex}
+#rlx .orb{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(190,255,235,.9),rgba(94,224,176,.5) 45%,rgba(40,120,110,.25) 75%);box-shadow:0 0 80px rgba(94,224,176,.45);animation:rlxb 8s ease-in-out infinite}
+#rlx.done .orb{animation:none;opacity:.6}
+@keyframes rlxb{0%,100%{transform:scale(.72)}50%{transform:scale(1.08)}}
+#rlx .rt{font-size:54px;font-weight:300;letter-spacing:2px;font-variant-numeric:tabular-nums}
+#rlx .rh{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#8fb9b0;height:16px}
+#rlx .rm{font-size:17px;line-height:1.5;color:#c4dcd6;max-width:290px;min-height:76px}
+#rlx .rb{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px}
+#rlx button{padding:14px;border-radius:99px;border:1px solid rgba(255,255,255,.16);color:#e8f3f0;font-weight:600;font-size:15px}
+#rlx button.p{background:#5ee0b0;color:#06201a;border-color:transparent}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -1068,7 +1083,7 @@ h2.sh,.sh{letter-spacing:-.015em}
   </div>
 </div>
 
-<header><div class="logo"></div><h1 id="pt">Home</h1><button class="thm" id="plbtn" aria-label="Plan my week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 13.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg></button><button class="thm" id="shopbtn" data-act="rewards" aria-label="Reward shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.1 11.1a1.5 1.5 0 0 1-1.5 1.4H7.6a1.5 1.5 0 0 1-1.5-1.4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></button><button class="thm" id="thm" aria-label="Switch light / dark"><svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button class="pv-gear" id="pv-gear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></header>
+<header><div class="logo"></div><h1 id="pt">Home</h1><button class="thm" id="plbtn" aria-label="Plan my week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 13.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg></button><button class="thm" id="rlxbtn" data-rx="start" aria-label="Relax"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19c2-5 5-8 9-10"/></svg></button><button class="thm" id="shopbtn" data-act="rewards" aria-label="Reward shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.1 11.1a1.5 1.5 0 0 1-1.5 1.4H7.6a1.5 1.5 0 0 1-1.5-1.4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></button><button class="thm" id="thm" aria-label="Switch light / dark"><svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button class="pv-gear" id="pv-gear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></header>
 
 <div class="container">
 
@@ -1076,6 +1091,7 @@ h2.sh,.sh{letter-spacing:-.015em}
   <div id="hdock"></div>
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card tpc" id="tpcard"></div>
+  <button class="card rxcard" id="rxcard" data-rx="start"><span class="rxi">🌿</span><span class="rxt"><b>Relax</b><small>Feeling off? Lock your phone away for an hour</small></span><span class="rxg">›</span></button>
   <div class="card" id="xmcard" style="display:none"></div>
   <div class="card hhc" id="hhcard"></div>
   <div class="card" id="rtcard" style="display:none"></div>
@@ -2569,18 +2585,18 @@ let LIFT=null,LIFTRAF=0;
 function liftStart(t,kind,e){
   if(t.classList.contains('mini')){if(kind==='task')editTask(t.dataset.id);return}
   const box=t.parentElement;
-  const rows=[...box.children].filter(x=>x.dataset.hold===kind&&x.dataset.id!=='_');
-  const i0=rows.indexOf(t);if(i0<0){kind==='goal'?editGoal(t.dataset.id):kind==='rwd'?(rsub={m:'edit',id:t.dataset.id},rwSheet()):editTask(t.dataset.id);return}
+  const rows=[...box.children].filter(x=>x.dataset.hold===kind&&x.dataset.id!=='_'&&(kind!=='hcard'||x.offsetHeight>0));
+  const i0=rows.indexOf(t);if(i0<0){kind==='hcard'?PH.edit(t.dataset.hk):kind==='goal'?editGoal(t.dataset.id):kind==='rwd'?(rsub={m:'edit',id:t.dataset.id},rwSheet()):editTask(t.dataset.id);return}
   const sc=window.scrollY,rc=rows.map(r=>r.getBoundingClientRect());
   const gap=rows.length>1?Math.max(0,rc[1].top-rc[0].bottom):10;
-  LIFT={el:t,kind,id:t.dataset.id,rows,i0,ni:i0,moved:false,sy:e.clientY,y:e.clientY,sc0:sc,tops:rc.map(r=>r.top+sc),hs:rc.map(r=>r.height),gap};
+  LIFT={el:t,kind,id:kind==='hcard'?t.dataset.hk:t.dataset.id,rows,i0,ni:i0,moved:false,sy:e.clientY,y:e.clientY,sc0:sc,tops:rc.map(r=>r.top+sc),hs:rc.map(r=>r.height),gap,gaps:kind==='hcard'?rc.map((r,j)=>j<rc.length-1?Math.max(0,rc[j+1].top-r.bottom):0):null};
   t.classList.add('lift');
 }
 function liftLayout(){
   const L=LIFT,order=[];
   L.rows.forEach((r,j)=>{if(j!==L.i0)order.push(j)});order.splice(L.ni,0,L.i0);
   let pos=L.tops[0];L.slot={};
-  order.forEach(j=>{L.slot[j]=pos;if(j!==L.i0)L.rows[j].style.transform='translateY('+(pos-L.tops[j])+'px)';pos+=L.hs[j]+L.gap});
+  order.forEach((j,p)=>{L.slot[j]=pos;if(j!==L.i0)L.rows[j].style.transform='translateY('+(pos-L.tops[j])+'px)';pos+=L.hs[j]+(L.gaps?L.gaps[p]:L.gap)});
 }
 function liftMove(){
   const L=LIFT;if(!L)return;
@@ -2593,19 +2609,20 @@ function liftMove(){
 }
 function liftEnd(cancelled){
   const L=LIFT;if(!L)return;LIFT=null;cancelAnimationFrame(LIFTRAF);
-  if(!L.moved){L.el.classList.remove('lift');if(!cancelled){L.kind==='goal'?editGoal(L.id):L.kind==='rwd'?(rsub={m:'edit',id:L.id},rwSheet()):editTask(L.id)}return}
+  if(!L.moved){L.el.classList.remove('lift');if(!cancelled){L.kind==='hcard'?PH.edit(L.id):L.kind==='goal'?editGoal(L.id):L.kind==='rwd'?(rsub={m:'edit',id:L.id},rwSheet()):editTask(L.id)}return}
   const slot=L.slot&&L.slot[L.i0]!=null?L.slot[L.i0]:L.tops[L.i0];
   L.el.style.transition='transform .2s var(--ease),box-shadow .2s';L.el.style.transform='translateY('+(slot-L.tops[L.i0])+'px)';
   setTimeout(()=>{
     L.rows.forEach(r=>{r.classList.remove('lift','shift');r.style.transform='';r.style.transition=''});
     if(!cancelled&&L.ni!==L.i0){
-      const ids=L.rows.map(r=>r.dataset.id);ids.splice(L.i0,1);ids.splice(L.ni,0,L.id);
+      const ids=L.rows.map(r=>L.kind==='hcard'?r.dataset.hk:r.dataset.id);ids.splice(L.i0,1);ids.splice(L.ni,0,L.id);
+      if(L.kind==='hcard'){try{PH.reorder(ids)}catch(e){}vib(15);return}
       if(L.kind==='rwd'){const set=new Set(ids),slots=[];rwd.forEach((t,i)=>{if(set.has(t.id))slots.push(i)});const by=Object.fromEntries(rwd.map(t=>[t.id,t]));ids.forEach((id,k)=>{rwd[slots[k]]=by[id]})}
       else if(L.kind==='goal'){const by=Object.fromEntries(goals.map(g=>[g.id,g]));const rest=goals.filter(g=>!ids.includes(g.id));goals=ids.map(i=>by[i]).filter(Boolean).concat(rest)}
       else{const set=new Set(ids),slots=[];tasks.forEach((t,i)=>{if(set.has(t.id))slots.push(i)});const by=Object.fromEntries(tasks.map(t=>[t.id,t]));ids.forEach((id,k)=>{tasks[slots[k]]=by[id]})}
       sv();vib(15);
     }
-    if(L.kind==='rwd')rwSheet();else if(cur==='tasks')rTasks();else if(cur==='home')rHomeTasks();
+    if(L.kind==='hcard'){try{PH.layout()}catch(e){}}else if(L.kind==='rwd')rwSheet();else if(cur==='tasks')rTasks();else if(cur==='home')rHomeTasks();
   },210);
 }
 function liftScroll(){
@@ -2635,7 +2652,7 @@ document.addEventListener('touchmove',e=>{if(LIFT&&e.cancelable)e.preventDefault
     tm=setTimeout(()=>{
       const t=el;if(!t)return;fired=true;t.classList.remove('holding');t.classList.add('held');setTimeout(()=>t.classList.remove('held'),380);vib(25);
       const a=t.dataset.hold;
-      if(a==='task'||a==='goal'||a==='rwd'){liftStart(t,a,last)}
+      if(a==='task'||a==='goal'||a==='rwd'||a==='hcard'){liftStart(t,a,last)}
       else if(a==='ev')editEvent(t.dataset.id,null,t.dataset.d);
       else if(a==='slot'){
         const r=t.getBoundingClientRect(),y=Math.max(0,last.clientY-r.top-10);
@@ -2799,10 +2816,11 @@ function fCtl(){
   else if(F.status==='run')c.innerHTML=`<div class="row2"><button class="btn" data-f="pause" style="margin-top:0">Pause</button><button class="btn danger" data-f="stop" style="margin-top:0">Stop</button></div>`;
   else if(F.status==='pause')c.innerHTML=`<div class="row2"><button class="btn primary" data-f="resume" style="margin-top:0">Resume</button><button class="btn danger" data-f="stop" style="margin-top:0">Stop</button></div>`;
   else c.innerHTML=F.kind==='focus'?`<div class="row2"><button class="btn primary pulse" data-f="break" style="margin-top:0">Break · ${M.brk} min</button><button class="btn" data-f="reset" style="margin-top:0">Done</button></div>`:`<button class="btn primary" data-f="reset" style="margin-top:0">Back to focus</button>`;
+  if(OPL().on&&F.opl&&F.status!=='run'&&F.status!=='pause')c.innerHTML+=`<button class="btn" data-f="opalstop" style="margin-top:8px">End Opal session</button>`;
 }
 function fChips(){
   const td=fhist.filter(h=>h.date===fk());const min=td.reduce((s,h)=>s+(h.min||0),0);
-  $('fchips').innerHTML=`<span class="pill">${td.length} session${td.length===1?'':'s'} today</span><span class="pill xp">${Math.floor(min/60)?Math.floor(min/60)+'h ':''}${min%60} min focused</span>`;
+  $('fchips').innerHTML=`<span class="pill">${td.length} session${td.length===1?'':'s'} today</span><span class="pill xp">${Math.floor(min/60)?Math.floor(min/60)+'h ':''}${min%60} min focused</span><button class="pill" data-f="opal" style="cursor:pointer">Opal · ${OPL().on?'on':'off'}</button><button class="pill" data-rx="start" style="cursor:pointer">🌿 Relax</button>`;
 }
 function tickClock(){const n=new Date();$('dclock').textContent=n.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()+' '+pad(n.getHours())+':'+pad(n.getMinutes())}
 const hm=ms=>{const d=new Date(ms);return pad(d.getHours())+':'+pad(d.getMinutes())};
@@ -2866,10 +2884,81 @@ function fPauseCheck(){
   else toast('Paused over 3 min · session ended');
   F.status='idle';F.cust=0;F.kind='focus';F.pAt=0;sv();if(cur==='focus'){fRender(true,true);rStats()}
 }
+
+/* ---------- Opal link: Aether asks the Shortcuts app to run your Opal start/stop shortcuts ---------- */
+const OPL=()=>Object.assign({on:false,start:'Opal Start',stop:'Opal Stop',relax:'Opal Relax',rmin:60},(()=>{try{return JSON.parse(localStorage.getItem('opl'))||{}}catch(e){return{}}})());
+const oplGo=n=>{const u='shortcuts://run-shortcut?name='+encodeURIComponent(n);try{(window.__oplHook||(x=>{location.href=x}))(u)}catch(e){}};
+function oplStart(){const o=OPL();if(!o.on)return;F.opl=1;sv();setTimeout(()=>oplGo(o.start),220)}
+function oplStop(){const o=OPL();if(!o.on||!F.opl)return;F.opl=0;sv();setTimeout(()=>oplGo(o.stop),220)}
+function oplSheet(){
+  const o=OPL();
+  openSheet(`<h2>Opal</h2>
+  <div class="sub" style="margin:0 0 12px">Your focus session starts an Opal session, and ends it with you. It runs through two shortcuts of yours.</div>
+  <div class="chips"><button class="chip ${o.on?'on':''}" id="op-on">Start Opal with my focus sessions</button></div>
+  <div class="two" style="margin-top:10px"><div><label class="hint">Start shortcut</label><input id="op-s" value="${esc(o.start)}" autocapitalize="off"></div><div><label class="hint">Stop shortcut</label><input id="op-e" value="${esc(o.stop)}" autocapitalize="off"></div></div>
+  <div class="two" style="margin-top:10px"><div><label class="hint">Relax shortcut</label><input id="op-r" value="${esc(o.relax)}" autocapitalize="off"></div><div><label class="hint">Relax minutes</label><input id="op-m" type="number" inputmode="numeric" value="${o.rmin}"></div></div>
+  <div class="lbl" style="margin-top:14px">Set it up once (2 min)</div>
+  <div class="hint" style="text-align:left;line-height:1.5">1. Shortcuts app › + › add the Opal action <b>Start Timer</b> (or Start Session) and pick your block list. Name it exactly like the Start shortcut above.<br>2. Make another one with Opal's stop action, named like the Stop shortcut.<br>3. For <b>Relax</b>, make a third shortcut with <b>Start Timer · 1h · Distracting Apps</b>.<br>4. Optional: end each shortcut with <b>Open App › Aether</b> so you land back here.</div>
+  <div class="hint" style="text-align:left;margin-top:8px">The first time, iOS asks to open Shortcuts. Aether leaves for a second to start Opal, so keep it to focus sessions. When a timer ends while the app is closed, tap <b>End Opal session</b> on the Focus tab.</div>
+  <div class="two" style="margin-top:12px"><button class="btn" id="op-t1" style="margin:0">Try start</button><button class="btn" id="op-t2" style="margin:0">Try stop</button></div>
+  <button class="btn primary" id="op-ok" style="margin-top:10px">Save</button>`);
+  const sv2=()=>{const c={on:$('op-on').classList.contains('on'),start:($('op-s').value||'Opal Start').trim(),stop:($('op-e').value||'Opal Stop').trim(),relax:($('op-r').value||'Opal Relax').trim(),rmin:Math.min(240,Math.max(5,+$('op-m').value||60))};try{localStorage.setItem('opl',JSON.stringify(c))}catch(e){}return c};
+  $('op-on').onclick=e=>e.currentTarget.classList.toggle('on');
+  $('op-t1').onclick=()=>oplGo(sv2().start);$('op-t2').onclick=()=>oplGo(sv2().stop);
+  $('op-ok').onclick=()=>{sv2();closeSheet();fChips();fCtl();toast('Opal link saved')};
+}
+
+/* ---------- Relax: one hour away from the phone, with Opal blocking it ---------- */
+const RLXQ=['Put the phone down. You do not need to fix anything right now.','This feeling will pass. You only have to wait.','Breathe in for 4, out for 4. Let the circle lead.','Look away from the screen. Find 3 things you can see.','You are not behind. You are resting on purpose.','Drink some water. Stand up. Stretch your shoulders.'];
+const RLX=()=>{try{return JSON.parse(localStorage.getItem('rlx'))||null}catch(e){return null}};
+const rlxSave=v=>{try{v?localStorage.setItem('rlx',JSON.stringify(v)):localStorage.removeItem('rlx')}catch(e){}};
+let _rlxT=null,_rlxQ=0;
+function rlxEnsure(){
+  let e=document.getElementById('rlx');if(e)return e;
+  e=document.createElement('div');e.id='rlx';
+  e.innerHTML='<div class="rh" id="rlx-h"></div><div class="orb"></div><div class="rt" id="rlx-t">60:00</div><div class="rm" id="rlx-m"></div><div class="rb" id="rlx-b"></div>';
+  document.body.appendChild(e);
+  e.onclick=async ev=>{const a=(ev.target.closest('[data-r]')||{dataset:{}}).dataset.r;
+    if(a==='early'){const ok=await ask({title:'End Relax early?',msg:'The urge to scroll usually fades after about 10 minutes. Stay a little longer?',ok:'End now',cancel:'Stay',danger:true});if(ok)rlxEnd(true)}
+    else if(a==='end')rlxEnd(true);
+    else if(a==='opal')oplSheet()};
+  return e;
+}
+function rlxStart(){
+  if(RLX()){rlxShow();return}
+  const o=OPL(),min=o.rmin||60;
+  rlxSave({start:Date.now(),end:Date.now()+min*6e4,min,opl:o.on?1:0});
+  F.opl=0;if(o.on)setTimeout(()=>oplGo(o.relax||'Opal Relax'),250);
+  try{vib(30)}catch(e){}rlxShow();
+}
+function rlxShow(){
+  const e=rlxEnsure(),r=RLX();if(!r){e.classList.remove('on');return}
+  e.classList.add('on');clearInterval(_rlxT);rlxTick();_rlxT=setInterval(rlxTick,1000);
+}
+function rlxTick(){
+  const r=RLX(),e=document.getElementById('rlx');if(!r||!e)return;
+  const left=Math.max(0,Math.round((r.end-Date.now())/1000)),m=Math.floor(left/60),s=left%60,o=OPL();
+  document.getElementById('rlx-t').textContent=pad(m)+':'+pad(s);
+  const done=left<=0;e.classList.toggle('done',done);
+  if(done&&!r.fin){r.fin=1;rlxSave(r);try{vib(80);chime()}catch(x){}}
+  document.getElementById('rlx-h').textContent=done?'Relax finished':'Relax · phone down';
+  const mq=document.getElementById('rlx-m'),k=Math.floor((Date.now()-r.start)/45000)%RLXQ.length;
+  const txt=done?'Well done. Take it slowly when you pick your phone back up.':RLXQ[k];if(mq.textContent!==txt)mq.textContent=txt;
+  const b=document.getElementById('rlx-b'),h=(done?'d':'r')+(o.on?1:0);
+  if(b.dataset.h!==h){b.dataset.h=h;b.innerHTML=done?'<button class="p" data-r="end">'+(r.opl?'End Opal & close':'Close')+'</button>':'<button data-r="early">End early</button>'+(o.on?'':'<button data-r="opal">Block apps with Opal…</button>')}
+}
+function rlxEnd(stop){
+  const r=RLX();rlxSave(null);clearInterval(_rlxT);const e=document.getElementById('rlx');if(e)e.classList.remove('on');
+  if(stop&&r&&r.opl)setTimeout(()=>oplGo(OPL().stop),150);
+  try{if(cur==='home')rHome()}catch(x){}
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-rx="start"]'))rlxStart()});
+setTimeout(()=>{if(RLX())rlxShow();else if(/[?&#]relax\b/.test(location.search+location.hash)){history.replaceState(null,'',location.pathname);rlxStart()}},900);
 function fStart(){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){window._ac=window._ac||new AC();window._ac.resume&&window._ac.resume()}}catch(e){}
   F.extra=0;F.dur=fDur();F.start=Date.now();F.pAt=0;F.end=Date.now()+F.dur*1000;F.status='run';sv();vib(30);
   fRender(true,true);
+  if(F.kind==='focus')oplStart();else oplStop();
 }
 function fElapsedMin(){return Math.floor((fDur()-fRemain())/60)}
 function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
@@ -2894,7 +2983,7 @@ async function fStop(){
   const ok=await ask({title:'End session?',msg:F.kind==='focus'?(m>=1?m+' min will be logged and added to your calendar.':'Nothing to log yet.'):'The break will end.',ok:'End session',cancel:'Keep going',danger:true});
   if(!ok)return;
   if(F.kind==='focus'&&m>=1){fLog(F.status==='pause'&&F.pAt?F.pAt:Date.now(),m);try{window.PW&&PW.focusDone&&PW.focusDone(F.taskId,m,false)}catch(e){}}
-  F.status='idle';F.cust=0;F.kind='focus';sv();fRender(true,true);
+  F.status='idle';F.cust=0;F.kind='focus';sv();fRender(true,true);oplStop();
 }
 document.addEventListener('click',e=>{
   const mb=e.target.closest('.mode');
@@ -2912,6 +3001,8 @@ document.addEventListener('click',e=>{
   else if(a==='pause'){F.rem=fRemain();F.status='pause';F.pAt=Date.now();sv();fRender(true);vib(15)}
   else if(a==='resume'){if(F.pAt&&Date.now()-F.pAt>180000){fPauseCheck();return}F.end=Date.now()+F.rem*1000;F.status='run';F.pAt=0;sv();fRender(true);vib(15)}
   else if(a==='stop')fStop();
+  else if(a==='opal')oplSheet();
+  else if(a==='opalstop'){const o=OPL();F.opl=0;sv();fCtl();oplGo(o.stop)}
   else if(a==='break'){F.kind='break';F.status='idle';sv();fRender(true,true);fStart()}
   else if(a==='reset'){F.kind='focus';F.cust=0;F.status='idle';sv();fRender(true,true)}
 });
@@ -5937,7 +6028,7 @@ const LEADS=[5,10,15,30,45,60,90,120,180,1440];
 const DAYN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const KINDN={colle:'Colles',ds:'DS',cb:'Cours blanc',vt:'Vocab test',focus:'Focus',own:'My events'};
 const NTD=()=>({
-  on:true,ch:{sys:true,banner:true,sound:true,vib:true},snd:'chime',snooze:10,cap:8,hold:true,
+  on:true,icsAt:0,ch:{sys:true,banner:true,sound:true,vib:true},snd:'chime',snooze:10,cap:8,hold:true,
   quiet:{on:true,from:'22:30',to:'07:00'},
   rules:{
     ev:{on:true,leads:[60,15],kinds:['colle','ds','cb','vt','own'],subjs:[]},
@@ -6073,12 +6164,21 @@ function buildIcs(days){
     if(R.exam.on)cal.filter(e=>R.exam.kinds.includes(e.kind)&&e.date>ds).forEach(e=>{const k=Math.round((new Date(e.date+'T12:00:00')-new Date(ds+'T12:00:00'))/864e5);if(R.exam.days.includes(k)){ev('exam-'+e.id+'-'+ds,e.title+' in '+k+' d',ds,R.exam.time,R.exam.time,'Prepare: '+e.title,[0]);n++}});
     NT.custom.forEach(c=>{if(c.on===false||!c.time)return;const wd=new Date(ds+'T12:00:00').getDay();if(c.date?c.date===ds:(!c.days||!c.days.length||c.days.includes(wd))){ev('cu-'+c.id+'-'+ds,c.title,ds,c.time,c.time,c.note,[0]);n++}});
     if(R.brief.on&&R.brief.wd.includes(new Date(ds+'T12:00:00').getDay())){ev('brief-'+ds,'Aether: your day',ds,R.brief.time,R.brief.time,'Open Aether for today\'s plan.',[0]);n++}
+    if(R.block&&R.block.on)cal.filter(c=>c.date===ds&&c.time&&String(c.id).startsWith('tb-')&&(typeof isPlan==='function'?isPlan(c):true)&&!String(c.title).startsWith('✓')).forEach(c=>{ev('bl-'+c.id,c.title,ds,c.time,c.endTime,'Planned block · open Aether to start it',[R.block.lead||5]);n++});
+    if(R.task&&R.task.on){const k=tasks.filter(t=>!t.done&&t.due===ds&&!t.gen).length+(ds===td&&R.task.overdue?tasks.filter(t=>!t.done&&t.due&&t.due<ds&&!t.gen).length:0);if(k){ev('tk-'+ds,'Aether: '+k+' task'+(k>1?'s':'')+' due',ds,R.task.time,R.task.time,'Open Aether to see them.',[0]);n++}}
+    if(R.cards&&R.cards.on)(R.cards.times||[]).forEach(t=>{ev('cd-'+ds+'-'+t,'Aether: flashcards waiting',ds,t,t,'A few minutes of review keeps them fresh.',[0]);n++});
+    if(R.plan&&R.plan.on){ev('pl-'+ds,'Aether: plan tomorrow',ds,R.plan.time,R.plan.time,'Look at tomorrow in Aether.',[0]);n++}
   }
   L.push('END:VCALENDAR');return{text:L.join('\r\n'),n};
 }
-async function shareIcs(days){
-  const r=buildIcs(days);if(!r.n){toast('Nothing to export with the current rules');return}
-  const f=new File([r.text],'aether-alarms.ics',{type:'text/calendar'});
+function testIcs(){
+  const d=new Date(Date.now()+2*6e4),ds=iso(d),t=pad(d.getHours())+':'+pad(d.getMinutes()),stamp=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
+  return['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Aether//Test//EN','BEGIN:VEVENT','UID:aether-test-'+Date.now()+'@aether','DTSTAMP:'+stamp,'DTSTART:'+icsT(ds,t),'DTEND:'+icsT(ds,t),'SUMMARY:Aether test alarm','DESCRIPTION:If you see this with Aether closed, alarms work.','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Aether test alarm','TRIGGER:PT0S','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+}
+async function shareIcs(days,test){
+  const r=test?{text:testIcs(),n:1}:buildIcs(days);if(!r.n){toast('Nothing to export with the current rules');return}
+  if(!test){NT.icsAt=Date.now();ntSave()}
+  const f=new File([r.text],test?'aether-test.ics':'aether-alarms.ics',{type:'text/calendar'});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Aether alarms'});return}}catch(e){if(e&&e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.text],{type:'text/calendar'}));a.download='aether-alarms.ics';document.body.appendChild(a);a.click();a.remove();toast(r.n+' alarms exported')
 }
@@ -6108,7 +6208,13 @@ function ntSheet(sub){
   const pst=perm==='granted'?'System notifications are allowed ✓':perm==='denied'?'Blocked in iOS Settings → Notifications → Aether':perm==='none'?'Not available here: add Aether to the Home Screen first (Share → Add to Home Screen)':'Not allowed yet';
   const n=inbox().filter(x=>!x.r).length;
   let h='<h2 class="sh">Notifications</h2>'+
-  '<div class="sub" style="margin:0 0 10px">'+pst+'. iOS only lets a web app notify while it is open or was open recently. For alarms that ring with Aether closed, use “Rings with the app closed” at the bottom.</div>'+
+  (()=>{const st=(navigator.standalone===true)||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches),ago=NT.icsAt?Math.round((Date.now()-NT.icsAt)/864e5):null,L=(ok,t,fix)=>'<div style="display:flex;gap:8px;align-items:flex-start;margin:5px 0;font-size:13.5px"><span style="flex:none">'+(ok?'✅':'⚠️')+'</span><span style="flex:1">'+t+'</span>'+(fix||'')+'</div>';
+    return '<div class="card" style="padding:12px 14px;margin:0 0 12px"><div class="lbl" style="margin-bottom:4px">Why you might see nothing</div>'+
+    L(st,st?'Aether is on your Home Screen':'Open Aether from its Home Screen icon (Share › Add to Home Screen), not from Safari')+
+    L(perm==='granted',perm==='granted'?'System notifications allowed':perm==='denied'?'Blocked: iOS Settings › Notifications › Aether':'Not allowed yet',perm==='default'?'<button class="chip" data-g="perm">Allow</button>':'')+
+    L(NT.on,NT.on?'Notifications are ON':'Notifications are OFF',NT.on?'':'<button class="chip" data-g="on">Turn on</button>')+
+    L(ago!==null&&ago<=6,ago===null?'Alarms for when Aether is closed are not set up':ago>6?'Closed-app alarms are '+ago+' days old':'Closed-app alarms updated '+(ago?ago+' d ago':'today'),'<button class="chip" data-g="ics">'+(ago===null||ago>6?'Set up':'Refresh')+'</button>')+
+    '<div class="hint" style="text-align:left;margin-top:6px">iOS freezes a web app a few seconds after you leave it, so in-app notifications cannot ring while it is closed. The Calendar alarms below are what the iPhone itself rings, on time, even offline.</div></div>'})()+
   '<div class="chips" style="margin-bottom:10px"><button class="chip '+(NT.on?'on':'')+'" data-g="on">'+(NT.on?'All notifications: ON':'All notifications: OFF')+'</button>'+(perm==='default'?'<button class="chip" data-g="perm">Allow system notifications</button>':'')+'<button class="chip" data-g="test">Send a test</button><button class="chip" data-g="inbox">Inbox'+(n?' ('+n+')':'')+'</button></div>'+
   '<div class="field"><label>Quick setup</label><div class="chips" id="nt-pre"><button class="chip" data-v="min">Minimal</button><button class="chip" data-v="bal">Balanced</button><button class="chip" data-v="all">Everything</button></div></div>'+
   '<div class="field"><label>How to alert me</label>'+chipsH('nt-ch',[['sys','System notification'],['banner','In-app banner'],['sound','Sound'],['vib','Vibration']],Object.keys(NT.ch).filter(k=>NT.ch[k]))+'</div>'+
@@ -6122,7 +6228,7 @@ function ntSheet(sub){
   '<div class="pv-h" style="margin:14px 0 6px">My reminders</div>'+
   (NT.custom.length?NT.custom.map(c=>'<div class="prow" style="--c:var(--acc);cursor:pointer" data-nc="'+c.id+'"><span class="m"><div class="t">'+esc(c.title)+'</div><div class="s">'+(c.date?c.date:(c.days&&c.days.length?c.days.map(d=>DAYN[d]).join(' '):'Every day'))+' · '+c.time+'</div></span><span class="chip '+(c.on===false?'':'on')+'" data-ncx="'+c.id+'">'+(c.on===false?'Off':'On')+'</span></div>').join(''):'<div class="sub">None yet.</div>')+
   '<button class="btn" id="nt-add" style="margin-top:8px">+ Add a reminder</button>'+
-  '<div class="pv-h" style="margin:14px 0 6px">Rings with the app closed</div><div class="sub" style="margin:0 0 8px">Exports your enabled event / countdown / brief / custom rules as alarms into the iPhone Calendar (re-importing updates, no duplicates).</div><div class="chips" id="nt-ics">'+[7,14,30,60].map(d=>'<button class="chip" data-v="'+d+'">Next '+d+' days</button>').join('')+'</div>'+
+  '<div class="pv-h" style="margin:14px 0 6px">Rings with the app closed</div><div class="chips" style="margin-bottom:8px"><button class="chip on" data-g="ics">Update my alarms · 14 days</button><button class="chip" data-g="icstest">Test: rings in 2 min</button></div><div class="sub" style="margin:0 0 8px">Exports your enabled event / countdown / brief / custom rules as alarms into the iPhone Calendar (re-importing updates, no duplicates).</div><div class="chips" id="nt-ics">'+[7,14,30,60].map(d=>'<button class="chip" data-v="'+d+'">Next '+d+' days</button>').join('')+'</div>'+
   '<button class="btn danger" id="nt-reset" style="margin-top:14px">Reset</button>';
   openSheet(h);
   const rd=()=>ntSheet(sub);
@@ -6134,6 +6240,8 @@ function ntSheet(sub){
       else if(a==='perm'){try{await Notification.requestPermission()}catch(e){}rd()}
       else if(a==='test'){const r=await deliver({type:'test',title:'Aether test',body:'This is how your notifications look.',key:'test|'+Date.now()},{force:true});toast(document.hidden?'Sent':'Test sent ('+r+')')}
       else if(a==='inbox')inboxSheet();
+      else if(a==='ics')shareIcs(14);
+      else if(a==='icstest')shareIcs(0,true);
       else if(a==='quiet'){NT.quiet.on=!NT.quiet.on;ntSave();rd()}
       return}
     const t=ev.target.closest('[data-nt]');if(t){const k=t.dataset.nt;NT.rules[k].on=!NT.rules[k].on;ntSave();rd();return}
@@ -7311,22 +7419,26 @@ window.PW={sc:pwSc,sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwD
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
-const HCARDS={tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Motivation quote',Today:'Today\'s events',Objectives:'Objectives','Focus today':'Focus time','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day'};
-const hCfg=()=>Object.assign({mode:'auto',hide:[]},jl(PHK,{}));
+const HCARDS={tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Motivation quote',Today:'Today\'s events',Objectives:'Objectives','Focus today':'Focus time','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
+const PERIODS=[['morning','Morning'],['day','Daytime'],['night','Evening']],ALWAYS=['wkcard','hauto','xmcard','rxcard'];
+const hCfg=()=>{const c=Object.assign({mode:'auto',hide:[],order:[],when:{}},jl(PHK,{}));c.hide=c.hide||[];c.order=c.order||[];c.when=c.when||{};return c};
 function hKey(el,i){if(el.id&&HCARDS[el.id])return el.id;const l=el.querySelector('.lbl');const t=l?l.textContent.trim():'';if(HCARDS[t])return t;if(el.classList.contains('lazycard'))return 'lazycard';const j=el.getAttribute('onclick')||'';if(/showJournal/.test(j))return 'Journal';if(/stats/.test(j))return 'Stats';return null}
 function hPeriod(){const h=new Date().getHours(),m=h*60+new Date().getMinutes();return m>=20*60+30||h<5?'night':h<12?'morning':'day'}
-const KEEP={morning:['Today','Objectives'],day:['Today','Objectives','hhcard','Focus today'],night:['Objectives','How was your day?','Daily review','tpcard']};
+const KEEP={morning:['Today','Objectives'].concat(ALWAYS),day:['Today','Objectives','hhcard','Focus today'].concat(ALWAYS),night:['Objectives','How was your day?','Daily review','tpcard'].concat(ALWAYS)};
 function hLayout(){
   const home=document.getElementById('home');if(!home)return;
   const cfg=hCfg(),cards=[...home.querySelectorAll(':scope > .card')];
   cards.forEach(el=>{
     const k=hKey(el);el.classList.remove('ph-hide');if(!k)return;
     let hide=false;
-    if(cfg.mode==='calm')hide=!['Today','Objectives'].includes(k);
-    else if(cfg.mode==='auto')hide=!KEEP[hPeriod()].includes(k);
+    if(cfg.mode==='calm')hide=!['Today','Objectives'].concat(ALWAYS).includes(k);
+    else if(cfg.mode==='auto'){const w=cfg.when[k];hide=w?!w.includes(hPeriod()):!KEEP[hPeriod()].includes(k)}
     else if(cfg.mode==='custom')hide=cfg.hide.includes(k);
     if(hide)el.classList.add('ph-hide');
   });
+  const K=cards.filter(el=>hKey(el));K.forEach(el=>{el.dataset.hold='hcard';el.dataset.hk=hKey(el)});
+  if(cfg.order.length){const ix=k=>{const i=cfg.order.indexOf(k);return i<0?999:i},S=K.map((el,i)=>[el,i]).sort((a,b)=>ix(hKey(a[0]))-ix(hKey(b[0]))||a[1]-b[1]).map(x=>x[0]);
+    if(S.some((el,i)=>el!==K[i])){const M=K.map(el=>{const m=document.createComment('');el.before(m);return m});M.forEach((m,i)=>m.replaceWith(S[i]))}}
   let b=document.getElementById('ph-more');
   if(!b){b=document.createElement('div');b.id='ph-more';b.style.cssText='display:flex;gap:10px;justify-content:center;margin:6px 0 90px';b.innerHTML='<button class="btn" data-h="more" style="width:auto;margin:0;padding:10px 16px">Show everything</button><button class="btn" data-h="cust" style="width:auto;margin:0;padding:10px 16px">Customise Home</button>';b.onclick=e=>{const x=e.target.closest('[data-h]');if(!x)return;if(x.dataset.h==='more'){home.classList.toggle('ph-more');hLayout()}else hCustom()};}
   b.style.display=(cfg.mode==='full'&&!dkOffList().length)?'none':'flex';
@@ -7338,9 +7450,23 @@ function hCustom(){
   const keys=[...home.querySelectorAll(':scope > .card')].map(hKey).filter(Boolean);
   openSheet('<h2 class="sh">Customise Home</h2><div class="sub" style="margin:0 0 10px">Your level and the “Now” block are always there. Alerts (exam mode, rescue…) still appear on their own when they matter.</div><div class="field"><label>Layout</label><div class="chips" id="hc-m">'+[['auto','Adaptive'],['calm','Calm'],['full','Everything'],['custom','My choice']].map(x=>'<button class="chip '+(cfg.mode===x[0]?'on':'')+'" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div><div class="sub" style="margin:-4px 0 10px">Adaptive: morning, daytime and evening each show only what is useful then. Calm: only today and objectives.</div>'+(cfg.mode==='custom'?'<div class="field"><label>Show these blocks</label><div class="chips" id="hc-c" style="flex-wrap:wrap">'+keys.map(k=>'<button class="chip '+(cfg.hide.includes(k)?'':'on')+'" data-v="'+esc(k)+'">'+esc(HCARDS[k])+'</button>').join('')+'</div></div>':''));
   bindChips('hc-m',v=>{cfg.mode=v;js(PHK,cfg);hLayout();hCustom()});
+  {const nv=Object.keys(cfg.when).filter(k=>HCARDS[k]&&!(cfg.when[k]||[]).length);const d=document.createElement('div');d.className='field';d.style.marginTop='14px';d.innerHTML='<label>Move and edit</label><div class="sub">Hold a block on Home and drag it to move it. Let go without moving to edit it.</div>'+(nv.length?'<div class="chips" id="hc-nv" style="margin-top:8px">'+nv.map(k=>'<button class="chip" data-v="'+k+'">'+esc(HCARDS[k])+' · show again</button>').join('')+'</div>':'')+'<button class="btn" id="hc-rs" style="margin-top:8px">Reset block order</button>';document.getElementById('sbody').appendChild(d);d.onclick=e=>{const b=e.target.closest('.chip');if(b&&b.parentElement.id==='hc-nv'){const c2=hCfg();delete c2.when[b.dataset.v];js(PHK,c2);b.remove();hLayout();return}if(e.target.id==='hc-rs'){const c2=hCfg();c2.order=[];js(PHK,c2);toast('Order reset');try{render()}catch(x){}}}}
   const offs=dkOffList();
   if(offs.length){const d=document.createElement('div');d.className='field';d.style.marginTop='14px';d.innerHTML='<label>Switched off (you swiped them right)</label><div class="chips" id="hc-off">'+offs.map(id=>'<button class="chip" data-v="'+id+'">'+esc((DOCK.find(x=>x[0]===id)||[0,0,id])[1]+' '+(DOCK.find(x=>x[0]===id)||[0,0,id])[2])+' · turn on</button>').join('')+'</div>';document.getElementById('sbody').appendChild(d);d.onclick=e=>{const b=e.target.closest('.chip');if(!b)return;dkOn(b.dataset.v);b.remove();hv();hLayout()}}
   const c=document.getElementById('hc-c');if(c)c.onclick=e=>{const b=e.target.closest('.chip');if(!b)return;b.classList.toggle('on');cfg.hide=[...c.querySelectorAll('.chip:not(.on)')].map(x=>x.dataset.v);js(PHK,cfg);hLayout()};
+}
+const hKeys=()=>[...document.getElementById('home').querySelectorAll(':scope > .card')].map(hKey).filter(Boolean);
+function hReorder(ids){const cfg=hCfg(),all=hKeys(),vis=new Set(ids);let i=0;cfg.order=all.map(k=>vis.has(k)?ids[i++]:k);js(PHK,cfg);hLayout()}
+function hMove(k,to){const cfg=hCfg(),all=hKeys().filter(x=>x!==k);if(to==='top')all.unshift(k);else all.push(k);cfg.order=all;js(PHK,cfg);hLayout()}
+function hEdit(k){
+  if(!HCARDS[k])return;
+  const cfg=hCfg(),w=cfg.when[k],eff=w||PERIODS.map(p=>p[0]).filter(p=>KEEP[p].includes(k));
+  openSheet('<h2 class="sh">'+esc(HCARDS[k])+'</h2><div class="sub" style="margin:0 0 10px">Hold a block and drag it to move it. Here you choose when it shows.</div><div class="field"><label>Show it in the</label><div class="chips" id="he-p" style="flex-wrap:wrap">'+PERIODS.map(p=>'<button class="chip '+(eff.includes(p[0])?'on':'')+'" data-v="'+p[0]+'">'+p[1]+'</button>').join('')+'</div></div><div class="sub" style="margin:-4px 0 12px">'+(cfg.mode==='auto'?'Adaptive layout: this block follows these times.':'Changing this switches Home to the Adaptive layout.')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" id="he-top" style="margin:0">⬆︎ To the top</button><button class="btn" id="he-bot" style="margin:0">⬇︎ To the bottom</button></div><button class="btn danger" id="he-off" style="margin-top:10px">Hide this block</button><button class="btn" id="he-rs" style="margin-top:8px">Reset the order of all blocks</button>');
+  const g=i=>document.getElementById(i),c=g('he-p');
+  c.onclick=e=>{const b=e.target.closest('.chip');if(!b)return;b.classList.toggle('on');const c2=hCfg();c2.when[k]=[...c.querySelectorAll('.chip.on')].map(x=>x.dataset.v);c2.mode='auto';js(PHK,c2);hLayout()};
+  g('he-top').onclick=()=>{hMove(k,'top');closeSheet()};g('he-bot').onclick=()=>{hMove(k,'bot');closeSheet()};
+  g('he-rs').onclick=()=>{const c2=hCfg();c2.order=[];js(PHK,c2);closeSheet();toast('Order reset · it applies at the next refresh');try{render()}catch(e){}};
+  g('he-off').onclick=()=>{const c2=hCfg();if(c2.mode==='custom'||c2.mode==='full'){c2.mode='custom';if(!c2.hide.includes(k))c2.hide.push(k)}else c2.when[k]=[];if(c2.mode==='calm')c2.mode='auto';js(PHK,c2);hLayout();closeSheet();toast(HCARDS[k]+' hidden · Customise Home brings it back')};
 }
 /* the "Now" block: one thing, chosen for this moment */
 function homeNow(){
@@ -7361,7 +7487,7 @@ function homeNow(){
   return head('🧭 Now',per==='morning'?'Good morning':'')+(t?row(t.title,'Best move now · '+t.min+' min · '+t.why,AP_TYPES[t.type].ic)+'<button class="btn primary" data-ap="go">Go</button>':'<div class="sub">Nothing urgent. Enjoy it, or add an exam / cards.</div>');
 }
 function briefShort(ds){const ev=evOn(ds).filter(e=>e.time&&e.kind!=='work').length,tk=tasks.filter(t=>t.due&&t.due<=ds).length;return ev+' event'+(ev===1?'':'s')+(tk?' · '+tk+' due':'')}
-window.PH={layout:hLayout,custom:hCustom,now:homeNow};
+window.PH={edit:hEdit,reorder:hReorder,layout:hLayout,custom:hCustom,now:homeNow};
 
 /* ================= v68: THE EXAMINER OF YOUR OWN FAULTS =================
    A mock exam made ONLY of the traps you already fell into (your mistake notebook, colles, DS), reformulated with new data.
