@@ -642,6 +642,11 @@ textarea::placeholder{color:var(--dim)}
 #pview canvas,#pview img{display:block;margin:0 auto 10px;max-width:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.6)}
 #pview .pgn{position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(20,22,28,.85);border:1px solid var(--line2);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 #printarea{display:none}
+#prv{position:fixed;inset:0;z-index:885;background:#050609;display:none;flex-direction:column}#prv.show{display:flex;animation:fadein .25s}
+#prv .vh{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;border-bottom:1px solid var(--line);background:rgba(10,11,15,.9)}
+#prv .vt{flex:1;font-weight:700;text-align:center}#prv .vb{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px}
+#prv .paper{background:#fff;color:#111;border-radius:6px;padding:22px 20px;box-shadow:0 10px 30px rgba(0,0,0,.6);max-width:760px;margin:0 auto}
+#prv .paper *{color:inherit}#prv .paper h1,#prv .paper h2,#prv .paper h3{color:#111}#prv .paper h2{border-bottom:1px solid #999}#prv .paper .ex{background:#fff;border:1px solid #bbb}
 @media print{
   body>*:not(#printarea){display:none!important}
   #printarea{display:block!important;color:#111;background:#fff;padding:0;font-size:12pt}
@@ -1215,7 +1220,7 @@ const fmt=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 function ld(k,def){try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v)}catch(e){return def}}
 function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms||18)}catch(e){}try{const h=$('hap');if(h)h.click()}catch(e){}}
 const COLORS=['#4fd1ff','#5eead4','#ff9f0a','#9b8cff','#ff6fb5','#30d158'];
-const EVC=COLORS.concat(['#ff5d5d','#ffd60a','#4d8dff','#7c6bff','#b6e24a','#d19a66','#ff7a59','#a0a8b8','ghost','#eef1f8']);
+const EVC=COLORS.concat(['#ff5d5d','#ffd60a','#4d8dff','#7c6bff','#b6e24a','#d19a66','#ff7a59','#a0a8b8','ghost','#eef1f8','#ff8fa3','#ffb86b','#f4d35e','#a3e635','#34d399','#2dd4bf','#38bdf8','#60a5fa','#818cf8','#a78bfa','#e879f9','#f472b6','#fb7185','#c084fc','#84cc16','#fbbf24']);
 const GHOST=EVC.indexOf('ghost'),FROST=EVC.indexOf('#eef1f8');
 const PAL=EVC.filter(x=>x!=='ghost');
 const vcol=h=>{h=String(h||'');const m=/^#([0-9a-f]{6})$/i.exec(h);if(!m)return h;const r=parseInt(m[1].slice(0,2),16)/255,g=parseInt(m[1].slice(2,4),16)/255,b=parseInt(m[1].slice(4,6),16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(d<.04)return h;let l=(mx+mn)/2,hh=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;hh=(hh*60+360)%360;let sa=Math.max(.9,d/(1-Math.abs(2*l-1)));l=Math.min(.6,Math.max(.52,l));const c=(1-Math.abs(2*l-1))*sa,x=c*(1-Math.abs((hh/60)%2-1)),m0=l-c/2,[R,G,B]=hh<60?[c,x,0]:hh<120?[x,c,0]:hh<180?[0,c,x]:hh<240?[0,x,c]:hh<300?[x,0,c]:[c,0,x];return'#'+[R,G,B].map(v=>Math.round((v+m0)*255).toString(16).padStart(2,'0')).join('')};
@@ -3085,7 +3090,7 @@ if(typeof ReadableStream!=='undefined'&&!ReadableStream.prototype[Symbol.asyncIt
 const SUBJ={maths:{n:'Maths',c:0},phys:{n:'Physique',c:3},chim:{n:'Chimie',c:5},ang:{n:'Anglais',c:4},fr:{n:'Français',c:2},ipt:{n:'IPT / SI',c:1}};
 const LSUBJ=Object.keys(SUBJ);
 const COLORS_L=['#0a84c8','#0d9c8a','#d97706','#6d5bd0','#d6336c','#1f9d55'];
-const sc=s=>{const i=(SUBJ[s]||{c:0}).c;return document.documentElement.getAttribute('data-theme')==='light'?COLORS_L[i]:COLORS[i]};
+const sc=s=>{try{const o=((S&&S.set&&S.set.sc)||{})[s];if(o)return document.documentElement.getAttribute('data-theme')==='light'&&typeof vcol==='function'?vcol(o):o}catch(e){}const i=(SUBJ[s]||{c:0}).c;return document.documentElement.getAttribute('data-theme')==='light'?COLORS_L[i]:COLORS[i]};
 const sn=s=>(SUBJ[s]||{n:'Other'}).n;
 const TAGS=['Calculation','Method','Course knowledge','Time','Misread the question','Presentation','Stress / focus','Rigor / proof'];
 const SCHED=[{"id":"s-ds-20260907","kind":"ds","subj":"ang","title":"DS Anglais","date":"2026-09-07","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20260912","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-09-12","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20260914","kind":"ds","subj":"fr","title":"DS Français","date":"2026-09-14","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-ds-20260919","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-09-19","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-ang-20260921","kind":"colle","subj":"ang","title":"Colle Anglais (110)","date":"2026-09-21","time":"12:00","endTime":"13:00","color":4,"desc":"Thevenin","teacher":"Thevenin","room":"110","v":6},{"id":"s-colle-maths-20260923","kind":"colle","subj":"maths","title":"Colle Maths (105)","date":"2026-09-23","time":"16:45","endTime":"17:45","color":0,"desc":"C Ogabi","teacher":"C Ogabi","room":"105","v":6},{"id":"s-ds-20260926","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-09-26","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20260928","kind":"ds","subj":"chim","title":"DS Chimie","date":"2026-09-28","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-colle-maths-20261001","kind":"colle","subj":"maths","title":"Colle Maths (107)","date":"2026-10-01","time":"12:55","endTime":"13:55","color":0,"desc":"N Bovetto","teacher":"N Bovetto","room":"107","v":6},{"id":"s-colle-phys-20261002","kind":"colle","subj":"phys","title":"Colle Physique (209)","date":"2026-10-02","time":"12:00","endTime":"13:00","color":3,"desc":"B Bissardon","teacher":"B Bissardon","room":"209","v":6},{"id":"s-ds-20261003","kind":"ds","subj":"ipt","title":"DS IPT + SI","date":"2026-10-03","time":"07:45","endTime":"11:45","color":1,"desc":""},{"id":"s-colle-ang-20261006","kind":"colle","subj":"ang","title":"Colle Anglais (107)","date":"2026-10-06","time":"17:45","endTime":"18:45","color":4,"desc":"Kyne","teacher":"Kyne","room":"107","v":6},{"id":"s-colle-maths-20261008","kind":"colle","subj":"maths","title":"Colle Maths (B605)","date":"2026-10-08","time":"17:45","endTime":"18:45","color":0,"desc":"S Visier","teacher":"S Visier","room":"B605","v":6},{"id":"s-ds-20261010","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-10-10","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-maths-20261014","kind":"colle","subj":"maths","title":"Colle Maths (108)","date":"2026-10-14","time":"17:45","endTime":"18:45","color":0,"desc":"N Hamouti","teacher":"N Hamouti","room":"108","v":6},{"id":"s-colle-phys-20261015","kind":"colle","subj":"phys","title":"Colle Physique (106)","date":"2026-10-15","time":"12:00","endTime":"13:00","color":3,"desc":"T Busser Ramseyer","teacher":"T Busser Ramseyer","room":"106","v":6},{"id":"s-ds-20261017","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-10-17","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20261102","kind":"ds","subj":"fr","title":"DS Français","date":"2026-11-02","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-colle-ang-20261103","kind":"colle","subj":"ang","title":"Colle Anglais (209)","date":"2026-11-03","time":"17:45","endTime":"18:45","color":4,"desc":"Morse","teacher":"Morse","room":"209","v":6},{"id":"s-colle-maths-20261105","kind":"colle","subj":"maths","title":"Colle Maths (B505)","date":"2026-11-05","time":"17:45","endTime":"18:45","color":0,"desc":"M Zaegel","teacher":"M Zaegel","room":"B505","v":6},{"id":"s-ds-20261107","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-11-07","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-phys-20261109","kind":"colle","subj":"phys","title":"Colle Physique (100)","date":"2026-11-09","time":"12:00","endTime":"13:00","color":3,"desc":"D Villegas","teacher":"D Villegas","room":"100","v":6},{"id":"s-ds-20261109","kind":"ds","subj":"ang","title":"DS Anglais","date":"2026-11-09","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-colle-maths-20261112","kind":"colle","subj":"maths","title":"Colle Maths (811)","date":"2026-11-12","time":"17:45","endTime":"18:45","color":0,"desc":"B Jeuris","teacher":"B Jeuris","room":"811","v":6},{"id":"s-ds-20261114","kind":"ds","subj":"ipt","title":"DS IPT + SI","date":"2026-11-14","time":"07:45","endTime":"11:45","color":1,"desc":""},{"id":"s-ds-20261116","kind":"ds","subj":"chim","title":"DS Chimie","date":"2026-11-16","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-colle-ang-20261117","kind":"colle","subj":"ang","title":"Colle Anglais (110)","date":"2026-11-17","time":"12:00","endTime":"13:00","color":4,"desc":"Thevenin","teacher":"Thevenin","room":"110","v":6},{"id":"s-colle-maths-20261119","kind":"colle","subj":"maths","title":"Colle Maths (107)","date":"2026-11-19","time":"12:00","endTime":"13:00","color":0,"desc":"N Bovetto","teacher":"N Bovetto","room":"107","v":6},{"id":"s-ds-20261121","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-11-21","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20261128","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-11-28","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-phys-20261201","kind":"colle","subj":"phys","title":"Colle Physique (102)","date":"2026-12-01","time":"12:00","endTime":"13:00","color":3,"desc":"L Favreau","teacher":"L Favreau","room":"102","v":6},{"id":"s-colle-maths-20261203","kind":"colle","subj":"maths","title":"Colle Maths (B405)","date":"2026-12-03","time":"17:45","endTime":"18:45","color":0,"desc":"M Fatou","teacher":"M Fatou","room":"B405","v":6},{"id":"s-ds-20261205","kind":"ds","subj":"maths","title":"DS Maths","date":"2026-12-05","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20261207","kind":"ds","subj":"fr","title":"DS Français","date":"2026-12-07","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-colle-maths-20261209","kind":"colle","subj":"maths","title":"Colle Maths (709)","date":"2026-12-09","time":"16:45","endTime":"17:45","color":0,"desc":"G Mallet","teacher":"G Mallet","room":"709","v":6},{"id":"s-colle-ang-20261211","kind":"colle","subj":"ang","title":"Colle Anglais (106)","date":"2026-12-11","time":"17:45","endTime":"18:45","color":4,"desc":"Singh","teacher":"Singh","room":"106","v":6},{"id":"s-ds-20261212","kind":"ds","subj":"phys","title":"DS Physique","date":"2026-12-12","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-colle-phys-20261214","kind":"colle","subj":"phys","title":"Colle Physique (808)","date":"2026-12-14","time":"12:00","endTime":"13:00","color":3,"desc":"S Leroy","teacher":"S Leroy","room":"808","v":6},{"id":"s-ds-20261214","kind":"ds","subj":"ipt","title":"DS IPT","date":"2026-12-14","time":"15:50","endTime":"17:40","color":1,"desc":""},{"id":"s-colle-maths-20261217","kind":"colle","subj":"maths","title":"Colle Maths (B605)","date":"2026-12-17","time":"18:45","endTime":"19:45","color":0,"desc":"S Visier","teacher":"S Visier","room":"B605","v":6},{"id":"s-ds-20270104","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-01-04","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20270109","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-01-09","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270111","kind":"ds","subj":"fr","title":"DS Français","date":"2027-01-11","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-ds-20270116","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-01-16","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270125","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-01-25","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270130","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-01-30","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270201","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-02-01","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270206","kind":"ds","subj":"ipt","title":"DS IPT","date":"2027-02-06","time":"07:45","endTime":"11:45","color":1,"desc":""},{"id":"s-ds-20270213","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-02-13","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-cb1-20270301","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-01","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270302","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-02","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270303","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-03","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270304","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-04","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270305","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-05","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb1-20270306","kind":"cb","subj":"cb","title":"Concours blanc 1","date":"2027-03-06","time":"","endTime":"","color":1,"desc":""},{"id":"s-ds-20270313","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-03-13","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270315","kind":"ds","subj":"ipt","title":"DS IPT","date":"2027-03-15","time":"15:50","endTime":"17:40","color":1,"desc":""},{"id":"s-ds-20270320","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-03-20","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270322","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-03-22","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270327","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-03-27","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270403","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-04-03","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270405","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-04-05","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20270410","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-04-10","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270426","kind":"ds","subj":"fr","title":"DS Français","date":"2027-04-26","time":"15:50","endTime":"17:40","color":2,"desc":""},{"id":"s-ds-20270503","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-05-03","time":"15:50","endTime":"17:40","color":3,"desc":""},{"id":"s-ds-20270510","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-05-10","time":"15:50","endTime":"17:40","color":4,"desc":""},{"id":"s-ds-20270515","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-05-15","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270522","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-05-22","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270524","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-05-24","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270529","kind":"ds","subj":"maths","title":"DS Maths","date":"2027-05-29","time":"07:45","endTime":"11:45","color":0,"desc":""},{"id":"s-ds-20270531","kind":"ds","subj":"chim","title":"DS Chimie","date":"2027-05-31","time":"15:50","endTime":"17:40","color":5,"desc":""},{"id":"s-ds-20270605","kind":"ds","subj":"phys","title":"DS Physique","date":"2027-06-05","time":"07:45","endTime":"11:45","color":3,"desc":""},{"id":"s-ds-20270612","kind":"ds","subj":"ang","title":"DS Anglais","date":"2027-06-12","time":"07:45","endTime":"11:45","color":4,"desc":""},{"id":"s-ds-20270614","kind":"ds","subj":"ipt","title":"DS IPT","date":"2027-06-14","time":"15:50","endTime":"17:40","color":1,"desc":""},{"id":"s-cb2-20270618","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-18","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270619","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-19","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270621","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-21","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270622","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-22","time":"","endTime":"","color":1,"desc":""},{"id":"s-cb2-20270623","kind":"cb","subj":"cb","title":"Concours blanc 2","date":"2027-06-23","time":"","endTime":"","color":1,"desc":""}];
@@ -3818,7 +3823,20 @@ async function view(x){
   }
 }
 function closeView(){const v=$('pview');v.classList.remove('show');v._t=0;if(v._u){URL.revokeObjectURL(v._u);v._u=null}$('pvb').innerHTML=''}
-function printHtml(html){$('printarea').innerHTML='<div class="doc">'+html+'</div>';setTimeout(()=>{try{window.print()}catch(e){toast('Printing is not available here')}},150)}
+/* Printing: the page is first shown in an in-app print view; the Print button calls window.print() straight from the tap,
+   so iOS never needs any extra permission and never blocks it (a print started after a delay or an await is refused). */
+function printHtml(html){
+  $('printarea').innerHTML='<div class="doc">'+html+'</div>';
+  let o=$('prv');
+  if(!o){
+    o=document.createElement('div');o.id='prv';
+    o.innerHTML='<div class="vh"><button class="pmini" id="prv-c" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="vt">Print preview</div><button class="btn primary sm" id="prv-p" style="margin:0;flex:none">Print / PDF</button></div><div class="vb"><div class="paper doc" id="prv-d"></div><div class="sub" style="text-align:center;padding:10px 24px 40px">Tap <b>Print / PDF</b>. To keep a PDF, choose Save to Files in the print or share menu.</div></div>';
+    document.body.appendChild(o);
+    $('prv-c').onclick=()=>o.classList.remove('show');
+    $('prv-p').onclick=()=>{try{window.print()}catch(e){toast('Printing is not available here')}};
+  }
+  $('prv-d').innerHTML=html;o.classList.add('show');o.querySelector('.vb').scrollTop=0;
+}
 
 /* ---------- navigation ---------- */
 function go(v,id){st.stack.push({v,id});render('push');window.scrollTo(0,0)}
@@ -4369,7 +4387,10 @@ function vProg(id){
   h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(p.subj)+'">'+SUBJ[p.subj].n+'</span><span class="pill">'+fdl(p.date)+'</span>'+folderPill('progs',id)+(p.min?'<span class="pill">⏱ '+hdur(p.min)+'</span>':'')+'</div>';
   h+=fileRows(p.files,'prog',id)+liveBox(k)+errBox(k)+(p.err&&!errs[k]?'<div class="warnbox">'+esc(p.err)+'</div>':'');
   if(!live[k]){
-    if(!p.chapters||!p.chapters.length)h+='<button class="btn primary" data-a="parseProg" data-i="'+id+'">Build my sheet</button>';
+    if(!p.chapters||!p.chapters.length){
+      h+='<button class="btn primary" data-a="parseProg" data-i="'+id+'">Build my sheet with AI</button><button class="btn" data-a="impSheet" data-i="'+id+'" style="margin-top:8px">⬆ I already have a sheet: import it</button>';
+      if(p.sheetAt)h+='<button class="btn" data-a="openSheet" data-i="'+id+'" style="margin-top:8px">Exercises & corrections</button><button class="btn" data-pvt="S'+id+'" data-pvn="Prep sheet" style="margin-top:8px">👁 Quick preview</button>';
+    }
   }
   h+='</div>';
   if(p.chapters&&p.chapters.length){
@@ -4384,7 +4405,7 @@ function vProg(id){
       h+='<div class="sub" style="margin-bottom:6px">Made '+new Date(p.sheetAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+(p.noCourse?'':' from '+(p.used||[]).length+' of your lesson'+((p.used||[]).length>1?'s':''))+'</div>';
       if(p.audit)h+='<div class="sub" style="margin-bottom:8px">'+(p.audit.fixed?'✓ Checked against your programme: '+p.audit.fixed+' point'+(p.audit.fixed>1?'s':'')+' fixed ('+esc(p.audit.issues.join(' · ')).slice(0,220)+')':p.audit.ok?'✓ Checked against your programme: theme, exclusions and format OK':'⚠︎ Could not fix: '+esc((p.audit.issues||[]).join(' · ')).slice(0,260)+'. Regenerate if it matters.')+'</div>';
       if(p.noCourse)h+='<div class="warnbox">'+(S.lessons.some(l=>l.subj===p.subj)?'Your '+SUBJ[p.subj].n+' lessons were not read yet, so this sheet uses general prépa knowledge, not your course. Open Lessons → “Read all now”, then generate a new sheet.':'No lesson of '+SUBJ[p.subj].n+' was uploaded, so this sheet uses general prépa knowledge, not your course.')+'</div>';
-      h+='<button class="btn primary" data-a="openSheet" data-i="'+id+'">Exercises & corrections</button>';
+      h+='<button class="btn primary" data-a="openSheet" data-i="'+id+'">Exercises & corrections</button><button class="btn" data-pvt="S'+id+'" data-pvn="Prep sheet" style="margin-top:8px">👁 Quick preview</button>';
     }
     if(!live[k]){const T=tl(id);if(!p.sheetAt)h+='<button class="btn primary" data-a="mkSheet" data-i="'+id+'">Generate the sheet</button>';h+=tiles([p.sheetAt?T('mkSheet','🔄','New sheet','regenerate'):'',T('impSheet','⬆','Import a sheet','from a file'),T('promptSheet','📋','Prompt for Claude','copy')])}
     h+='</div>';
@@ -4533,6 +4554,7 @@ function decorate(root){
 new MutationObserver(m=>{if(m.some(x=>x.addedNodes.length))decorate()}).observe(document.body,{childList:true,subtree:true});
 document.addEventListener('click',e=>{
   const t=e.target;if(!t.closest)return;
+  const pt=t.closest('[data-pvt]');if(pt){e.preventDefault();e.stopPropagation();peek(pt.dataset.pvt,pt.dataset.pvn);return}
   const pf=t.closest('[data-pvf]');if(pf){e.preventDefault();e.stopPropagation();view(pf.dataset.pvf);return}
   const sb=t.closest('[data-pvs]');if(sb){const f=stagedFor(sb.closest('.filerow'));if(f){e.preventDefault();e.stopPropagation();view(f)}return}
   const row=t.closest('.filerow');if(!row||t.closest('button'))return;
@@ -4548,12 +4570,50 @@ function allDocs(){
     const c=o.title||o.name||o.n||ctx;for(const k in o)walk(o[k],typeof c==='string'?c:ctx,d+1)};
   Object.keys(S).forEach(k=>walk(S[k],k,0));return out;
 }
+let _gd=[];
 function docsSheet(q){
   q=(q||'').toLowerCase();const all=allDocs(),l=all.filter(d=>!q||(d.name+' '+(d.ctx||'')).toLowerCase().includes(q));
-  openSheet('<h2 class="sh">All documents</h2><div class="field"><input id="dc-q" placeholder="Search '+all.length+' documents" value="'+esc(q)+'" autocapitalize="off"></div><div id="dc-l">'+(l.length?l.slice(0,120).map(d=>'<div class="filerow" data-fid="'+d.id+'" data-fn="'+esc(d.name)+'"><span class="n">'+esc(d.name)+'<small>'+C.kb(d.size)+(d.ctx?' · '+esc(String(d.ctx).slice(0,28)):'')+'</small></span><button class="pmini" data-pvf="'+d.id+'" aria-label="Open">'+ico.eye+'</button></div>').join(''):'<div class="sub">No document yet. Upload one in Lessons, TD, Exos or Import.</div>')+'</div>');
+  openSheet('<h2 class="sh">All documents</h2><div class="field"><input id="dc-q" placeholder="Search '+all.length+' documents" value="'+esc(q)+'" autocapitalize="off"></div><div id="dc-l">'+(l.length?l.slice(0,120).map(d=>'<div class="filerow" data-fid="'+d.id+'" data-fn="'+esc(d.name)+'"><span class="n">'+esc(d.name)+'<small>'+C.kb(d.size)+(d.ctx?' · '+esc(String(d.ctx).slice(0,28)):'')+'</small></span><button class="pmini" data-pvf="'+d.id+'" aria-label="Open">'+ico.eye+'</button></div>').join(''):'<div class="sub">No uploaded file yet.</div>')+'</div><div class="lbl" style="margin:14px 0 6px">Generated and imported texts</div><div id="dc-g"><div class="sub"><span class="spin2"></span></div></div>');
+  sLoad().then(g=>{const e=$('dc-g');if(!e)return;const m=g.filter(d=>!q||(d.title+' '+d.tag+' '+(d.subj||'')).toLowerCase().includes(q));
+    const key=d=>d.kind==='lc'?'LC'+d.ref:d.kind==='vc'?'VC'+d.ref:d.kind==='lesson'?'L'+d.ref:d.kind==='meth'?'K'+d.ref:d.kind==='mbook'?'KT'+d.ref:d.kind==='sheet'?'S'+d.ref:d.kind==='mock'?'M'+d.ref:d.kind==='tdco'?'TC'+d.ref:d.kind==='fiche'?'F'+String(d.ref).split('|')[1]:d.kind==='formu'?'FM'+d.ref:'';
+    e.innerHTML=m.length?m.slice(0,150).map(d=>'<div class="filerow" data-pvt="'+key(d)+'" data-pvn="'+esc((d.title||'')+' · '+d.tag)+'"><span class="n">'+esc(d.title||d.tag)+'<small>'+esc(d.tag)+(d.subj&&SUBJ[d.subj]?' · '+SUBJ[d.subj].n:'')+'</small></span><span class="pmini" data-pvt="'+key(d)+'" data-pvn="'+esc((d.title||'')+' · '+d.tag)+'">'+EYE+'</span></div>').join(''):'<div class="sub">Nothing generated yet.</div>'});
   const i=$('dc-q');if(i)i.oninput=()=>{clearTimeout(i._t);i._t=setTimeout(()=>{const pos=i.value;docsSheet(pos);const n=$('dc-q');if(n){n.focus();n.setSelectionRange(pos.length,pos.length)}},250)};
 }
-window.PV={open:view,docs:docsSheet,all:allDocs};
+
+/* ---------- preview generated / imported TEXT documents (prep sheets, résumés, lessons, mocks, TD corrigés…) ---------- */
+async function peek(key,title){
+  const tx=await C.getText(key);
+  if(!tx){toast('Nothing to preview yet');return}
+  const v=$('pview'),vb=$('pvb');$('pvt').textContent=title||'Document';$('pvn').textContent='';v._t=Math.random();
+  vb.innerHTML='<div class="sub" style="padding:40px"><span class="spin2"></span> Opening…</div>';v.classList.add('show');
+  $('pvz').onclick=null;
+  let html='';try{html=await C.mdAsync(tx)}catch(e){html='<pre style="white-space:pre-wrap">'+esc(tx)+'</pre>'}
+  vb.innerHTML='<div class="card" style="margin:12px"><div class="doc">'+html+'</div></div>';
+}
+function textCands(a,i){
+  const cl=cal.find(e=>e.id===i);
+  if(a==='prog')return[['S'+i,'Prep sheet'],['F'+i,'Résumé']];
+  if(a==='colleGo'&&cl){const p=S.progs.find(x=>x.subj===cl.subj&&x.date===cl.date);return p?[['S'+p.id,'Prep sheet'],['F'+p.id,'Résumé']]:[]}
+  if(a==='mock')return[['M'+i,'Mock exam'],['F'+i,'Résumé']];
+  if(a==='lesson')return[['LC'+i,'Lesson completed'],['VC'+i,'Visual course'],['L'+i,'Lesson'],['D'+i,'Lesson notes']];
+  if(a==='td')return[['TC'+i,'TD corrigé']];
+  return[];
+}
+let _tk=null,_tkAt=0;
+async function textKeys(){if(_tk&&Date.now()-_tkAt<2500)return _tk;try{_tk=new Set((await C.dbKeys('texts')).map(String))}catch(e){_tk=new Set()}_tkAt=Date.now();return _tk}
+let _dcT=0;
+async function decorateText(){
+  const keys=await textKeys();
+  document.querySelectorAll('#pbody .prow[data-a][data-i]:not([data-pvd])').forEach(r=>{
+    r.dataset.pvd='1';
+    const c=textCands(r.dataset.a,r.dataset.i).find(x=>keys.has(x[0]));if(!c)return;
+    let nm='';try{nm=(r.querySelector('.t')||{}).textContent||''}catch(e){}
+    const b=document.createElement('span');b.className='pmini';b.setAttribute('role','button');b.setAttribute('aria-label','Preview');b.dataset.pvt=c[0];b.dataset.pvn=(nm?nm+' · ':'')+c[1];b.style.cssText='flex:none;margin-left:6px;cursor:pointer';b.innerHTML=EYE;
+    const chev=r.querySelector('svg:last-child');r.insertBefore(b,r.lastElementChild&&r.lastElementChild.tagName==='svg'?r.lastElementChild:null);
+  });
+}
+{const pb=$('pbody');if(pb)new MutationObserver(()=>{clearTimeout(_dcT);_dcT=setTimeout(decorateText,60)}).observe(pb,{childList:true,subtree:true})}
+window.PV={open:view,docs:docsSheet,all:allDocs,peek,print:printHtml,A};
 A.docs=()=>docsSheet();
 A.view=id=>view(id);
 A.seg=i=>{st.seg=i;render()};
@@ -4777,15 +4837,16 @@ A.printRec=async i=>{
 A.prog=id=>go('prog',id);
 A.addProg=()=>{
   let subj='maths',files=[];
-  openSheet('<h2 class="sh">Programme de colles</h2><div class="field"><label>Subject</label>'+subjChips(subj,OWN,'p-s')+'</div><div class="field"><label>Date of the colle</label><input id="p-d" type="date" value="'+iso()+'"></div><div class="field"><label>The programme (photo or PDF)</label><div id="p-f"></div><button class="btn" id="p-p">Choose photo or PDF</button></div><div class="sub">The AI reads it, picks your lessons of this subject, and writes exercises + corrections.</div><button class="btn primary" id="p-go">Create my prep sheet</button>');
+  openSheet('<h2 class="sh">Programme de colles</h2><div class="field"><label>Subject</label>'+subjChips(subj,OWN,'p-s')+'</div><div class="field"><label>Date of the colle</label><input id="p-d" type="date" value="'+iso()+'"></div><div class="field"><label>The programme (photo or PDF)</label><div id="p-f"></div><button class="btn" id="p-p">Choose photo or PDF</button></div><div class="sub">The AI reads it, picks your lessons of this subject, and writes exercises + corrections.</div><button class="btn primary" id="p-go">Create my prep sheet</button><button class="btn" id="p-ns">Save the file only (no AI)</button>');
   bindChips('p-s',v=>subj=v);
   $('p-p').onclick=async()=>{const fs=await C.pickFiles();if(fs.length){files=files.concat(fs);$('p-f').innerHTML=files.map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'</span></div>').join('')}};
-  $('p-go').onclick=async()=>{
+  const fin=async ai=>{
     if(!files.length){toast('Choose the programme file');return}
-    if(!needKey())return;
-    const stored=await C.addFiles(files),p={id:uid(),subj,date:$('p-d').value||iso(),title:'',files:stored,chapters:[],remarks:''};
-    S.progs.push(p);save.progs();closeSheet();st.tab='colles';go('prog',p.id);pipeline(p.id);
+    if(ai&&!needKey())return;
+    const stored=await C.addFiles(files),p={id:uid(),subj,date:$('p-d').value||iso(),title:ai?'':(files[0].name||'').replace(/\.\w{2,4}$/,'').replace(/_+/g,' ').trim(),files:stored,chapters:[],remarks:''};
+    S.progs.push(p);save.progs();closeSheet();st.tab='colles';go('prog',p.id);if(ai)pipeline(p.id);else toast('Saved ✓ Ask the AI later or import your own sheet');
   };
+  $('p-go').onclick=()=>fin(true);$('p-ns').onclick=()=>fin(false);
 };
 A.parseProg=async id=>{if(!needKey())return;pipeline(id)};
 async function askUnread(id){
@@ -4863,15 +4924,16 @@ A.printMock=async id=>{const sp=splitSheet((await C.getText('M'+id))||'');await 
 A.td=id=>go('td',id);
 A.addTD=()=>{
   let subj='maths',files=[];
-  openSheet('<h2 class="sh">Add a TD</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ.filter(s=>s!=='ang'),'t-s')+'</div><div class="field"><label>Title (optional: the AI finds it)</label><input id="t-t" maxlength="80" placeholder="e.g. TD 4 — Suites"></div><div class="field"><label>Date</label><input id="t-d" type="date" value="'+iso()+'"></div><div class="field"><label>The TD sheet (PDF or photos)</label><div id="t-f"></div><button class="btn" id="t-p">Choose the file(s)</button></div><button class="btn primary" id="t-go">Add and read the TD</button>');
+  openSheet('<h2 class="sh">Add a TD</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ.filter(s=>s!=='ang'),'t-s')+'</div><div class="field"><label>Title (optional: the AI finds it)</label><input id="t-t" maxlength="80" placeholder="e.g. TD 4 — Suites"></div><div class="field"><label>Date</label><input id="t-d" type="date" value="'+iso()+'"></div><div class="field"><label>The TD sheet (PDF or photos)</label><div id="t-f"></div><button class="btn" id="t-p">Choose the file(s)</button></div><button class="btn primary" id="t-go">Add and read the TD</button><button class="btn" id="t-ns">Save the file only (no AI)</button>');
   bindChips('t-s',v=>subj=v);
   $('t-p').onclick=async()=>{const fs=await C.pickFiles();if(fs.length){files=files.concat(fs);$('t-f').innerHTML=files.map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'</span></div>').join('')}};
-  $('t-go').onclick=async()=>{
+  const fin=async ai=>{
     if(!files.length){toast('Choose the TD file');return}
-    const stored=await C.addFiles(files),t={id:uid(),subj,title:$('t-t').value.trim(),date:$('t-d').value||iso(),files:stored,mine:[],exos:[],skills:[],min:0};
+    const stored=await C.addFiles(files),t={id:uid(),subj,title:$('t-t').value.trim()||(ai?'':(files[0].name||'').replace(/\.\w{2,4}$/,'').replace(/_+/g,' ').trim()),date:$('t-d').value||iso(),files:stored,mine:[],exos:[],skills:[],min:0};
     S.tds.push(t);save.tds();closeSheet();st.tab='td';go('td',t.id);
-    if(C.hasKey())tdRead(t.id);else toast('Add your AI key (⚙️) to read the TD');
+    if(ai){if(C.hasKey())tdRead(t.id);else toast('Add your AI key (⚙️) to read the TD')}else toast('Saved ✓ You can ask the AI to read it any time');
   };
+  $('t-go').onclick=()=>fin(true);$('t-ns').onclick=()=>fin(false);
 };
 A.tdRead=id=>{if(needKey())tdRead(id)};
 A.tdAddFile=async i=>{const[id,sl]=i.split('|'),t=S.tds.find(x=>x.id===id),fs=await C.pickFiles();if(!fs.length)return;t[sl]=(t[sl]||[]).concat(await C.addFiles(fs));save.tds();render()};
@@ -5143,8 +5205,9 @@ const SPF=[['teacher',"My teacher's style and habits","e.g. Very rigorous on pro
 A.sprofs=()=>openSheet('<h2 class="sh">Subject profiles</h2><div class="sub" style="margin-bottom:10px">Everything you write here is given to the AI each time it makes something for that subject (mock exams, prep sheets, résumés, corrections, drills, lessons…), so the result matches your teacher and your course.</div>'+C.LSUBJ.map(s=>{const p=(S.set.sp||{})[s]||{},n=SPF.filter(f=>(p[f[0]]||'').trim()).length;return '<button class="prow" style="--c:'+C.sc(s)+'" data-a="sprof" data-i="'+s+'"><i class="dot"></i><span class="m"><div class="t">'+SUBJ[s].n+'</div><div class="s">'+(n?n+' of '+SPF.length+' filled':'Not filled yet')+'</div></span></button>'}).join(''));
 A.sprof=s=>{
   const p=(S.set.sp||{})[s]||{};
-  openSheet('<h2 class="sh">'+SUBJ[s].n+'</h2>'+SPF.map(f=>'<div class="field"><label>'+f[1]+'</label><textarea id="sp-'+f[0]+'" placeholder="'+esc(f[2])+'">'+esc(p[f[0]]||'')+'</textarea></div>').join('')+'<button class="btn primary" id="sp-s">Save</button>');
-  $('sp-s').onclick=()=>{const o={};SPF.forEach(f=>{o[f[0]]=$('sp-'+f[0]).value.trim()});(S.set.sp||(S.set.sp={}))[s]=o;save.set();closeSheet();A.sprofs();toast('Saved')};
+  openSheet('<h2 class="sh">'+SUBJ[s].n+'</h2>'+SPF.map(f=>'<div class="field"><label>'+f[1]+'</label><textarea id="sp-'+f[0]+'" placeholder="'+esc(f[2])+'">'+esc(p[f[0]]||'')+'</textarea></div>').join('')+'<div class="field"><label>Colour</label><div class="swatches" id="sp-c"><button class="chip '+(!(S.set.sc||{})[s]?'on':'')+'" data-v="">Default</button>'+PAL.map(x=>'<button class="sw '+(((S.set.sc||{})[s])===x?'on':'')+'" data-v="'+x+'" style="--c:'+x+'"></button>').join('')+'</div></div><button class="btn primary" id="sp-s">Save</button>');
+  let cc=(S.set.sc||{})[s]||'';$('sp-c').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;cc=b.dataset.v;[...$('sp-c').children].forEach(x=>x.classList.toggle('on',x===b))};
+  $('sp-s').onclick=()=>{(S.set.sc||(S.set.sc={}));if(cc)S.set.sc[s]=cc;else delete S.set.sc[s];const o={};SPF.forEach(f=>{o[f[0]]=$('sp-'+f[0]).value.trim()});(S.set.sp||(S.set.sp={}))[s]=o;save.set();closeSheet();A.sprofs();toast('Saved')};
 };
 
 /* ===== Today plan: what is worth doing now, ranked and fitted into the free time left today ===== */
