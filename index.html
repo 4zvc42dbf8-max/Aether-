@@ -1028,6 +1028,18 @@ h2.sh,.sh{letter-spacing:-.015em}
 #ntb .nt-a button.ok{background:linear-gradient(180deg,var(--blue1),var(--blue2) 60%,var(--blue3));box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 18px -8px rgba(63,125,240,.8)}
 
 #motiv .cardhead{padding-right:34px}
+/* ---------- smoothness pass ---------- */
+body.busy #amb i,body:has(#sheet.show) #amb i,body:has(#pview.show) #amb i,body:has(#rlx.on) #amb i{animation-play-state:paused}
+header{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#sheet.show,#pv-sheet.show{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#toast{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+button,.prow,.chip,.btn,.card.tap,.ptab,.nb,.pev,.tprow,.task,.goal,.dk{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:transform .12s var(--ease,ease),opacity .12s,background-color .2s,border-color .2s}
+.prow:active,.ptab:active,.pev:active,.tprow:active,.task:active,.goal:active{transform:scale(.975);opacity:.88}
+.ptab:active{transform:scale(.9)}
+.prow,.tprow{content-visibility:auto;contain-intrinsic-size:auto 64px}
+#pbody{contain:layout style}
+@media (prefers-reduced-motion:reduce){#amb i{animation:none!important}}
 /* Relax */
 .rxcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;background:linear-gradient(135deg,rgba(94,224,176,.16),rgba(77,141,255,.10)),var(--surf)!important;border-color:rgba(94,224,176,.32)!important}
 .rxcard .rxi{font-size:28px;flex:none;filter:drop-shadow(0 4px 10px rgba(94,224,176,.4))}.rxcard .rxt{flex:1;display:flex;flex-direction:column;gap:2px}.rxcard b{font-size:16px}.rxcard small{color:var(--muted);font-size:12.5px}.rxcard .rxg{color:var(--muted);font-size:22px}
@@ -2975,6 +2987,9 @@ function rlxEnd(stop){
 }
 document.addEventListener('click',e=>{if(e.target.closest('[data-rx="start"]'))rlxStart()});
 setTimeout(()=>{if(RLX()){try{if(!(RLX().end<=Date.now()))localStorage.setItem('rlxv','0')}catch(x){}rlxShow()}else if(/[?&#]relax\b/.test(location.search+location.hash)){history.replaceState(null,'',location.pathname);rlxStart()}},900);
+
+/* pause ambient animation while the finger moves or the page scrolls: the blurred header and nav no longer re-blur an animated background every frame */
+(()=>{let t=0;const on=()=>{document.body.classList.add('busy');clearTimeout(t);t=setTimeout(()=>document.body.classList.remove('busy'),700)};addEventListener('scroll',on,{passive:true,capture:true});addEventListener('touchmove',on,{passive:true})})();
 function fStart(){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){window._ac=window._ac||new AC();window._ac.resume&&window._ac.resume()}}catch(e){}
   F.extra=0;F.dur=fDur();F.start=Date.now();F.pAt=0;F.end=Date.now()+F.dur*1000;F.status='run';sv();vib(30);
@@ -3104,11 +3119,11 @@ const SCHED=[{"id":"s-ds-20260907","kind":"ds","subj":"ang","title":"DS Anglais"
 /* ---------- state ---------- */
 const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Storage is full')}};
 const S={
-  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),mocks:ld('p_mocks',[]),tds:ld('p_tds',[]),mist:ld('p_mist',[]),boards:ld('p_boards',[]),exos:ld('p_exos',[]),teach:ld('p_teach',[]),
+  lessons:ld('p_lessons',[]),exams:ld('p_exams',{}),colles:ld('p_colles',{}),progs:ld('p_progs',[]),cards:ld('p_cards',[]),vocab:ld('p_vocab',[]),mocks:ld('p_mocks',[]),tds:ld('p_tds',[]),mist:ld('p_mist',[]),boards:ld('p_boards',[]),exos:ld('p_exos',[]),tps:ld('p_tps',[]),teach:ld('p_teach',[]),
   set:Object.assign({prov:'gemini',model:'claude-sonnet-5-5',gmodel:'gemini-flash-latest',mread:'claude-haiku-5-5',mwrite:'claude-sonnet-5-5',news:'meridian-news'},ld('p_set',{})),
   removed:ld('p_removed',[]),usage:ld('p_usage',{i:0,o:0,n:0})
 };
-const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),mocks:()=>put('p_mocks',S.mocks),tds:()=>put('p_tds',S.tds),mist:()=>put('p_mist',S.mist),boards:()=>put('p_boards',S.boards),exos:()=>put('p_exos',S.exos),teach:()=>put('p_teach',S.teach),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
+const save={lessons:()=>put('p_lessons',S.lessons),exams:()=>put('p_exams',S.exams),colles:()=>put('p_colles',S.colles),progs:()=>put('p_progs',S.progs),cards:()=>put('p_cards',S.cards),vocab:()=>put('p_vocab',S.vocab),mocks:()=>put('p_mocks',S.mocks),tds:()=>put('p_tds',S.tds),mist:()=>put('p_mist',S.mist),boards:()=>put('p_boards',S.boards),exos:()=>put('p_exos',S.exos),tps:()=>put('p_tps',S.tps),teach:()=>put('p_teach',S.teach),set:()=>put('p_set',S.set),removed:()=>put('p_removed',S.removed)};
 
 /* ---------- IndexedDB (files + big texts) ---------- */
 let dbp=null;
@@ -3850,9 +3865,9 @@ function back(){st.stack.pop();render('pop');window.scrollTo(0,0)}
 function tab(t){st.tab=t;st.stack=[];render('tab');window.scrollTo(0,0)}
 
 /* ================= SCREENS ================= */
-const TICO={"home":["#4d8dff","<rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"13.5\" y=\"3.5\" width=\"7\" height=\"5\" rx=\"2\"/><rect x=\"13.5\" y=\"11.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"3.5\" y=\"15.5\" width=\"7\" height=\"5\" rx=\"2\"/>"],"map":["#2ec4b6","<path d=\"M3.5 6.5l5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2z\"/><path d=\"M9 4.5v13M15 6.5v13\"/><circle class=\"ac\" cx=\"12\" cy=\"11\" r=\"2\"/>"],"lessons":["#ffb703","<path d=\"M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5c-3.5-.5-6.5 0-8.5 1.5z\"/><path d=\"M12 6.5v13\"/><path class=\"as\" d=\"M6 9h3M6 12h3M15 9h3M15 12h3\"/>"],"exams":["#ef476f","<path d=\"M6 3.5h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1z\"/><path d=\"M15 3.5v4h4\"/><path class=\"as\" d=\"M8.5 14.5l2.3 2.3 4.7-4.8\"/>"],"tests":["#f78c40","<circle cx=\"12\" cy=\"13.5\" r=\"7.5\"/><path d=\"M9.5 3h5M12 3v3\"/><path class=\"ac\" d=\"M12 13.5V8.3a5.2 5.2 0 0 1 5.2 5.2z\"/>"],"colles":["#b57bff","<rect class=\"ac\" x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6\"/>"],"td":["#4cc9f0","<rect x=\"5\" y=\"4.5\" width=\"14\" height=\"17\" rx=\"2.5\"/><rect class=\"ac\" x=\"9\" y=\"2.5\" width=\"6\" height=\"3.5\" rx=\"1.2\"/><path d=\"M8.5 11h7M8.5 14.5h7M8.5 18h4\"/>"],"exos":["#ff6b6b","<path d=\"M3.5 10v4M20.5 10v4M8 12h8\"/><rect class=\"ac\" x=\"5\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/><rect class=\"ac\" x=\"16\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/>"],"teach":["#7bd88f","<path class=\"ac\" d=\"M2.5 9.5L12 5l9.5 4.5L12 14z\"/><path d=\"M6.5 11.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2M21.5 9.5V15\"/>"],"grades":["#ffd166","<path d=\"M3.5 20.5h17\"/><rect class=\"ac\" x=\"5\" y=\"12.5\" width=\"3.5\" height=\"8\" rx=\"1\"/><rect class=\"ac\" x=\"10.2\" y=\"8.5\" width=\"3.5\" height=\"12\" rx=\"1\"/><rect class=\"ac\" x=\"15.5\" y=\"4.5\" width=\"3.5\" height=\"16\" rx=\"1\"/>"],"boards":["#5ee0b0","<rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 20.5l2-4.5M16 20.5l-2-4.5\"/><path class=\"as\" d=\"M6.5 12.5l3-4 2.5 3 2.5-4 3 3\"/>"],"cards":["#e56bff","<rect x=\"8.5\" y=\"3.5\" width=\"12\" height=\"15\" rx=\"2\" transform=\"rotate(9 14.5 11)\"/><rect class=\"ac\" x=\"3.5\" y=\"6\" width=\"12\" height=\"15\" rx=\"2\"/><path d=\"M7 11h5M7 14.5h3\"/>"]};
+const TICO={"work":['#ff9f0a','<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6v3H9z"/><path class="ac" d="M9 12h6M9 16h4"/>'],"tp":['#2dd4bf','<path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 19l-5-10V3"/><path class="ac" d="M7.5 15h9"/>'],"home":["#4d8dff","<rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"13.5\" y=\"3.5\" width=\"7\" height=\"5\" rx=\"2\"/><rect x=\"13.5\" y=\"11.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"3.5\" y=\"15.5\" width=\"7\" height=\"5\" rx=\"2\"/>"],"map":["#2ec4b6","<path d=\"M3.5 6.5l5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2z\"/><path d=\"M9 4.5v13M15 6.5v13\"/><circle class=\"ac\" cx=\"12\" cy=\"11\" r=\"2\"/>"],"lessons":["#ffb703","<path d=\"M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5c-3.5-.5-6.5 0-8.5 1.5z\"/><path d=\"M12 6.5v13\"/><path class=\"as\" d=\"M6 9h3M6 12h3M15 9h3M15 12h3\"/>"],"exams":["#ef476f","<path d=\"M6 3.5h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1z\"/><path d=\"M15 3.5v4h4\"/><path class=\"as\" d=\"M8.5 14.5l2.3 2.3 4.7-4.8\"/>"],"tests":["#f78c40","<circle cx=\"12\" cy=\"13.5\" r=\"7.5\"/><path d=\"M9.5 3h5M12 3v3\"/><path class=\"ac\" d=\"M12 13.5V8.3a5.2 5.2 0 0 1 5.2 5.2z\"/>"],"colles":["#b57bff","<rect class=\"ac\" x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6\"/>"],"td":["#4cc9f0","<rect x=\"5\" y=\"4.5\" width=\"14\" height=\"17\" rx=\"2.5\"/><rect class=\"ac\" x=\"9\" y=\"2.5\" width=\"6\" height=\"3.5\" rx=\"1.2\"/><path d=\"M8.5 11h7M8.5 14.5h7M8.5 18h4\"/>"],"exos":["#ff6b6b","<path d=\"M3.5 10v4M20.5 10v4M8 12h8\"/><rect class=\"ac\" x=\"5\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/><rect class=\"ac\" x=\"16\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/>"],"teach":["#7bd88f","<path class=\"ac\" d=\"M2.5 9.5L12 5l9.5 4.5L12 14z\"/><path d=\"M6.5 11.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2M21.5 9.5V15\"/>"],"grades":["#ffd166","<path d=\"M3.5 20.5h17\"/><rect class=\"ac\" x=\"5\" y=\"12.5\" width=\"3.5\" height=\"8\" rx=\"1\"/><rect class=\"ac\" x=\"10.2\" y=\"8.5\" width=\"3.5\" height=\"12\" rx=\"1\"/><rect class=\"ac\" x=\"15.5\" y=\"4.5\" width=\"3.5\" height=\"16\" rx=\"1\"/>"],"boards":["#5ee0b0","<rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 20.5l2-4.5M16 20.5l-2-4.5\"/><path class=\"as\" d=\"M6.5 12.5l3-4 2.5 3 2.5-4 3 3\"/>"],"cards":["#e56bff","<rect x=\"8.5\" y=\"3.5\" width=\"12\" height=\"15\" rx=\"2\" transform=\"rotate(9 14.5 11)\"/><rect class=\"ac\" x=\"3.5\" y=\"6\" width=\"12\" height=\"15\" rx=\"2\"/><path d=\"M7 11h5M7 14.5h3\"/>"]};
 const tabIco=k=>{const t=TICO[k];return t?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+t[1]+'</svg>':''};
-const TABS=[['home','Overview'],['map','Map'],['lessons','Lessons'],['exams','Exams'],['tests','Tests'],['colles','Colles'],['td','TD'],['exos','Exos'],['teach','Teach'],['grades','Grades'],['boards','Boards'],['cards','Cards']];
+const TABS=[['home','Overview'],['map','Map'],['lessons','Lessons'],['exams','Exams'],['tests','Tests'],['colles','Colles'],['work','Exos & TD'],['tp','TP'],['teach','Teach'],['grades','Grades'],['boards','Boards'],['cards','Cards']];
 function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px"><button data-a="back" aria-label="Back">‹</button><b style="font-size:19px;flex:1;text-align:center;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(title)+'</b>'+(right||'<span style="width:36px"></span>')+'</div>'}
 
 /* ----- OVERVIEW (the calendar itself lives in the Calendar tab) ----- */
@@ -4489,6 +4504,7 @@ function fillBars(){
 function render(kind){
   if(typeof cur!=='undefined'&&cur!=='prepa')return;
   if(kind&&typeof kind!=='string')kind='tab';
+  if(st.tab==='td'||st.tab==='exos'){st.wk=st.tab;st.tab='work'}
   const b=body();if(!b)return;
   const top=st.stack[st.stack.length-1],y=window.scrollY;
   $('ptabs').style.display=top?'none':'';
@@ -4496,8 +4512,8 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='vc'?vVC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):v==='exo'?PE.page(top.id):v==='exsol'?PE.sol(top.id):'';
-  }else h=st.tab==='home'?vOver():st.tab==='map'?vMap():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='tests'?vTests():st.tab==='colles'?vColles():st.tab==='td'?vTD():st.tab==='grades'?vGrades():st.tab==='boards'?vBoards():st.tab==='exos'?PE.list():st.tab==='teach'?PTC.list():vCards();
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='vc'?vVC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):v==='exo'?PE.page(top.id):v==='exsol'?PE.sol(top.id):v==='tp'?PTP.page(top.id):'';
+  }else h=st.tab==='home'?vOver():st.tab==='map'?vMap():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='tests'?vTests():st.tab==='colles'?vColles():st.tab==='work'?vWork():st.tab==='tp'?PTP.list():st.tab==='grades'?vGrades():st.tab==='boards'?vBoards():st.tab==='teach'?PTC.list():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
   post(top);
@@ -4520,6 +4536,7 @@ async function post(top){
     if(top&&top.v==='meth'){const tx=(await C.getText('K'+top.id))||'';if($('methdoc'))into('methdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mbook'){const tx=await mbookText(top.id);if($('mbookdoc'))into('mbookdoc',tx||'*Nothing yet.*')}
     if(top&&(top.v==='exo'||top.v==='exsol'))await PE.after(top,into);
+  if(top&&top.v==='tp')PTP.after(top);
     if(top&&top.v==='tdco'){const tx=(await C.getText('TC'+top.id))||'';if($('tcdoc'))into('tcdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='fiche'){const tx=(await C.getText('F'+top.id.split('|')[1]))||'';if($('fichedoc'))into('fichedoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mock'){const tx=(await C.getText('M'+top.id))||'',sp=splitSheet(tx);if($('mockdoc'))into('mockdoc',st.seg==='co'?(sp.co||'*No corrigé found.*'):sp.ex)}
@@ -4557,7 +4574,7 @@ function decorate(root){
     const b=document.createElement('button');b.className='pmini';b.type='button';b.dataset.pvs='1';b.setAttribute('aria-label','Preview');b.innerHTML=EYE;r.insertBefore(b,r.querySelector('button')||null);
   });
 }
-new MutationObserver(m=>{if(m.some(x=>x.addedNodes.length))decorate()}).observe(document.body,{childList:true,subtree:true});
+new MutationObserver(m=>{if(m.some(x=>[...x.addedNodes].some(n=>n.nodeType===1&&(n.matches('.filerow')||n.querySelector('.filerow')))))decorate()}).observe(document.body,{childList:true,subtree:true});
 document.addEventListener('click',e=>{
   const t=e.target;if(!t.closest)return;
   const pt=t.closest('[data-pvt]');if(pt){e.preventDefault();e.stopPropagation();peek(pt.dataset.pvt,pt.dataset.pvn);return}
@@ -4714,6 +4731,7 @@ A.rmfile=async i=>{
   if(slot==='prog'){const p=S.progs.find(x=>x.id===id);if(p.files.length<2){toast('Keep at least one file');return}p.files=p.files.filter(f=>f.id!==fid);await C.delFile(fid);save.progs();render();return}
   if(slot==='td'||slot==='tdmine'){const t=S.tds.find(x=>x.id===id),k=slot==='td'?'files':'mine';if(k==='files'&&t.files.length<2){toast('Keep at least one file');return}if(!await ask({title:'Remove this file?',ok:'Remove',danger:1}))return;t[k]=(t[k]||[]).filter(f=>f.id!==fid);await C.delFile(fid);save.tds();render();return}
   if(slot==='exo'||slot==='exomine'){PE.rm(id,slot,fid);return}
+  if(slot==='tp'||slot==='tprep'){PTP.rm(id,slot,fid);return}
   const[kind,sl]=slot.split('|');
   if(!await ask({title:'Remove this file?',ok:'Remove',danger:1}))return;
   const r=S[kind][id];r[sl]=r[sl].filter(f=>f.id!==fid);await C.delFile(fid);save[kind]();render();
@@ -8397,6 +8415,74 @@ function tcToggle(){if(TP.play){tcStop();return}TP.play=1;tcSpeakFrom(TP.s||0)}
 function tcGo(i){const t=TP.t;if(!t)return;i=Math.max(0,Math.min(t.scenes.length-1,i));const was=TP.play;tcStop();TP.play=was;tcShow(i,!!was)}
 window.PTC={list:tcList,open:tcOpen,close:tcClose,state:TP,clean:cleanSvg,sents};
 
+
+/* ================= v96: TP (lab sessions) + merged "Exos & TD" tab ================= */
+const TPS=[['plan','Planned'],['done','Done'],['rep','Report written'],['in','Handed in']];
+const tpById=id=>S.tps.find(x=>x.id===id);
+const SYS_TPREP=s=>"You help a French prépa (MPSI) student write the compte-rendu of a lab session (TP) in "+s+". Use ONLY the notes he gives; never invent a measurement or a result, and write [à compléter] where something is missing. Write in French with these markdown sections: ## Objectif, ## Matériel et protocole, ## Mesures (a markdown table with units and uncertainties when given), ## Exploitation (formulas used, a worked numerical example, uncertainty reasoning), ## Conclusion, ## Pistes d'amélioration. Math in $...$.";
+function tpList(){
+  let h='<button class="add" data-a="tpAdd">+ New lab session (TP)</button>';
+  if(!S.tps.length)return h+'<div class="hidecorr">Keep every lab session here: aim, protocol, measurements, photos of the setup, graphs, and your report. Aether can draft the compte-rendu from your notes.</div>';
+  const cnt=k=>S.tps.filter(x=>x.status===k).length;
+  h+='<div class="card"><div class="cardhead"><div class="lbl">'+S.tps.length+' sessions</div></div><div class="pmeta" style="margin:6px 0 0">'+TPS.map(s=>'<span class="pill">'+cnt(s[0])+' '+s[1].toLowerCase()+'</span>').join('')+'</div></div>';
+  const row=x=>'<button class="prow" style="--c:'+C.sc(x.subj)+'" data-a="tp" data-i="'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.title||SUBJ[x.subj].n+' TP')+'</div><div class="s">'+SUBJ[x.subj].n+' · '+fdl(x.date)+((x.files||[]).length?' · '+x.files.length+' file'+(x.files.length>1?'s':''):'')+'</div></span><span class="gpill '+(x.status==='in'?'g-hi':x.status==='plan'?'todo':'g-mid')+'">'+(TPS.find(s=>s[0]===x.status)||TPS[0])[1]+'</span></button>';
+  const srt=a=>a.slice().sort((p,q)=>(q.date||'').localeCompare(p.date||''));
+  const todo=S.tps.filter(x=>x.status!=='in'),dn=S.tps.filter(x=>x.status==='in');
+  h+='<div class="card"><div class="lbl">To finish</div>'+(todo.length?srt(todo).map(row).join(''):'<div class="sub">Everything is handed in.</div>')+'</div>';
+  if(dn.length)h+='<details class="card"><summary class="lbl" style="cursor:pointer">Handed in ('+dn.length+')</summary><div style="margin-top:10px">'+srt(dn).map(row).join('')+'</div></details>';
+  return h;
+}
+const TPF=[['aim','Aim of the session','What are we trying to measure or show?'],['mat','Equipment and protocol','Setup, steps, settings'],['data','Measurements','One per line, e.g. U = 5.02 V ± 0.05'],['res','Analysis and results','Formulas, graphs, fits, uncertainties'],['con','Conclusion and sources of error','Does the result match the theory? Why or why not?']];
+function tpPage(id){
+  const x=tpById(id);if(!x){st.stack.pop();return tpList()}
+  let h=backBar(x.title||SUBJ[x.subj].n+' TP','<button class="pmini" data-a="tpEdit" data-i="'+id+'" aria-label="Rename">✎</button><button class="pmini" data-a="tpDel" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
+  h+='<div class="card"><div class="pmeta" style="margin:0 0 12px"><span class="pill" style="color:'+C.sc(x.subj)+'">'+SUBJ[x.subj].n+'</span><span class="pill">'+fdl(x.date)+'</span></div>';
+  h+='<div class="field"><label>Status</label><div class="chips" id="tp-st">'+TPS.map(s=>'<button class="chip '+(x.status===s[0]?'on':'')+'" data-v="'+s[0]+'">'+s[1]+'</button>').join('')+'</div></div>';
+  h+=TPF.map(f=>'<div class="field"><label>'+f[1]+'</label><textarea id="tp-'+f[0]+'" rows="'+(f[0]==='data'?5:3)+'" data-nofix="1" placeholder="'+esc(f[2])+'">'+esc(x[f[0]]||'')+'</textarea></div>').join('');
+  h+='</div><div class="card"><div class="slot"><div class="hd"><div class="lbl">Photos, graphs, data sheets</div><button class="addf" data-a="tpFile" data-i="'+id+'|files">+ Add</button></div>'+(fileRows(x.files,'tp',id)||'<div class="sub">Photos of the setup, a screenshot of your graph, the data sheet…</div>')+'</div>';
+  h+='<div class="slot"><div class="hd"><div class="lbl">My report (compte-rendu)</div><button class="addf" data-a="tpFile" data-i="'+id+'|report">+ Add</button></div>'+(fileRows(x.report,'tprep',id)||'<div class="sub">Your finished report as a PDF or photo.</div>')+'</div></div>';
+  const k='XT'+id;
+  h+='<div class="card"><div class="lbl">Draft the report with AI</div><div class="sub" style="margin:4px 0 10px">Built only from your notes above: it never invents a measurement.</div>'+liveBox(k)+errBox(k);
+  if(x.rep)h+='<div class="doc" data-md="'+esc(x.rep)+'" style="margin-bottom:10px"></div>';
+  if(!live[k])h+='<button class="btn primary" data-a="tpDraft" data-i="'+id+'">'+(x.rep?'Redo the draft':'✍️ Draft my report')+'</button>'+(x.rep?'<button class="btn" data-a="tpPrint" data-i="'+id+'" style="margin-top:8px">🖨 Print the draft</button>':'');
+  h+='</div>';
+  return h;
+}
+function tpAfter(top){
+  const id=top.id,x=tpById(id);if(!x)return;
+  TPF.forEach(f=>{const e=$('tp-'+f[0]);if(!e)return;e.oninput=()=>{clearTimeout(e._t);e._t=setTimeout(()=>{x[f[0]]=e.value;save.tps()},350)};e.onblur=()=>{x[f[0]]=e.value;save.tps()}});
+  const s=$('tp-st');if(s)s.onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;x.status=b.dataset.v;
+    if(x.status!=='plan'&&!x.got){x.got=true;const n=XPD[3];if(window.gain){gain(n,e.clientX||200,e.clientY||500,undefined,x.subj);if(window.sv)sv();toast('+'+(window.xpn?xpn(n):n)+' XP · lab session')}}
+    save.tps();[...s.children].forEach(c=>c.classList.toggle('on',c===b))};
+}
+A.tp=id=>go('tp',id);
+A.tpAdd=()=>{
+  let subj='phys';
+  openSheet('<h2 class="sh">New lab session</h2><div class="field"><label>Subject</label>'+subjChips(subj,['phys','chim','ipt'],'tp-s')+'</div><div class="field"><label>Title</label><input id="tp-t" maxlength="80" placeholder="e.g. TP3 Titrage pH-métrique"></div><div class="field"><label>Date</label><input id="tp-d" type="date" value="'+iso()+'"></div><button class="btn primary" id="tp-go">Create</button>');
+  bindChips('tp-s',v=>subj=v);
+  $('tp-go').onclick=()=>{const x={id:uid(),subj,title:$('tp-t').value.trim(),date:$('tp-d').value||iso(),status:'plan',files:[],report:[],aim:'',mat:'',data:'',res:'',con:'',rep:'',got:false};S.tps.push(x);save.tps();closeSheet();st.tab='tp';go('tp',x.id)};
+};
+A.tpFile=async i=>{const[id,sl]=i.split('|'),x=tpById(id),fs=await C.pickFiles();if(!fs.length)return;x[sl]=(x[sl]||[]).concat(await C.addFiles(fs));save.tps();render()};
+A.tpEdit=id=>{const x=tpById(id);openSheet('<h2 class="sh">Rename</h2><div class="field"><input id="tp-n" maxlength="80" value="'+esc(x.title||'')+'"></div><div class="field"><label>Date</label><input id="tp-n2" type="date" value="'+esc(x.date||iso())+'"></div><button class="btn primary" id="tp-ok">Save</button>');$('tp-ok').onclick=()=>{x.title=$('tp-n').value.trim();x.date=$('tp-n2').value||x.date;save.tps();closeSheet();render()}};
+A.tpDel=async id=>{if(!await ask({title:'Delete this lab session?',msg:'Its notes, files and report draft are deleted.',ok:'Delete',danger:1}))return;const x=tpById(id);for(const f of (x.files||[]).concat(x.report||[]))await C.delFile(f.id);S.tps=S.tps.filter(t=>t.id!==id);save.tps();st.stack.pop();render()};
+A.tpDraft=id=>{
+  const x=tpById(id);if(!x||!needKey())return;
+  const notes=TPF.map(f=>f[1]+':\n'+(x[f[0]]||'(empty)')).join('\n\n');
+  if(!(x.aim||x.mat||x.data||x.res)){toast('Write a few notes first');return}
+  run('XT'+id,'Drafting your report…',async(lab,txt)=>{
+    const r=await C.ai({subj:x.subj,system:SYS_TPREP(SUBJ[x.subj].n),content:[{type:'text',text:'Session: '+(x.title||'TP')+' ('+SUBJ[x.subj].n+')\n\n'+notes}],max:4000,onText:txt});
+    if(r.text.length<120)throw new C.AIError('The draft came out empty. Add more notes and try again.');
+    x.rep=r.text.trim();save.tps();toast('Draft ready ✓');
+  });
+};
+A.tpPrint=async id=>{const x=tpById(id);if(!x||!x.rep)return;PV.print('<h1>'+esc(x.title||'TP')+'</h1>'+await C.mdAsync(x.rep))};
+A.wk=i=>{st.wk=i;render()};
+function vWork(){
+  const w=st.wk||'exos',o=S.exos.filter(x=>x.status!=='done').length,t=S.tds.length;
+  return '<div class="chips" style="margin-bottom:12px"><button class="chip '+(w==='exos'?'on':'')+'" data-a="wk" data-i="exos">Exercises'+(o?' · '+o:'')+'</button><button class="chip '+(w==='td'?'on':'')+'" data-a="wk" data-i="td">TD'+(t?' · '+t:'')+'</button></div>'+(w==='td'?vTD():PE.list());
+}
+window.PTP={list:tpList,page:tpPage,after:tpAfter,rm:async(id,slot,fid)=>{const x=tpById(id);if(!x)return;const k=slot==='tp'?'files':'report';if(!await ask({title:'Remove this file?',ok:'Remove',danger:1}))return;x[k]=(x[k]||[]).filter(f=>f.id!==fid);await C.delFile(fid);save.tps();render()}};
+
 /* ================= v70: THE TIMER PILL (always visible while a Focus timer runs) =================
    Compact pill in the header (v73). Long-press (or tap the chevron zone) opens the glass capsule: digital clock tinted with the
    subject colour, Add time / Pause / Stop. "Add time" opens a graduated ruler you scrub with a finger. Hooks the real Focus state F. */
@@ -8590,7 +8676,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','p_nt','p_ninbox','p_ap','p_exos','p_teach','p_tb','p_tbc','p_tbl','p_tbw','p_tbwf','p_pw','p_pws','p_pwb','p_hm','p_live','p_fault','p_boards','p_isl','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_mist','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','p_nt','p_ninbox','p_ap','p_exos','p_tps','p_teach','p_tb','p_tbc','p_tbl','p_tbw','p_tbwf','p_pw','p_pws','p_pwb','p_hm','p_live','p_fault','p_boards','p_isl','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_mist','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}

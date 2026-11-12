@@ -1,5 +1,5 @@
 // Offline support for Aether. Bump CACHE when you change files to force a refresh.
-const CACHE = 'aether-v95';
+const CACHE = 'aether-v96';
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-180.png", "./icon-192.png", "./icon-512.png"];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(FILES.map(f => c.add(f).catch(() => {})))).then(() => self.skipWaiting()));
