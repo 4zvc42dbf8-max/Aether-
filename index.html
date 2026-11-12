@@ -1022,6 +1022,7 @@ h2.sh,.sh{letter-spacing:-.015em}
 #ntb .nt-a button:active{transform:scale(.94)}
 #ntb .nt-a button.ok{background:linear-gradient(180deg,var(--blue1),var(--blue2) 60%,var(--blue3));box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 18px -8px rgba(63,125,240,.8)}
 
+#motiv .cardhead{padding-right:34px}
 /* Relax */
 .rxcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;background:linear-gradient(135deg,rgba(94,224,176,.16),rgba(77,141,255,.10)),var(--surf)!important;border-color:rgba(94,224,176,.32)!important}
 .rxcard .rxi{font-size:28px;flex:none;filter:drop-shadow(0 4px 10px rgba(94,224,176,.4))}.rxcard .rxt{flex:1;display:flex;flex-direction:column;gap:2px}.rxcard b{font-size:16px}.rxcard small{color:var(--muted);font-size:12.5px}.rxcard .rxg{color:var(--muted);font-size:22px}
@@ -1100,7 +1101,6 @@ h2.sh,.sh{letter-spacing:-.015em}
   <div class="card" id="svcard" style="display:none"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
-  <div class="card"><div class="lbl">Focus today</div><div id="focus-bar"></div></div>
   <div class="card" id="wkcard" style="display:none"></div>
   <div class="card motiv" id="motiv"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
@@ -1757,6 +1757,7 @@ function rHomeTasks(){
   $('htasks').innerHTML=l.map((t,i)=>taskHTML(t,i,true)).join('')||`<div class="orbempty">${orb(64)}<p>All clear. Add an objective in Tasks.</p></div>`;
 }
 function rFocusBar(){
+  if(!$('focus-bar'))return;
   const min=fhist.filter(h=>h.date===fk()).reduce((s,h)=>s+(h.min||0),0);
   const plan=plans[iso()]||60,C=2*Math.PI*37;
   $('focus-bar').innerHTML=`<div class="fring"><div class="rg"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="37"/><circle class="pg" id="fpg" cx="42" cy="42" r="37" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rn"><span id="fmn">0</span></div></div><div style="flex:1"><div class="ttl" style="font-size:17px">${min} min <span class="sub">of ${plan} planned</span></div><div class="stepper"><button data-act="plan" data-d="-15" aria-label="Less">−</button><span class="sub" style="flex:1;text-align:center">Daily goal</span><button data-act="plan" data-d="15" aria-label="More">+</button></div></div></div>`;
@@ -1795,8 +1796,10 @@ function rMotiv(){
   el.innerHTML=`<div class="cardhead"><div class="lbl">This week</div><button class="${ready?'hch go rdy':'lnk'}" data-act="wreview">${ready?'📋 Review ready':'📋 Review ›'}</button></div>
   <div class="fring"><div class="rg"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="37"/><circle class="pg ${w>=g?'done':''}" id="wpg" cx="42" cy="42" r="37" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rn"><span>${Math.round(p*100)}%</span></div></div>
   <div style="flex:1;min-width:0"><div class="big"><b>${w}</b> <span>/ ${g} XP</span></div><div class="sub" style="margin-top:4px">${w>=g?'Goal reached 🎉 Everything now is a bonus.':`${need} XP to go · about ${Math.ceil(need/left)} a day for ${left} day${left>1?'s':''}`}</div><button class="lnk" data-act="wgoalset" style="margin-top:4px;padding:0">Change goal</button></div></div>
+  <div class="lbl" style="margin:14px 0 8px;padding-top:12px;border-top:1px solid var(--line)">Focus today</div><div id="focus-bar"></div>
   <button class="whyrow ${why.t?'':'empty'}" data-act="whyedit"><span class="wl">Why I'm doing this</span><span class="wt">${why.t?esc(why.t):'＋ Add your reason'}</span>${dl!=null?`<span class="wd">${dl>0?'D−'+dl:dl===0?'Today!':'Done'}</span>`:''}</button>`;
   {const hb=$('hbal');if(hb)hb.textContent=balance()}
+  rFocusBar();
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const e=$('wpg');if(e)e.style.strokeDashoffset=C*(1-p)}));
 }
 function whyEdit(){
@@ -3778,13 +3781,19 @@ async function markMissing(){
     r.classList.add('miss');const s=r.querySelector('.n small');if(s&&!/missing/.test(s.textContent))s.textContent+=' · missing — tap 👁 to re-attach';
   });
 }
-async function view(fid){
-  const rec=await C.dbGet('blobs',fid);if(!rec){await reattach(fid);return}
+async function view(x){
+  let rec,fid=null;
+  if(typeof x==='string'){fid=x;rec=await C.dbGet('blobs',fid);if(!rec){await reattach(fid);return}}
+  else if(x instanceof Blob){rec={blob:x,name:x.name||'file',type:x.type&&x.type!=='application/octet-stream'?x.type:C.guessType(x.name),size:x.size}}
+  else rec=x;
+  if(!rec)return;
   const v=$('pview'),vb=$('pvb');$('pvt').textContent=rec.name;$('pvn').textContent='';vb.innerHTML='<div class="sub" style="padding:40px"><span class="spin2"></span> Opening…</div>';v.classList.add('show');
   let zoom=1;
   const apply=()=>vb.querySelectorAll('canvas,img').forEach(c=>c.style.width=(100*zoom)+'%');
   $('pvz').onclick=()=>{zoom=zoom>=2.5?1:zoom+.5;apply()};
+  if(/\.html?$/i.test(rec.name||'')||rec.type==='text/html'){const h=await rec.blob.text();vb.innerHTML='<iframe sandbox style="width:100%;height:100%;min-height:70vh;border:0;background:#fff;border-radius:10px"></iframe>';vb.firstChild.srcdoc=h;return}
   if(C.isTextual(rec)){const t=await C.fileText(rec).catch(e=>e.message);vb.innerHTML='<pre style="white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;padding:4px">'+esc(t.slice(0,60000))+'</pre>';return}
+  if(!C.isPdf(rec)&&!/^image\//.test(rec.type||'')&&!/\.(jpe?g|png|gif|webp|heic|heif|avif|bmp|svg)$/i.test(rec.name||'')){const u=URL.createObjectURL(rec.blob);v._u=u;vb.innerHTML='<div class="warnbox" style="margin:20px">Aether cannot draw this kind of file here.<br><a class="btn sm" style="display:inline-block;margin-top:10px" href="'+u+'" target="_blank" rel="noopener">Open with the phone</a></div>';return}
   if(!C.isPdf(rec)){const u=URL.createObjectURL(rec.blob);vb.innerHTML='<img alt="" src="'+u+'" style="width:100%">';v._u=u;return}
   const link=()=>{const u=URL.createObjectURL(rec.blob);v._u2=u;return '<a class="btn sm" style="display:inline-block;margin-top:10px" href="'+u+'" target="_blank" rel="noopener">Open with the phone\'s PDF viewer</a>'};
   try{
@@ -3827,7 +3836,7 @@ function wkNudge(){const d=new Date(),dw=d.getDay(),hr=d.getHours();if(!((dw===0
 function vOver(){
   const td=iso(),now=new Date().toTimeString().slice(0,5);
   const nx=cal.filter(e=>(e.kind==='colle'||e.kind==='ds'||e.kind==='vt')&&(e.date>td||(e.date===td&&(e.endTime||e.time||'23:59')>=now))).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,5);
-  let h='<div class="card"><div class="cardhead"><div class="lbl">Next up</div><button class="addf" data-a="openCal">Open calendar ›</button></div>';
+  let h='<div class="card"><div class="cardhead"><div class="lbl">Next up</div><span style="display:flex;gap:6px"><button class="addf" data-a="docs">📂 Documents</button><button class="addf" data-a="openCal">Calendar ›</button></span></div>';
   h+=nx.length?nx.map(e=>'<div class="sub" style="margin:8px 2px 4px;font-weight:600">'+(e.date===td?'Today':e.date===iso(addD(new Date(),1))?'Tomorrow':fd(e.date))+'</div>'+evBtn(e,false)).join(''):'<div class="pfree">No colle or exam coming up.</div>';
   h+='</div>';
   const ups=cal.filter(e=>e.kind==='colle'&&e.date>=td&&e.date<=iso(addD(new Date(),21))).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))).slice(0,6);
@@ -4509,6 +4518,43 @@ function colleGo(id){
   if(r&&e.date>=iso()){st.tab='colles';go('prog',r.p.id)}else{st.tab='colles';go('rec','colles|'+id)}
 }
 A.rec=i=>go('rec',i);
+
+/* ---------- preview ANY document, from anywhere ---------- */
+const stage=new Map(),fkey=f=>f.name+'|'+f.size;
+{const _pf=C.pickFiles;C.pickFiles=async function(o){const fs=await _pf.call(C,o);fs.forEach(f=>stage.set(fkey(f),f));return fs}}
+const EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+function stagedFor(row){const n=row.querySelector('.n'),t=n?n.firstChild&&n.firstChild.textContent||n.textContent:'';for(const f of stage.values())if(f.name===t.trim())return f;for(const f of stage.values())if(n&&n.textContent.indexOf(f.name)===0)return f;return null}
+function decorate(root){
+  (root||document).querySelectorAll('.filerow:not([data-fid]):not([data-pvx])').forEach(r=>{
+    r.dataset.pvx='1';if(!stagedFor(r))return;
+    const b=document.createElement('button');b.className='pmini';b.type='button';b.dataset.pvs='1';b.setAttribute('aria-label','Preview');b.innerHTML=EYE;r.insertBefore(b,r.querySelector('button')||null);
+  });
+}
+new MutationObserver(m=>{if(m.some(x=>x.addedNodes.length))decorate()}).observe(document.body,{childList:true,subtree:true});
+document.addEventListener('click',e=>{
+  const t=e.target;if(!t.closest)return;
+  const pf=t.closest('[data-pvf]');if(pf){e.preventDefault();e.stopPropagation();view(pf.dataset.pvf);return}
+  const sb=t.closest('[data-pvs]');if(sb){const f=stagedFor(sb.closest('.filerow'));if(f){e.preventDefault();e.stopPropagation();view(f)}return}
+  const row=t.closest('.filerow');if(!row||t.closest('button'))return;
+  if(row.dataset.fid){view(row.dataset.fid);return}
+  const f=stagedFor(row);if(f)view(f);
+},true);
+/* every stored document the app knows about, found by walking the data */
+function allDocs(){
+  const out=[],seen=new Set();
+  const walk=(o,ctx,d)=>{if(!o||typeof o!=='object'||d>6)return;
+    if(typeof o.id==='string'&&typeof o.name==='string'&&typeof o.size==='number'&&o.type!==undefined){if(!seen.has(o.id)){seen.add(o.id);out.push({id:o.id,name:o.name,size:o.size,type:o.type,ctx})}return}
+    if(Array.isArray(o)){o.forEach(x=>walk(x,ctx,d+1));return}
+    const c=o.title||o.name||o.n||ctx;for(const k in o)walk(o[k],typeof c==='string'?c:ctx,d+1)};
+  Object.keys(S).forEach(k=>walk(S[k],k,0));return out;
+}
+function docsSheet(q){
+  q=(q||'').toLowerCase();const all=allDocs(),l=all.filter(d=>!q||(d.name+' '+(d.ctx||'')).toLowerCase().includes(q));
+  openSheet('<h2 class="sh">All documents</h2><div class="field"><input id="dc-q" placeholder="Search '+all.length+' documents" value="'+esc(q)+'" autocapitalize="off"></div><div id="dc-l">'+(l.length?l.slice(0,120).map(d=>'<div class="filerow" data-fid="'+d.id+'" data-fn="'+esc(d.name)+'"><span class="n">'+esc(d.name)+'<small>'+C.kb(d.size)+(d.ctx?' · '+esc(String(d.ctx).slice(0,28)):'')+'</small></span><button class="pmini" data-pvf="'+d.id+'" aria-label="Open">'+ico.eye+'</button></div>').join(''):'<div class="sub">No document yet. Upload one in Lessons, TD, Exos or Import.</div>')+'</div>');
+  const i=$('dc-q');if(i)i.oninput=()=>{clearTimeout(i._t);i._t=setTimeout(()=>{const pos=i.value;docsSheet(pos);const n=$('dc-q');if(n){n.focus();n.setSelectionRange(pos.length,pos.length)}},250)};
+}
+window.PV={open:view,docs:docsSheet,all:allDocs};
+A.docs=()=>docsSheet();
 A.view=id=>view(id);
 A.seg=i=>{st.seg=i;render()};
 
@@ -6416,6 +6462,7 @@ async function review(files){
     (needDoc?'<div class="field" style="margin-top:12px"><label>Course files go to</label><div class="chips" id="ih-as"><button class="chip '+(as==='lesson'?'on':'')+'" data-v="lesson">Lessons</button><button class="chip '+(as==='td'?'on':'')+'" data-v="td">TD</button><button class="chip '+(as==='prog'?'on':'')+'" data-v="prog">Programme de colles</button></div></div>':'')+
     (needSubj?'<div class="field"><label>Subject</label>'+subjChips(subj,as==='prog'?OWN:C.LSUBJ,'ih-s')+'</div>':'')+
     '<button class="btn primary" id="ih-go" style="margin-top:6px">Import '+items.filter(i=>i.k!=='skip').length+' item(s)</button>';
+    box.querySelectorAll('.prow').forEach((r,i)=>{const it=items[i],f=it&&(it.f||(it.fs&&it.fs[0]));if(!f||!window.PV)return;const b=document.createElement('button');b.className='pmini';b.type='button';b.setAttribute('aria-label','Preview');b.style.marginLeft='8px';b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';b.onclick=e=>{e.stopPropagation();PV.open(f)};r.appendChild(b)});
     if($('ih-as'))bindChips('ih-as',v=>{as=v;if(as==='prog'&&!OWN.includes(subj))subj='maths';draw()});
     if($('ih-s'))bindChips('ih-s',v=>subj=v);
     $('ih-go').onclick=go;
@@ -7426,12 +7473,12 @@ window.PW={sc:pwSc,sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwD
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
-const HCARDS={tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Motivation quote',Today:'Today\'s events',Objectives:'Objectives','Focus today':'Focus time','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
+const HCARDS={tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
 const PERIODS=[['morning','Morning'],['day','Daytime'],['night','Evening']],ALWAYS=['wkcard','hauto','xmcard','rxcard'];
 const hCfg=()=>{const c=Object.assign({mode:'auto',hide:[],order:[],when:{}},jl(PHK,{}));c.hide=c.hide||[];c.order=c.order||[];c.when=c.when||{};return c};
 function hKey(el,i){if(el.id&&HCARDS[el.id])return el.id;const l=el.querySelector('.lbl');const t=l?l.textContent.trim():'';if(HCARDS[t])return t;if(el.classList.contains('lazycard'))return 'lazycard';const j=el.getAttribute('onclick')||'';if(/showJournal/.test(j))return 'Journal';if(/stats/.test(j))return 'Stats';return null}
 function hPeriod(){const h=new Date().getHours(),m=h*60+new Date().getMinutes();return m>=20*60+30||h<5?'night':h<12?'morning':'day'}
-const KEEP={morning:['Today','Objectives'].concat(ALWAYS),day:['Today','Objectives','hhcard','Focus today'].concat(ALWAYS),night:['Objectives','How was your day?','Daily review','tpcard'].concat(ALWAYS)};
+const KEEP={morning:['Today','Objectives'].concat(ALWAYS),day:['Today','Objectives','hhcard','motiv'].concat(ALWAYS),night:['Objectives','motiv','How was your day?','Daily review','tpcard'].concat(ALWAYS)};
 function hLayout(){
   const home=document.getElementById('home');if(!home)return;
   const cfg=hCfg(),cards=[...home.querySelectorAll(':scope > .card')];
