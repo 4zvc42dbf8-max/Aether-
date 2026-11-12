@@ -1033,6 +1033,7 @@ h2.sh,.sh{letter-spacing:-.015em}
 #rlx .rt{font-size:54px;font-weight:300;letter-spacing:2px;font-variant-numeric:tabular-nums}
 #rlx .rh{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#8fb9b0;height:16px}
 #rlx .rm{font-size:17px;line-height:1.5;color:#c4dcd6;max-width:290px;min-height:76px}
+#rlxp{position:fixed;left:50%;transform:translateX(-50%);top:max(8px,env(safe-area-inset-top));z-index:8000;display:none;align-items:center;gap:8px;padding:7px 14px;border-radius:99px;background:rgba(10,30,28,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(94,224,176,.4);color:#c9f5e6;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}#rlxp.on{display:flex}#rlxp i{width:8px;height:8px;border-radius:50%;background:#5ee0b0;animation:rlxb 4s ease-in-out infinite}
 #rlx .rb{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px}
 #rlx button{padding:14px;border-radius:99px;border:1px solid rgba(255,255,255,.16);color:#e8f3f0;font-weight:600;font-size:15px}
 #rlx button.p{background:#5ee0b0;color:#06201a;border-color:transparent}
@@ -2886,9 +2887,9 @@ function fPauseCheck(){
 }
 
 /* ---------- Opal link: Aether asks the Shortcuts app to run your Opal start/stop shortcuts ---------- */
-const OPL=()=>Object.assign({on:false,start:'Opal Start',stop:'Opal Stop',relax:'Opal Relax',rmin:60},(()=>{try{return JSON.parse(localStorage.getItem('opl'))||{}}catch(e){return{}}})());
-const oplGo=n=>{const u='shortcuts://run-shortcut?name='+encodeURIComponent(n);try{(window.__oplHook||(x=>{location.href=x}))(u)}catch(e){}};
-function oplStart(){const o=OPL();if(!o.on)return;F.opl=1;sv();setTimeout(()=>oplGo(o.start),220)}
+const OPL=()=>Object.assign({on:false,start:'Opal Start',stop:'Opal Stop',relax:'Opal Relax',rmin:60,fs:'start',rx:true},(()=>{try{return JSON.parse(localStorage.getItem('opl'))||{}}catch(e){return{}}})());
+const oplGo=(n,min)=>{const u='shortcuts://run-shortcut?name='+encodeURIComponent(n)+(min?'&input=text&text='+min:'');try{(window.__oplHook||(x=>{location.href=x}))(u)}catch(e){}};
+function oplStart(){const o=OPL();if(!o.on)return;F.opl=1;sv();const m=Math.max(1,Math.ceil((F.dur||1500)/60));setTimeout(()=>oplGo(o.fs==='relax'?o.relax:o.start,m),220)}
 function oplStop(){const o=OPL();if(!o.on||!F.opl)return;F.opl=0;sv();setTimeout(()=>oplGo(o.stop),220)}
 function oplSheet(){
   const o=OPL();
@@ -2896,14 +2897,17 @@ function oplSheet(){
   <div class="sub" style="margin:0 0 12px">Your focus session starts an Opal session, and ends it with you. It runs through two shortcuts of yours.</div>
   <div class="chips"><button class="chip ${o.on?'on':''}" id="op-on">Start Opal with my focus sessions</button></div>
   <div class="two" style="margin-top:10px"><div><label class="hint">Start shortcut</label><input id="op-s" value="${esc(o.start)}" autocapitalize="off"></div><div><label class="hint">Stop shortcut</label><input id="op-e" value="${esc(o.stop)}" autocapitalize="off"></div></div>
+  <div class="hint" style="text-align:left;margin:12px 0 6px">When I start a Focus session, run:</div>
+  <div class="chips" id="op-fs"><button class="chip ${o.fs!=='relax'?'on':''}" data-v="start">Start shortcut</button><button class="chip ${o.fs==='relax'?'on':''}" data-v="relax">Relax shortcut</button></div>
+  <div class="chips" style="margin-top:8px"><button class="chip ${o.rx!==false?'on':''}" id="op-rx">🌿 Relax button also starts Opal</button></div>
   <div class="two" style="margin-top:10px"><div><label class="hint">Relax shortcut</label><input id="op-r" value="${esc(o.relax)}" autocapitalize="off"></div><div><label class="hint">Relax minutes</label><input id="op-m" type="number" inputmode="numeric" value="${o.rmin}"></div></div>
   <div class="lbl" style="margin-top:14px">Set it up once (2 min)</div>
-  <div class="hint" style="text-align:left;line-height:1.5">1. Shortcuts app › + › add the Opal action <b>Start Timer</b> (or Start Session) and pick your block list. Name it exactly like the Start shortcut above.<br>2. Make another one with Opal's stop action, named like the Stop shortcut.<br>3. For <b>Relax</b>, make a third shortcut with <b>Start Timer · 1h · Distracting Apps</b>.<br>4. Optional: end each shortcut with <b>Open App › Aether</b> so you land back here.</div>
+  <div class="hint" style="text-align:left;line-height:1.5">1. Shortcuts app › + › add the Opal action <b>Start Timer</b> (or Start Session) and pick your block list. Name it exactly like the Start shortcut above.<br>2. Make another one with Opal's stop action, named like the Stop shortcut.<br>3. For <b>Relax</b>, make a third shortcut with <b>Start Timer · 1h</b> and pick only your distracting apps (Instagram, YouTube…). Leave Aether and Safari out of the list so you can keep using your tasks.<br><b>Matching the timer:</b> Aether sends the minutes as the shortcut's input. Start the shortcut with <b>Receive/Get Shortcut Input</b>, then in <b>Start Timer</b> tap the duration and pick <b>Shortcut Input</b> (minutes). Relax sends your Relax minutes, a Focus session sends its own length.<br>4. Optional: end each shortcut with <b>Open App › Aether</b> so you land back here.</div>
   <div class="hint" style="text-align:left;margin-top:8px">The first time, iOS asks to open Shortcuts. Aether leaves for a second to start Opal, so keep it to focus sessions. When a timer ends while the app is closed, tap <b>End Opal session</b> on the Focus tab.</div>
   <div class="two" style="margin-top:12px"><button class="btn" id="op-t1" style="margin:0">Try start</button><button class="btn" id="op-t2" style="margin:0">Try stop</button></div>
   <button class="btn primary" id="op-ok" style="margin-top:10px">Save</button>`);
-  const sv2=()=>{const c={on:$('op-on').classList.contains('on'),start:($('op-s').value||'Opal Start').trim(),stop:($('op-e').value||'Opal Stop').trim(),relax:($('op-r').value||'Opal Relax').trim(),rmin:Math.min(240,Math.max(5,+$('op-m').value||60))};try{localStorage.setItem('opl',JSON.stringify(c))}catch(e){}return c};
-  $('op-on').onclick=e=>e.currentTarget.classList.toggle('on');
+  const sv2=()=>{const c={on:$('op-on').classList.contains('on'),start:($('op-s').value||'Opal Start').trim(),stop:($('op-e').value||'Opal Stop').trim(),relax:($('op-r').value||'Opal Relax').trim(),rmin:Math.min(240,Math.max(5,+$('op-m').value||60)),fs:(document.querySelector('#op-fs .on')||{dataset:{v:'start'}}).dataset.v,rx:$('op-rx').classList.contains('on')};try{localStorage.setItem('opl',JSON.stringify(c))}catch(e){}return c};
+  $('op-on').onclick=e=>e.currentTarget.classList.toggle('on');$('op-rx').onclick=e=>e.currentTarget.classList.toggle('on');$('op-fs').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;[...$('op-fs').children].forEach(x=>x.classList.toggle('on',x===b))};
   $('op-t1').onclick=()=>oplGo(sv2().start);$('op-t2').onclick=()=>oplGo(sv2().stop);
   $('op-ok').onclick=()=>{sv2();closeSheet();fChips();fCtl();toast('Opal link saved')};
 }
@@ -2919,41 +2923,44 @@ function rlxEnsure(){
   e.innerHTML='<div class="rh" id="rlx-h"></div><div class="orb"></div><div class="rt" id="rlx-t">60:00</div><div class="rm" id="rlx-m"></div><div class="rb" id="rlx-b"></div>';
   document.body.appendChild(e);
   e.onclick=async ev=>{const a=(ev.target.closest('[data-r]')||{dataset:{}}).dataset.r;
-    if(a==='early'){const ok=await ask({title:'End Relax early?',msg:'The urge to scroll usually fades after about 10 minutes. Stay a little longer?',ok:'End now',cancel:'Stay',danger:true});if(ok)rlxEnd(true)}
+    if(a==='min')rlxMin();else if(a==='early'){const ok=await ask({title:'End Relax early?',msg:'The urge to scroll usually fades after about 10 minutes. Stay a little longer?',ok:'End now',cancel:'Stay',danger:true});if(ok)rlxEnd(true)}
     else if(a==='end')rlxEnd(true);
     else if(a==='opal')oplSheet()};
+  const q=document.createElement('button');q.id='rlxp';q.innerHTML='<i></i><span id="rlxp-t"></span>';q.onclick=()=>{try{localStorage.setItem('rlxv','1')}catch(x){}rlxShow()};document.body.appendChild(q);
   return e;
 }
+function rlxMin(){try{localStorage.setItem('rlxv','0')}catch(x){}rlxShow()}
 function rlxStart(){
   if(RLX()){rlxShow();return}
   const o=OPL(),min=o.rmin||60;
-  rlxSave({start:Date.now(),end:Date.now()+min*6e4,min,opl:o.on?1:0});
-  F.opl=0;if(o.on)setTimeout(()=>oplGo(o.relax||'Opal Relax'),250);
+  try{localStorage.setItem('rlxv','1')}catch(x){}rlxSave({start:Date.now(),end:Date.now()+min*6e4,min,opl:(o.on&&o.rx!==false)?1:0});
+  F.opl=0;if(o.on&&o.rx!==false)setTimeout(()=>oplGo(o.relax||'Opal Relax',min),250);
   try{vib(30)}catch(e){}rlxShow();
 }
 function rlxShow(){
   const e=rlxEnsure(),r=RLX();if(!r){e.classList.remove('on');return}
-  e.classList.add('on');clearInterval(_rlxT);rlxTick();_rlxT=setInterval(rlxTick,1000);
+  const full=(()=>{try{return localStorage.getItem('rlxv')!=='0'}catch(x){return 1}})();
+  e.classList.toggle('on',full);document.getElementById('rlxp').classList.toggle('on',!full);clearInterval(_rlxT);rlxTick();_rlxT=setInterval(rlxTick,1000);
 }
 function rlxTick(){
   const r=RLX(),e=document.getElementById('rlx');if(!r||!e)return;
   const left=Math.max(0,Math.round((r.end-Date.now())/1000)),m=Math.floor(left/60),s=left%60,o=OPL();
-  document.getElementById('rlx-t').textContent=pad(m)+':'+pad(s);
+  document.getElementById('rlx-t').textContent=pad(m)+':'+pad(s);{const pt=document.getElementById('rlxp-t');if(pt)pt.textContent='Relax · '+pad(m)+':'+pad(s)}
   const done=left<=0;e.classList.toggle('done',done);
-  if(done&&!r.fin){r.fin=1;rlxSave(r);try{vib(80);chime()}catch(x){}}
+  if(done&&!r.fin){r.fin=1;rlxSave(r);try{vib(80);chime();localStorage.setItem('rlxv','1')}catch(x){}rlxShow();return}
   document.getElementById('rlx-h').textContent=done?'Relax finished':'Relax · phone down';
   const mq=document.getElementById('rlx-m'),k=Math.floor((Date.now()-r.start)/45000)%RLXQ.length;
   const txt=done?'Well done. Take it slowly when you pick your phone back up.':RLXQ[k];if(mq.textContent!==txt)mq.textContent=txt;
   const b=document.getElementById('rlx-b'),h=(done?'d':'r')+(o.on?1:0);
-  if(b.dataset.h!==h){b.dataset.h=h;b.innerHTML=done?'<button class="p" data-r="end">'+(r.opl?'End Opal & close':'Close')+'</button>':'<button data-r="early">End early</button>'+(o.on?'':'<button data-r="opal">Block apps with Opal…</button>')}
+  if(b.dataset.h!==h){b.dataset.h=h;b.innerHTML=done?'<button class="p" data-r="end">'+(r.opl?'End Opal & close':'Close')+'</button>':'<button class="p" data-r="min">Back to Aether</button><button data-r="early">End early</button>'+(o.on?'':'<button data-r="opal">Block apps with Opal…</button>')}
 }
 function rlxEnd(stop){
-  const r=RLX();rlxSave(null);clearInterval(_rlxT);const e=document.getElementById('rlx');if(e)e.classList.remove('on');
+  const r=RLX();rlxSave(null);clearInterval(_rlxT);const e=document.getElementById('rlx');if(e)e.classList.remove('on');{const q=document.getElementById('rlxp');if(q)q.classList.remove('on')}
   if(stop&&r&&r.opl)setTimeout(()=>oplGo(OPL().stop),150);
   try{if(cur==='home')rHome()}catch(x){}
 }
 document.addEventListener('click',e=>{if(e.target.closest('[data-rx="start"]'))rlxStart()});
-setTimeout(()=>{if(RLX())rlxShow();else if(/[?&#]relax\b/.test(location.search+location.hash)){history.replaceState(null,'',location.pathname);rlxStart()}},900);
+setTimeout(()=>{if(RLX()){try{if(!(RLX().end<=Date.now()))localStorage.setItem('rlxv','0')}catch(x){}rlxShow()}else if(/[?&#]relax\b/.test(location.search+location.hash)){history.replaceState(null,'',location.pathname);rlxStart()}},900);
 function fStart(){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){window._ac=window._ac||new AC();window._ac.resume&&window._ac.resume()}}catch(e){}
   F.extra=0;F.dur=fDur();F.start=Date.now();F.pAt=0;F.end=Date.now()+F.dur*1000;F.status='run';sv();vib(30);
