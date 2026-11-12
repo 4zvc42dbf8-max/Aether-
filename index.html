@@ -867,6 +867,18 @@ textarea::placeholder{color:var(--dim)}
 #calendar #cseg{flex:none;width:132px;margin:0;padding:3px;min-width:0;display:grid;grid-template-columns:1fr 1fr}
 #calendar #cseg button{padding:6px 0;font-size:13px;min-height:0;text-align:center;justify-content:center;width:100%}#calendar #cseg i{width:calc(50% - 3px)}
 #calendar #cnx{padding:6px 10px;font-size:12.5px;border-radius:12px}
+/* v107 shop */
+.rwsh{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:16px 2px 8px}.rwsh span{background:rgba(255,255,255,.08);border-radius:99px;padding:1px 8px;font-size:11px}
+.rwsh.g{color:#30d158}.rwsh.r{color:#ff9f0a}
+.rwsec{display:flex;flex-direction:column;gap:8px}
+.rwk{display:flex;gap:12px;align-items:center;padding:12px;border-radius:20px;border:1px solid var(--line2);background:linear-gradient(170deg,rgba(255,255,255,.07),rgba(255,255,255,.02));position:relative;transition:transform .25s var(--spring),opacity .2s;touch-action:manipulation}
+.rwk:active{transform:scale(.97)}.rwk.rok{border-color:color-mix(in srgb,#30d158 55%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,#30d158 25%,transparent) inset}.rwk.rlock{opacity:.62}
+.rwk-i{flex:none;width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:24px;box-shadow:0 6px 14px -6px var(--rc)}
+.rwk-m{flex:1;min-width:0}.rwk-n{font-weight:700;font-size:16px;line-height:1.2}.rwk-s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.rwk-w{font-size:12.5px;margin-top:5px;color:#ff9f0a}.rwk-w.a{color:#ffd60a}
+.rwk-p{flex:none;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}.rwk-p b{font-size:18px}.rwk-p small{font-size:10.5px;color:var(--muted)}
+.rwk-go{margin-top:4px;background:#30d158;color:#04210d;font-weight:800;font-size:12.5px;border-radius:99px;padding:5px 14px}
+.rwexam{font-size:13px;color:var(--muted);background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.25);border-radius:14px;padding:9px 12px;margin:0 0 10px}.rwexam b{color:var(--text)}.rwexam .lnk{margin-left:6px}
 /* v99 landscape + fullscreen clock */
 @media (orientation:landscape) and (max-height:520px){
   .container{max-width:none}
@@ -1767,7 +1779,7 @@ function scrRender(){
   const ago=Math.max(1,Math.round((Date.now()-d.u)/60000)),agt=ago<60?ago+' min':ago<1440?Math.round(ago/60)+' h':Math.round(ago/1440)+' d';
   el.innerHTML=`<div style="display:flex;align-items:baseline;gap:8px"><b style="font-size:26px">${today} min</b><span class="sub">today${lim?' of '+lim:''} · avg ${avg} min</span></div>`+
    `<div class="scrbars">${days.map(([k,v])=>`<div class="scrb${k===td0?' t':''}${lim&&v>lim?' o':''}"><i style="height:${Math.max(3,Math.round(v/mx*64))}px"></i><span>${'SMTWTFS'[new Date(k+'T12:00:00').getDay()]}</span></div>`).join('')}</div>`+
-   `<div class="sub" style="margin:8px 0 10px">Updated ${agt} ago. Open VLite and send again to refresh.</div><div style="display:flex;gap:8px"><button class="btn sm" id="scr-in">Paste</button><button class="btn sm" id="scr-repo">Link repo</button><button class="btn sm" id="scr-op">Opal min</button><button class="btn sm" id="scr-rm">Forget</button></div>`+(opalDays()[td0]!=null?`<div class="sub" style="margin-top:8px">Opal today: ${opalDays()[td0]} min · total ${opalDays()[td0]+today} min</div>`:'');
+   `<div class="sub" style="margin:8px 0 10px">Updated ${agt} ago. Open VLite and send again to refresh.</div><div style="display:flex;gap:8px"><button class="btn sm" id="scr-in">Paste</button><button class="btn sm" id="scr-repo">Link repo</button><button class="btn sm" id="scr-op">Phone min</button><button class="btn sm" id="scr-rm">Forget</button></div>`+((opalDays()[td0]!=null||appleDays()[td0]!=null)?`<div class="sub" style="margin-top:8px">VLite ${today} min${opalDays()[td0]!=null?' · Opal '+opalDays()[td0]+' min':''}${appleDays()[td0]!=null?' · Apple '+appleDays()[td0]+' min (all apps)':''}</div>`:'');
 }
 function scrImport(txt){const d=scrParse(txt);if(!d)return false;try{localStorage.setItem('sigdata',JSON.stringify(d))}catch(e){}scrRender();toast('Screen time updated');vib(15);return true}
 document.addEventListener('click',async e=>{
@@ -1784,12 +1796,13 @@ async function scrAuto(){const r=vlRepo();if(!r)return;try{
   const res=await fetch('https://raw.githubusercontent.com/'+r+'/main/usage.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)return;
   const j=await res.json(),days={};Object.keys(j.days||{}).forEach(k=>{days[k]=Math.round(j.days[k]/60)});
   const old=scrLoad()||{lim:{wk:0,we:0}};try{localStorage.setItem('sigdata',JSON.stringify({u:Date.now(),days,lim:old.lim}))}catch(e){}scrRender()}catch(e){}}
+const appleDays=()=>{try{return JSON.parse(localStorage.getItem('appledays')||'{}')}catch(e){return{}}};
 const opalDays=()=>{try{return JSON.parse(localStorage.getItem('opaldays')||'{}')}catch(e){return{}}};
 document.addEventListener('click',e=>{
   if(e.target.id==='scr-repo'){openSheet('<h2>VLite link</h2><div class="sub" style="margin-bottom:10px">Same repo as in VLite (e.g. name/vlite). Aether then reads your watch time by itself.</div><div class="field"><input id="scr-r" value="'+esc(vlRepo())+'" placeholder="name/vlite" autocapitalize="off"></div><button class="btn primary" id="scr-rs">Save</button>');
     $('scr-rs').onclick=()=>{try{localStorage.setItem('vlrepo',$('scr-r').value.trim().replace(/^https:\/\/github\.com\//,''))}catch(x){}closeSheet();scrAuto()}}
-  if(e.target.id==='scr-op'){const o=opalDays(),k=iso();openSheet('<h2>Opal time today</h2><div class="sub" style="margin-bottom:10px">Opal cannot be read by apps, so type today\'s distracting-app minutes (30 s once a day).</div><div class="field"><input id="scr-om" type="number" inputmode="numeric" value="'+(o[k]||'')+'" placeholder="minutes"></div><button class="btn primary" id="scr-os">Save</button>');
-    $('scr-os').onclick=()=>{o[k]=Math.max(0,+$('scr-om').value||0);try{localStorage.setItem('opaldays',JSON.stringify(o))}catch(x){}closeSheet();scrRender()}}
+  if(e.target.id==='scr-op'){const o=opalDays(),a=appleDays(),k=iso();openSheet('<h2>Screen time today</h2><div class="sub" style="margin-bottom:10px">Neither Opal nor Apple Screen Time can be read by an app, so type the minutes once a day (Settings › Screen Time on iPhone, or the Opal app). VLite is read automatically.</div><div class="field"><label>Opal (distracting apps), min</label><input id="scr-om" type="number" inputmode="numeric" value="'+(o[k]||'')+'" placeholder="minutes"></div><div class="field"><label>Apple Screen Time, min</label><input id="scr-am" type="number" inputmode="numeric" value="'+(a[k]||'')+'" placeholder="minutes"></div><button class="btn primary" id="scr-os">Save</button>');
+    $('scr-os').onclick=()=>{o[k]=Math.max(0,+$('scr-om').value||0);a[k]=Math.max(0,+$('scr-am').value||0);try{localStorage.setItem('opaldays',JSON.stringify(o));localStorage.setItem('appledays',JSON.stringify(a))}catch(x){}closeSheet();scrRender()}}
 });
 setTimeout(scrAuto,1500);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')scrAuto()});
 function sndRender(){
@@ -2142,7 +2155,7 @@ let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:
 let hols=ld('hols',null)||HOL0.map(x=>({...x}));
 let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
 let rcat=ld('rcat',['🍕 Food','🎮 Games','📺 Leisure','🛍 Other']),rcf='',rsub=null;
-let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,vthr:16,vxp:15,xm:true,xd:2,pw:7,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
+let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,vthr:16,vxp:15,xm:true,xl:'soft',xt:2,xd:2,pw:7,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
 if(!shs.xd2){shs.xd2=1;if(shs.xd===3)shs.xd=2}
 let commits=ld('commits',[]),rtimer=ld('rtimer',null),rsave=ld('rsave',''),bnd=ld('bnd',{g:null,p:[],s:[]}),alw=ld('alw',{wk:'',left:0}),cmSel={tid:'',stake:50,due:''};
 let hhome=ld('hhome',null),homeNow=null;
@@ -2294,7 +2307,7 @@ function rTP(){
   const h=Math.floor(p.total/60),m=p.total%60,dur=p.total?(h?h+'h'+(m?pad(m):''):m+' min'):'';
   el.innerHTML=`<div class="cardhead"><div class="lbl">${p.xm?'📚 ':''}${esc(p.title)}</div><span class="sub">${p.items.length?p.items.length+' thing'+(p.items.length>1?'s':'')+' · about '+dur:''}<button class="lnk" data-act="tpcfg" aria-label="Timer settings" style="margin-left:8px">⚙︎</button></span></div>`+
     (p.items.length?p.items.map((it,i)=>{const a=it.at?it.at.split(' – '):[],sub=[it.sub].filter(Boolean).map(esc).join('');return `<div class="tprow" style="--i:${i}${it.col?';--rc:'+it.col:''}"><div class="tpt">${a[0]?esc(a[0]):'·'}${a[1]?`<small>${esc(a[1])}</small>`:''}</div><div class="tpm"><div class="tpn">${it.ic} ${esc(it.title)}</div><div class="tps"><span class="dur">${it.min} min</span>${sub?`<span style="overflow:hidden;text-overflow:ellipsis">${sub}</span>`:''}</div></div><div class="tpb">${i?`<button data-act="tpup" data-id="${esc(it.id)}" aria-label="Move up">↑</button>`:''}<button data-act="tpskip" data-id="${esc(it.id)}" aria-label="Skip for today">✕</button><button class="go" data-act="tpgo" data-id="${esc(it.id)}" aria-label="Start">▶</button></div></div>`}).join(''):`<div class="tps" style="margin-top:6px">Nothing urgent right now. Pick a task, or take a break you earned.</div>`)+
-    (p.xm?`<div class="tps" style="margin-top:8px">Exam mode is on: protect your sleep, big rewards wait until after the exam.</div>`:'');
+    (p.xm?`<div class="tps" style="margin-top:8px">Exam mode is on: protect your sleep, big rewards ${shs.xl==='hard'?'wait until after the exam':shs.xl==='off'?'stay available':'ask for a second thought'}.</div>`:'');
 }
 function rXM(){
   const el=$('xmcard');if(!el)return;const x=examMode();
@@ -2311,7 +2324,7 @@ function rXM(){
   const row=i=>`<div class="xwr${i.done?' dn':''}"><button class="xwk" data-act="xmtk" data-id="${esc(i.k)}" aria-label="Tick">${i.done?'✓':''}</button><div class="xwm" ${i.go?`data-act="xmgo" data-id="${esc(i.k)}"`:''}><div class="xwt">${i.ic} ${esc(i.t)}</div><div class="xws">${esc(i.sub)} · ${i.min} min</div></div></div>`;
   const today=has?wk.days.find(d=>d.date===td):null,rest=has?wk.days.filter(d=>d.date!==td):[];
   el.innerHTML=`<div class="xmh" data-act="xmx"><span class="ic">${x?'📚':'🗓'}</span><b>${x?'Exam mode':'Exam week'}</b><span class="sub">${esc(names)} · ${when}</span></div>`+
-   `<div class="xmch">${x?'<span title="Sleep bonus doubled">😴 ×2</span><span title="Big rewards wait">🔒</span>':''}${has?`<span title="Done">✓ ${wk.done}/${wk.total}</span>`:''}</div>`+
+   `<div class="xmch">${x?('<span title="Sleep bonus doubled">😴 ×2</span>'+(shs.xl==='hard'?'<span title="Big rewards wait">🔒</span>':'')):''}${has?`<span title="Done">✓ ${wk.done}/${wk.total}</span>`:''}</div>`+
    (has?`<div class="xmnext">${(()=>{const n=today&&today.items.find(i=>!i.done);return n?`<span>Next</span> ${esc(n.ic)} ${esc(n.t)}`:(today?'<span>Today</span> all done ✓':'<span>Next</span> '+esc(rest[0].items[0].t))})()}</div>`:'')+
    `<div class="xmdet">`+(today?`<div class="xwd">Today · ${hm(today.min)}</div>`+today.items.map(row).join(''):'')+rest.map(d=>`<div class="xwd">${dl(d.date)} · ${hm(d.min)}</div>`+d.items.map(row).join('')).join('')+`</div>`+(has&&keep?`<button class="xwmore" data-act="xmx">Hide the programme</button>`:'');
 }
@@ -2326,7 +2339,7 @@ function rcheck(r){
   const td=iso(),wk=mondayOf(td),buys=rlog.filter(x=>x.id===r.id);
   if(r.from&&td<r.from)return'Opens '+fdm(r.from);if(r.to&&td>r.to)return'Season over';
   if(r.minLv&&lv<r.minLv)return'Reach level '+r.minLv;
-  {const x=examMode();if(x&&tierOf(r.c)>=2)return'After your exam ('+fdm(x.e.date)+')'}
+  {const x=examMode();if(x&&shs.xl==='hard'&&tierOf(r.c)>=(shs.xt||2))return'After your exam ('+fdm(x.e.date)+')'}
   if(r.fm&&focusToday()<r.fm)return'Focus '+(r.fm-focusToday())+' more min today';
   if(r.gr&&!recsRecent(r.grk).some(x=>+x.grade>=r.gr))return'Needs '+(r.grk==='colles'?'a colle':r.grk==='exams'?'an exam or DS':r.grk==='tests'?'a vocabulary test':'a')+' grade ≥ '+r.gr+' (last 3 weeks)';
   if(r.lim&&buys.filter(x=>iso(new Date(x.t))>=wk).length>=r.lim)return'Weekly limit reached';
@@ -2401,6 +2414,7 @@ async function rbuy(id,el){
   const why=rcheck(r),shake=()=>{if(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}if(shs.hap)vib(15)};
   if(why){shake();toast(why);return}
   if(balance()<r.c){shake();toast(r.c-balance()+' XP to go for "'+r.n+'"');return}
+  {const x=examMode();if(x&&shs.xl==='soft'&&tierOf(r.c)>=(shs.xt||2)&&!await ask({title:'Exam '+(x.days===0?'today':x.days===1?'tomorrow':'in '+x.days+' days')+' — still buy?',msg:'"'+r.n+'" is a big reward and your exam is close. Your call.',ok:'Yes, buy it',cancel:'Not now'}))return}
   if(!await ask({title:'Buy "'+r.n+'"?',msg:'−'+r.c+' XP from your balance'+(r.mins?' · starts a '+r.mins+' min timer':'')+'. Your level stays the same.',ok:'Buy',cancel:'Cancel'}))return;
   spent+=r.c;rlog.push({id:r.id,n:r.n,c:r.c,t:Date.now()});if(shs.al){allowLeft();alw.left=Math.max(0,alw.left-r.c)}
   if(r.mins)rtimer={n:r.n,c:r.c,mins:r.mins,end:Date.now()+r.mins*6e4};
@@ -2429,12 +2443,12 @@ function rwSettings(){
   <div class="lbl" style="margin-top:12px">Treat sizes (by cost)</div><div class="two">${N('ss-t1','🌱→✨ from',shs.t1)}${N('ss-t2','✨→🔥 from',shs.t2)}${N('ss-t3','🔥→👑 from',shs.t3)}</div>
   <div class="lbl" style="margin-top:12px">Commitments and timers</div><div class="two">${N('ss-cb','Bonus when kept (%)',shs.cb)}${N('ss-ref','Timer refund (%)',shs.ref)}</div>
   <div class="lbl" style="margin-top:12px">Bonus XP (0 = off)</div><div class="hint" style="text-align:left">Exams and DS</div><div class="two">${N('ss-gthr','Grade ≥ /20',shs.gthr)}${N('ss-gxp','gives XP',shs.gxp)}</div><div class="hint" style="text-align:left;margin-top:6px">Colles</div><div class="two">${N('ss-cthr','Grade ≥ /20',shs.cthr)}${N('ss-cxp','gives XP',shs.cxp)}</div><div class="hint" style="text-align:left;margin-top:6px">Vocabulary tests (not counted as exams)</div><div class="two">${N('ss-vthr','Grade ≥ /20',shs.vthr)}${N('ss-vxp','gives XP',shs.vxp)}</div><div class="two" style="margin-top:6px">${N('ss-pxp','Fully prepared for a colle',shs.pxp)}${N('ss-sxp','Slept ≥ h gives XP',shs.sxp)}</div><div class="two" style="margin-top:6px">${N('ss-sth','Sleep threshold (h)',shs.sth)}<div></div></div>
-  <div class="lbl" style="margin-top:12px">Exam mode</div><div class="chips">${T('ss-xm','Switch to recovery mode before a DS or colle',shs.xm)}</div><div class="two" style="margin-top:6px">${N('ss-xd','Exam mode starts (days before)',shs.xd)}${N('ss-pw','Revision programme starts (days before)',shs.pw)}</div><div class="lbl" style="margin-top:12px">Behaviour</div><div class="chips">${T('ss-arr','Ask what to do when I get home',shs.arr)}${T('ss-resc','Evening "smallest win" nudge',shs.resc)}${T('ss-snd','Sounds',shs.snd)}${T('ss-hap','Vibrations',shs.hap)}</div>
+  <div class="lbl" style="margin-top:12px">Exam mode</div><div class="hint" style="text-align:left">Big rewards while an exam is close</div><div class="chips" id="ss-xl" data-rad="1">${[['off','Free'],['soft','Ask me first'],['hard','Locked']].map(([v,l])=>`<button class="chip ${(shs.xl||'soft')===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="hint" style="text-align:left;margin-top:8px">What counts as big</div><div class="chips" id="ss-xt" data-rad="1">${[[1,'✨ and up'],[2,'🔥 and up'],[3,'👑 only']].map(([v,l])=>`<button class="chip ${(shs.xt||2)===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="chips">${T('ss-xm','Switch to recovery mode before a DS or colle',shs.xm)}</div><div class="two" style="margin-top:6px">${N('ss-xd','Exam mode starts (days before)',shs.xd)}${N('ss-pw','Revision programme starts (days before)',shs.pw)}</div><div class="lbl" style="margin-top:12px">Behaviour</div><div class="chips">${T('ss-arr','Ask what to do when I get home',shs.arr)}${T('ss-resc','Evening "smallest win" nudge',shs.resc)}${T('ss-snd','Sounds',shs.snd)}${T('ss-hap','Vibrations',shs.hap)}</div>
   <button class="btn primary" id="ss-save" style="margin-top:14px">Save</button>`);
   const B=$('sbody');
-  B.onclick=e=>{const c=e.target.closest('.chip');if(c){if(c.parentElement.id==='ss-roll'){[...c.parentElement.children].forEach(x=>x.classList.toggle('on',x===c))}else c.classList.toggle('on')}if(e.target.closest('[data-sb]')){rsub=null;rwSheet()}};
+  B.onclick=e=>{const c=e.target.closest('.chip');if(c){if(c.parentElement.id==='ss-roll'||c.parentElement.dataset.rad){[...c.parentElement.children].forEach(x=>x.classList.toggle('on',x===c))}else c.classList.toggle('on')}if(e.target.closest('[data-sb]')){rsub=null;rwSheet()}};
   $('ss-save').onclick=()=>{const g=i=>+$(i).value||0,on=i=>$(i).classList.contains('on');const old=shs.al?shs.amt:0;
-    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),cthr:g('ss-cthr')||14,cxp:g('ss-cxp'),vthr:g('ss-vthr')||16,vxp:g('ss-vxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),xm:on('ss-xm'),xd:Math.max(1,Math.min(14,g('ss-xd')||2)),pw:Math.max(2,Math.min(14,g('ss-pw')||7)),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
+    shs=Object.assign(shs,{al:on('ss-al')?1:0,amt:Math.max(0,g('ss-amt')),roll:+(B.querySelector('#ss-roll .on')||{dataset:{v:shs.roll}}).dataset.v,xl:(B.querySelector('#ss-xl .on')||{dataset:{v:'soft'}}).dataset.v,xt:+(B.querySelector('#ss-xt .on')||{dataset:{v:2}}).dataset.v,t1:g('ss-t1')||200,t2:g('ss-t2')||600,t3:g('ss-t3')||1500,cb:g('ss-cb'),ref:g('ss-ref'),gthr:g('ss-gthr')||14,gxp:g('ss-gxp'),cthr:g('ss-cthr')||14,cxp:g('ss-cxp'),vthr:g('ss-vthr')||16,vxp:g('ss-vxp'),pxp:g('ss-pxp'),sxp:g('ss-sxp'),sth:g('ss-sth')||7.5,arr:on('ss-arr'),xm:on('ss-xm'),xd:Math.max(1,Math.min(14,g('ss-xd')||2)),pw:Math.max(2,Math.min(14,g('ss-pw')||7)),resc:on('ss-resc'),snd:on('ss-snd'),hap:on('ss-hap')});
     if(shs.al&&shs.amt!==old)alw.wk='';sv();rsub=null;rwSheet();rRescue();toast('Saved')};
 }
 let rtab='shop';
@@ -2456,8 +2470,17 @@ function rwSheet(tab){
 <div class="chips" style="margin-bottom:10px"><button class="chip ${rsub.id&&rsave===rsub.id?'on':''}" id="re-sv">📌 Save for this (shown on Home)</button></div><button class="btn primary" id="re-s">${r?'Save':'Add reward'}</button>${r?'<button class="btn danger" id="re-d">Delete</button>':''}`;
     }else{
       const list=rwd.filter(r=>!rcf||(rcf==='-'?!r.cat||!rcat.includes(r.cat):r.cat===rcf)),bal=balance();
-      b=`<div class="rwhero"><i class="st s1"></i><i class="st s2"></i><i class="st s3"></i><i class="st s4"></i><div class="rwc">🪙</div><div class="rwb"><div class="rwn" id="rw-bal" data-v="${bal}">0</div><div class="rws">XP to spend · hold a reward to edit or move it${shs.al?`<br>Weekly allowance: <b>${allowLeft()}</b> XP left`:''}</div></div></div>
-      <div class="chips" style="margin:2px 0 12px"><button class="chip ${!rcf?'on':''}" data-f="">All</button>${rcat.map(c=>`<button class="chip ${rcf===c?'on':''}" data-f="${esc(c)}">${esc(c)}</button>`).join('')}<button class="chip" data-sc="1">✎</button><button class="chip" data-ss="1">⚙</button></div>${(()=>{const rdy=list.filter(r=>bal>=r.c&&!rcheck(r)).length,nx=list.filter(r=>r.c>bal).sort((x,y)=>x.c-y.c)[0];return `<div class="rwnext"><span>${rdy?'🟢 '+rdy+' ready to buy':'⏳ Nothing affordable yet'}</span>${nx?`<span>Next: <b>${esc(nx.n)}</b> · ${nx.c-bal} XP to go</span>`:''}</div>`})()}<div id="rw-list">`+(list.length?list.map((r,i)=>{const pr=Math.min(100,bal/r.c*100),why=rcheck(r),ok=bal>=r.c&&!why,ci=Math.max(0,rcat.indexOf(r.cat)),col=COLORS[ci%COLORS.length],tr=tierOf(r.c);return`<div class="goal rw tier${tr} ${ok?'rok':'rlock'}" style="--i:${i};--rc:${col}" data-act="rbuy" data-hold="rwd" data-id="${r.id}"><div class="gd" style="background:${col}">${esc(r.ico||'🎁')}</div><div class="gm"><div class="gn">${esc(r.n)}</div><div class="gs">${r.c} XP · ${TIERS[tr][0]} ${TIERS[tr][1]} · ≈ ${worthTxt(r.c)} of focus${why?'<br>🔒 '+esc(why):ok?' · tap to buy':' · '+(r.c-bal)+' to go'}${r.mins?' · ⏳ '+r.mins+' min':''}${r.to?' · until '+fdm(r.to):''}</div><div class="bar"><div class="bar-fill rwfill" data-w="${pr}" style="width:0;background:${ok?'#30d158':col};box-shadow:none"></div></div></div><div class="rwtag">${rsave===r.id?'📌':ok?'Buy':'🔒'}</div></div>`}).join(''):'<div class="hint">Nothing here yet. Add your first reward.</div>')+`</div><button class="btn" data-new="1" style="margin-top:4px">＋ New reward</button>`+(rlog.length?`<div class="hint" style="text-align:left;margin-top:10px">Recent: ${rlog.slice(-3).reverse().map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')}</div>`:'');
+      const st=r=>{const why=rcheck(r);return{r,why,ok:bal>=r.c&&!why,lock:!!why}};
+      const S2=list.map(st),ready=S2.filter(x=>x.ok),saving=S2.filter(x=>!x.ok&&!x.lock),locked=S2.filter(x=>x.lock),nx=saving.slice().sort((x,y)=>x.r.c-y.r.c)[0];
+      const xm=examMode(),card=(x,i)=>{const r=x.r,why=x.why,ci=Math.max(0,rcat.indexOf(r.cat)),col=COLORS[ci%COLORS.length],tr=tierOf(r.c),pr=Math.min(100,bal/r.c*100);
+        const warn=!why&&xm&&tr>=(shs.xt||2)&&shs.xl==='soft';
+        return `<div class="rwk ${x.ok?'rok':x.lock?'rlock':'rsave'} tier${tr}" style="--i:${i};--rc:${col}" data-act="rbuy" data-hold="rwd" data-id="${r.id}"><div class="rwk-i" style="background:${col}">${esc(r.ico||'🎁')}</div><div class="rwk-m"><div class="rwk-n">${esc(r.n)}</div><div class="rwk-s">${TIERS[tr][0]} ${TIERS[tr][1]} · ≈ ${worthTxt(r.c)} of focus${r.mins?' · ⏳ '+r.mins+' min':''}${r.to?' · until '+fdm(r.to):''}</div>${why?`<div class="rwk-w">🔒 ${esc(why)}</div>`:warn?`<div class="rwk-w a">📚 Exam soon — I will ask first</div>`:''}${x.ok||x.lock?'':`<div class="bar" style="margin-top:7px"><div class="bar-fill rwfill" data-w="${pr}" style="width:0;background:${col};box-shadow:none"></div></div>`}</div><div class="rwk-p">${rsave===r.id?'📌 ':''}<b>${r.c}</b><small>XP</small>${x.ok?'<span class="rwk-go">Buy</span>':x.lock?'':`<small>${r.c-bal} to go</small>`}</div></div>`};
+      const sec=(t,arr,cls)=>arr.length?`<div class="rwsh ${cls}">${t}<span>${arr.length}</span></div><div class="rwsec">${arr.map(card).join('')}</div>`:'';
+      b=`<div class="rwhero"><i class="st s1"></i><i class="st s2"></i><i class="st s3"></i><i class="st s4"></i><div class="rwc">🪙</div><div class="rwb"><div class="rwn" id="rw-bal" data-v="${bal}">0</div><div class="rws">XP to spend${shs.al?`<br>Weekly allowance: <b>${allowLeft()}</b> XP left`:''}</div></div></div>
+      ${xm?`<div class="rwexam"><b>📚 Exam mode</b> · ${esc((xm.e.title||'Exam').replace(/\s*\([^)]*\)\s*$/,''))} ${xm.days===0?'today':xm.days===1?'tomorrow':'in '+xm.days+' days'} · big rewards: <b>${shs.xl==='hard'?'locked':shs.xl==='off'?'free':'ask first'}</b> <button class="lnk" data-ss="1">Change</button></div>`:''}
+      <div class="chips" style="margin:2px 0 10px"><button class="chip ${!rcf?'on':''}" data-f="">All</button>${rcat.map(c=>`<button class="chip ${rcf===c?'on':''}" data-f="${esc(c)}">${esc(c)}</button>`).join('')}<button class="chip" data-sc="1">✎</button><button class="chip" data-ss="1">⚙</button></div>
+      <div class="rwnext"><span>${ready.length?'🟢 '+ready.length+' ready to buy':'⏳ Nothing affordable yet'}</span>${nx?`<span>Next: <b>${esc(nx.r.n)}</b> · ${nx.r.c-bal} XP to go</span>`:''}</div>
+      <div id="rw-list">`+(list.length?sec('Ready to buy',ready,'g')+sec('Saving up',saving,'b')+sec('Locked',locked,'r'):'<div class="hint">Nothing here yet. Add your first reward.</div>')+`</div>`+`<button class="btn" data-new="1" style="margin-top:4px">＋ New reward</button>`+(rlog.length?`<div class="hint" style="text-align:left;margin-top:10px">Recent: ${rlog.slice(-3).reverse().map(x=>esc(x.n)+' (−'+x.c+')').join(' · ')}</div>`:'');
     }
   }else if(rtab==='com'){
     const open=tasks.filter(t=>!t.rep&&!commits.some(c=>c.st==='open'&&c.tid===t.id)).slice(0,10);if(!cmSel.due)cmSel.due=shiftD(iso(),1);
