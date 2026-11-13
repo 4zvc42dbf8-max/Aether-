@@ -3509,12 +3509,16 @@ function errText(status,j){
   return m||('The AI service returned error '+status+'.');
 }
 const keyName=()=>S.set.prov==='gemini'?'p_gkey':'p_key';
+/* models the providers have retired (Groq stopped llama-3.3-70b-versatile and llama-3.1-8b-instant on 16 Aug 2026; OpenRouter's free llama slug went paid) */
+const RETIRED_M={'llama-3.3-70b-versatile':'openai/gpt-oss-120b','llama-3.1-8b-instant':'openai/gpt-oss-20b','meta-llama/llama-3.3-70b-instruct:free':'auto-free'};
+function migModel(x){const m=(x.model||'').trim();if(!m)return m;const r=RETIRED_M[m];if(!r)return m;if(r==='auto-free')return /openrouter/i.test(x.base||'')?r:m;return /groq/i.test(x.base||'')?r:m}
 function provs(){
   let l=S.set.provs;
   if(!Array.isArray(l)){l=[];S.set.provs=l}
   let ch=false;
   if(l.some(x=>x.id==='p0')){l=l.filter(x=>x.id!=='p0');localStorage.removeItem('p_pk_p0');localStorage.removeItem('p_fbase');localStorage.removeItem('p_fkey');ch=true}
   if(!l.some(x=>x.id==='gemini')){l.push({id:'gemini',name:'Gemini',special:true,on:true});ch=true}
+  l.forEach(x=>{if(x.special)return;const m=migModel(x);if(m&&m!==x.model){x.model=m;ch=true}});
   S.set.provs=l;if(ch){try{put('p_set',S.set)}catch(e){}}
   return l;
 }
@@ -3561,7 +3565,7 @@ async function aiGemini({system,content,max,model,onText}){
         body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:[{role:'user',parts}],generationConfig:{maxOutputTokens:Math.min(max,60000),temperature:0.4}})});
     }catch(e){throw new AIError('Cannot reach the AI service. Check your internet connection.')}
     if(r.status===503||r.status===500){await new Promise(z=>setTimeout(z,2000));try{r=await fetch(r.url,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:[{role:'user',parts}],generationConfig:{maxOutputTokens:Math.min(max,60000),temperature:0.4}})})}catch(e){}}
-    if(r.status===404){continue}   // unknown model name: try the next one
+    if(r.status===404||r.status===503||r.status===500){continue}   // unknown or busy model: try the next one
     used=m;break;
   }
   if(!used&&r&&r.status===404)throw new AIError('No Gemini model answered. In AI settings, set the model to gemini-flash-latest.');
@@ -3593,16 +3597,16 @@ function fErr(status,j,name){
   if(status>=500)return n+' is busy or down.';
   return (typeof m==='string'&&m)||(n+' returned error '+status+'.');
 }
-async function aiProv(pr,{system,content,max=4096,onText}){
+async function aiProv1(pr,{system,content,max=4096,onText},mdl){
   const base=pbase(pr.base),name=pr.name||'Provider';if(!base)throw new AIError(name+': no address set.');
   const text=content.map(c=>c.text).join('\n\n');
   const key=pkey(pr),ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),(S.set.fto||30)*1000);
   const headers={'content-type':'application/json'};if(key)headers.authorization='Bearer '+key;
   let r;
-  try{r=await fetch(base+'/chat/completions',{method:'POST',headers,signal:ctl.signal,body:JSON.stringify({model:pr.model||'auto',stream:true,max_tokens:Math.min(max,pr.maxTok||8000),temperature:0.4,messages:[{role:'system',content:system},{role:'user',content:text}]})})}
+  try{r=await fetch(base+'/chat/completions',{method:'POST',headers,signal:ctl.signal,body:JSON.stringify({model:mdl||pr.model||'auto',stream:true,max_tokens:Math.min(max,pr.maxTok||8000),temperature:0.4,messages:[{role:'system',content:system},{role:'user',content:text}]})})}
   catch(e){clearTimeout(to);throw new AIError(e&&e.name==='AbortError'?name+' did not answer in time.':'Cannot reach '+name+'. Check the address, or that it allows this website (CORS).')}
   clearTimeout(to);
-  if(!r.ok){let j={};try{j=await r.json()}catch(e){}throw new AIError(fErr(r.status,j,name))}
+  if(!r.ok){let j={};try{j=await r.json()}catch(e){}const er=new AIError(fErr(r.status,j,name));er.status=r.status;er.raw=JSON.stringify(j).slice(0,400);throw er}
   let out='',stop='',inT=0,outT=0;
   const ct=r.headers.get('content-type')||'';
   if(/json/.test(ct)&&!/event-stream/.test(ct)){
@@ -3617,6 +3621,46 @@ async function aiProv(pr,{system,content,max=4096,onText}){
   if(out.length<20)throw new AIError(name+' returned almost nothing.');
   S.usage.by=S.usage.by||{};S.usage.by[name]=(S.usage.by[name]||0)+1;put('p_usage',S.usage);
   return{text:out,stop,inT,outT,via:name};
+}
+
+const MODEL_BAD=/decommission|deprecat|does not exist|not found|no longer|unavailable for free|slug|model_not_found|invalid model|not supported/i;
+const GROQ_FALL=['openai/gpt-oss-120b','qwen/qwen3.6-27b','openai/gpt-oss-20b'];
+async function modelCands(pr,bad){
+  const base=pbase(pr.base),key=pkey(pr),out=[];
+  if(/groq/i.test(base))out.push(...GROQ_FALL);
+  try{
+    const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),8000);
+    const r=await fetch(base+'/models',{headers:key?{authorization:'Bearer '+key}:{},signal:ctl.signal});clearTimeout(to);
+    if(r.ok){
+      const j=await r.json();let ids=(j.data||j.models||[]).map(m=>typeof m==='string'?m:(m.id||m.name)).filter(Boolean);
+      ids=ids.filter(id=>!/whisper|guard|embed|tts|orpheus|speech|vision|image|moderation|rerank|safeguard|ocr|audio/i.test(id));
+      if(/openrouter/i.test(base))ids=ids.filter(id=>/:free$/.test(id));
+      const pref=id=>(/gpt-oss-120b/.test(id)?0:/gpt-oss-20b/.test(id)?1:/llama-3\.3|llama-4/.test(id)?2:/qwen/.test(id)?3:/gemma|mistral|deepseek/.test(id)?4:5);
+      ids.sort((a,b)=>pref(a)-pref(b));out.push(...ids);
+    }
+  }catch(e){}
+  return out.filter((m,i,a)=>m&&m!==bad&&a.indexOf(m)===i).slice(0,5);
+}
+async function aiProv(pr,o){
+  const first=pr.model==='auto-free'?'':migModel(pr);
+  if(pr.model==='auto-free'||first==='auto-free'){
+    const c=await modelCands(pr,'');if(!c.length)throw new AIError((pr.name||'Provider')+': no free model found.');
+    return tryModels(pr,o,c);
+  }
+  try{return await aiProv1(pr,o,first)}
+  catch(e){
+    if(!(e&&(e.status===404||e.status===400)&&MODEL_BAD.test(e.raw||e.message||'')))throw e;
+    const c=await modelCands(pr,first);if(!c.length)throw e;
+    try{return await tryModels(pr,o,c)}catch(x){throw x&&x.status?x:e}
+  }
+}
+async function tryModels(pr,o,c){
+  let last=null;
+  for(const m of c){
+    try{const r=await aiProv1(pr,o,m);pr.model=m;try{put('p_set',S.set)}catch(_){}return r}
+    catch(x){last=x;if(!(x&&(x.status===404||x.status===400)))throw x}
+  }
+  throw last;
 }
 const READ_JOBS=()=>[SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_CARDS];
 const isRead=s=>READ_JOBS().includes(s)||/^You build a compact MEMORY NOTE/.test(s)||/^Reply with the single word/.test(s)||/^You write a short weekly review/.test(s)||/^You read the text of a vocabulary file/.test(s)||/^You read a TD sheet/.test(s)||/^You compare an AI-written lesson/.test(s);
@@ -3661,6 +3705,12 @@ async function claudeGate(o,tried){
   if(a==='sess')claudeSess=Date.now()+30*60000;
   put('p_usage',S.usage);return a;
 }
+
+function sumErrs(list){
+  const g=new Map();
+  list.forEach(x=>{const i=x.indexOf(': ');const n=i>0?x.slice(0,i):'';let m=i>0?x.slice(i+2):x;m=m.replace(n+':','').replace(n,'').replace(/^\s*/,'').replace(/\s+/g,' ').trim();if(m.length>150)m=m.slice(0,147)+'…';const k=m;if(!g.has(k))g.set(k,[]);if(n)g.get(k).push(n)});
+  return [...g].map(([m,ns])=>(ns.length?ns.join(', ')+' — ':'')+m);
+}
 async function aiAuto(o){
   const gk=localStorage.getItem('p_gkey'),ck=localStorage.getItem('p_key');
   const chain=[],skipped=[],txt=textOnly(o);
@@ -3684,9 +3734,8 @@ async function aiAuto(o){
     const name=chain[i][0],isC=!!chain[i][2];
     try{
       if(isC){
-        if(errs.length&&!errs.some(m=>QUOTA.test(m)))throw new AIError(errs.join(' ')+' Claude is only offered when every other API has used up its daily limit.');
         /* nothing else is left: every API above was tried (or could not serve this job) */
-        const why=skipped.concat(errs);
+        const why=sumErrs(skipped.concat(errs));
         if(!chain.slice(0,i).length&&!why.length)why.push('No other AI is set up.');
         await claudeGate(o,why);
       }
@@ -3705,7 +3754,8 @@ async function aiAuto(o){
     }
   }
   if(cut)return cut;
-  throw new AIError(chain.length===1?errs[0].replace(/^[^:]+: /,''):errs.join(' '));
+  const ck2=localStorage.getItem('p_key');
+  throw new AIError(chain.length===1?errs[0].replace(/^[^:]+: /,''):sumErrs(errs).join('\n')+(ck2?'':'\nAdd an Anthropic key in AI settings so Claude can step in (you are asked before each use).'));
 }
 const HOUSE="\n\nHOUSE RULES (they apply on top of everything above; if one conflicts with the requested output format, keep the format):\n1. Stay inside THIS student's course. When a lesson, programme, exam or TD of his is provided, reuse its exact notation, definitions, theorem names and order of chapters; never rely on a result he has not seen yet without proving it or marking it 'admis'.\n2. Calibrate to a real MPSI class at lycée Aux Lazaristes (Lyon): rigorous, proof-oriented, no university-level shortcuts. Difficulty and length must be doable in the stated time.\n3. Anchor everything in the programme: each exercise or question names the chapter or skill it trains. Follow the style and level of his past exams and TDs when you have them. Never invent exercise numbers, pages or teacher remarks.\n4. Accuracy first: recompute every result before writing it, with units when relevant. If something is uncertain, say so instead of inventing.\n5. Pedagogy: one idea per question, rising difficulty, the classic trap flagged where it matters, and methods he can reuse.\n6. Output only what was asked, in the requested format and language, with no preamble or closing remark.";
 function subjCtx(subj){
@@ -6197,7 +6247,7 @@ A.vaddPhoto=async id=>{
 
 /* ================= SETTINGS ================= */
 function icsUrl(){return location.origin+location.pathname.replace(/[^/]*$/,'')+'prepa.ics'}
-const PRESETS=[['Groq','https://api.groq.com/openai/v1','llama-3.3-70b-versatile'],['OpenRouter','https://openrouter.ai/api/v1','meta-llama/llama-3.3-70b-instruct:free'],['Mistral','https://api.mistral.ai/v1','mistral-small-latest'],['Cerebras','https://api.cerebras.ai/v1','llama-3.3-70b']];
+const PRESETS=[['Groq','https://api.groq.com/openai/v1','openai/gpt-oss-120b'],['OpenRouter','https://openrouter.ai/api/v1','auto-free'],['Mistral','https://api.mistral.ai/v1','mistral-small-latest'],['Cerebras','https://api.cerebras.ai/v1','llama-3.3-70b']];
 function provHTML(){
   const L=C.provs();
   const row=(x,i)=>{
@@ -6206,7 +6256,7 @@ function provHTML(){
     '<input class="pv-k" type="password" placeholder="'+(has?'Key saved on this phone — paste to replace':'Paste your API key')+'" autocomplete="off" autocapitalize="off" style="margin-top:8px">'+
     (sp?'':'<details style="margin-top:8px"><summary class="sub" style="cursor:pointer">Address and model</summary><input class="pv-b" placeholder="https://… (address)" value="'+esc(x.base||'')+'" autocapitalize="off" autocomplete="off" spellcheck="false" style="margin-top:6px"><input class="pv-m" placeholder="model name" value="'+esc(x.model||'')+'" autocapitalize="off" autocomplete="off" spellcheck="false" style="margin-top:6px"></details>')+
     '<div class="chips" style="margin-top:8px"><button class="chip '+(x.on!==false?'on':'')+'" data-pa="on" data-pi="'+i+'">'+(x.on!==false?'On':'Paused')+'</button>'+(sp?'':'<button class="chip" data-pa="use" data-pi="'+i+'">'+(x.use==='read'?'Reading jobs only':'Everything')+'</button>')+'<span class="pill">'+(has?'Key ✓':'No key')+'</span></div></div>'};
-  return '<div class="lbl" style="margin-top:6px">AI keys, asked from top to bottom</div><div class="sub" style="margin:2px 0 8px">Aether tries the first one, and if it is out of quota or fails, the next, and so on. Use ▲▼ to change the order. Claude (paid) is always last, only if all the others are out.</div><div id="s-pv">'+L.map(row).join('')+
+  return '<div class="lbl" style="margin-top:6px">AI keys, asked from top to bottom</div><div class="sub" style="margin:2px 0 8px">Aether tries the first one, and if it is out of quota or fails, the next, and so on. Use ▲▼ to change the order. Claude (paid) is always last: whenever the others fail, a button asks you before using it.</div><div id="s-pv">'+L.map(row).join('')+
   '<div class="sub" style="margin-top:8px">Add a provider:</div><div class="chips" style="margin-top:6px">'+PRESETS.map((p,k)=>'<button class="chip" data-pa="add" data-k="'+k+'" data-pi="0">＋ '+p[0]+'</button>').join('')+'</div></div><div class="sub" style="margin:8px 0 10px">Create a free key on each provider\'s website and paste it above. If a provider says “model not found”, open “Address and model” and copy a current free model name from its documentation. Photos and PDFs skip the providers that only read text (Groq, OpenRouter, Mistral, Cerebras) and go to Gemini or Claude. Free open models are weaker than Claude for long exams: keep them on “Reading jobs only” if the quality disappoints. Keys stay on this phone only.</div>';
 }
 function readProvs(){
@@ -6223,7 +6273,7 @@ C.hooks.askClaude=info=>new Promise(res=>{
   const d=$('dlg'),b=$('dbox');
   try{if(C.hooks.notify)C.hooks.notify({type:'claude',title:'Claude needs your OK',body:'Every other AI was tried first. Open Aether to allow or refuse.',key:'claude-ask'})}catch(e){}
   const li=(info.tried||[]).map(x=>'<li>'+esc(x)+'</li>').join('')||'<li>No other AI is set up.</li>';
-  b.innerHTML='<h3>Your free APIs are used up</h3><p>Use Claude for this one job? Every other API was tried first:</p><ul style="margin:6px 0 10px 18px;padding:0;font-size:12.5px;line-height:1.5;color:var(--dim);max-height:30vh;overflow:auto">'+li+'</ul><p style="font-size:12.5px;color:var(--dim)">Claude would use <b>'+esc(info.model)+'</b> · about '+info.est.toLocaleString('en')+' tokens in, up to '+info.max.toLocaleString('en')+' out'+(info.files?' · '+info.files+' picture(s)/page(s)':'')+'. This is paid on your Anthropic account.</p><div class="row2" style="margin-top:12px"><button class="btn" data-r="no">No, stop</button><button class="btn primary" data-r="once">Yes, once</button></div><button class="btn" style="margin-top:8px;width:100%" data-r="sess">Yes · mute 30 min</button>';
+  b.innerHTML='<h3>The free APIs could not do this</h3><p>Use Claude (paid) for this one job? Here is what happened:</p><ul style="margin:6px 0 10px 18px;padding:0;font-size:12.5px;line-height:1.5;color:var(--dim);max-height:30vh;overflow:auto">'+li+'</ul><p style="font-size:12.5px;color:var(--dim)">Claude would use <b>'+esc(info.model)+'</b> · about '+info.est.toLocaleString('en')+' tokens in, up to '+info.max.toLocaleString('en')+' out'+(info.files?' · '+info.files+' picture(s)/page(s)':'')+'. This is paid on your Anthropic account.</p><div class="row2" style="margin-top:12px"><button class="btn" data-r="no">No, stop</button><button class="btn primary" data-r="once">Yes, once</button></div><button class="btn" style="margin-top:8px;width:100%" data-r="sess">Yes · mute 30 min</button>';
   d.classList.add('show');
   b.onclick=e=>{const r=e.target.closest('[data-r]');if(!r)return;d.classList.remove('show');res(r.dataset.r)};
 });
