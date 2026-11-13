@@ -513,7 +513,7 @@ html.covered:not(.locked) #pv-lock>*{visibility:hidden}
 .pv-btn:active{transform:scale(.95)}
 .pv-btn.danger{color:var(--red);border-color:rgba(255,77,66,.35);background:rgba(255,77,66,.08)}
 /* ================= PRÉPA ================= */
-.ptabs{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:0 0 14px;padding:5px;border-radius:22px;border:1px solid var(--line2);background:rgba(12,13,18,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:sticky;top:calc(66px + env(safe-area-inset-top));z-index:30}
+.ptabs{display:block;margin:0 0 14px;padding:5px;border-radius:22px;border:1px solid var(--line2);background:rgba(12,13,18,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:sticky;top:calc(66px + env(safe-area-inset-top));z-index:30}
 .ptabs::-webkit-scrollbar{display:none}
 .ptabs .ptab{position:relative;height:42px;padding:0;display:grid;place-items:center;border-radius:16px;border:1px solid transparent;background:transparent;color:var(--muted);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;transform:none;transition:all .3s var(--spring)}
 .ptab svg{width:24px;height:24px;display:block;overflow:visible}
@@ -859,6 +859,20 @@ textarea::placeholder{color:var(--dim)}
 .pytest{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;padding:3px 0}.pytest.ok span{color:var(--green,#30d158)}.pytest.bad span{color:var(--red,#ff453a)}.pytest code{font:12.5px ui-monospace,Menlo,monospace}.pytest small{width:100%;opacity:.65;font:11.5px ui-monospace,Menlo,monospace;padding-left:20px}
 .pyfb p{margin:6px 0}
 .pybar .btn{width:auto;flex:none;padding:10px 16px;margin:0}.pybar .btn.pri{background:var(--blue,#4d8dff);color:#fff}
+
+/* grouped tabs */
+.pgrp{display:flex;gap:4px;padding:0 0 5px}.pg{position:relative;flex:1;height:34px;border:0;border-radius:13px;background:transparent;color:var(--muted);font-weight:800;font-size:14px;font-family:inherit;padding:0}
+.pg.on{background:var(--text,#fff);color:var(--bg,#000)}.pg.pgx{flex:0 0 38px;font-size:17px}.pg em{position:absolute;top:0;right:2px;font-style:normal;font-size:9px;background:#ff453a;color:#fff;border-radius:99px;padding:1px 4px}
+.prow2{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}.prow2::-webkit-scrollbar{display:none}
+.prow2 .ptab{flex:1 0 auto;min-width:50px;height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0 6px}
+.prow2 .ptab svg{width:22px;height:22px}.prow2 .ptab span{font-size:10px;font-weight:700;line-height:1}
+.tag2{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 4px;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.trow{display:flex;align-items:center;gap:12px;padding:8px 10px;margin:0 0 5px;border-radius:14px;background:var(--card,rgba(255,255,255,.06))}.trow i{width:26px;height:26px;color:var(--tc);display:block}.trow i svg{width:26px;height:26px}.trow i .ac{fill:var(--tc);fill-opacity:.38;stroke:var(--tc)}.trow i .as{stroke:var(--tc)}.trow b{flex:1;font-size:16px}.trow span,.tag2 span:last-child{display:flex;gap:6px}
+/* colles */
+.nxc{display:block;width:100%;text-align:left;margin:0 0 12px;padding:18px;border-radius:24px;border:1px solid color-mix(in srgb,var(--c) 50%,transparent);background:linear-gradient(145deg,color-mix(in srgb,var(--c) 30%,#0b0c12),#0b0c12 80%);color:inherit;font-family:inherit}
+.nxk{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--c)}.nxt{font-size:26px;font-weight:800;margin:4px 0 2px;line-height:1.15}.nxs{opacity:.7;font-size:14.5px}
+.nxb{display:flex;gap:8px;margin-top:14px}.nxb .btn{flex:1;margin:0}.nxe{text-align:center;font-weight:800;font-size:17px;border-style:dashed;color:var(--blue,#4d8dff);background:none}
+.ctiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 6px}.ctiles button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px;border-radius:18px;border:1px solid color-mix(in srgb,var(--c) 40%,transparent);background:color-mix(in srgb,var(--c) 14%,transparent);color:inherit;font:700 12px inherit;font-family:inherit}.ctiles button span{font-size:24px;line-height:1}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
@@ -5579,6 +5593,39 @@ function tab(t){st.tab=t;st.stack=[];render('tab');window.scrollTo(0,0)}
 const TICO={"lcs":['#34c759','<path d="M5 20l3-1 10-10-2-2L6 17z"/><path class="ac" d="M14 7l2 2"/>'],"vcs":['#64d2ff','<circle cx="12" cy="12" r="8"/><path class="ac" d="M15.5 8.5l-2 5-5 2 2-5z"/>'],"mths":['#bf5af2','<path d="M4 18L18 4"/><path d="M4 8h6M7 5v6"/><path class="ac" d="M13 16h6"/>'],"mists":['#ff453a','<path d="M6 4h10l3 3v13H6z"/><path class="ac" d="M9 12h7M9 16h5"/>'],"py":['#ffd60a','<path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/><path class="ac" d="M13.5 5l-3 14"/>'],"work":['#ff9f0a','<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6v3H9z"/><path class="ac" d="M9 12h6M9 16h4"/>'],"tp":['#2dd4bf','<path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 19l-5-10V3"/><path class="ac" d="M7.5 15h9"/>'],"home":["#4d8dff","<rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"13.5\" y=\"3.5\" width=\"7\" height=\"5\" rx=\"2\"/><rect x=\"13.5\" y=\"11.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"3.5\" y=\"15.5\" width=\"7\" height=\"5\" rx=\"2\"/>"],"map":["#2ec4b6","<path d=\"M3.5 6.5l5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2z\"/><path d=\"M9 4.5v13M15 6.5v13\"/><circle class=\"ac\" cx=\"12\" cy=\"11\" r=\"2\"/>"],"lessons":["#ffb703","<path d=\"M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5c-3.5-.5-6.5 0-8.5 1.5z\"/><path d=\"M12 6.5v13\"/><path class=\"as\" d=\"M6 9h3M6 12h3M15 9h3M15 12h3\"/>"],"exams":["#ef476f","<path d=\"M6 3.5h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1z\"/><path d=\"M15 3.5v4h4\"/><path class=\"as\" d=\"M8.5 14.5l2.3 2.3 4.7-4.8\"/>"],"tests":["#f78c40","<circle cx=\"12\" cy=\"13.5\" r=\"7.5\"/><path d=\"M9.5 3h5M12 3v3\"/><path class=\"ac\" d=\"M12 13.5V8.3a5.2 5.2 0 0 1 5.2 5.2z\"/>"],"colles":["#b57bff","<rect class=\"ac\" x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6\"/>"],"td":["#4cc9f0","<rect x=\"5\" y=\"4.5\" width=\"14\" height=\"17\" rx=\"2.5\"/><rect class=\"ac\" x=\"9\" y=\"2.5\" width=\"6\" height=\"3.5\" rx=\"1.2\"/><path d=\"M8.5 11h7M8.5 14.5h7M8.5 18h4\"/>"],"exos":["#ff6b6b","<path d=\"M3.5 10v4M20.5 10v4M8 12h8\"/><rect class=\"ac\" x=\"5\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/><rect class=\"ac\" x=\"16\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/>"],"teach":["#7bd88f","<path class=\"ac\" d=\"M2.5 9.5L12 5l9.5 4.5L12 14z\"/><path d=\"M6.5 11.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2M21.5 9.5V15\"/>"],"grades":["#ffd166","<path d=\"M3.5 20.5h17\"/><rect class=\"ac\" x=\"5\" y=\"12.5\" width=\"3.5\" height=\"8\" rx=\"1\"/><rect class=\"ac\" x=\"10.2\" y=\"8.5\" width=\"3.5\" height=\"12\" rx=\"1\"/><rect class=\"ac\" x=\"15.5\" y=\"4.5\" width=\"3.5\" height=\"16\" rx=\"1\"/>"],"boards":["#5ee0b0","<rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 20.5l2-4.5M16 20.5l-2-4.5\"/><path class=\"as\" d=\"M6.5 12.5l3-4 2.5 3 2.5-4 3 3\"/>"],"cards":["#e56bff","<rect x=\"8.5\" y=\"3.5\" width=\"12\" height=\"15\" rx=\"2\" transform=\"rotate(9 14.5 11)\"/><rect class=\"ac\" x=\"3.5\" y=\"6\" width=\"12\" height=\"15\" rx=\"2\"/><path d=\"M7 11h5M7 14.5h3\"/>"]};
 const tabIco=k=>{const t=TICO[k];return t?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+t[1]+'</svg>':''};
 const TABS=[['home','Overview'],['map','Map'],['lessons','Lessons'],['lcs','Completed'],['vcs','Visual'],['mths','Methods'],['mists','Mistakes'],['cards','Cards'],['py','Python'],['work','Exos & TD'],['tp','TP'],['tests','Tests'],['exams','Exams'],['colles','Colles'],['grades','Grades'],['boards','Boards'],['teach','Teach']];
+
+const TGR=[['start','Start',['home','map','boards']],['learn','Learn',['lessons','lcs','vcs','mths','mists','cards','teach']],['prac','Practice',['py','work','tp','tests']],['eval','Assess',['exams','colles','grades']]];
+const TLAB={home:'Overview',map:'Map',boards:'Boards',lessons:'Lessons',lcs:'Done',vcs:'Visual',mths:'Methods',mists:'Mistakes',cards:'Cards',teach:'Teach',py:'Python',work:'Exos',tp:'TP',tests:'Tests',exams:'Exams',colles:'Colles',grades:'Grades'};
+function tabLayout(){
+  let sv;try{sv=JSON.parse(localStorage.getItem('p_tabord')||'null')}catch(e){sv=null}
+  const all=TABS.map(t=>t[0]),seen=new Set(),out=[];
+  if(Array.isArray(sv))sv.forEach(g=>{const d=TGR.find(x=>x[0]===g[0]);if(!d||!Array.isArray(g[1]))return;const l=g[1].filter(t=>all.includes(t)&&!seen.has(t));l.forEach(t=>seen.add(t));out.push([g[0],d[1],l])});
+  TGR.forEach(d=>{if(!out.find(g=>g[0]===d[0]))out.push([d[0],d[1],[]])});
+  TGR.forEach(d=>d[2].forEach(t=>{if(!seen.has(t)){seen.add(t);out.find(g=>g[0]===d[0])[2].push(t)}}));
+  all.forEach(t=>{if(!seen.has(t))out[0][2].push(t)});
+  return out;
+}
+const tabSaveL=l=>{try{localStorage.setItem('p_tabord',JSON.stringify(l.map(g=>[g[0],g[2]])))}catch(e){}};
+st.gl=st.gl||{};
+function tabsHTML(top){
+  const L=tabLayout().filter(g=>g[2].length),cg=(L.find(g=>g[2].includes(st.tab))||L[0]);if(!cg)return'';
+  st.gl[cg[0]]=st.tab;
+  let h='<div class="pgrp">'+L.map(g=>'<button class="pg'+(g[0]===cg[0]&&!top?' on':'')+'" data-a="pgrp" data-i="'+g[0]+'">'+g[1]+(g[2].includes('cards')&&dueCards().length?'<em>'+dueCards().length+'</em>':'')+'</button>').join('')+'<button class="pg pgx" data-a="tabord" aria-label="Arrange tabs">⇅</button></div>';
+  h+='<div class="prow2">'+cg[2].map(k=>'<button class="ptab '+(st.tab===k&&!top?'on':'')+'" data-a="tab" data-i="'+k+'" aria-label="'+TLAB[k]+'" style="--tc:'+(TICO[k]||['#4d8dff'])[0]+'">'+tabIco(k)+'<span>'+TLAB[k]+'</span>'+(k==='cards'&&dueCards().length?'<em>'+dueCards().length+'</em>':'')+'</button>').join('')+'</div>';
+  return h}
+function tabSheet(){
+  const L=tabLayout();
+  openSheet('<h2 class="sh">Arrange</h2><div class="sub" style="margin-bottom:8px">Move tabs up or down. Crossing the edge of a group moves it to the next group.</div>'+L.map((g,gi)=>'<div class="tag2"><span>'+g[1]+'</span><span><button class="pmini" data-gm="'+gi+'|-1" aria-label="Group up">▲</button><button class="pmini" data-gm="'+gi+'|1" aria-label="Group down">▼</button></span></div>'+(g[2].length?g[2].map((k,ti)=>'<div class="trow" style="--tc:'+(TICO[k]||['#4d8dff'])[0]+'"><i>'+tabIco(k)+'</i><b>'+TLAB[k]+'</b><span><button class="pmini" data-tm="'+gi+'|'+ti+'|-1" aria-label="Up">▲</button><button class="pmini" data-tm="'+gi+'|'+ti+'|1" aria-label="Down">▼</button></span></div>').join(''):'<div class="sub" style="padding:6px 4px">Empty</div>')).join('')+'<button class="btn" id="tb-rs" style="margin-top:12px">Reset order</button>');
+  $('sbody').onclick=e=>{const gm=e.target.closest('[data-gm]'),tm=e.target.closest('[data-tm]'),L2=tabLayout();
+    if(gm){const[a,d]=gm.dataset.gm.split('|').map(Number),b=a+d;if(b<0||b>=L2.length)return;[L2[a],L2[b]]=[L2[b],L2[a]]}
+    else if(tm){const[g,t,d]=tm.dataset.tm.split('|').map(Number),k=L2[g][2][t];L2[g][2].splice(t,1);
+      if(t+d<0){const ng=g-1;if(ng<0){L2[g][2].splice(t,0,k);return}L2[ng][2].push(k)}
+      else if(t+d>L2[g][2].length){const ng=g+1;if(ng>=L2.length){L2[g][2].splice(t,0,k);return}L2[ng][2].unshift(k)}
+      else L2[g][2].splice(t+d,0,k)}
+    else if(e.target.id==='tb-rs'){try{localStorage.removeItem('p_tabord')}catch(x){}tabSheet();render();return}
+    else return;
+    tabSaveL(L2);tabSheet();render();$('sbody').scrollTop=$('sbody').scrollTop};
+}
 function backBar(title,right){return '<div class="pwk" style="margin-bottom:14px"><button data-a="back" aria-label="Back">‹</button><b style="font-size:19px;flex:1;text-align:center;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(title)+'</b>'+(right||'<span style="width:36px"></span>')+'</div>'}
 
 /* ----- OVERVIEW (the calendar itself lives in the Calendar tab) ----- */
@@ -5756,9 +5803,8 @@ function gradeCard(){
 function vExams(){
   const td=iso(),allx=examList(),all=allx.filter(x=>!x.vt);
   const past=all.filter(x=>x.date<=td||S.exams[x.id]),up=all.filter(x=>!past.includes(x)).sort((a,b)=>a.date.localeCompare(b.date));
-  let h='<button class="btn primary" data-a="fault" style="margin:0 0 12px">🎯 DS from my faults</button>';h+=gradeCard()+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ New exam</button>';
+  let h='<button class="btn primary" data-a="fault" style="margin:0 0 12px">🎯 DS from my faults</button>';if(up.length)h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div><span class="sub">'+up.length+'</span></div>'+up.slice(0,4).map(x=>exRow('exams',x)).join('');h+=gradeCard()+mistakeCard()+mockCard()+'<button class="add" data-a="addExam">+ New exam</button>';
   if(past.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Past exams</div></div>'+inFolders('exams',past,x=>(S.exams[x.id]||{}).folder||'',x=>exRow('exams',x))}
-  if(up.length){h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div><span class="sub">'+up.length+'</span></div>'+up.slice(0,4).map(x=>exRow('exams',x)).join('')}
   return h;
 }
 function linkedCard(evIds){
@@ -5781,7 +5827,7 @@ function vTests(){
   const a=g.length?wavg(g,r=>+r.grade):null,todo=past.filter(x=>!(S.exams[x.id]&&S.exams[x.id].grade!=null)).length;
   const row=x=>{const r=S.exams[x.id],e=cal.find(c=>c.id===x.id);return '<button class="prow" style="--c:'+C.sc(x.subj||'ang')+'" data-a="rec" data-i="exams|'+x.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(x.title||'Vocabulary Test')+'</div><div class="s">'+fd(x.date)+(e&&e.time?' · '+e.time+(e.endTime?'–'+e.endTime:''):'')+' · coef '+fcoef(coefOf(Object.assign({cat:'vocab',kind:'exams'},r||{})))+'</div></span>'+(r&&r.grade!=null&&r.grade!==''?gp(r.grade):x.date<=td?'<span class="gpill todo">add grade</span>':'')+'</button>'};
   let h='<div class="card"><div class="cardhead"><div class="lbl">Vocabulary tests</div>'+(a!=null?'<div class="gpill '+gcls(a)+'">avg '+a.toFixed(1)+'/20</div>':'')+'</div><div class="sub">Every Friday · 13:40–13:45 · coefficient 1/3 of the English grade. They are counted apart from exams and colles.'+(todo?'<br><b>'+todo+'</b> to grade':'')+'</div>'+(g.length>1?'<div style="margin-top:10px">'+spark(g.sort((p,q)=>(p.date||'').localeCompare(q.date||'')).map(r=>+r.grade),C.sc('ang'))+'</div>':'')+'</div>';
-  h+='<div class="card"><div class="lbl">Upcoming</div>'+(up.length?up.slice(0,3).map(row).join(''):'<div class="sub">Nothing planned.</div>')+'</div>';
+  h='<div class="card"><div class="lbl">Upcoming</div>'+(up.length?up.slice(0,3).map(row).join(''):'<div class="sub">Nothing planned.</div>')+'</div>'+h;
   h+='<div class="card"><div class="lbl">Past</div>'+(past.length?past.slice(0,16).map(row).join('')+(past.length>16?'<div class="sub">+ '+(past.length-16)+' older in Grades</div>':''):'<div class="sub">No test yet.</div>')+'</div>';
   return h;
 }
@@ -6068,20 +6114,24 @@ function mistakeCard(){
 
 /* ----- COLLES ----- */
 function vColles(){
-  let h='<button class="btn primary" data-a="live" style="margin:0 0 12px">🎙 Colle Live</button><div class="card"><div class="cardhead"><div class="lbl">Programmes de colles</div></div><div class="sub" style="margin:-4px 0 12px">Maths & physics: drop the weekly programme, get a prep sheet built from your lessons.</div>';
-  h+=inFolders('colles',S.progs.slice().sort((a,b)=>b.date.localeCompare(a.date)),p=>p.folder||'',p=>{
+  const td=iso(),dl=d=>Math.round((D(d)-D(td))/864e5),when=d=>{const n=dl(d);return n<=0?'Today':n===1?'Tomorrow':'in '+n+' days'};
+  const cs=cal.filter(e=>e.kind==='colle').map(e=>({id:e.id,subj:e.subj,title:e.title,date:e.date}));
+  Object.values(S.colles).forEach(r=>{if(!cs.find(x=>x.id===r.id))cs.push({id:r.id,subj:r.subj,title:r.title,date:r.date})});cs.sort((a,b)=>b.date.localeCompare(a.date));
+  const pastC=cs.filter(e=>e.date<td||S.colles[e.id]),upC=cs.filter(e=>!pastC.includes(e)).sort((a,b)=>a.date.localeCompare(b.date));
+  const nx=upC[0];let h='';
+  if(nx){const pr=S.progs.filter(p=>p.subj===nx.subj).sort((a,b)=>b.date.localeCompare(a.date))[0],ci=colleInfo(nx.id);
+    h+='<div class="nxc" style="--c:'+C.sc(nx.subj)+'"><div class="nxk">NEXT COLLE · '+when(nx.date)+'</div><div class="nxt">'+esc(nx.title)+'</div><div class="nxs">'+SUBJ[nx.subj].n+' · '+fd(nx.date)+(ci.teacher?' · '+esc(ci.teacher):'')+'</div><div class="nxb">'+(pr?'<button class="btn primary" data-a="prog" data-i="'+pr.id+'">'+(pr.sheetAt?'Prep sheet':'Build prep sheet')+'</button>':'<button class="btn primary" data-a="addProg">＋ Programme</button>')+'<button class="btn" data-a="rec" data-i="colles|'+nx.id+'">Details</button></div></div>'}
+  else h+='<button class="nxc nxe" data-a="addColle">＋ Plan a colle</button>';
+  h+='<div class="ctiles"><button data-a="live" style="--c:#4d8dff"><span>🎙</span>Live</button><button data-a="eng" style="--c:#ff6ec7"><span>🇬🇧</span>English</button><button data-a="addProg" style="--c:#30d158"><span>＋</span>Programme</button><button data-a="addColle" style="--c:#ff9f0a"><span>＋</span>Colle</button></div>';
+  if(upC.length>1)h+='<div class="sec2"><div class="lbl" style="margin:0">Then</div><span class="sub">'+(upC.length-1)+'</span></div>'+upC.slice(1,5).map(e=>exRow('colles',e)).join('');
+  h+='<div class="sec2"><div class="lbl" style="margin:0">Programmes</div><span class="sub">'+S.progs.length+'</span></div>';
+  h+=inFolders('colles',S.progs.slice().sort((a,b)=>(!!a.sheetAt-!!b.sheetAt)||b.date.localeCompare(a.date)),p=>p.folder||'',p=>{
     const r=p.chapters&&p.chapters.length?Math.round(100*p.chapters.filter(c=>c.ready).length/p.chapters.length):null;
     const stt=live['P'+p.id]?'Working…':p.sheetAt?'Sheet ready':p.chapters&&p.chapters.length?'Programme read':p.err?'Failed — open to retry':'Not read yet';
     return '<button class="prow" style="--c:'+C.sc(p.subj)+'" data-a="prog" data-i="'+p.id+'"><i class="dot"></i><span class="m"><div class="t">'+esc(p.title||SUBJ[p.subj].n+' programme')+'</div><div class="s">'+SUBJ[p.subj].n+' · '+fdl(p.date)+' · '+stt+'</div></span>'+(r!=null?'<span class="gpill '+(r>=70?'g-hi':r>=40?'g-mid':'g-lo')+'">'+r+'%</span>':'')+ico.chev+'</button>';
   });
-  h+='<button class="add" data-a="addProg">+ New programme</button></div>';
-  h+='<button class="prow" style="--c:'+C.sc('ang')+'" data-a="eng"><i class="dot"></i><span class="m"><div class="t">English colle prep</div><div class="s">2 topics picked from Meridian + vocabulary & questions</div></span>'+ico.chev+'</button>';
-  const td=iso(),cs=cal.filter(e=>e.kind==='colle').map(e=>({id:e.id,subj:e.subj,title:e.title,date:e.date}));
-  Object.values(S.colles).forEach(r=>{if(!cs.find(x=>x.id===r.id))cs.push({id:r.id,subj:r.subj,title:r.title,date:r.date})});cs.sort((a,b)=>b.date.localeCompare(a.date));
-  const pastC=cs.filter(e=>e.date<=td||S.colles[e.id]),upC=cs.filter(e=>!pastC.includes(e)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
-  h+='<div class="sec2"><div class="lbl" style="margin:0">Colle debriefs</div></div><button class="add" data-a="addColle">+ New colle</button>';
+  h+='<div class="sec2"><div class="lbl" style="margin:0">Debriefs</div><span class="sub">'+pastC.length+'</span></div>';
   h+=pastC.length?inFolders('colles',pastC,e=>(S.colles[e.id]||{}).folder||'',e=>exRow('colles',e)):'<div class="hidecorr" style="padding:14px">After each colle, open it here: grade, what went wrong, what to redo.</div>';
-  if(upC.length)h+='<div class="sec2"><div class="lbl" style="margin:0">Upcoming</div></div>'+upC.map(e=>exRow('colles',e)).join('');
   return h;
 }
 
@@ -6224,7 +6274,7 @@ function render(kind){
   const b=body();if(!b)return;
   const top=st.stack[st.stack.length-1],y=window.scrollY;
   $('ptabs').style.display=top?'none':'';
-  $('ptabs').innerHTML=TABS.map(t=>'<button class="ptab '+(st.tab===t[0]&&!top?'on':'')+'" data-a="tab" data-i="'+t[0]+'" aria-label="'+t[1]+'" title="'+t[1]+'" style="--tc:'+(TICO[t[0]]||['#4d8dff'])[0]+'">'+tabIco(t[0])+(t[0]==='cards'&&dueCards().length?'<em>'+dueCards().length+'</em>':'')+'</button>').join('');
+  $('ptabs').innerHTML=tabsHTML(top);
   let h='';
   if(top){
     const v=top.v;
@@ -6238,7 +6288,7 @@ function render(kind){
   fillBars();
   if(kind==='card')return;
   if(kind==='push'||kind==='pop'||kind==='tab')window.scrollTo(0,0);else if(y)window.scrollTo(0,y);
-  const on=document.querySelector('#ptabs .ptab.on');if(on&&on.scrollIntoView)try{on.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}
+  
 }
 async function post(top){
   const t=++rtok;
@@ -6264,7 +6314,7 @@ async function post(top){
 
 /* ================= ACTIONS ================= */
 const A={};
-A.tab=i=>tab(i);A.back=()=>back();
+A.tab=i=>tab(i);A.pgrp=g=>{const L=tabLayout(),G=L.find(x=>x[0]===g);if(!G||!G[2].length)return;tab(G[2].includes(st.gl[g])?st.gl[g]:G[2][0])};A.tabord=()=>tabSheet();A.back=()=>back();
 A.openCal=()=>show('calendar');
 A.qaLesson=()=>{tab('lessons');A.addLesson()};A.qaProg=()=>{tab('colles');A.addProg()};A.qaVocab=()=>{st.ctab='vocab';tab('cards');A.addVocab()};
 A.settings=()=>settings();
