@@ -1230,9 +1230,9 @@ html.bgp *,html.bgp *::before,html.bgp *::after{animation-play-state:paused!impo
 .hwnote{white-space:pre-wrap;line-height:1.5}.hwcnt{display:flex;align-items:center;gap:10px}.hwcnt .btn{flex:none;width:auto;min-width:44px}.hwclock{font-size:54px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}.hw-s .hwclock{font-size:36px}
 .hwmb{display:flex;align-items:flex-end;gap:5px;height:54px;margin-top:8px}.hwmb i{flex:1;border-radius:5px;background:var(--lime);min-height:3px;opacity:.9}.hwmb i.z{background:var(--line2)}
 
-.tseg{display:flex;gap:8px;align-items:center;margin:0 0 14px}.tseg .seg{flex:1;min-width:0;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:3px;border-radius:16px;background:var(--inset,rgba(120,120,140,.12))}
-.tseg .seg button{all:unset;box-sizing:border-box;text-align:center;padding:10px 2px;border-radius:13px;font-size:13px;font-weight:650;color:var(--muted);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .2s,color .2s}
-.tseg .seg button.on{background:var(--lime);color:#fff;box-shadow:0 6px 16px -6px var(--lime)}
+.tseg{display:flex;gap:8px;align-items:center;margin:0 0 14px}.tseg .tsg{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1.18fr .55fr;gap:2px;padding:3px;border-radius:16px;background:var(--inset,rgba(120,120,140,.12))}
+.tseg .tsg button{all:unset;box-sizing:border-box;text-align:center;padding:10px 2px;border-radius:13px;font-size:13.5px;font-weight:650;color:var(--muted);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .2s,color .2s}
+.tseg .tsg button.on{background:var(--lime);color:#fff;box-shadow:0 6px 16px -6px var(--lime)}
 .tsortb{all:unset;box-sizing:border-box;width:44px;height:44px;border-radius:15px;display:grid;place-items:center;flex:none;background:var(--inset,rgba(120,120,140,.12));color:var(--muted);cursor:pointer}.tsortb.on{color:var(--lime)}
 
 .fseg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:3px;border-radius:16px;background:var(--inset,rgba(120,120,140,.12));margin:0 0 14px}
@@ -2327,7 +2327,7 @@ function rSubjects(anim){
 function tmodeBar(){
   let b=$('tmode');
   if(!b){b=document.createElement('div');b.id='tmode';b.className='tseg';
-    b.innerHTML='<div class="seg"><button data-m="goal">Goals</button><button data-m="sub">Subjects</button><button data-m="rem">Reminders</button></div><button class="tsortb" id="tsortb" aria-label="Sort"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M3.5 16.5 7 20l3.5-3.5M17 20V4M13.5 7.5 17 4l3.5 3.5"/></svg></button>';
+    b.innerHTML='<div class="tsg"><button data-m="goal">🎯 Goals</button><button data-m="sub">📚 Subjects</button><button data-m="rem" aria-label="Reminders" title="Reminders">🔔</button></div><button class="tsortb" id="tsortb" aria-label="Sort"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M3.5 16.5 7 20l3.5-3.5M17 20V4M13.5 7.5 17 4l3.5 3.5"/></svg></button>';
     $('tlbl').before(b);
     b.onclick=e=>{
       if(e.target.closest('#tsortb')){
@@ -3331,6 +3331,7 @@ function fPickTask(){
       const chip=t=>`<button class="chip ${F.taskId===t.id&&!F.ref?'on':''}" data-id="${t.id}" data-v="${esc(t.text)}">${esc(t.text)}</button>`;
       const grp=[...goals.map(g=>({g,l:open.filter(t=>t.gid===g.id)})).filter(x=>x.l.length),{g:null,l:open.filter(t=>!goalOf(t))}].filter(x=>x.l.length);
       body=`<div id="ft-c">${open.length?grp.map(x=>`<div class="ftf" style="display:flex;align-items:center;gap:7px">${x.g?`<i style="width:9px;height:9px;border-radius:50%;background:${x.g.color||'var(--acc)'};flex:none"></i>${esc(x.g.name)}`:'No goal'}<span style="opacity:.5;font-weight:600">${x.l.length}</span></div><div class="chips">${x.l.map(chip).join('')}</div>`).join(''):'<div class="hint">No open task. Add one in Objectives, or type below.</div>'}</div>
+      <div class="ftf" style="margin-top:14px">Subject</div><div class="chips" id="ft-sj">${(window.PC?PC.LSUBJ:[]).map(k=>`<button class="chip ${F.subj===k?'on':''}" data-s="${k}">${esc(PC.SUBJ[k].n)}</button>`).join('')}</div>
       <div class="field" style="margin-top:14px"><label>Or type anything</label><input id="ft-t" maxlength="60" placeholder="e.g. Maths · complexes exercises" value="${F.taskId||F.ref?'':esc(F.task||'')}"></div>
       <button class="btn primary" id="ft-s">Use this</button>`;
     }else{
@@ -3346,26 +3347,28 @@ function fPickTask(){
     if(kind==='task'){
       $('ft-c').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;id=b.dataset.id;txt=b.dataset.v;$('ft-t').value='';$('ft-c').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));vib(10)};
       $('ft-t').oninput=()=>{id='';txt=$('ft-t').value;$('ft-c').querySelectorAll('.chip').forEach(c=>c.classList.remove('on'))};
-      $('ft-s').onclick=()=>{F.ref=null;F.taskId=id;F.task=(txt||'').trim();if(!F.task)F.taskId='';let ch=0;{const tk=id&&tasks.find(x=>x.id===id);if(tk&&taskMin(tk)){if(tk.dur>0)F.cust=tk.dur;else{F.mode=tk.tm;F.cust=0}F.rem=fDur();ch=1}}sv();closeSheet();rFtask();if(ch)fRender(true,true)};
+      let sj=F.subj||'';$('ft-sj').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sj=sj===b.dataset.s?'':b.dataset.s;$('ft-sj').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.s===sj));vib(10)};
+      $('ft-s').onclick=()=>{F.ref=null;F.taskId=id;F.subj=id?'':sj;if(!(txt||'').trim()&&sj&&!id)txt=PC.SUBJ[sj].n;F.task=(txt||'').trim();if(!F.task)F.taskId='';let ch=0;{const tk=id&&tasks.find(x=>x.id===id);if(tk&&taskMin(tk)){if(tk.dur>0)F.cust=tk.dur;else{F.mode=tk.tm;F.cust=0}F.rem=fDur();ch=1}}sv();closeSheet();rFtask();if(ch)fRender(true,true)};
     }else{
       const sb=$('sbody');
-      sb.querySelectorAll('.ftitem').forEach(b=>b.onclick=()=>{const it=P.focusItems(kind==='td'?'td':'prog').find(x=>x.id===b.dataset.id);if(!it)return;F.ref={k:kind==='td'?'td':'prog',id:it.id};F.taskId='';F.task=kind==='td'?'TD · '+it.title:(P.trainName(it.id)||'Colle · '+it.title);sv();vib(12);closeSheet();rFtask()});
+      sb.querySelectorAll('.ftitem').forEach(b=>b.onclick=()=>{const it=P.focusItems(kind==='td'?'td':'prog').find(x=>x.id===b.dataset.id);if(!it)return;F.ref={k:kind==='td'?'td':'prog',id:it.id};F.taskId='';F.subj='';F.task=kind==='td'?'TD · '+it.title:(P.trainName(it.id)||'Colle · '+it.title);sv();vib(12);closeSheet();rFtask()});
     }
-    if($('ft-n'))$('ft-n').onclick=()=>{F.ref=null;F.task='';F.taskId='';sv();closeSheet();rFtask()};
+    if($('ft-n'))$('ft-n').onclick=()=>{F.ref=null;F.task='';F.taskId='';F.subj='';sv();closeSheet();rFtask()};
   };
   draw();
 }
 /* save a focus block to the calendar (start = when it began, end = when it ended) */
 const fTitle=()=>(F.ref&&F.ref.k==='prog'&&window.P&&P.trainName&&P.trainName(F.ref.id))||F.task||'';
 const fCol=()=>{try{if(F.blk&&window.PW){const g=PW.get(F.blk),sj=(g&&g.c.subj)||fSubj();return PW.sc(sj)}}catch(e){}return FROST};
-const fSubj=()=>{try{return window.P&&P.subjOf?P.subjOf(fTitle(),F.ref,F.taskId):''}catch(e){return ''}};
+const fSubj=()=>{try{if(F.subj)return F.subj;return window.P&&P.subjOf?P.subjOf(fTitle(),F.ref,F.taskId):''}catch(e){return ''}};
+const fSubjs=()=>{try{if(F.subj||F.ref||!F.taskId)return undefined;const t=tasks.find(x=>x.id===F.taskId),ss=t?sidsOf(t):[];return ss.length>1?ss.slice():undefined}catch(e){return undefined}};
 function fLog(endMs,mins){
   const tt=fTitle();
   const s=F.start||endMs-mins*60000,date=iso(new Date(s));
   let t1=hm(s),t2=hm(endMs);
   if(iso(new Date(endMs))!==date||tmin(t2)<=tmin(t1))t2=tmin(t1)>=23*60+59?'23:59':fmt(Math.min(24*60-1,tmin(t1)+Math.max(1,mins)));
-  cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:fCol(),kind:'focus'});
-  fhist.push({task:tt||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1,subj:fSubj()});
+  cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+MODES[F.mode].name+' · '+mins+' min',color:fCol(),kind:'focus',subj:fSubj()||undefined});
+  fhist.push({task:tt||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1,subj:fSubj(),subjs:fSubjs()});
   if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,mins);
 }
 function fPauseCheck(){
@@ -3515,7 +3518,7 @@ function fFinish(){setTimeout(()=>{if(cur==='focus')rStats()},600);
   const M=MODES[F.mode];F.status='done';F.rem=0;const EM=Math.max(F.cust||M.min,Math.round(fDur()/60));
   let resc=false;if(F.kind==='focus'){resc=shs.resc&&nowMin()>=1080&&noWorkToday()}
   if(F.kind==='focus'){
-    const tt=fTitle();fhist.push({task:tt||'Focus',min:EM,date:fk(),ts:Date.now(),mode:F.mode,subj:fSubj()});
+    const tt=fTitle();fhist.push({task:tt||'Focus',min:EM,date:fk(),ts:Date.now(),mode:F.mode,subj:fSubj(),subjs:fSubjs()});
     if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,EM);
     {const s=F.start||Date.now()-EM*60000,date=iso(new Date(s)),t1=hm(s);let t2=hm(Date.now());if(iso()!==date||tmin(t2)<=tmin(t1))t2=fmt(Math.min(24*60-1,tmin(t1)+EM));cal.push({id:uid(),title:tt||'Focus session',date,time:t1,endTime:t2,desc:'Focus · '+M.name+' · '+EM+' min',color:fCol(),kind:'focus'})}
     sv();try{window.PW&&PW.focusDone&&PW.focusDone(F.taskId,EM,true)}catch(e){}gain(F.cust?Math.max(5,Math.round(M.xp*F.cust/M.min)):F.mode==='intense'?Math.round(M.xp*1.25):M.xp,null,null,null,fSubj());if(F.mode==='intense')setTimeout(()=>toast('Deep focus: +25% XP 🧠'),900);if(resc)setTimeout(()=>{gain(15,innerWidth/2,innerHeight*.4);toast('🛟 Smallest win: +15 XP')},1500);
@@ -6962,7 +6965,7 @@ const SUBJ_RX=[['maths',/\b(maths?|mathematiques?|alg[eè]bre|analyse)\b/],['phy
 function subjOf(title,ref,taskId){
   try{
     if(ref&&ref.id){const o=ref.k==='td'?S.tds.find(x=>x.id===ref.id):S.progs.find(x=>x.id===ref.id);if(o&&o.subj)return o.subj}
-    if(taskId){const t=tasks.find(x=>x.id===taskId);if(t&&t.lk){const e=cal.find(c=>c.id===t.lk);if(e&&e.subj)return e.subj}}
+    if(taskId){const t=tasks.find(x=>x.id===taskId);const ss=t?sidsOf(t):[];if(ss.length&&SUBJ[ss[0]])return ss[0];if(t&&t.lk){const e=cal.find(c=>c.id===t.lk);if(e&&e.subj)return e.subj}}
     const f=FOLD(title);for(const[k,rx]of SUBJ_RX)if(rx.test(f))return k;
   }catch(_){}
   return '';
@@ -7043,7 +7046,7 @@ A.sgo=i=>{const k=i.indexOf('|'),kind=i.slice(0,k),ref=i.slice(k+1);
 const monOf=d=>{const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
 function focusMin(from,to){
   const by={};let tot=0;
-  (typeof fhist!=='undefined'?fhist:[]).forEach(h=>{const d=h.date||'';if(d<from||d>to)return;const k=h.subj||subjOf(h.task)||'other';by[k]=(by[k]||0)+(h.min||0);tot+=h.min||0});
+  (typeof fhist!=='undefined'?fhist:[]).forEach(h=>{const d=h.date||'';if(d<from||d>to)return;const m=h.min||0;tot+=m;if(h.subjs&&h.subjs.length>1){h.subjs.forEach(z=>{by[z]=(by[z]||0)+m/h.subjs.length})}else{const k=h.subj||subjOf(h.task)||'other';by[k]=(by[k]||0)+m}});
   return{by,tot};
 }
 function evalMass(from,to){
@@ -10304,7 +10307,7 @@ const HW={
     const mx=Math.max(30,...ds.map(d=>hwMin(fk(d))));
     return '<div class="hwwk">'+ds.map((d,i)=>{const k=iso(d),m=hwMin(fk(d)),n=evOn(k).filter(e=>e.kind!=='work').length;return '<div class="'+(k===iso()?'on':'')+'" data-hw="cal"><span>'+'MTWTFSS'[i]+'</span><i style="height:'+Math.max(4,Math.round(m/mx*(sz==='l'?60:38)))+'px;background:'+(it.acc||'var(--acc)')+'"></i><b>'+(n||'')+'</b></div>'}).join('')+'</div><div class="hws">Bars = focus minutes · numbers = events</div>'}},
   balance:{n:'Time by subject',ic:'🥧',d:'Where this week\'s focus time went, by subject.',opts:[],r(it,sz){
-    const lim=shiftD(iso(),-6),by={};fhist.filter(h=>(h.ts?iso(new Date(h.ts)):'')>=lim).forEach(h=>{const s=h.subj||'other';by[s]=(by[s]||0)+(h.min||0)});
+    const lim=shiftD(iso(),-6),by={};fhist.filter(h=>(h.ts?iso(new Date(h.ts)):'')>=lim).forEach(h=>{if(h.subjs&&h.subjs.length>1){h.subjs.forEach(z=>{by[z]=(by[z]||0)+(h.min||0)/h.subjs.length})}else{const s=h.subj||'other';by[s]=(by[s]||0)+(h.min||0)}});
     const e=Object.entries(by).sort((a,b)=>b[1]-a[1]).slice(0,sz==='l'?8:4),tot=e.reduce((s,x)=>s+x[1],0);
     return tot?e.map(([s,m])=>'<div class="hwbar"><span>'+esc(s==='other'?'Other':(SUBJ[s]||{n:s}).n)+'</span><div><i style="width:'+Math.round(m/tot*100)+'%;background:'+(s==='other'?'#8b93a7':C.sc(s))+'"></i></div><b>'+m+'m</b></div>').join(''):'<div class="sub">Do a Focus session with a subject and it shows up here.</div>'}},
   quick:{n:'Quick actions',ic:'⚡',d:'Your own shortcut buttons to any part of the app.',opts:[{k:'set',l:'Buttons',multi:1,c:Object.entries(HW_QUICK).map(([k,v])=>[k,v[0]+' '+v[1]])}],r(it,sz){
