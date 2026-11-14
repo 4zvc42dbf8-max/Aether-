@@ -469,7 +469,7 @@ details.rwrules summary{cursor:pointer;list-style:none}
 .dbox{width:min(86vw,330px);background:linear-gradient(180deg,rgba(255,255,255,.06),transparent),var(--surf2);border:1px solid var(--line2);border-radius:28px;padding:24px 20px 18px;text-align:center;animation:popin .4s var(--spring);box-shadow:0 30px 70px rgba(0,0,0,.7)}
 .dbox h3{font-family:var(--serif);font-variant:small-caps;font-size:23px;margin-bottom:8px}
 .dbox p{color:var(--muted);font-size:14.5px;white-space:pre-line;margin-bottom:6px}
-#toast{position:fixed;left:50%;bottom:calc(98px + env(safe-area-inset-bottom));z-index:700;transform:translate(-50%,30px) scale(.9);opacity:0;pointer-events:none;background:#23262f;border:1px solid var(--line2);padding:11px 18px;border-radius:999px;font-size:14px;font-weight:600;display:flex;gap:14px;align-items:center;box-shadow:0 14px 30px rgba(0,0,0,.6);transition:all .45s var(--spring);white-space:nowrap;max-width:92vw}
+#toast{position:fixed;left:50%;bottom:calc(98px + env(safe-area-inset-bottom));z-index:9000;transform:translate(-50%,30px) scale(.9);opacity:0;pointer-events:none;background:#23262f;border:1px solid var(--line2);padding:11px 18px;border-radius:999px;font-size:14px;font-weight:600;display:flex;gap:14px;align-items:center;box-shadow:0 14px 30px rgba(0,0,0,.6);transition:all .45s var(--spring);white-space:nowrap;max-width:92vw}
 #toast.show{transform:translate(-50%,0) scale(1);opacity:1;pointer-events:auto}
 #toast button{background:none;border:none;color:var(--lime);font-weight:700;font-size:14px}
 #fx{position:fixed;inset:0;z-index:960;pointer-events:none;overflow:hidden}
@@ -8406,7 +8406,7 @@ const pset=o=>js(PSH,Object.assign(pcfg(),o));
 const pUrl=()=>(pcfg().url||'').trim().replace(/\/+$/,'');
 async function pfetch(path,body){
   const c=pcfg(),r=await fetch(pUrl()+path,{method:body?'POST':'GET',headers:Object.assign({'content-type':'application/json'},c.token?{'x-token':c.token}:{}),body:body?JSON.stringify(body):undefined});
-  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('Server answered '+r.status));return j;
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||(j.status?'The push service (Apple) answered '+j.status:'Server answered '+r.status));return j;
 }
 const pU8=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
 const pOk=()=>!!(window.PushManager&&window.Notification&&navigator.serviceWorker);
@@ -8451,7 +8451,7 @@ function pushCard(){
   const c=pcfg(),on=c.on&&pUrl(),ago=c.at?Math.max(0,Math.round((Date.now()-c.at)/6e4)):null;
   let h='<div class="pv-h" style="margin:14px 0 6px">Push · rings with the app closed</div><div class="card" style="padding:12px 14px;margin:0 0 6px">';
   if(!on)h+='<div style="font-size:13.5px;line-height:1.4;margin-bottom:8px">Real notifications on your iPhone at the right time, with Aether closed. Needs a free Cloudflare worker, about 5 minutes once.</div><button class="chip on" data-p="setup">Set up push</button>';
-  else h+='<div style="font-size:13.5px;margin-bottom:8px">'+(c.err?'⚠️ '+esc(c.err):'✅ On · '+(c.n||0)+' notifications scheduled'+(ago!==null?' · synced '+(ago<1?'just now':ago<90?ago+' min ago':Math.round(ago/60)+' h ago'):''))+'</div><div class="chips"><button class="chip" data-p="test">Send a test now</button><button class="chip" data-p="sync">Sync now</button><button class="chip" data-p="setup">Settings</button></div>';
+  else h+='<div style="font-size:13.5px;margin-bottom:8px">'+(c.err?'⚠️ '+esc(c.err):'✅ On · '+(c.n||0)+' notifications scheduled'+(ago!==null?' · synced '+(ago<1?'just now':ago<90?ago+' min ago':Math.round(ago/60)+' h ago'):''))+'</div>'+(c.last?'<div style="font-size:13px;margin:0 0 8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.06)">'+esc(c.last)+'</div>':'')+'<div class="chips"><button class="chip" data-p="test">Send a test now</button><button class="chip" data-p="sync">Sync now</button><button class="chip" data-p="setup">Settings</button></div>';
   return h+'</div>';
 }
 function pushSheet(){
@@ -8478,9 +8478,13 @@ async function pushAct(a,rd){
     if(a==='enable'){const u=(document.getElementById('pu-url').value||'').trim();if(!/^https:\/\//.test(u)){msg('The address must start with https://');return}
       pset({url:u,token:document.getElementById('pu-tok').value.trim()});msg('Connecting…');await pEnable();toast('Push is on');return ntSheet()}
     if(a==='sync'){toast('Syncing…');await pSync(true);toast('Synced');return ntSheet()}
-    if(a==='test'){const s=await pSub(false);if(!s){toast('Not subscribed: open Settings and turn push on');return}await pfetch('/test',{sub:s.toJSON()});toast('Sent: arrives in a few seconds');return}
+    if(a==='test'){const t0=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});pset({last:t0+' · sending the test…'});ntSheet();
+      const reg=await navigator.serviceWorker.ready,s=await reg.pushManager.getSubscription();
+      if(!s){pset({last:t0+' · not subscribed on this phone. Open Settings and turn push on again.'});return ntSheet()}
+      const r=await pfetch('/test',{sub:s.toJSON()});
+      pset({last:t0+' · the push service accepted it (code '+r.status+'). It should appear in a few seconds. Lock the phone and check the Lock Screen. If nothing arrives, tell Claude: it is the service worker or iOS.'});return ntSheet()}
     if(a==='off'){const s=await pSub(false);try{if(s){await pfetch('/unsub',{endpoint:s.endpoint}).catch(()=>{});await s.unsubscribe()}}catch(e){}pset({on:false});toast('Push is off');return ntSheet()}
-  }catch(e){const t=String(e.message||e);pset({err:a==='enable'?'':t});msg(t.length>140?t.slice(0,140):t)}
+  }catch(e){const t=String(e.message||e);if(a==='test'){pset({last:'Test failed: '+t});return ntSheet()}pset({err:a==='enable'?'':t});msg(t.length>140?t.slice(0,140):t)}
 }
 window.PN.push={sheet:pushSheet,pset,pcfg,worker:PUSH_WORKER};
 
