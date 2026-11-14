@@ -8482,7 +8482,7 @@ async function pushAct(a,rd){
       const reg=await navigator.serviceWorker.ready,s=await reg.pushManager.getSubscription();
       if(!s){pset({last:t0+' · not subscribed on this phone. Open Settings and turn push on again.'});return ntSheet()}
       const r=await pfetch('/test',{sub:s.toJSON()});
-      pset({last:t0+' · the push service accepted it (code '+r.status+'). It should appear in a few seconds. Lock the phone and check the Lock Screen. If nothing arrives, tell Claude: it is the service worker or iOS.'});return ntSheet()}
+      pset({last:t0+' · the push service accepted it (code '+r.status+'). Checking that your phone received it…'});ntSheet();const t1=Date.now();setTimeout(async()=>{try{const r=await caches.match('./__lastpush'),v=r?+await r.text():0,ok=v>=t1-3000;pset({last:t0+' · accepted by Apple (201). '+(ok?'Your phone received it ✓. If you saw no banner, check the Lock Screen and the Notification Center.':'Your phone has NOT received it yet. Wait 20 s and press the test again, or tell Claude.')});if(document.getElementById('nt-add'))ntSheet()}catch(e){}},9000);return}
     if(a==='off'){const s=await pSub(false);try{if(s){await pfetch('/unsub',{endpoint:s.endpoint}).catch(()=>{});await s.unsubscribe()}}catch(e){}pset({on:false});toast('Push is off');return ntSheet()}
   }catch(e){const t=String(e.message||e);if(a==='test'){pset({last:'Test failed: '+t});return ntSheet()}pset({err:a==='enable'?'':t});msg(t.length>140?t.slice(0,140):t)}
 }

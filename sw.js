@@ -1,5 +1,5 @@
 // Offline support for Aether. Bump CACHE when you change files to force a refresh.
-const CACHE = 'aether-v127';
+const CACHE = 'aether-v128';
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-180.png", "./icon-192.png", "./icon-512.png"];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(FILES.map(f => c.add(f).catch(() => {})))).then(() => self.skipWaiting()));
@@ -44,12 +44,15 @@ self.addEventListener('fetch', e => {
   );
 });
 
-self.addEventListener('push', e => {{
-  let d = {{}};
-  try {{ d = e.data.json(); }} catch (x) {{ d = {{title: 'Aether', body: e.data ? e.data.text() : ''}}; }}
-  e.waitUntil(self.registration.showNotification(d.title || 'Aether', {{body: d.body || '', tag: d.key || 'aether', renotify: true, icon: 'icon-192.png'}}));
-}});
-self.addEventListener('notificationclick', e => {{
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data.json(); } catch (x) { d = {title: 'Aether', body: e.data ? e.data.text() : ''}; }
+  e.waitUntil(Promise.all([
+    self.registration.showNotification(d.title || 'Aether', {body: d.body || '', tag: d.key || 'aether', renotify: true, icon: 'icon-192.png'}),
+    caches.open(CACHE).then(c => c.put('./__lastpush', new Response(String(Date.now())))).catch(() => {})
+  ]));
+});
+self.addEventListener('notificationclick', e => {
   e.notification.close();
-  e.waitUntil(self.clients.matchAll({{type: 'window', includeUncontrolled: true}}).then(l => {{ for (const c of l) {{ if ('focus' in c) return c.focus(); }} return self.clients.openWindow('./'); }}));
-}});
+  e.waitUntil(self.clients.matchAll({type: 'window', includeUncontrolled: true}).then(l => { for (const c of l) { if ('focus' in c) return c.focus(); } return self.clients.openWindow('./'); }));
+});
