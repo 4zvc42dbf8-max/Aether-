@@ -8134,7 +8134,7 @@ const NTD=()=>({
 });
 function mergeD(d,o){if(!o||typeof o!=='object')return d;Object.keys(d).forEach(k=>{if(o[k]===undefined)return;if(d[k]&&typeof d[k]==='object'&&!Array.isArray(d[k]))mergeD(d[k],o[k]);else if(typeof o[k]===typeof d[k]||Array.isArray(d[k])&&Array.isArray(o[k]))d[k]=o[k]});if(Array.isArray(d.custom)&&Array.isArray(o.custom))d.custom=o.custom.filter(x=>x&&x.title);return d}
 let NT=mergeD(NTD(),ld(NTK,null));
-const ntSave=()=>{try{localStorage.setItem(NTK,JSON.stringify(NT))}catch(e){}};
+const ntSave=()=>{try{localStorage.setItem(NTK,JSON.stringify(NT))}catch(e){}try{if(typeof pSyncSoon==='function')pSyncSoon()}catch(e){}};
 const jl=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
 const js=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const hm=s=>{const m=/^(\d{1,2}):(\d{2})/.exec(s||'');return m?(+m[1])*60+(+m[2]):null};
@@ -8325,12 +8325,13 @@ function ntSheet(sub){
   '<div class="pv-h" style="margin:14px 0 6px">My reminders</div>'+
   (NT.custom.length?NT.custom.map(c=>'<div class="prow" style="--c:var(--acc);cursor:pointer" data-nc="'+c.id+'"><span class="m"><div class="t">'+esc(c.title)+'</div><div class="s">'+(c.date?c.date:(c.days&&c.days.length?c.days.map(d=>DAYN[d]).join(' '):'Every day'))+' · '+c.time+'</div></span><span class="chip '+(c.on===false?'':'on')+'" data-ncx="'+c.id+'">'+(c.on===false?'Off':'On')+'</span></div>').join(''):'<div class="sub">None yet.</div>')+
   '<button class="btn" id="nt-add" style="margin-top:8px">+ Add a reminder</button>'+
-  '<div class="pv-h" style="margin:14px 0 6px">Rings with the app closed</div><div class="chips" style="margin-bottom:8px"><button class="chip on" data-g="ics">Update my alarms · 14 days</button><button class="chip" data-g="icstest">Test: rings in 2 min</button></div><div class="sub" style="margin:0 0 8px">Exports your enabled event / countdown / brief / custom rules as alarms into the iPhone Calendar (re-importing updates, no duplicates).</div><div class="chips" id="nt-ics">'+[7,14,30,60].map(d=>'<button class="chip" data-v="'+d+'">Next '+d+' days</button>').join('')+'</div>'+
+  pushCard()+'<div class="pv-h" style="margin:14px 0 6px">Backup: Calendar alarms</div><div class="chips" style="margin-bottom:8px"><button class="chip on" data-g="ics">Update my alarms · 14 days</button><button class="chip" data-g="icstest">Test: rings in 2 min</button></div><div class="sub" style="margin:0 0 8px">Exports your enabled event / countdown / brief / custom rules as alarms into the iPhone Calendar (re-importing updates, no duplicates).</div><div class="chips" id="nt-ics">'+[7,14,30,60].map(d=>'<button class="chip" data-v="'+d+'">Next '+d+' days</button>').join('')+'</div>'+
   '<button class="btn danger" id="nt-reset" style="margin-top:14px">Reset</button>';
   openSheet(h);
   const rd=()=>ntSheet(sub);
   const body=document.getElementById('sbody');
   body.onclick=async ev=>{
+    const pp=ev.target.closest('[data-p]');if(pp){pushAct(pp.dataset.p);return}
     const g=ev.target.closest('[data-g]');
     if(g){const a=g.dataset.g;
       if(a==='on'){NT.on=!NT.on;ntSave();rd()}
@@ -8395,6 +8396,93 @@ function inboxSheet(){
   const x=inbox();x.forEach(i=>i.r=1);js(NTI,x);badge();
 }
 window.PN={open:()=>ntSheet(),tick,deliver,occs,buildIcs,get cfg(){return NT},inbox,start:startNT,reset:()=>{NT=NTD();ntSave()},setLast:t=>{lastRun=t}};
+
+
+/* ---- Web Push: notifications with Aether CLOSED, through your own Cloudflare worker ---- */
+const PUSH_WORKER="/* Aether push worker: sends your Aether notifications to your iPhone even when the app is closed.\n   Setup: Cloudflare dashboard > Workers & Pages > Create > paste this code > Deploy.\n   Then: Settings > Bindings > add a KV namespace with variable name KV.\n         Settings > Triggers > add a Cron trigger: * * * * *\n   Optional: Settings > Variables > TOKEN = any secret word (then type the same word in Aether). */\nconst enc=new TextEncoder();\nconst b64u=b=>{let s='';new Uint8Array(b).forEach(c=>s+=String.fromCharCode(c));return btoa(s).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'')};\nconst unb64u=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};\nconst cat=(...a)=>{const o=new Uint8Array(a.reduce((x,y)=>x+y.length,0));let i=0;a.forEach(y=>{o.set(y,i);i+=y.length});return o};\nasync function hkdf(salt,ikm,info,len){const k=await crypto.subtle.importKey('raw',ikm,'HKDF',false,['deriveBits']);return new Uint8Array(await crypto.subtle.deriveBits({name:'HKDF',hash:'SHA-256',salt,info},k,len*8))}\n/* RFC 8291 (aes128gcm) */\nexport async function encrypt(sub,text,o){\n  o=o||{};const ua=unb64u(sub.keys.p256dh),auth=unb64u(sub.keys.auth);\n  const as=o.as||await crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveBits']);\n  const asPub=new Uint8Array(await crypto.subtle.exportKey('raw',as.publicKey));\n  const uaKey=await crypto.subtle.importKey('raw',ua,{name:'ECDH',namedCurve:'P-256'},false,[]);\n  const secret=new Uint8Array(await crypto.subtle.deriveBits({name:'ECDH',public:uaKey},as.privateKey,256));\n  const salt=o.salt||crypto.getRandomValues(new Uint8Array(16));\n  const ikm=await hkdf(auth,secret,cat(enc.encode('WebPush: info\\0'),ua,asPub),32);\n  const cek=await hkdf(salt,ikm,enc.encode('Content-Encoding: aes128gcm\\0'),16);\n  const nonce=await hkdf(salt,ikm,enc.encode('Content-Encoding: nonce\\0'),12);\n  const key=await crypto.subtle.importKey('raw',cek,'AES-GCM',false,['encrypt']);\n  const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:nonce},key,cat(enc.encode(text),new Uint8Array([2]))));\n  return cat(salt,new Uint8Array([0,0,16,0]),new Uint8Array([asPub.length]),asPub,ct);\n}\nasync function vapid(env){\n  let j=await env.KV.get('vapid','json');\n  if(!j){const k=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign']);\n    j={priv:await crypto.subtle.exportKey('jwk',k.privateKey),pub:b64u(await crypto.subtle.exportKey('raw',k.publicKey))};await env.KV.put('vapid',JSON.stringify(j))}\n  return j;\n}\nasync function jwt(env,aud){\n  const v=await vapid(env),key=await crypto.subtle.importKey('jwk',v.priv,{name:'ECDSA',namedCurve:'P-256'},false,['sign']);\n  const h=b64u(enc.encode('{\"typ\":\"JWT\",\"alg\":\"ES256\"}')),c=b64u(enc.encode(JSON.stringify({aud,exp:Math.floor(Date.now()/1e3)+43200,sub:env.SUBJECT||'mailto:aether@example.com'})));\n  const sig=await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},key,enc.encode(h+'.'+c));\n  return h+'.'+c+'.'+b64u(sig);\n}\nasync function send(env,sub,msg){\n  const aud=new URL(sub.endpoint).origin,v=await vapid(env);\n  return fetch(sub.endpoint,{method:'POST',headers:{Authorization:'vapid t='+await jwt(env,aud)+', k='+v.pub,'Content-Encoding':'aes128gcm','Content-Type':'application/octet-stream',TTL:'900',Urgency:'high'},body:await encrypt(sub,JSON.stringify(msg))});\n}\nconst OK=/^https:\\/\\/([a-z0-9.-]+\\.)?(push\\.apple\\.com|googleapis\\.com|mozilla\\.com|windows\\.com|notify\\.windows\\.com)\\//;\nconst CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'content-type,x-token','Access-Control-Allow-Methods':'GET,POST,OPTIONS'};\nconst J=(o,s)=>new Response(JSON.stringify(o),{status:s||200,headers:Object.assign({'content-type':'application/json'},CORS)});\nconst id=async u=>b64u(await crypto.subtle.digest('SHA-256',enc.encode(u))).slice(0,16);\nconst load=async env=>(await env.KV.get('db','json'))||{subs:{}};\nexport default{\n  async fetch(req,env){\n    if(req.method==='OPTIONS')return new Response(null,{headers:CORS});\n    const u=new URL(req.url);\n    if(env.TOKEN&&req.headers.get('x-token')!==env.TOKEN)return J({error:'token'},401);\n    if(u.pathname==='/vapid')return J({key:(await vapid(env)).pub});\n    if(u.pathname==='/sync'&&req.method==='POST'){\n      const b=await req.json(),s=b.sub;\n      if(!s||!s.endpoint||!OK.test(s.endpoint)||!s.keys)return J({error:'bad subscription'},400);\n      const db=await load(env),k=await id(s.endpoint);\n      if(!db.subs[k]&&Object.keys(db.subs).length>=5)return J({error:'too many devices'},429);\n      db.subs[k]={sub:s,items:(b.items||[]).slice(0,500).map(x=>({k:String(x.k).slice(0,80),at:+x.at,t:String(x.t).slice(0,120),b:String(x.b||'').slice(0,240)})),upd:Date.now()};\n      await env.KV.put('db',JSON.stringify(db));return J({ok:1,n:db.subs[k].items.length});\n    }\n    if(u.pathname==='/unsub'&&req.method==='POST'){const b=await req.json(),db=await load(env);delete db.subs[await id(b.endpoint||'')];await env.KV.put('db',JSON.stringify(db));return J({ok:1})}\n    if(u.pathname==='/test'&&req.method==='POST'){const b=await req.json(),r=await send(env,b.sub,{title:'Aether push works',body:'You will get notifications with the app closed.',key:'test'+Date.now()});return J({status:r.status},r.ok?200:502)}\n    return new Response('Aether push worker is running.',{headers:CORS});\n  },\n  async scheduled(ev,env){\n    const db=await load(env),now=Date.now();let dirty=false;\n    for(const [k,d] of Object.entries(db.subs)){\n      const due=d.items.filter(x=>x.at<=now&&x.at>now-15*6e4),keep=d.items.filter(x=>x.at>now);\n      if(!due.length&&keep.length===d.items.length)continue;\n      for(const x of due){\n        try{const r=await send(env,d.sub,{title:x.t,body:x.b,key:x.k});if(r.status===404||r.status===410){delete db.subs[k];break}}catch(e){}\n      }\n      if(db.subs[k])d.items=keep;dirty=true;\n    }\n    if(dirty)await env.KV.put('db',JSON.stringify(db));\n  }\n};\n";
+const PSH='p_push';
+const pcfg=()=>jl(PSH,{});
+const pset=o=>js(PSH,Object.assign(pcfg(),o));
+const pUrl=()=>(pcfg().url||'').trim().replace(/\/+$/,'');
+async function pfetch(path,body){
+  const c=pcfg(),r=await fetch(pUrl()+path,{method:body?'POST':'GET',headers:Object.assign({'content-type':'application/json'},c.token?{'x-token':c.token}:{}),body:body?JSON.stringify(body):undefined});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('Server answered '+r.status));return j;
+}
+const pU8=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+const pOk=()=>!!(window.PushManager&&window.Notification&&navigator.serviceWorker);
+async function pSub(make,key){
+  const reg=await navigator.serviceWorker.ready;let sub=await reg.pushManager.getSubscription();
+  if(sub&&key&&pcfg().key&&pcfg().key!==key){await sub.unsubscribe();sub=null}
+  if(!sub&&make)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pU8(key)});
+  return sub;
+}
+async function pEnable(){
+  if(!pUrl())throw new Error('Paste your worker address first');
+  if(!pOk())throw new Error('Open Aether from the Home Screen icon (iOS 16.4 or later)');
+  if(await Notification.requestPermission()!=='granted')throw new Error('Notifications are not allowed: iOS Settings › Notifications › Aether');
+  const {key}=await pfetch('/vapid');
+  await pSub(true,key);pset({on:true,key,h:'',at:0});
+  if(!NT.on){NT.on=true;ntSave()}
+  await pSync(true);
+}
+async function pSync(force){
+  const c=pcfg();if(!c.on||!pUrl()||!NT.on||!pOk())return;
+  if(!force&&Date.now()-(c.at||0)<20*6e4)return;
+  const sub=await pSub(false);if(!sub)return;
+  const now=Date.now(),items=[];
+  occs(now,now+7*864e5).forEach(o=>{
+    if(inQuiet(o.at))return;
+    let b=o.body;if(o.cond){try{b=o.cond()}catch(e){b=null}if(b==null)return}
+    items.push({k:o.key,at:o.at,t:o.title,b:b||''});
+  });
+  items.sort((a,b)=>a.at-b.at);items.length=Math.min(items.length,400);
+  const h=String(items.length)+'|'+items.map(x=>x.k+x.at+x.t+x.b).join('').length+'|'+items.slice(0,40).map(x=>x.k+x.at).join('');
+  if(!force&&h===c.h&&Date.now()-(c.at||0)<6*36e5)return;
+  const r=await pfetch('/sync',{sub:sub.toJSON(),items});
+  pset({h,at:Date.now(),n:r.n,err:''});
+}
+let _pst=null;
+function pSyncSoon(){if(!pcfg().on)return;clearTimeout(_pst);_pst=setTimeout(()=>pSync(true).catch(e=>pset({err:String(e.message||e)})),3000)}
+function pAuto(){pSync(false).catch(e=>pset({err:String(e.message||e)}))}
+setTimeout(pAuto,4000);setInterval(()=>{if(!document.hidden)pAuto()},5*6e4);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(pAuto,1500)});
+
+function pushCard(){
+  const c=pcfg(),on=c.on&&pUrl(),ago=c.at?Math.max(0,Math.round((Date.now()-c.at)/6e4)):null;
+  let h='<div class="pv-h" style="margin:14px 0 6px">Push · rings with the app closed</div><div class="card" style="padding:12px 14px;margin:0 0 6px">';
+  if(!on)h+='<div style="font-size:13.5px;line-height:1.4;margin-bottom:8px">Real notifications on your iPhone at the right time, with Aether closed. Needs a free Cloudflare worker, about 5 minutes once.</div><button class="chip on" data-p="setup">Set up push</button>';
+  else h+='<div style="font-size:13.5px;margin-bottom:8px">'+(c.err?'⚠️ '+esc(c.err):'✅ On · '+(c.n||0)+' notifications scheduled'+(ago!==null?' · synced '+(ago<1?'just now':ago<90?ago+' min ago':Math.round(ago/60)+' h ago'):''))+'</div><div class="chips"><button class="chip" data-p="test">Send a test now</button><button class="chip" data-p="sync">Sync now</button><button class="chip" data-p="setup">Settings</button></div>';
+  return h+'</div>';
+}
+function pushSheet(){
+  const c=pcfg(),st=(a,b)=>'<div style="display:flex;gap:10px;margin:8px 0;align-items:flex-start"><b style="flex:none;width:24px;height:24px;border-radius:50%;background:var(--acc,#6aa8ff);color:#000;display:grid;place-items:center;font-size:13px">'+a+'</b><span style="font-size:13.5px;line-height:1.4">'+b+'</span></div>';
+  openSheet('<h2 class="sh">Push notifications</h2><div class="hint" style="text-align:left;margin:0 0 6px">A tiny worker on your own free Cloudflare account sends your Aether notifications to your iPhone, even when the app is closed. It only holds your notification times and titles.</div>'+
+  st(1,'Open <b>dash.cloudflare.com</b> in Safari and create a free account.')+
+  st(2,'<b>Workers &amp; Pages › Create › Start with Hello World › Deploy</b>, then <b>Edit code</b>.')+
+  st(3,'Select all the code, delete it, and paste the code below. Press <b>Deploy</b>.<br><button class="chip on" data-p="copy" style="margin-top:6px">Copy the worker code</button>')+
+  st(4,'Worker <b>Settings › Bindings › Add › KV namespace</b>. Create one, and set the variable name to <b>KV</b> (capital letters).')+
+  st(5,'<b>Settings › Triggers › Add Cron Trigger</b>: <code>* * * * *</code> (every minute).')+
+  st(6,'Optional but recommended: <b>Settings › Variables › TOKEN</b> = any secret word. Type the same word below.')+
+  st(7,'Paste the worker address (it ends with <b>.workers.dev</b>) and press <b>Turn on</b>. iOS then asks to allow notifications.')+
+  '<div class="field"><label>Worker address</label><input id="pu-url" placeholder="https://aether-push.yourname.workers.dev" value="'+esc(c.url||'')+'" autocapitalize="off" autocorrect="off"></div>'+
+  '<div class="field"><label>Secret word (if you set one)</label><input id="pu-tok" type="password" autocapitalize="off" value="'+esc(c.token||'')+'"></div>'+
+  '<div class="chips"><button class="chip on" data-p="enable">Turn on</button>'+(c.on?'<button class="chip" data-p="off">Turn off</button>':'')+'<button class="chip" data-p="back">Back</button></div><div class="hint" id="pu-msg" style="text-align:left;margin-top:8px">Push only works when Aether is opened from its Home Screen icon.</div>');
+  document.getElementById('sbody').onclick=async ev=>{const b=ev.target.closest('[data-p]');if(b)pushAct(b.dataset.p)};
+}
+async function pushAct(a,rd){
+  const msg=t=>{const m=document.getElementById('pu-msg');if(m)m.textContent=t;else toast(t)};
+  try{
+    if(a==='setup')return pushSheet();
+    if(a==='back')return ntSheet();
+    if(a==='copy'){await navigator.clipboard.writeText(PUSH_WORKER);toast('Worker code copied');return}
+    if(a==='enable'){const u=(document.getElementById('pu-url').value||'').trim();if(!/^https:\/\//.test(u)){msg('The address must start with https://');return}
+      pset({url:u,token:document.getElementById('pu-tok').value.trim()});msg('Connecting…');await pEnable();toast('Push is on');return ntSheet()}
+    if(a==='sync'){toast('Syncing…');await pSync(true);toast('Synced');return ntSheet()}
+    if(a==='test'){const s=await pSub(false);if(!s){toast('Not subscribed: open Settings and turn push on');return}await pfetch('/test',{sub:s.toJSON()});toast('Sent: arrives in a few seconds');return}
+    if(a==='off'){const s=await pSub(false);try{if(s){await pfetch('/unsub',{endpoint:s.endpoint}).catch(()=>{});await s.unsubscribe()}}catch(e){}pset({on:false});toast('Push is off');return ntSheet()}
+  }catch(e){const t=String(e.message||e);pset({err:a==='enable'?'':t});msg(t.length>140?t.slice(0,140):t)}
+}
+window.PN.push={sheet:pushSheet,pset,pcfg,worker:PUSH_WORKER};
 
 /* ================= v65: IMPORT ANYTHING =================
    One door for every file: backups (merge or replace), calendars (.ics), spreadsheets (.csv),
