@@ -889,6 +889,25 @@ textarea::placeholder{color:var(--dim)}
 .pytp{padding:11px 14px;margin:0 0 5px;border-radius:14px;background:var(--card,rgba(255,255,255,.06));font-size:14.5px}
 .pytools{display:flex;gap:8px;margin:0 0 12px}.pytools .pysbx{margin:0;flex:1;justify-content:center}.pytools .pysbx small{display:none}
 
+/* Home block icon chips */
+.hico{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:9px;margin-right:9px;background:color-mix(in srgb,var(--c,#6aa8ff) 17%,transparent);color:var(--c,#6aa8ff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c,#6aa8ff) 24%,transparent)}
+.hico svg{width:16px;height:16px;fill:currentColor}
+.lbl.hlb{display:flex;align-items:center}
+.hicob{display:inline-grid;place-items:center;flex:none}
+.hicob .hico{width:40px;height:40px;border-radius:13px;margin:0 12px 0 0}
+.hicob .hico svg{width:23px;height:23px}
+#xmcard .xmh .hicob .hico{width:34px;height:34px;margin-right:10px}
+#tpcard .hicob .hico{width:38px;height:38px;margin-right:2px}
+
+/* Settings rows */
+.pv-g .pv-btn.pvx::before{display:none}
+.hico.pvi{width:32px;height:32px;border-radius:10px;margin:0 12px 0 0}
+.hico.pvi svg{width:19px;height:19px}
+.pv-g .pv-btn.pvx{font-size:15.5px;gap:0;line-height:1.25}
+.pv-g .pv-btn.pvx small{flex:0 1 42%;min-width:0;line-height:1.25;padding-left:8px}
+.pv-g{border-radius:20px;overflow:hidden}
+.pv-h{margin:22px 4px 8px}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 
@@ -8398,6 +8417,43 @@ function inboxSheet(){
 window.PN={open:()=>ntSheet(),tick,deliver,occs,buildIcs,get cfg(){return NT},inbox,start:startNT,reset:()=>{NT=NTD();ntSave()},setLast:t=>{lastRun=t}};
 
 
+/* ---- icon chip on every Home block ---- */
+const HICO={
+  'today':['calendar-check','#6aa8ff'],'objectives':['format-list-checks','#34d399'],'week plan':['calendar-star','#a78bfa'],
+  'this week':['trophy','#fbbf24'],'tomorrow':['moon-waning-crescent','#818cf8'],'prépa':['school','#30d158'],'prepa':['school','#30d158'],
+  'how was your day?':['emoticon-happy-outline','#f59e0b'],'daily review':['notebook-edit','#38bdf8'],'journal':['notebook','#fb923c'],
+  'stats':['chart-bar','#22d3ee'],'lazy day':['bed','#94a3b8'],'happy hour':['party-popper','#f472b6'],'smallest win':['flag-variant','#f87171']
+};
+const hicoEl=(n,c)=>{const s=document.createElement('span');s.className='hico';s.style.setProperty('--c',c);s.innerHTML=(typeof icoHTML==='function'?icoHTML('m:'+n,16):'');return s};
+const EMO=/^[\p{Extended_Pictographic}\uFE0F\u200d\s]+/u;
+function homeIcons(){
+  const h=document.getElementById('home');if(!h)return;
+  h.querySelectorAll('.card .lbl').forEach(l=>{
+    if(l.closest('#tpcard'))return;
+    if(l.classList.contains('hlb')&&l.firstElementChild&&l.firstElementChild.classList.contains('hico'))return;
+    const t=l.textContent.replace(EMO,'').trim().toLowerCase(),m=HICO[t];if(!m)return;
+    const fn=l.firstChild;if(fn&&fn.nodeType===3)fn.nodeValue=fn.nodeValue.replace(EMO,'');
+    l.classList.add('hlb');l.insertBefore(hicoEl(m[0],m[1]),l.firstChild);
+  });
+  /* the three feature cards that carried a plain emoji */
+  const sw=(sel,n,c)=>{const e=h.querySelector(sel);if(e&&!e.dataset.hi){e.dataset.hi=1;e.classList.add('hicob');e.innerHTML='';e.appendChild(hicoEl(n,c))}};
+  sw('#rxcard .rxi','leaf','#34d399');sw('#xmcard .xmh .ic','school','#a78bfa');
+  const tm=h.querySelector('#tpcard .tmr>span');if(tm&&!tm.dataset.hi){tm.dataset.hi=1;tm.className='hicob';tm.removeAttribute('style');tm.innerHTML='';tm.appendChild(hicoEl('moon-waning-crescent','#818cf8'))}
+}
+(function(){let q=0;const run=()=>{q=0;try{homeIcons()}catch(e){}};
+  const go=()=>{if(!q)q=requestAnimationFrame(run)};
+  const h=document.getElementById('home');if(!h){document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{const x=document.getElementById('home');if(x){new MutationObserver(go).observe(x,{childList:true,subtree:true});go()}},200));return}
+  new MutationObserver(go).observe(h,{childList:true,subtree:true});go();
+})();
+
+/* ---- Settings rows: tinted icon chips instead of emoji ---- */
+const PVIC={'pv-home':['puzzle','#a78bfa'],'pv-opal':['shield-check','#60a5fa'],'pv-app':['cellphone','#34d399'],'pv-ck':['sleep','#818cf8'],'pv-vl':['television','#f87171'],'pv-rlx':['leaf','#4ade80'],
+  'pv-notif':['bell','#fbbf24'],'pv-studio':['star-four-points','#f472b6'],'pv-wk':['calendar-star','#a78bfa'],'pv-hub':['folder-open','#38bdf8'],'pv-ai':['robot','#22d3ee'],
+  'pv-setpin':['lock','#94a3b8'],'pv-rmpin':['lock-open','#f87171'],'pv-snaps':['database','#fb923c'],'pv-export':['file-document','#34d399'],'pv-import':['file-document-edit','#60a5fa']};
+function pvIcons(){Object.keys(PVIC).forEach(id=>{const b=document.getElementById(id);if(!b||b.querySelector('.hico'))return;const m=PVIC[id],c=hicoEl(m[0],m[1]);c.classList.add('pvi');b.classList.add('pvx');b.insertBefore(c,b.firstChild)})}
+setTimeout(pvIcons,300);setInterval(pvIcons,1500);
+
+
 /* ---- Web Push: notifications with Aether CLOSED, through your own Cloudflare worker ---- */
 const PUSH_WORKER="/* Aether push worker: sends your Aether notifications to your iPhone even when the app is closed.\n   Setup: Cloudflare dashboard > Workers & Pages > Create > paste this code > Deploy.\n   Then: Settings > Bindings > add a KV namespace with variable name KV.\n         Settings > Triggers > add a Cron trigger: * * * * *\n   Optional: Settings > Variables > TOKEN = any secret word (then type the same word in Aether). */\nconst enc=new TextEncoder();\nconst b64u=b=>{let s='';new Uint8Array(b).forEach(c=>s+=String.fromCharCode(c));return btoa(s).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'')};\nconst unb64u=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};\nconst cat=(...a)=>{const o=new Uint8Array(a.reduce((x,y)=>x+y.length,0));let i=0;a.forEach(y=>{o.set(y,i);i+=y.length});return o};\nasync function hkdf(salt,ikm,info,len){const k=await crypto.subtle.importKey('raw',ikm,'HKDF',false,['deriveBits']);return new Uint8Array(await crypto.subtle.deriveBits({name:'HKDF',hash:'SHA-256',salt,info},k,len*8))}\n/* RFC 8291 (aes128gcm) */\nexport async function encrypt(sub,text,o){\n  o=o||{};const ua=unb64u(sub.keys.p256dh),auth=unb64u(sub.keys.auth);\n  const as=o.as||await crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveBits']);\n  const asPub=new Uint8Array(await crypto.subtle.exportKey('raw',as.publicKey));\n  const uaKey=await crypto.subtle.importKey('raw',ua,{name:'ECDH',namedCurve:'P-256'},false,[]);\n  const secret=new Uint8Array(await crypto.subtle.deriveBits({name:'ECDH',public:uaKey},as.privateKey,256));\n  const salt=o.salt||crypto.getRandomValues(new Uint8Array(16));\n  const ikm=await hkdf(auth,secret,cat(enc.encode('WebPush: info\\0'),ua,asPub),32);\n  const cek=await hkdf(salt,ikm,enc.encode('Content-Encoding: aes128gcm\\0'),16);\n  const nonce=await hkdf(salt,ikm,enc.encode('Content-Encoding: nonce\\0'),12);\n  const key=await crypto.subtle.importKey('raw',cek,'AES-GCM',false,['encrypt']);\n  const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:nonce},key,cat(enc.encode(text),new Uint8Array([2]))));\n  return cat(salt,new Uint8Array([0,0,16,0]),new Uint8Array([asPub.length]),asPub,ct);\n}\nasync function vapid(env){\n  let j=await env.KV.get('vapid','json');\n  if(!j){const k=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign']);\n    j={priv:await crypto.subtle.exportKey('jwk',k.privateKey),pub:b64u(await crypto.subtle.exportKey('raw',k.publicKey))};await env.KV.put('vapid',JSON.stringify(j))}\n  return j;\n}\nasync function jwt(env,aud){\n  const v=await vapid(env),key=await crypto.subtle.importKey('jwk',v.priv,{name:'ECDSA',namedCurve:'P-256'},false,['sign']);\n  const h=b64u(enc.encode('{\"typ\":\"JWT\",\"alg\":\"ES256\"}')),c=b64u(enc.encode(JSON.stringify({aud,exp:Math.floor(Date.now()/1e3)+43200,sub:env.SUBJECT||'mailto:aether@example.com'})));\n  const sig=await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},key,enc.encode(h+'.'+c));\n  return h+'.'+c+'.'+b64u(sig);\n}\nasync function send(env,sub,msg){\n  const aud=new URL(sub.endpoint).origin,v=await vapid(env);\n  return fetch(sub.endpoint,{method:'POST',headers:{Authorization:'vapid t='+await jwt(env,aud)+', k='+v.pub,'Content-Encoding':'aes128gcm','Content-Type':'application/octet-stream',TTL:'900',Urgency:'high'},body:await encrypt(sub,JSON.stringify(msg))});\n}\nconst OK=/^https:\\/\\/([a-z0-9.-]+\\.)?(push\\.apple\\.com|googleapis\\.com|mozilla\\.com|windows\\.com|notify\\.windows\\.com)\\//;\nconst CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'content-type,x-token','Access-Control-Allow-Methods':'GET,POST,OPTIONS'};\nconst J=(o,s)=>new Response(JSON.stringify(o),{status:s||200,headers:Object.assign({'content-type':'application/json'},CORS)});\nconst id=async u=>b64u(await crypto.subtle.digest('SHA-256',enc.encode(u))).slice(0,16);\nconst load=async env=>(await env.KV.get('db','json'))||{subs:{}};\nexport default{\n  async fetch(req,env){\n    if(req.method==='OPTIONS')return new Response(null,{headers:CORS});\n    const u=new URL(req.url);\n    if(env.TOKEN&&req.headers.get('x-token')!==env.TOKEN)return J({error:'token'},401);\n    if(u.pathname==='/vapid')return J({key:(await vapid(env)).pub});\n    if(u.pathname==='/sync'&&req.method==='POST'){\n      const b=await req.json(),s=b.sub;\n      if(!s||!s.endpoint||!OK.test(s.endpoint)||!s.keys)return J({error:'bad subscription'},400);\n      const db=await load(env),k=await id(s.endpoint);\n      if(!db.subs[k]&&Object.keys(db.subs).length>=5)return J({error:'too many devices'},429);\n      db.subs[k]={sub:s,items:(b.items||[]).slice(0,500).map(x=>({k:String(x.k).slice(0,80),at:+x.at,t:String(x.t).slice(0,120),b:String(x.b||'').slice(0,240)})),upd:Date.now()};\n      await env.KV.put('db',JSON.stringify(db));return J({ok:1,n:db.subs[k].items.length});\n    }\n    if(u.pathname==='/unsub'&&req.method==='POST'){const b=await req.json(),db=await load(env);delete db.subs[await id(b.endpoint||'')];await env.KV.put('db',JSON.stringify(db));return J({ok:1})}\n    if(u.pathname==='/test'&&req.method==='POST'){const b=await req.json(),r=await send(env,b.sub,{title:'Aether push works',body:'You will get notifications with the app closed.',key:'test'+Date.now()});return J({status:r.status},r.ok?200:502)}\n    return new Response('Aether push worker is running.',{headers:CORS});\n  },\n  async scheduled(ev,env){\n    const db=await load(env),now=Date.now();let dirty=false;\n    for(const [k,d] of Object.entries(db.subs)){\n      const due=d.items.filter(x=>x.at<=now&&x.at>now-15*6e4),keep=d.items.filter(x=>x.at>now);\n      if(!due.length&&keep.length===d.items.length)continue;\n      for(const x of due){\n        try{const r=await send(env,d.sub,{title:x.t,body:x.b,key:x.k});if(r.status===404||r.status===410){delete db.subs[k];break}}catch(e){}\n      }\n      if(db.subs[k])d.items=keep;dirty=true;\n    }\n    if(dirty)await env.KV.put('db',JSON.stringify(db));\n  }\n};\n";
 const PSH='p_push';
@@ -8482,7 +8538,7 @@ async function pushAct(a,rd){
       const reg=await navigator.serviceWorker.ready,s=await reg.pushManager.getSubscription();
       if(!s){pset({last:t0+' · not subscribed on this phone. Open Settings and turn push on again.'});return ntSheet()}
       const r=await pfetch('/test',{sub:s.toJSON()});
-      pset({last:t0+' · the push service accepted it (code '+r.status+'). Checking that your phone received it…'});ntSheet();const t1=Date.now();setTimeout(async()=>{try{const r=await caches.match('./__lastpush'),v=r?+await r.text():0,ok=v>=t1-3000;pset({last:t0+' · accepted by Apple (201). '+(ok?'Your phone received it ✓. If you saw no banner, check the Lock Screen and the Notification Center.':'Your phone has NOT received it yet. Wait 20 s and press the test again, or tell Claude.')});if(document.getElementById('nt-add'))ntSheet()}catch(e){}},9000);return}
+      pset({last:t0+' · the push service accepted it (code '+r.status+'). Checking that your phone received it…'});ntSheet();const t1=Date.now();setTimeout(async()=>{try{const r=await caches.match('./__lastpush'),v=r?+await r.text():0,ok=v>=t1-3000;pset({last:t0+' · accepted by Apple (201). '+(ok?'Your phone received it ✓. If you saw no banner, check the Lock Screen and the Notification Center.':'Look at your Lock Screen or Notification Center.')});if(document.getElementById('nt-add'))ntSheet()}catch(e){}},9000);return}
     if(a==='off'){const s=await pSub(false);try{if(s){await pfetch('/unsub',{endpoint:s.endpoint}).catch(()=>{});await s.unsubscribe()}}catch(e){}pset({on:false});toast('Push is off');return ntSheet()}
   }catch(e){const t=String(e.message||e);if(a==='test'){pset({last:'Test failed: '+t});return ntSheet()}pset({err:a==='enable'?'':t});msg(t.length>140?t.slice(0,140):t)}
 }
