@@ -1000,11 +1000,13 @@ textarea::placeholder{color:var(--dim)}
   .hgrid,.hw-grid{grid-template-columns:repeat(2,1fr)!important}
   .sbox,.pv-box{max-width:760px}
 }
-body.fsc #device{position:fixed;inset:0;z-index:900;max-width:none!important;width:auto;border-radius:0;grid-template-columns:1fr;padding:0;background:#000;display:grid;place-items:center;margin:0}
-body.fsc #device .screen{background:#000;box-shadow:none;border-radius:0;width:min(100vw,100vh);padding:0}
+body.fsc{overflow:hidden}
+body.fsc #device{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;z-index:3000;max-width:none!important;margin:0;padding:0;border-radius:0;background:#000;box-shadow:none;animation:none;grid-template-columns:1fr;display:grid;place-items:center;overflow:hidden}
+body.fsc #device .screen{background:#000;box-shadow:none;border-radius:0;padding:0;width:min(100vw,100dvh,900px);max-width:100%}
 body.fsc #device .side{display:none}
-#fscx{display:none;position:fixed;z-index:901;top:calc(14px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:50%;border:0;background:#ffffff22;color:#fff;font-size:20px}
+#fscx{display:none;position:fixed;z-index:3001;top:calc(14px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));width:44px;height:44px;border-radius:50%;border:0;background:#ffffff22;color:#fff;font-size:20px;backdrop-filter:blur(8px)}
 body.fsc #fscx{display:block}body.fsc #fscb{display:none}
+body.fsc .nav,body.fsc #hhglow{display:none!important}
 #fscb{position:absolute;right:6px;bottom:4px;border:0;background:#ffffff18;color:#fff;width:34px;height:34px;border-radius:50%;font-size:15px;z-index:3}
 @media (orientation:landscape) and (max-height:520px){
   body{padding-left:calc(84px + env(safe-area-inset-left));padding-right:env(safe-area-inset-right);padding-bottom:24px}
@@ -1304,6 +1306,22 @@ html.bgp *,html.bgp *::before,html.bgp *::after{animation-play-state:paused!impo
 .tfrow{overflow-x:auto;scrollbar-width:none;margin:-2px 0 8px}.tfrow button{padding:7px 12px;font-size:13px}.tfrow::-webkit-scrollbar{display:none}
 .tlrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .tsortr{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:#ff453a;padding:6px 2px;white-space:nowrap}
+
+/* screen time dashboard */
+.sd-hero{display:flex;align-items:center;gap:16px;margin:2px 0 14px}.sd-ring{width:112px;height:112px;flex:none}.sd-rb{fill:none;stroke:var(--line2);stroke-width:10}.sd-rf{fill:none;stroke:#6aa8ff;stroke-width:10;stroke-linecap:round;transition:stroke-dasharray .6s}.sd-rf.o{stroke:#ff7a70}
+.sd-hc{display:flex;flex-direction:column;gap:3px;min-width:0}.sd-hc b{font-size:34px;line-height:1.05;letter-spacing:-.02em}.sd-k{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.sd-s{font-size:13px;color:var(--muted)}.sd-d{font-size:13px;font-weight:800}.sd-d.up{color:#ff7a70}.sd-d.dn{color:#5be68a}
+.sd-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 14px}.sd-kpis>div{background:var(--inset);border-radius:14px;padding:10px 4px;text-align:center;display:flex;flex-direction:column;gap:2px}.sd-kpis b{font-size:15px}.sd-kpis span{font-size:10.5px;color:var(--muted);font-weight:700}
+.sd-chart{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end}.sdc{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 0;border-radius:12px;cursor:pointer}.sdc .stk{width:100%;max-width:30px;display:flex;flex-direction:column-reverse;justify-content:flex-start;gap:2px}.sdc .stk b{display:block;border-radius:5px}.sdc span{font-size:11px;font-weight:800;color:var(--muted)}.sdc.on{background:var(--inset)}.sdc.on span{color:var(--text)}
+.sd-lim{position:absolute;left:0;right:0;border-top:1.5px dashed #ff7a7099;pointer-events:none}
+.sd-leg{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin:10px 0 14px;font-size:11.5px;color:var(--muted)}.sd-leg i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:-4px}
+.sd-vl{background:var(--inset);border-radius:16px;padding:12px 14px;margin:0 0 12px;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:end}.sd-vh{grid-column:1/-1;display:flex;align-items:center;gap:8px}.sd-vh b{font-size:15px}.sd-vb{display:flex;align-items:flex-end;gap:4px;height:36px}.sd-vb i{width:9px;border-radius:3px;background:#ffb34755}.sd-vb i.on{background:#ffb347}
+.sd-dot{width:8px;height:8px;border-radius:50%;background:var(--line2)}.sd-dot.ok{background:#5be68a}.sd-dot.bad{background:#ff7a70}.sd-dot.warn{background:#ffb347}
+.sd-row{display:flex;gap:8px;flex-wrap:wrap}.sd-row .btn{flex:1 1 auto;width:auto;margin:0}
+.sd-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:10px 4px}.sd-empty b{font-size:19px}.sd-empty>span{color:var(--muted);font-size:14px;max-width:28ch}.sd-eico{font-size:34px}.sd-empty .sd-row{margin-top:8px;width:100%}.sd-warn{margin-top:8px;font-size:13px;color:#ffb347}
+.sd-ah{display:flex;justify-content:space-between;align-items:center;margin:0 0 6px}.sd-ah b{font-size:15px}
+.sda{all:unset;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;padding:11px 2px;border-top:1px solid var(--line2);cursor:pointer}.sda:first-of-type{border-top:0}
+.sda-i{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:17px;flex:none}.sda-n{flex:1;display:flex;flex-direction:column;min-width:0}.sda-n b{font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sda-n small,.sda-t small{font-size:11.5px;color:var(--muted);font-weight:600}.sda-t{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}.sda-t.o{color:#ff7a70}
+.sda-p{flex:0 0 100%;height:5px;border-radius:5px;background:var(--line2);overflow:hidden}.sda-p u{display:block;height:100%;border-radius:5px}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -1453,8 +1471,7 @@ html.bgp *,html.bgp *::before,html.bgp *::after{animation-play-state:paused!impo
   <div class="card" data-fs="trend"><div class="lbl">Focus · weekly trend</div><div class="bars" id="bars6"></div></div>
   <div class="lbl" data-fs="scr" style="margin:22px 4px 12px">Screen time</div>
   <div class="card" id="scrcard" data-fs="scr"></div>
-  <div class="lbl" data-fs="apps" style="margin:22px 4px 12px">Apps · distracting or productive</div>
-  <div class="card" id="scrstat" data-fs="apps"></div>
+  <div class="card" id="scrstat" data-fs="apps" style="margin-top:12px"></div>
   </div>
   <div class="fpane" id="fp-snd">
   <div class="card" id="sndcard"></div>
@@ -1955,17 +1972,35 @@ function scrParse(t){
     const days={};Object.keys(d.days).forEach(k=>{if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&isFinite(+d.days[k]))days[k]=Math.max(0,Math.round(+d.days[k]))});
     return{u:Date.now(),days,lim:{wk:+(d.lim&&d.lim.wk)||0,we:+(d.lim&&d.lim.we)||0}}}catch(e){return null}
 }
+let scrSel='';
+const fmM=m=>{m=Math.max(0,Math.round(m));return m<60?m+' min':Math.floor(m/60)+' h '+String(m%60).padStart(2,'0')};
+const sdAgo=u=>{if(!u)return'';const m=Math.max(1,Math.round((Date.now()-u)/60000));return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 function scrRender(){
   try{scrStat()}catch(e){}
-  const el=$('scrcard');if(!el)return;const d=scrLoad();
-  if(!d){el.innerHTML='<div class="sub" style="margin-bottom:10px">See your VLite time here. In VLite, open Settings and tap “Envoyer le temps d\'écran à Aether”, then come back and paste.</div><div class="sub" style="margin-bottom:8px">'+(vlSt==='nf'?'⚠️ No usage.json found in <b>'+esc(vlRepo())+'</b>. In VLite, send the time once, or fix the repo name.':vlSt==='off'?'⚠️ Offline. Will retry.':vlSt===''?'Looking for VLite…':'')+'</div><button class="btn" id="scr-retry">Try again</button> <button class="btn" id="scr-repo" style="margin-top:8px">Repo: '+esc(vlRepo())+'</button> <button class="btn" id="scr-in" style="margin-top:8px">Paste from VLite</button>';return}
-  const td0=iso(),days=[];for(let i=6;i>=0;i--){const k=shiftD(td0,-i);days.push([k,d.days[k]||0])}
-  const g=new Date().getDay(),lim=(g===0||g===6)?d.lim.we:d.lim.wk,today=d.days[td0]||0,avg=Math.round(days.reduce((a,x)=>a+x[1],0)/7),mx=Math.max(30,lim||0,...days.map(x=>x[1]));
-  const ago=Math.max(1,Math.round((Date.now()-d.u)/60000)),agt=ago<60?ago+' min':ago<1440?Math.round(ago/60)+' h':Math.round(ago/1440)+' d';
-  el.innerHTML=`<div style="display:flex;align-items:baseline;gap:8px"><b style="font-size:26px">${today} min</b><span class="sub">today${lim?' of '+lim:''} · avg ${avg} min</span></div>`+
-   `<div class="scrbars">${days.map(([k,v])=>`<div class="scrb${k===td0?' t':''}${lim&&v>lim?' o':''}"><i style="height:${Math.max(3,Math.round(v/mx*64))}px"></i><span>${'SMTWTFS'[new Date(k+'T12:00:00').getDay()]}</span></div>`).join('')}</div>`+
-   `<div class="sub" style="margin:8px 0 10px">Updated ${agt} ago. Open VLite and send again to refresh.</div><div style="display:flex;gap:8px"><button class="btn sm" id="scr-in">Paste</button><button class="btn sm" id="scr-repo">Link repo</button><button class="btn sm" id="scr-op">Phone min</button><button class="btn sm" id="scr-rm">Forget</button></div>`+((opalDays()[td0]!=null||appleDays()[td0]!=null)?`<div class="sub" style="margin-top:8px">VLite ${today} min${opalDays()[td0]!=null?' · Opal '+opalDays()[td0]+' min':''}${appleDays()[td0]!=null?' · Apple '+appleDays()[td0]+' min (all apps)':''}</div>`:'');
+  const el=$('scrcard');if(!el)return;
+  const sd=scrLoad(),td=iso(),sel=scrSel&&scrSel<=td?scrSel:td,days=[];for(let i=6;i>=0;i--)days.push(shiftD(td,-i));
+  if(!days.includes(sel))scrSel=td;
+  const D=days.map(d=>[d,appDay(d)]),cur=D.find(x=>x[0]===(scrSel||td))||D[6],a=cur[1],chill=x=>x.dist+x.vl;
+  if(!D.some(x=>x[1].has)&&!sd){
+    el.innerHTML='<div class="sd-empty"><div class="sd-eico">📱</div><b>Nothing tracked yet</b><span>Link VLite once and your watch time shows up here by itself.</span><div class="sd-row"><button class="btn primary" id="scr-retry">Link VLite</button><button class="btn" id="scr-op">Log today</button></div>'+(vlSt==='nf'?'<div class="sd-warn">No usage.json found in '+esc(vlRepo())+'. Send the time once from VLite, or fix the repo name.</div>':vlSt==='off'?'<div class="sd-warn">Offline. Will retry.</div>':'')+'</div>';return}
+  const lim=sd?((new Date(cur[0]+'T12:00:00').getDay()%6===0)?sd.lim.we:sd.lim.wk):0,others=D.filter(x=>x[0]!==cur[0]&&x[1].has),avg=others.length?others.reduce((t,x)=>t+chill(x[1]),0)/others.length:0,v=chill(a);
+  const goal=lim||Math.round(avg)||0,pct=goal?Math.min(1.25,v/goal):0,R=46,C=2*Math.PI*R,over=goal&&v>goal;
+  const diff=avg?Math.round(100*(v-avg)/avg):null,fm=minOn(new Date(cur[0]+'T12:00:00')),isT=cur[0]===td;
+  const mx=Math.max(60,goal,...D.map(x=>x[1].dist+x[1].prod+x[1].vl+x[1].other)),H=104;
+  const seg=(m,c)=>m?'<b style="height:'+Math.max(3,Math.round(m/mx*H))+'px;background:'+c+'"></b>':'';
+  const lbl=isT?'Today':new Date(cur[0]+'T12:00:00').toLocaleDateString('en',{weekday:'long'});
+  let h='<div class="sd-hero"><svg viewBox="0 0 120 120" class="sd-ring"><circle cx="60" cy="60" r="'+R+'" class="sd-rb"/><circle cx="60" cy="60" r="'+R+'" class="sd-rf'+(over?' o':'')+'" stroke-dasharray="'+(C*Math.min(1,pct)).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 60 60)"/></svg>'+
+   '<div class="sd-hc"><span class="sd-k">'+lbl+' · chill</span><b>'+fmM(v)+'</b><span class="sd-s">'+(goal?(over?'over':'under')+' '+(lim?'your limit':'your average')+' ('+fmM(goal)+')':'no goal yet')+'</span>'+(diff!==null?'<span class="sd-d '+(diff>0?'up':'dn')+'">'+(diff>0?'▲':'▼')+' '+Math.abs(diff)+'% vs avg</span>':'')+'</div></div>'+
+   '<div class="sd-kpis"><div><b style="color:#ff7a70">'+fmM(a.dist)+'</b><span>Distracting</span></div><div><b style="color:#ffb347">'+fmM(a.vl)+'</b><span>VLite</span></div><div><b style="color:#5be68a">'+fmM(a.prod)+'</b><span>Productive</span></div><div><b style="color:#6aa8ff">'+fmM(fm)+'</b><span>Focus</span></div></div>'+
+   '<div class="sd-chart">'+D.map(([d,x])=>'<button class="sdc'+(d===cur[0]?' on':'')+'" data-sd="'+d+'" aria-label="'+d+'"><div class="stk" style="height:'+H+'px">'+seg(x.other,'var(--line2)')+seg(x.prod,'#5be68a')+seg(x.vl,'#ffb347')+seg(x.dist,'#ff7a70')+'</div><span>'+'SMTWTFS'[new Date(d+'T12:00:00').getDay()]+'</span></button>').join('')+(goal?'<i class="sd-lim" style="bottom:'+(22+Math.round(goal/mx*H))+'px"></i>':'')+'</div>'+
+   '<div class="sd-leg"><i style="background:#ff7a70"></i>Distracting<i style="background:#ffb347"></i>VLite<i style="background:#5be68a"></i>Productive<i style="background:var(--line2)"></i>Other</div>';
+  const vl=D.map(x=>x[1].vl),vw=vl.reduce((t,x)=>t+x,0),vm=Math.max(30,...vl),dot=vlSt==='ok'?'ok':vlSt==='nf'?'bad':vlSt==='off'?'warn':'';
+  h+='<div class="sd-vl"><div class="sd-vh"><b>VLite</b><span class="sd-dot '+dot+'"></span><span class="sd-s">'+(vlSt==='nf'?'no usage.json':vlSt==='off'?'offline':sd?'synced '+sdAgo(sd.u)+' ago':'linking…')+'</span></div>'+
+   '<div class="sd-vb">'+vl.map((m,i)=>'<i class="'+(D[i][0]===cur[0]?'on':'')+'" style="height:'+Math.max(3,Math.round(m/vm*34))+'px"></i>').join('')+'</div><div class="sd-s">'+fmM(vw)+' this week · '+fmM(Math.round(vw/7))+' a day</div></div>'+
+   '<div class="sd-row"><button class="btn sm" id="scr-op">Log today</button><button class="btn sm" id="scr-retry">Refresh</button><button class="btn sm" id="scr-in">Paste</button><button class="btn sm" id="scr-repo">Repo</button></div>';
+  el.innerHTML=h;
 }
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sd]');if(b){scrSel=b.dataset.sd;vib(6);scrRender()}});
 function scrImport(txt){const d=scrParse(txt);if(!d)return false;try{localStorage.setItem('sigdata',JSON.stringify(d))}catch(e){}scrRender();toast('Screen time updated');vib(15);return true}
 document.addEventListener('click',async e=>{
   if(e.target.id==='scr-rm'){try{localStorage.removeItem('sigdata')}catch(x){}scrRender();return}
@@ -2011,22 +2046,15 @@ function appDay(d){
 }
 function scrStat(){
   const el=$('scrstat');if(!el)return;
-  const td=iso(),days=[];for(let i=6;i>=0;i--)days.push(shiftD(td,-i));
-  const D=days.map(d=>[d,appDay(d)]);
-  if(!D.some(x=>x[1].has)){el.innerHTML='<div class="sub" style="margin-bottom:10px">No app data yet. Add your apps and limits, or let a Shortcut send the time.</div><button class="btn primary" id="app-add">＋ App</button> <button class="btn" id="scr-ib">Shortcut setup</button>';return}
-  const t=D[6][1],cl=appCls(),mx=Math.max(30,...D.map(x=>x[1].dist+x[1].prod+x[1].vl+x[1].other));
-  const seg=(v,c)=>v?'<b style="height:'+Math.max(2,Math.round(v/mx*70))+'px;background:'+c+'"></b>':'';
-  const wk={};D.forEach(([d,a])=>Object.keys(a.apps).forEach(k=>wk[k]=(wk[k]||0)+a.apps[k]));
-  const alim=lj('applim',{}),wm={};weekDays().forEach(d=>{const a=lj('apptime',{})[d]||{};Object.keys(a).forEach(k=>wm[k]=(wm[k]||0)+a[k])});
-  const list=[...new Set([...Object.keys(wk),...Object.keys(alim),...Object.keys(wm)])].sort((a,b)=>(wm[b]||0)-(wm[a]||0)).slice(0,14),fmm=m=>m>=60?(m/60).toFixed(m%60?1:0)+' h':m+' min';
-  const dW=D.reduce((a,x)=>a+x[1].dist+x[1].vl,0),pW=D.reduce((a,x)=>a+x[1].prod,0),fW=D.reduce((a,x)=>a+minOn(new Date(x[0]+'T12:00:00')),0);
-  const hh=m=>(m/60).toFixed(1)+' h';
-  el.innerHTML='<div class="scrk"><div><b style="color:#ff7a70">'+(t.dist+t.vl)+'</b><span>distracting today</span></div><div><b style="color:#5be68a">'+t.prod+'</b><span>productive today</span></div><div><b>'+(t.apple!=null?t.apple:'–')+'</b><span>Apple total</span></div></div>'+
-   '<div class="scrst">'+D.map(([d,a])=>'<div class="scrc'+(d===td?' t':'')+'"><div class="stk">'+seg(a.other,'var(--line2)')+seg(a.prod,'#5be68a')+seg(a.vl,'#ffb347')+seg(a.dist,'#ff7a70')+'</div><span>'+'SMTWTFS'[new Date(d+'T12:00:00').getDay()]+'</span></div>').join('')+'</div>'+
-   '<div class="scrl"><i style="background:#ff7a70"></i>Distracting<i style="background:#ffb347"></i>VLite<i style="background:#5be68a"></i>Productive<i style="background:var(--line2)"></i>Other</div>'+
-   '<div class="sub" style="margin:10px 0 8px">This week: '+hh(fW)+' focus · '+hh(dW)+' distracting'+(pW?' · '+hh(pW)+' productive':'')+(fW&&dW?' · '+(fW/dW).toFixed(1)+' min focus per distracting min':'')+'</div>'+
-   '<div class="lbl" style="margin:10px 0 6px">Apps this week · tap to set a limit</div>'+list.map(k=>{const u=wm[k]||0,L=alim[k]||0,ov=L&&u>L;return'<button class="scra" data-appc="'+esc(k)+'"><span>'+esc(k)+'</span><b'+(ov?' style="color:#ff7a70"':'')+'>'+fmm(u)+(L?' / '+fmm(L):'')+'</b><em class="'+(cl[k]==='n'?'p':'d')+'">'+(cl[k]==='n'?'Productive':'Distracting')+'</em>'+(L?'<i class="scrp"><u style="width:'+Math.min(100,Math.round(100*u/L))+'%;background:'+(ov?'#ff7a70':u>L*.8?'#ffb347':'')+'"></u></i>':'')+'</button>'}).join('')+'<button class="btn sm" id="app-add" style="margin-top:10px">＋ App</button>'+
-   '<div class="sub" style="margin-top:8px">Apple total comes from your Screen Time screenshot. “Other” is what neither Shortcut nor VLite counted.</div>';
+  const td=iso(),cl=appCls(),alim=lj('applim',{}),wm={},at=lj('apptime',{});
+  weekDays().forEach(d=>{const a=at[d]||{};Object.keys(a).forEach(k=>wm[k]=(wm[k]||0)+a[k])});
+  const names=[...new Set([...Object.keys(wm),...Object.keys(alim),...Object.keys(cl)])].sort((a,b)=>(wm[b]||0)-(wm[a]||0)).slice(0,16);
+  const pal=['#ff7a70','#ffb347','#6aa8ff','#c79bff','#5be68a','#59d1d6'];
+  let h='<div class="sd-ah"><b>Apps · this week</b><button class="chip" id="app-add">＋ App</button></div>';
+  if(!names.length)h+='<div class="sub" style="padding:4px 2px 2px">Add an app to set a weekly limit, or let a Shortcut send the time. <button class="chip" id="scr-ib" style="margin-top:8px">Shortcut setup</button></div>';
+  else h+=names.map((k,i)=>{const u=wm[k]||0,L=alim[k]||0,ov=L&&u>L,c=cl[k]==='n'?'#5be68a':pal[i%pal.length];
+    return'<button class="sda" data-appc="'+esc(k)+'"><span class="sda-i" style="background:'+c+'22;color:'+c+'">'+esc(k.slice(0,1).toUpperCase())+'</span><span class="sda-n"><b>'+esc(k)+'</b><small>'+(cl[k]==='n'?'Productive':'Distracting')+'</small></span><span class="sda-t'+(ov?' o':'')+'">'+fmM(u)+(L?'<small> / '+fmM(L)+'</small>':'')+'</span>'+(L?'<i class="sda-p"><u style="width:'+Math.min(100,Math.round(100*u/L))+'%;background:'+(ov?'#ff7a70':u>L*.8?'#ffb347':c)+'"></u></i>':'')+'</button>'}).join('');
+  el.innerHTML=h;
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest&&e.target.closest('[data-appc]');if(b){appSheet(b.dataset.appc);return}
@@ -3621,7 +3649,13 @@ function fDurSheet(){
   };
 }
 
-(()=>{const fs=on=>{document.body.classList.toggle('fsc',on);try{if(on&&navigator.wakeLock)navigator.wakeLock.request('screen').catch(()=>{})}catch(e){}};
+(()=>{let ph=null,wl=null;const fs=on=>{const d=document.getElementById('device');if(!d)return;
+  if(on&&!ph){ph=document.createComment('device');d.parentNode.insertBefore(ph,d);document.body.appendChild(d)}
+  else if(!on&&ph){ph.parentNode.insertBefore(d,ph);ph.remove();ph=null}
+  document.body.classList.toggle('fsc',on);
+  try{if(on&&navigator.wakeLock)navigator.wakeLock.request('screen').then(l=>{wl=l}).catch(()=>{});else if(wl){wl.release();wl=null}}catch(e){}
+  try{window.dispatchEvent(new Event('resize'))}catch(e){}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('fsc'))fs(false)});
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('#fscb,#fscx');if(t){fs(t.id==='fscb')}});
 window.fsClock=fs;})();
 (()=>{let t=0;const d=$('dial');if(!d)return;d.addEventListener('click',e=>{const n=Date.now();if(n-t<340){t=0;fDurSheet()}else t=n})})();
@@ -8226,12 +8260,22 @@ function testIcs(){
   const d=new Date(Date.now()+2*6e4),ds=iso(d),t=pad(d.getHours())+':'+pad(d.getMinutes()),stamp=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
   return['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Aether//Test//EN','BEGIN:VEVENT','UID:aether-test-'+Date.now()+'@aether','DTSTAMP:'+stamp,'DTSTART:'+icsT(ds,t),'DTEND:'+icsT(ds,t),'SUMMARY:Aether test alarm','DESCRIPTION:If you see this with Aether closed, alarms work.','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Aether test alarm','TRIGGER:PT0S','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
 }
+function icsHelp(n,test,how){
+  const st=(a,b)=>'<div style="display:flex;gap:10px;margin:9px 0;align-items:flex-start"><b style="flex:none;width:24px;height:24px;border-radius:50%;background:var(--ac,#6aa8ff);color:#000;display:grid;place-items:center;font-size:13px">'+a+'</b><span style="font-size:14px;line-height:1.4">'+b+'</span></div>';
+  openSheet('<h2 class="sh">Last step: add to Calendar</h2><div class="hint" style="text-align:left;margin:0 0 6px">'+(test?'Test alarm':n+' alarms')+' '+(how==='share'?'sent to the share sheet':'saved to your Files')+'. iOS never adds them on its own: you must open the file once.</div>'+
+  st(1,how==='share'?'In the share sheet, pick <b>Calendar</b> (if you do not see it, choose <b>Save to Files</b> and go to step 2).':'Open the <b>Files</b> app, in <b>Downloads</b>.')+
+  st(2,'Tap <b>'+(test?'aether-test.ics':'aether-alarms.ics')+'</b>. Calendar opens a list of events.')+
+  st(3,'Tap <b>Add All</b> at the bottom, and pick a calendar. Create a new calendar called <b>Aether</b> so you can delete everything in one tap later.')+
+  st(4,'Check <b>Settings › Notifications › Calendar</b>: allow sounds and banners.')+
+  '<div class="hint" style="text-align:left;margin-top:8px">'+(test?'The test rings in about 2 minutes. If you get the alert with Aether closed, it works.':'Come back and press Refresh about once a week: the file covers a fixed number of days.')+' Aether itself cannot ring while closed (iOS freezes web apps), which is why Calendar does it.</div>'+
+  '<button class="chip on" style="margin-top:10px;width:100%" onclick="closeSheet()">Done</button>')
+}
 async function shareIcs(days,test){
   const r=test?{text:testIcs(),n:1}:buildIcs(days);if(!r.n){toast('Nothing to export with the current rules');return}
   if(!test){NT.icsAt=Date.now();ntSave()}
-  const f=new File([r.text],test?'aether-test.ics':'aether-alarms.ics',{type:'text/calendar'});
-  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Aether alarms'});return}}catch(e){if(e&&e.name==='AbortError')return}
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.text],{type:'text/calendar'}));a.download='aether-alarms.ics';document.body.appendChild(a);a.click();a.remove();toast(r.n+' alarms exported')
+  const nm=test?'aether-test.ics':'aether-alarms.ics',f=new File([r.text],nm,{type:'text/calendar'});
+  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Aether alarms'});setTimeout(()=>icsHelp(r.n,test,'share'),300);return}}catch(e){if(e&&e.name==='AbortError')return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.text],{type:'text/calendar'}));a.download=nm;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>icsHelp(r.n,test,'file'),300)
 }
 
 /* ---- settings UI ---- */
