@@ -10044,8 +10044,8 @@ function balBack(){
   const u=pUrl(),tk=!!pcfg().token;
   openSheet('<h2>Back to Aether</h2><div class="sub" style="margin:0 0 12px">While Study first is locked, opening a distracting app can send you straight to Aether instead. Your Shortcut asks the worker whether your day is still locked.</div>'+
    '<ol class="bal-ol"><li>Open your <b>Is Opened</b> automation for the app (you must already have the live nudge address from the previous screen).</li>'+
-   '<li>After <b>Get Contents of URL</b> (the <b>/ev?a=…&amp;e=o</b> one), add the action <b>If</b>.</li>'+
-   '<li>Set it to: <b>Contents of URL</b> · <b>contains</b> · <code>"lock":true</code></li>'+
+   '<li>After <b>Get Contents of URL</b> (the <b>/ev?a=…&amp;e=o</b> one):</li>'+
+   '<li>Right after that action add <b>Set Variable</b> named <b>Lock</b>. Then add <b>If</b>: <b>Lock</b> · <b>contains</b> · <code>true</code> (just the word, no quotes).</li>'+
    '<li>Inside the If, add <b>Open App</b> and choose <b>Aether</b>. Leave Otherwise empty.</li>'+
    '<li>Repeat for each distracting app. Opening it then brings you to Aether while the day is locked, and does nothing once you reached your goal.</li></ol>'+
    '<div class="sub" style="margin-top:10px">iOS cannot block the app itself: Instagram opens for a moment, then Aether comes in front.</div>');
