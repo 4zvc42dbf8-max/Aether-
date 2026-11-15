@@ -908,6 +908,53 @@ textarea::placeholder{color:var(--dim)}
 .pv-g{border-radius:20px;overflow:hidden}
 .pv-h{margin:22px 4px 8px}
 
+/* ===== Home: soft glass blocks ===== */
+#home{--g1:rgba(255,255,255,.085);--g2:rgba(255,255,255,.025);--gb:rgba(255,255,255,.10);--gs:rgba(0,0,0,.55)}
+[data-theme="light"] #home{--g1:rgba(255,255,255,.95);--g2:rgba(255,255,255,.6);--gb:rgba(20,24,40,.08);--gs:rgba(40,50,90,.22)}
+#home > .card{background:linear-gradient(155deg,var(--g1),var(--g2));border:1px solid var(--gb);border-radius:26px;padding:18px 18px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 22px 40px -26px var(--gs);-webkit-backdrop-filter:blur(18px) saturate(1.35);backdrop-filter:blur(18px) saturate(1.35);margin-bottom:14px}
+#home > .card .cardhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+#home > .card .cardhead .lbl,#home > .card > .lbl{margin-bottom:0;font-size:11.5px;letter-spacing:.14em}
+#home > .card > .lbl{margin-bottom:14px}
+#home .lnk{background:color-mix(in srgb,var(--acc,#6aa8ff) 15%,transparent);color:var(--acc,#6aa8ff);padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;border:0;white-space:nowrap}
+#home .lnk:active{transform:scale(.95)}
+#home .sub{font-size:13px;color:var(--muted)}
+#home .btn.primary{border-radius:16px}
+#home .rxcard,#home .xmc{border-radius:26px}
+
+/* Week plan */
+#wkcard .wk-sum{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+#wkcard .wk-ring{--p:0;flex:none;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--acc,#6aa8ff) calc(var(--p)*1%),rgba(255,255,255,.09) 0);position:relative}
+#wkcard .wk-ring::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#14161d}
+[data-theme="light"] #wkcard .wk-ring::before{background:#f4f6fb}
+#wkcard .wk-ring b{position:relative;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+#wkcard .wk-ring small{font-size:10px;font-weight:700;opacity:.7;margin-left:1px}
+#wkcard .wk-big{font-size:19px;font-weight:800;letter-spacing:-.01em}
+#wkcard .wk-next{--c:var(--acc,#6aa8ff);display:flex;align-items:center;gap:12px;padding:14px 14px 14px 16px;border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 26%,transparent),color-mix(in srgb,var(--c) 8%,transparent));border:1px solid color-mix(in srgb,var(--c) 38%,transparent);margin-bottom:12px;position:relative;overflow:hidden}
+#wkcard .wk-next::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:0 4px 4px 0;background:var(--c)}
+#wkcard .wk-nm{flex:1;min-width:0}
+#wkcard .wk-k{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+#wkcard .wk-t{font-size:17px;font-weight:800;line-height:1.2;margin:3px 0 2px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#wkcard .wk-m{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+#wkcard .wk-go{flex:none;border:0;border-radius:999px;padding:11px 20px;font-weight:800;font-size:14.5px;color:#fff;background:var(--c);box-shadow:0 8px 20px -8px var(--c)}
+#wkcard .wk-go.alt{background:rgba(255,255,255,.12);box-shadow:none;color:var(--text)}
+#wkcard .wk-go:active{transform:scale(.94)}
+#wkcard .wk-l{display:flex;flex-direction:column;gap:6px}
+#wkcard .wk2{--c:var(--acc,#6aa8ff);display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;padding:11px 12px 11px 14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06);border-left:3px solid var(--c);border-radius:14px;color:inherit;text-align:left}
+[data-theme="light"] #wkcard .wk2{background:rgba(20,24,40,.04);border-color:rgba(20,24,40,.06);border-left-color:var(--c)}
+#wkcard .wk2 .wt{font-size:12.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:44px}
+#wkcard .wk2 .wx{min-width:0}
+#wkcard .wk2 .wx b{display:block;font-size:14.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#wkcard .wk2 .wx small{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+#wkcard .wk2 .st{font-size:11px;font-weight:800;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--muted)}
+#wkcard .wk2 .st.go{background:none;font-size:18px;padding:0 2px}
+#wkcard .wk2.p .st{background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c)}
+#wkcard .wk2.d{opacity:.5}#wkcard .wk2.d .wx b{text-decoration:line-through}#wkcard .wk2.d .st{background:rgba(48,209,88,.18);color:#30d158}
+#wkcard .wk-more{display:block;width:100%;margin-top:10px;padding:10px;border:0;border-radius:14px;background:none;color:var(--acc,#6aa8ff);font-weight:700;font-size:13.5px}
+#wkcard .wk-act{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+#wkcard .wk-pill{flex:1;min-width:0;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--text);font-weight:700;font-size:13px;white-space:nowrap}
+#wkcard .wk-pill.pri{background:var(--acc,#6aa8ff);border-color:transparent;color:#fff;flex:1.4}
+#wkcard .wkh{margin:14px 2px 6px}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 
@@ -1412,6 +1459,14 @@ html.bgp *,html.bgp *::before,html.bgp *::after{animation-play-state:paused!impo
 <section id="home" class="view">
   <div id="hdock"></div>
   <div class="card hero" id="hero" data-act="lvls"></div>
+  <div class="card" id="wkcard" style="display:none"></div>
+  <div class="card motiv" id="motiv"></div>
+  <div class="card"><div class="lbl">How was your day?</div>
+    <div class="dnav" id="dnav"></div>
+    <div class="moods" id="moods"><button data-act="mood" data-n="1">😞</button><button data-act="mood" data-n="2">😐</button><button data-act="mood" data-n="3">🙂</button><button data-act="mood" data-n="4">😊</button><button data-act="mood" data-n="5">🤩</button></div>
+    <div class="sub" id="moodt" style="text-align:center;margin-top:10px"></div>
+    <div class="hrs" id="hrs"></div></div>
+  <div class="card"><div class="lbl" id="revl">Daily review</div><div id="rev"></div></div>
   <div class="card tpc" id="tpcard"></div>
   <button class="card rxcard" id="rxcard" data-rx="start"><span class="rxi">🌿</span><span class="rxt"><b>Relax</b><small>Phone down for an hour</small></span><span class="rxg">›</span></button>
   <div class="card" id="xmcard" style="display:none"></div>
@@ -1421,15 +1476,7 @@ html.bgp *,html.bgp *::before,html.bgp *::after{animation-play-state:paused!impo
   <div class="card" id="svcard" style="display:none"></div>
   <div class="card"><div class="cardhead"><div class="lbl">Today</div><button class="lnk" onclick="show('calendar')">Open calendar</button></div><div id="today"></div></div>
   <div class="card"><div class="cardhead"><div class="lbl">Objectives</div><button class="lnk" onclick="show('tasks')">See all</button></div><div id="htasks"></div></div>
-  <div class="card" id="wkcard" style="display:none"></div>
-  <div class="card motiv" id="motiv"></div>
   <div class="card tap" id="hprepa" onclick="show('prepa')"></div>
-  <div class="card"><div class="lbl">How was your day?</div>
-    <div class="dnav" id="dnav"></div>
-    <div class="moods" id="moods"><button data-act="mood" data-n="1">😞</button><button data-act="mood" data-n="2">😐</button><button data-act="mood" data-n="3">🙂</button><button data-act="mood" data-n="4">😊</button><button data-act="mood" data-n="5">🤩</button></div>
-    <div class="sub" id="moodt" style="text-align:center;margin-top:10px"></div>
-    <div class="hrs" id="hrs"></div></div>
-  <div class="card"><div class="lbl" id="revl">Daily review</div><div id="rev"></div></div>
   <div class="card tap" onclick="showJournal()"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Journal</div><div class="sub">Last 14 days</div></div><span class="chev">›</span></div></div>
   <div class="card tap" onclick="show('stats')"><div class="cardhead"><div><div class="lbl" style="margin-bottom:2px">Stats</div><div class="sub">Streak, focus time, mood</div></div><span class="chev">›</span></div></div>
   <div class="card lazycard" id="lazycard"></div>
@@ -1899,6 +1946,12 @@ function dkExpand(id){
   document.addEventListener('touchend',end);document.addEventListener('touchcancel',end);
 })();
 /* the visible area (iPhone keyboard) drives the sheets: they always sit at the top of what you can see */
+(function(){/* iOS keeps the page shifted after the keyboard closes: nudge the viewport back */
+  const nudge=()=>{try{const y=window.scrollY;window.scrollTo(0,y+1);window.scrollTo(0,y)}catch(e){}};
+  document.addEventListener('focusout',e=>{if(/^(INPUT|TEXTAREA|SELECT)$/.test((e.target||{}).tagName)){[60,250,600,1200].forEach(t=>setTimeout(nudge,t))}},true);
+  if(window.visualViewport)visualViewport.addEventListener('resize',()=>{setTimeout(()=>{if(Math.abs(visualViewport.height-window.innerHeight)<3)nudge()},150)});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(nudge,250)});
+})();
 (function(){const vv=window.visualViewport,r=document.documentElement.style;
   function sync(){if(vv){r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px')}}
   if(vv){vv.addEventListener('resize',sync);vv.addEventListener('scroll',sync)}sync();
@@ -9573,16 +9626,24 @@ function pwCard(){
   const open=localStorage.p_pwx==='1';
   el.style.display='';
   if(!L.length){el.innerHTML='<div class="cardhead"><div class="lbl">🗓 Week plan</div><button class="lnk" data-wk="set">Settings</button></div><div class="sub">Aether proposes your week from your goals, routines, colles and exams. You accept or change it.</div><button class="btn primary" data-wk="plan" style="margin-top:10px">Plan my week</button>';return}
-  const byDay={};L.filter(c=>c.date>=td).forEach(c=>(byDay[c.date]=byDay[c.date]||[]).push(c));
-  const days=Object.keys(byDay).sort().slice(0,open?14:2);
-  const nx=L.filter(c=>c.date===td&&!o.blocks[c.id].done&&!o.blocks[c.id].prop&&hm(c.endTime||c.time)>new Date().getHours()*60+new Date().getMinutes())[0];
-  el.innerHTML='<div class="cardhead"><div class="lbl">🗓 Week plan</div><button class="lnk" data-wk="set">Settings</button></div>'+
-   '<div class="sub">'+(wkL.length?done+' of '+wkL.length+' done this week':'')+(prop.length?(wkL.length?' · ':'')+prop.length+' proposed':'')+'</div>'+(wkL.length?'<div class="wkp"><i style="width:'+Math.round(done/wkL.length*100)+'%"></i></div>':'')+
-   (nx?'<div class="prow" style="--c:var(--acc);cursor:default"><span class="m"><div class="t">'+pwEsc(nx.title)+'</div><div class="s">'+nx.time+' – '+nx.endTime+'</div></span><button class="btn primary" data-wk="start" data-i="'+nx.id+'" style="width:auto;margin:0;padding:8px 14px">Start</button></div>':'')+
-   days.map(d=>{const L2=byDay[d],mins=L2.reduce((t,c)=>t+(+((o.blocks[c.id]||{}).pl)||0),0),dur=mins>=60?Math.floor(mins/60)+' h'+(mins%60?' '+pad(mins%60):''):mins+' min';
-     return '<div class="wkh"><b>'+(d===td?'Today':DAYN[pwWd(d)])+' '+(+d.slice(8))+'</b><span>'+L2.length+' block'+(L2.length>1?'s':'')+' · '+dur+'</span></div>'+L2.map(c=>{const b=o.blocks[c.id],cl=b.done?'d':b.prop?'p':'a',tt=pwEsc(c.title.replace(/^✓ /,''));return'<button class="wkr '+cl+'" data-wk="blk" data-i="'+c.id+'" style="--c:'+colorOf(c)+'"><span class="tm">'+c.time+'</span><i></i><span class="tx"><span class="tt">'+tt+'</span><span class="sb">'+(b.pl||'')+' min'+(b.prop?' · proposed':'')+'</span></span>'+(b.done?'<span class="st">✓</span>':b.prop?'<span class="st">Review</span>':'')+'</button>'}).join('')}).join('')+
-   (Object.keys(byDay).length>2?'<button class="lnk" data-wk="more" style="margin-top:6px">'+(open?'Show less':'Show the whole plan')+'</button>':'')+
-   '<div style="display:flex;gap:8px;margin-top:10px">'+(prop.length?'<button class="btn primary" data-wk="all" style="margin:0">Accept all ('+prop.length+')</button>':'')+'<button class="btn" data-wk="plan" style="margin:0">Re-plan</button><button class="btn" data-wk="flex" style="margin:0">＋ Flex</button></div>';
+  const nowM=new Date().getHours()*60+new Date().getMinutes();
+  const nx=L.filter(c=>c.date===td&&!o.blocks[c.id].done&&!o.blocks[c.id].prop&&hm(c.endTime||c.time)>nowM)[0];
+  const upc=L.filter(c=>{const b=o.blocks[c.id];return b&&!b.done&&(c.date>td||hm(c.endTime||c.time)>nowM)});
+  const hero=nx||upc[0],rest=upc.filter(c=>!hero||c.id!==hero.id);
+  const when=c=>c.date===td?c.time:DAYN[pwWd(c.date)]+' '+(+c.date.slice(8))+' · '+c.time;
+  const pct=wkL.length?Math.round(done/wkL.length*100):0;
+  const row=c=>{const b=o.blocks[c.id],cl=b.done?'d':b.prop?'p':'a',tt=pwEsc(c.title.replace(/^✓ /,''));return '<button class="wk2 '+cl+'" data-wk="blk" data-i="'+c.id+'" style="--c:'+colorOf(c)+'"><span class="wt">'+when(c)+'</span><span class="wx"><b>'+tt+'</b><small>'+(b.pl||'')+' min'+(b.prop?' · proposed':'')+'</small></span>'+(b.done?'<span class="st">✓</span>':b.prop?'<span class="st">Review</span>':'<span class="st go">›</span>')+'</button>'};
+  let h='<div class="cardhead"><div class="lbl">🗓 Week plan</div><button class="lnk" data-wk="set">Settings</button></div>'+
+   '<div class="wk-sum"><div class="wk-ring" style="--p:'+pct+'"><b>'+pct+'<small>%</small></b></div><div class="wk-st"><div class="wk-big">'+done+' of '+wkL.length+' done</div><div class="sub">this week'+(prop.length?' · '+prop.length+' proposed':'')+'</div></div></div>';
+  if(hero){const hb=o.blocks[hero.id];h+='<div class="wk-next" style="--c:'+colorOf(hero)+'"><div class="wk-nm"><div class="wk-k">'+(nx?'Up next':'Coming up')+'</div><div class="wk-t">'+pwEsc(hero.title.replace(/^✓ /,''))+'</div><div class="wk-m">'+when(hero)+(hero.endTime?' – '+hero.endTime:'')+(hb&&hb.pl?' · '+hb.pl+' min':'')+'</div></div>'+(nx?'<button class="wk-go" data-wk="start" data-i="'+nx.id+'">Start</button>':'<button class="wk-go alt" data-wk="blk" data-i="'+hero.id+'">Open</button>')+'</div>'}
+  if(open){
+    const byDay={};L.filter(c=>c.date>=td).forEach(c=>(byDay[c.date]=byDay[c.date]||[]).push(c));
+    h+=Object.keys(byDay).sort().slice(0,14).map(d=>{const L2=byDay[d],mins=L2.reduce((t,c)=>t+(+((o.blocks[c.id]||{}).pl)||0),0),dur=mins>=60?Math.floor(mins/60)+' h'+(mins%60?' '+pad(mins%60):''):mins+' min';
+      return '<div class="wkh"><b>'+(d===td?'Today':DAYN[pwWd(d)])+' '+(+d.slice(8))+'</b><span>'+L2.length+' block'+(L2.length>1?'s':'')+' · '+dur+'</span></div><div class="wk-l">'+L2.map(row).join('')+'</div>'}).join('');
+  }else if(rest.length)h+='<div class="wk-l">'+rest.slice(0,3).map(row).join('')+'</div>';
+  if(upc.length>(open?0:4))h+='<button class="wk-more" data-wk="more">'+(open?'Show less':'Show the whole plan · '+Math.max(0,upc.length-4)+' more')+'</button>';
+  h+='<div class="wk-act">'+(prop.length?'<button class="wk-pill pri" data-wk="all">Accept all ('+prop.length+')</button>':'')+'<button class="wk-pill" data-wk="plan">Re-plan</button><button class="wk-pill" data-wk="flex">＋ Flex</button></div>';
+  el.innerHTML=h;
 }
 function pwBlock(id){
   const o=tbLoad(),b=o.blocks[id],gg=pwGet(id),c=gg&&gg.c;if(!b||!c)return;
