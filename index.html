@@ -1008,6 +1008,13 @@ textarea::placeholder{color:var(--dim)}
 #sfcard .btn{margin:0}
 #sfcard .sf-sk{margin-top:8px;opacity:.7;font-size:13px}
 
+/* v143 coach */
+#balcard .bal-co{display:flex;flex-direction:column;gap:3px;margin:0 0 12px}
+#balcard .bal-co b{font-size:17px;letter-spacing:-.01em}
+#balcard .bal-co span{font-size:14px;line-height:1.4;opacity:.92}
+.ru-d{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(128,128,140,.15);font-size:13px;line-height:1.4}
+.ru-d b{flex:none;width:34px}.ru-d span{flex:1;min-width:0}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 
@@ -9768,7 +9775,7 @@ function pwOpen(pg){
   const onoff=(id,v)=>'<div class="chips" id="'+id+'"><button class="chip '+(v?'on':'')+'" data-v="1">On</button><button class="chip '+(v?'':'on')+'" data-v="0">Off</button></div>';
   const mins=(id,v,l)=>'<div class="chips" id="'+id+'">'+(l||[15,20,30,45,60]).map(x=>'<button class="chip '+(v===x?'on':'')+'" data-v="'+x+'">'+x+' min</button>').join('')+'</div>';
   const FULL=('<h2 class="sh">🗓 Week planner</h2><div class="sub" style="margin:0 0 10px">Tell Aether your hours, goals and routines once. It proposes a week (dark and transparent), you accept what you like. It learns from what you finish or skip.</div>'+
-   '<button class="btn primary" id="pw-go">'+(nb?'Re-plan my week':'Plan my week')+'</button><button class="btn" id="pw-tp" style="margin-top:8px">📐 Week template</button><button class="btn" id="pw-fx" style="margin-top:8px">🧩 Flex block</button>'+(np?'<button class="btn" id="pw-all" style="margin-top:8px">Accept all ('+np+')</button>':'')+
+   '<button class="btn primary" id="pw-go">'+(nb?'Re-plan my week':'Plan my week')+'</button><button class="btn" id="pw-tp" style="margin-top:8px">📐 Week template</button><button class="btn" id="pw-ru" style="margin-top:8px">⭐ My weekly routine</button><button class="btn" id="pw-fx" style="margin-top:8px">🧩 Flex block</button>'+(np?'<button class="btn" id="pw-all" style="margin-top:8px">Accept all ('+np+')</button>':'')+
    '<div class="card" style="margin-top:12px"><div class="lbl">My hours</div>'+
     '<div class="field"><label>Weekdays</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+tin('pw-a',t.wd.from)+tin('pw-b',t.wd.to)+'</div></div>'+
     '<div class="field"><label>Weekend</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+tin('pw-c',t.we.from)+tin('pw-d',t.we.to)+'</div></div>'+
@@ -9823,7 +9830,7 @@ function pwRender(full,pg,cfg,t,nb,np){
     h='<h2 class="sh">🗓 Week planner</h2><div class="sub" style="margin:0 0 12px">Tell Aether your hours, goals and routines once. It proposes a week, you accept what you like.</div>'+
      pwStrip(nb,np)+
      q('pw-go')+(np?q('pw-all'):'')+
-     '<div class="pv-h">Plan</div><div class="pv-g"><button class="pv-btn" id="pw-tp" data-i="📐">Week template<small>Fixed weekly blocks</small></button><button class="pv-btn" id="pw-fx" data-i="🧩">Flex block<small>Floating work time</small></button></div>'+
+     '<div class="pv-h">Plan</div><div class="pv-g"><button class="pv-btn" id="pw-tp" data-i="📐">Week template<small>Fixed weekly blocks</small></button><button class="pv-btn" id="pw-ru" data-i="⭐">My weekly routine<small>Same sessions every week</small></button><button class="pv-btn" id="pw-fx" data-i="🧩">Flex block<small>Floating work time</small></button></div>'+
      '<div class="pv-h">Settings</div><div class="pv-g">'+meta.map((m,i)=>'<button class="pv-btn" data-pg="'+i+'" data-i="'+m[1][0]+'">'+esc(m[0].replace('▶ ',''))+'<small>'+(i===0?hrs:i===1?cfg.rules.length+' rule'+(cfg.rules.length===1?'':'s'):m[1][1])+'</small></button>').join('')+'</div>'+
      '<div class="pv-g" style="margin-top:12px"><button class="pv-btn" id="pw-fg" data-i="♻️">Reset learning</button>'+(nb?'<button class="pv-btn danger" id="pw-x" data-i="🗑">Remove plan</button>':'')+'</div>';
   }else{
@@ -9932,12 +9939,12 @@ function pwAddFlex(name,len,ds,at){
 
 window.PW={card:pwCard,sc:pwSc,sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
 
-/* ================= v137: SCREEN BALANCE — turns the app time Aether already records into a nudge to stop and work =================
+/* ================= v143: COACH + SCREEN BALANCE — only records and encourages, never blocks anything =================
    scroll  = minutes on apps you marked "Distracting" (appDay(d).dist)
-   budget  = daily scroll budget + "earn-back" (every 25 min of focus earns a few minutes)
-   Home card, a pause when you pass the budget, XP for clean days, a 7-day view. Everything stays on the phone. */
+   budget  = daily scroll budget + earn-back (every 25 min of focus earns a few minutes). It is a number to look at, not a lock.
+   The coach card reads your weekly routine, your focus time and your scroll time and says one useful thing. Everything stays on the phone. */
 const BALK='p_bal';
-const balCfg=()=>Object.assign({b:60,e:5,p:1,l:1,s:0,g:90},lj(BALK,{}));
+const balCfg=()=>Object.assign({b:60,e:5,ar:''},lj(BALK,{}));
 const balFoc=d=>{const k=fk(new Date(d+'T12:00:00'));return fhist.filter(h=>h.date===k).reduce((a,h)=>a+(h.min||0),0)};
 const balScr=d=>appDay(d).dist;
 const balBud=d=>{const c=balCfg();return Math.round(c.b+balFoc(d)/25*c.e)};
@@ -9956,60 +9963,58 @@ function balState(){
   return{d,has,s,b,f,r,tier,left:Math.max(0,b-s),over:Math.max(0,s-b),sess:Math.round(s/25*10)/10};
 }
 const balCol={none:'#6aa8ff',good:'#5be68a',mid:'#ffb347',edge:'#ff9f5a',over:'#ff7a70'};
-function balMsg(S){
-  const e=balCfg().e;
-  if(S.tier==='none')return'No app time logged yet today. A Shortcut can send it by itself, or log it by hand.';
-  if(S.tier==='good')return S.s<5?'Clean so far. Keep the phone face down.':'Clean so far: '+fmM(S.left)+' of scroll left today.';
-  if(S.tier==='mid')return fmM(S.left)+' left today.'+(e?' A 25 min focus earns back +'+e+' min.':'');
-  if(S.tier==='edge')return'Only '+fmM(S.left)+' left. Do a focus session before opening anything else.';
-  return'Over budget by '+fmM(S.over)+'. That is about '+S.sess+' focus sessions of 25 min. Rebalance now?';
-}
-/* what the push worker needs to nudge you in real time when a Shortcut says you opened an app */
-function balNudge(){
-  const c=balCfg();if(!c.l)return null;const td=iso(),cl=appCls();
-  let q=null;try{if(NT.quiet&&NT.quiet.on)q={f:hm(NT.quiet.from),t:hm(NT.quiet.to)}}catch(e){}
-  return{on:1,b:balBud(td),used:balScr(td),day:td,tz:-new Date().getTimezoneOffset(),good:Object.keys(cl).filter(k=>cl[k]==='n'),q,sf:c.s?{goal:c.g,foc:balFoc(td)}:undefined};
-}
-function balSyncCheck(){
-  try{const c=pcfg();if(!c.on||!balCfg().l)return;const n=balNudge(),sig=n.b+'|'+n.used+'|'+n.day+'|'+(n.sf?n.sf.goal+':'+n.sf.foc:'');
-    if(localStorage.p_bals!==sig){localStorage.p_bals=sig;pSyncSoon()}}catch(e){}
-}
-/* ---- Study first: until today's focus goal is done, Home shows one card and hides the rest ---- */
-const sfSt=()=>{const o=lj('p_sfd',{});return o.d===iso()?o:{d:iso()}};
-function sfLocked(){const c=balCfg();if(!c.s)return false;const o=sfSt();return !o.skip&&!o.done&&balFoc(iso())<c.g}
-function sfApply(){
-  const home=document.getElementById('home');if(!home)return;
-  const c=balCfg(),td=iso();let o=sfSt();
-  if(c.s&&!o.done&&!o.skip&&balFoc(td)>=c.g){o.done=1;sj('p_sfd',o);try{gain(20);toast('Study first done · +20 XP')}catch(e){}}
-  const lk=sfLocked();let el=document.getElementById('sfcard');
-  home.classList.toggle('sf-on',lk);
-  if(!lk){if(el)el.remove();return}
-  if(!el){el=document.createElement('div');el.id='sfcard';el.className='card';home.insertBefore(el,home.firstChild)}
-  const f=balFoc(td),left=Math.max(0,c.g-f),pc=Math.min(100,Math.round(100*f/c.g)),run=F.status==='run'&&F.kind==='focus',S=balState();
-  el.innerHTML='<div class="sf-t"><i>'+balIc+'</i>Study first</div><div class="sf-n">'+fmM(f)+'<small> / '+fmM(c.g)+'</small></div><i class="bal-b f"><u style="width:'+pc+'%"></u></i>'+
-   '<div class="sf-m">'+fmM(left)+' of focus to unlock your day.'+(S.has?' Scrolled so far today: '+fmM(S.s)+'.':'')+'</div>'+
-   '<button class="btn primary" data-sf="go">'+(run?'Back to my timer':'Focus 25 min')+'</button>'+
-   '<button class="btn sf-sk" data-sf="skip">'+(el.dataset.ask?'Really skip today?':'Skip today')+'</button>';
-}
+const BAL_LEN=50;
+const balIc='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 7h14M7 7l-3 7a3.5 3.5 0 0 0 7 0L8 7M17 7l-3 7a3.5 3.5 0 0 0 7 0l-3-7"/></svg>';
 function balGo(){
   if(F.status==='run'){show('focus');return}
-  F.mode='short';F.cust=25;F.kind='focus';F.task='Focus';F.status='idle';show('focus');setTimeout(fStart,350);
+  F.mode='short';F.cust=BAL_LEN;F.kind='focus';F.task='Focus';F.status='idle';show('focus');setTimeout(fStart,350);
 }
-const balIc='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 7h14M7 7l-3 7a3.5 3.5 0 0 0 7 0L8 7M17 7l-3 7a3.5 3.5 0 0 0 7 0l-3-7"/></svg>';
+/* what is on your routine right now, and what comes next today */
+function coachNow(){
+  const d=new Date(),m=d.getHours()*60+d.getMinutes(),wd=d.getDay(),cfg=pwCfg(),it=[];
+  (cfg.ref||[]).forEach(x=>{if(x.on!==0&&(x.days||[]).includes(wd)&&SUBJ[x.subj])it.push({k:'ref',l:pwSj(x.subj)+(x.type==='ex'?' exercises':' lesson'),a:hm(x.from),b:hm(x.to),f:x.from,t:x.to})});
+  (cfg.life||[]).forEach(x=>{if(x.on!==0&&(x.days||[]).includes(wd)&&!/lunch|dinner/i.test(x.name||''))it.push({k:'life',l:x.name||'Block',a:hm(x.from),b:hm(x.to),f:x.from,t:x.to})});
+  it.sort((p,q)=>p.a-q.a);
+  return{now:it.find(x=>x.a<=m&&m<x.b)||null,next:it.find(x=>x.a>m)||null,m,h:d.getHours()};
+}
+/* one short, human sentence: never a reproach */
+function coachMsg(S){
+  const c=coachNow(),st=balStreak(),running=F.status==='run'&&F.kind==='focus';
+  if(running)return{t:'In the zone',x:'Timer running. Stay on it, nothing else exists right now.',c:'#6aa8ff'};
+  if(c.now&&c.now.k==='ref')return{t:'Session on now',x:c.now.l+' until '+c.now.t+'. Phone in another room, first exercise now.',c:'#6aa8ff'};
+  if(c.now)return{t:c.now.l,x:'Until '+c.now.t+'. Do it fully, then it is done.',c:'#5be68a'};
+  if(S.tier==='over')return{t:'Reset, no guilt',x:'You are '+fmM(S.over)+' over your scroll budget. One '+BAL_LEN+' min focus puts you back on track.',c:'#ff7a70'};
+  if(S.f>=180)return{t:'Machine mode',x:fmM(S.f)+' of focus today. This is how you pull away from everyone else.',c:'#5be68a'};
+  if(S.f>=90)return{t:'Solid day',x:fmM(S.f)+' of focus already. Keep stacking.',c:'#5be68a'};
+  if(c.next&&c.next.a-c.m<=120)return{t:'Next: '+c.next.l,x:'At '+c.next.f+'. Get ready 10 minutes before and put the phone away.',c:'#6aa8ff'};
+  if(c.h>=22&&c.m>=22*60+30)return{t:'Close the day',x:'Sleep is part of the plan. 8 hours make tomorrow easier.',c:'#a78bfa'};
+  if(c.h<10)return{t:'Good morning',x:'Water, 10 push-ups, then your first win before you touch the phone.',c:'#ffb347'};
+  if(S.tier==='edge')return{t:'Close to your limit',x:fmM(S.left)+' of scroll left today. Spend it on purpose.',c:'#ff9f5a'};
+  if(st>=2)return{t:st+' clean days in a row',x:'Protect the streak. One focus session now.',c:'#ffb347'};
+  if(c.next)return{t:'Next: '+c.next.l,x:'At '+c.next.f+'. Until then, one focus session is never wasted.',c:'#6aa8ff'};
+  return{t:'One session now',x:'A started session beats a perfect plan. '+BAL_LEN+' minutes, go.',c:'#6aa8ff'};
+}
 function balCard(){
-  balSyncCheck();try{sfApply()}catch(e){}
   const el=document.getElementById('balcard');if(!el)return;
-  const S=balState(),c=balCol[S.tier],st=balStreak();
-  const never=!Object.keys(lj('apptime',{})).length&&!Object.keys(lj('opaldays',{})).length;
-  if(never){el.style.display='none';return}
+  const S=balState(),M=coachMsg(S),c=balCol[S.tier],st=balStreak();
   el.style.display='';
   const pS=S.b?Math.min(100,Math.round(100*S.s/S.b)):0,fMax=Math.max(60,S.f),pF=Math.min(100,Math.round(100*S.f/fMax));
   el.dataset.tier=S.tier;
-  el.innerHTML='<div class="bal-h"><span class="bal-t"><i style="color:'+c+'">'+balIc+'</i>Screen balance</span><button class="lnk" data-bal="det">Details</button></div>'+
-   '<div class="bal-r"><div class="bal-l"><span>Scrolling</span><b style="color:'+c+'">'+fmM(S.s)+'<small> / '+fmM(S.b)+'</small></b></div><i class="bal-b"><u style="width:'+pS+'%;background:'+c+'"></u></i></div>'+
+  el.innerHTML='<div class="bal-h"><span class="bal-t"><i style="color:'+M.c+'">'+balIc+'</i>Coach</span><button class="lnk" data-bal="det">Details</button></div>'+
+   '<div class="bal-co"><b style="color:'+M.c+'">'+esc(M.t)+'</b><span>'+esc(M.x)+'</span></div>'+
+   (S.has?'<div class="bal-r"><div class="bal-l"><span>Scrolling</span><b style="color:'+c+'">'+fmM(S.s)+'<small> / '+fmM(S.b)+'</small></b></div><i class="bal-b"><u style="width:'+pS+'%;background:'+c+'"></u></i></div>':'')+
    '<div class="bal-r"><div class="bal-l"><span>Focus</span><b>'+fmM(S.f)+'</b></div><i class="bal-b f"><u style="width:'+pF+'%"></u></i></div>'+
-   '<div class="bal-m">'+esc(balMsg(S))+'</div>'+
-   '<div class="bal-a"><button class="btn primary sm" data-bal="go">'+(F.status==='run'?'Back to my timer':'Focus 25 min')+'</button>'+(S.tier==='over'||S.tier==='edge'?'<button class="btn sm" data-bal="rx">Phone down 1 h</button>':'')+(st?'<span class="bal-st" title="Days under your scroll budget">🔥 '+st+' clean day'+(st>1?'s':'')+'</span>':'')+'</div>';
+   '<div class="bal-a"><button class="btn primary sm" data-bal="go">'+(F.status==='run'?'Back to my timer':'Focus '+BAL_LEN+' min')+'</button><button class="btn sm" data-bal="art">Doubt? Audio to Arthur</button>'+(st?'<span class="bal-st" title="Days under your scroll budget">🔥 '+st+'</span>':'')+'</div>';
+}
+function balArthur(){
+  const c=balCfg();
+  openSheet('<h2>Doubt? Audio to Arthur</h2><div class="sub" style="margin:0 0 12px">Stuck for more than 15 minutes? Do not burn an hour alone. Record a voice message:</div>'+
+   '<ol class="bal-ol"><li>Which exercise or question it is.</li><li>What you already tried.</li><li>Exactly where you are blocked.</li></ol>'+
+   '<div class="field" style="margin-top:12px"><label>Arthur\'s number, with country code</label><input id="ar-n" type="tel" inputmode="tel" placeholder="+33 6 12 34 56 78" value="'+esc(c.ar||'')+'"></div>'+
+   '<button class="btn primary" id="ar-w">Open WhatsApp</button><button class="btn" id="ar-s" style="margin-top:8px">Open Messages</button>');
+  const num=()=>{const v=($('ar-n').value||'').trim(),d=v.replace(/[^\d]/g,'');if(d.length<8){toast('Add Arthur\'s number first');return null}const x=balCfg();x.ar=v;sj(BALK,x);return{v,d}};
+  $('ar-w').onclick=()=>{const n=num();if(n)location.href='https://wa.me/'+n.d};
+  $('ar-s').onclick=()=>{const n=num();if(n)location.href='sms:+'+n.d};
 }
 function balSheet(){
   const c=balCfg(),td=iso(),D=Array.from({length:7},(_,i)=>shiftD(td,i-6));
@@ -10018,62 +10023,21 @@ function balSheet(){
   const at=lj('apptime',{}),cl=appCls(),wm={};D.forEach(d=>{const a=at[d]||{};Object.keys(a).forEach(k=>{if(cl[k]!=='n')wm[k]=(wm[k]||0)+a[k]})});
   const top=Object.keys(wm).sort((a,b)=>wm[b]-wm[a]).slice(0,3);
   const bars=D.map((d,i)=>'<div class="bal-d'+(d===td?' on':'')+'"><div class="bal-c"><i class="s" style="height:'+Math.max(2,Math.round(sc[i]/mx*72))+'px"></i><i class="f" style="height:'+Math.max(2,Math.round(fo[i]/mx*72))+'px"></i><em style="bottom:'+Math.round(bu[i]/mx*72)+'px"></em></div><small>'+new Date(d+'T12:00:00').toLocaleDateString('en',{weekday:'narrow'})+'</small></div>').join('');
-  const back=tS>=30?'<div class="bal-tb"><b>'+fmM(Math.round(tS/2))+'</b> a week: that is what you get by halving your scrolling, about '+Math.round(tS/2/25)+' focus sessions.</div>':'';
-  openSheet('<h2>Screen balance</h2><div class="sub" style="margin:0 0 10px">Scrolling is the time on apps you marked Distracting. Each focus session earns a few minutes back.</div>'+
+  const back=tS>=30?'<div class="bal-tb"><b>'+fmM(Math.round(tS/2))+'</b> a week: that is what you get by halving your scrolling, about '+Math.round(tS/2/BAL_LEN)+' focus sessions.</div>':'';
+  openSheet('<h2>Screen balance</h2><div class="sub" style="margin:0 0 10px">Scrolling is the time on apps you marked Distracting. Each focus session earns a few minutes back. This only measures, it never blocks.</div>'+
    '<div class="bal-chart">'+bars+'</div><div class="bal-lg"><span><i class="s"></i>Scrolling</span><span><i class="f"></i>Focus</span><span><em></em>Budget</span></div>'+
    '<div class="bal-sum"><div><b>'+fmM(tS)+'</b><small>scrolled · 7 days</small></div><div><b>'+fmM(tF)+'</b><small>focus · 7 days</small></div><div><b>'+ok+'/7</b><small>clean days</small></div></div>'+back+
    (top.length?'<div class="lbl" style="margin:14px 0 6px">Most scrolled this week</div>'+top.map(k=>'<div class="bal-ap"><span>'+esc(k)+'</span><b>'+fmM(wm[k])+'</b></div>').join(''):'')+
-   '<div class="lbl" style="margin:16px 0 8px">Your rules</div>'+
+   '<div class="lbl" style="margin:16px 0 8px">Your numbers</div>'+
    '<div class="two"><div class="field"><label>Scroll budget, min/day</label><input id="bl-b" type="number" inputmode="numeric" value="'+c.b+'"></div><div class="field"><label>Earned per 25 min focus</label><input id="bl-e" type="number" inputmode="numeric" value="'+c.e+'"></div></div>'+
-   '<div class="field"><label>Pause when I pass my budget</label><div class="chips" id="bl-p"><button class="chip '+(c.p?'on':'')+'" data-v="1">On</button><button class="chip '+(c.p?'':'on')+'" data-v="0">Off</button></div></div>'+
-   (pcfg().on?'<div class="field"><label>Live nudge (push when you open an app)</label><div class="chips" id="bl-l"><button class="chip '+(c.l?'on':'')+'" data-v="1">On</button><button class="chip '+(c.l?'':'on')+'" data-v="0">Off</button></div></div><button class="btn" id="bl-ping" style="margin-bottom:8px">Set up the live nudge</button>':'<div class="sub" style="margin:2px 0 10px">Live nudges need push notifications: turn them on in Settings › Notifications.</div>')+
-   '<div class="field"><label>Study first: lock Home until I reach my focus goal</label><div class="chips" id="bl-sf"><button class="chip '+(c.s?'':'on')+'" data-v="0">Off</button><button class="chip '+(c.s?'on':'')+'" data-v="1">On</button></div></div><div class="field"><label>Daily focus goal, min</label><input id="bl-g" type="number" inputmode="numeric" value="'+c.g+'"></div>'+
-   (c.s&&pcfg().on?'<button class="btn" id="bl-sfs" style="margin-bottom:8px">What happens when I open Instagram</button>':'')+
-   '<button class="btn primary" id="bl-s">Save</button><button class="btn" id="bl-h" style="margin-top:8px">How apps are counted</button>');
-  let pv=c.p,lv=c.l,sv2=c.s;
-  $('bl-sf').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sv2=+b.dataset.v;[...$('bl-sf').children].forEach(x=>x.classList.toggle('on',x===b))};
-  if($('bl-sfs'))$('bl-sfs').onclick=balBack;
-  if($('bl-l'))$('bl-l').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;lv=+b.dataset.v;[...$('bl-l').children].forEach(x=>x.classList.toggle('on',x===b))};
-  if($('bl-ping'))$('bl-ping').onclick=balPing;
-  $('bl-p').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;pv=+b.dataset.v;[...$('bl-p').children].forEach(x=>x.classList.toggle('on',x===b))};
+   '<button class="btn primary" id="bl-s">Save</button>'+
+   (typeof ruSheet==='function'?'<button class="btn" id="bl-ru" style="margin-top:8px">My weekly routine</button>':'')+
+   '<button class="btn" id="bl-h" style="margin-top:8px">How apps are counted</button>');
   $('bl-s').onclick=()=>{
     const b=Math.max(10,Math.min(600,Math.round(+$('bl-b').value||60))),e=Math.max(0,Math.min(25,Math.round(+$('bl-e').value||0)));
-    const g=Math.max(10,Math.min(600,Math.round(+$('bl-g').value||90)));sj(BALK,{b,e,p:pv,l:lv,s:sv2,g});localStorage.removeItem('p_bals');closeSheet();balCard();vib(10);toast(sv2?'Saved · Study first is on':'Saved')};
+    const x=balCfg();sj(BALK,Object.assign(x,{b,e}));closeSheet();balCard();vib(10);toast('Saved')};
+  if($('bl-ru'))$('bl-ru').onclick=()=>{closeSheet();setTimeout(ruSheet,300)};
   $('bl-h').onclick=()=>{try{appTimeHelp()}catch(x){}};
-}
-function balBack(){
-  openSheet('<h2>When Study first is locked</h2><div class="sub" style="margin:0 0 12px">iOS does not let a Shortcut open Aether (home screen web apps are not in the Open App list). Two things work instead:</div>'+
-   '<ol class="bal-ol"><li><b>The notification.</b> When you open a distracting app while your day is locked, you get a "Study first" push. Tap it: Aether opens and starts a 25 min focus. Nothing to add in Shortcuts.</li>'+
-   '<li><b>An alert on top of the app (optional).</b> In the <b>Is Opened</b> automation, right after the <b>/ev?a=…&amp;e=o</b> action add <b>Set Variable</b> named <b>Lock</b>, then <b>If</b> <b>Lock</b> · <b>contains</b> · <code>true</code>, and inside it <b>Show Alert</b> with the text "Study first: do your focus before scrolling". Leave Otherwise empty.</li></ol>'+
-   '<div class="sub" style="margin-top:10px">iOS cannot block the app itself. This is a nudge, not a lock.</div>');
-}
-function balPing(){
-  const u=pUrl(),bad=Object.keys(lj('apptime',{})).length?[...new Set(Object.values(lj('apptime',{})).flatMap(o=>Object.keys(o)))].filter(k=>appCls()[k]!=='n')[0]:'';
-  const ex=(bad||'Instagram').replace(/ /g,'_'),tk=!!pcfg().token;
-  openSheet('<h2>Live nudge</h2><div class="sub" style="margin:0 0 12px">Your Shortcut tells your push worker the moment you open or close an app. If you passed (or nearly passed) your budget, you get a notification right then. Tap it to start a focus session.</div>'+
-   '<div class="lbl" style="margin-bottom:6px">In each existing automation (Is Opened, then Is Closed)</div>'+
-   '<ol class="bal-ol"><li>Add one more action at the very end: <b>Get Contents of URL</b>, method <b>GET</b>.</li>'+
-   '<li>Address for <b>Is Opened</b>:<code>'+esc(u)+'/ev?a='+esc(ex)+'&amp;e=o</code>Address for <b>Is Closed</b>:<code>'+esc(u)+'/ev?a='+esc(ex)+'&amp;e=c</code>Use the app name with an underscore for spaces.</li>'+
-   (tk?'<li>Your worker has a token. Either add a header <b>x-token</b> with your token, or add <b>&amp;t=</b> and the token at the end of the address.</li>':'')+
-   '<li>No JSON, no headers needed otherwise.</li></ol>'+
-   '<button class="btn primary" id="bg-t" style="margin-top:12px">Send a test nudge</button><div class="sub" id="bg-r" style="margin-top:8px"></div>');
-  $('bg-t').onclick=async()=>{const r=$('bg-r');r.textContent='Sending…';
-    try{await pSync(true);const j=await pfetch('/ev?a='+encodeURIComponent(ex)+'&e=o');r.textContent=j.sent?'Sent. Look at your Lock Screen.':'The worker answered but sent nothing: you are under 80% of your budget, a nudge was sent less than 20 min ago, or it is your quiet hours.'}
-    catch(e){r.textContent='Error: '+String(e.message||e)}};
-}
-/* the pause: only when over budget, never while a timer runs, 90 min apart, 3 times a day at most */
-function balPause(){
-  if(document.hidden||!balCfg().p)return;
-  if(F.status==='run'||$('sheet').classList.contains('show'))return;
-  const S=balState();if(S.tier!=='over')return;
-  const p=lj('p_balp',{d:'',n:0,t:0});if(p.d!==S.d){p.d=S.d;p.n=0}
-  if(p.n>=3||Date.now()-p.t<90*60000)return;
-  p.n++;p.t=Date.now();sj('p_balp',p);
-  openSheet('<div class="bal-pz"><div class="bal-pi">'+balIc+'</div><h2>Take a breath</h2><div class="bal-pn">'+fmM(S.s)+'</div><div class="sub">scrolled today, '+fmM(S.over)+' over your budget.<br>The same time is about '+S.sess+' focus sessions.</div></div>'+
-   '<button class="btn primary" id="bp-go" style="margin-top:14px">Focus 25 min</button><button class="btn" id="bp-rx" style="margin-top:8px">Phone down for an hour</button><button class="btn" id="bp-no" style="margin-top:8px">Not now</button>');
-  $('bp-go').onclick=()=>{closeSheet();balGo()};
-  $('bp-rx').onclick=()=>{closeSheet();const r=$('rxcard');if(r)r.click()};
-  $('bp-no').onclick=()=>closeSheet();
 }
 /* a clean day earns XP, once, the next time you open Aether */
 function balReward(){
@@ -10083,28 +10047,98 @@ function balReward(){
   try{gain(15*n);toast('Clean day · +'+15*n+' XP')}catch(e){}
 }
 document.addEventListener('click',e=>{
-  const s=e.target.closest&&e.target.closest('[data-sf]');
-  if(s){e.stopPropagation();vib(8);if(s.dataset.sf==='go')balGo();else{const el=$('sfcard');if(el&&!el.dataset.ask){el.dataset.ask=1;sfApply();setTimeout(()=>{if(el)el.dataset.ask=''},4000)}else{const o=sfSt();o.skip=1;sj('p_sfd',o);sfApply();balCard()}}return}
   const b=e.target.closest&&e.target.closest('[data-bal]');if(!b)return;e.stopPropagation();vib(8);
   const a=b.dataset.bal;
   if(a==='det')balSheet();
   else if(a==='go')balGo();
-  else if(a==='rx'){const r=$('rxcard');if(r)r.click()}
+  else if(a==='art')balArthur();
 },true);
 (function(){
+  try{document.getElementById('home').classList.remove('sf-on');const o=document.getElementById('sfcard');if(o)o.remove()}catch(e){}
   try{const h=window.scrRender;if(typeof h==='function'&&!h.__bal){const w=function(){const r=h.apply(this,arguments);try{balCard()}catch(e){}return r};w.__bal=1;window.scrRender=w}}catch(e){}
   try{const sh=window.show;if(typeof sh==='function'&&!sh.__bal){const w=function(v){const r=sh.apply(this,arguments);if(v==='home')setTimeout(()=>{try{balCard()}catch(e){}},30);return r};w.__bal=1;window.show=w}}catch(e){}
-  setTimeout(balCard,1200);setTimeout(()=>{balCard();balReward()},4800);setTimeout(balPause,6500);
-  setInterval(()=>{if(!document.hidden)try{balCard()}catch(e){}},20000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden){setTimeout(balCard,600);setTimeout(()=>{balCard();balPause()},4500)}});
-  try{navigator.serviceWorker&&navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.go==='focus')balGo()})}catch(e){}
-  if(/#go=focus/.test(location.hash)){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}setTimeout(balGo,1500)}
-  window.PN=window.PN||{};window.PN.bal={state:balState,card:balCard,sheet:balSheet,pause:balPause,reward:balReward,streak:balStreak,cfg:balCfg,nudge:balNudge,ping:balPing,sync:balSyncCheck,locked:sfLocked,sf:sfApply};
+  setTimeout(balCard,1200);setTimeout(()=>{balCard();balReward()},4800);
+  setInterval(()=>{if(!document.hidden)try{balCard()}catch(e){}},30000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){setTimeout(balCard,600)}});
+  window.PN=window.PN||{};window.PN.bal={state:balState,card:balCard,sheet:balSheet,reward:balReward,streak:balStreak,cfg:balCfg,coach:coachMsg,now:coachNow,arthur:balArthur};
 })();
+
+/* ================= v143: MY WEEKLY ROUTINE — the same sessions every week, plus daily reminders =================
+   Applied once at first launch, and again whenever you tap "Apply again". Everything it adds has an id starting with "u-",
+   so applying twice never duplicates, and removing it never touches what you made yourself. Edit any block afterwards in Week template. */
+const RU_V=2,RU_FLAG='p_ru';
+const RU={
+ life:[ /* id, icon, name, days (0 = Sunday), from, to */
+  ['u-dinM','🍝','Dinner + cook portions for 2',[1],'21:00','22:00'],
+  ['u-dinT','🍝','Dinner (leftovers, eat right away)',[2],'20:30','21:15'],
+  ['u-dinW','🍝','Dinner',[3,4,5],'21:00','21:45'],
+  ['u-sport','🏸','Sport: badminton or 20 min jog + hard sprints',[2],'19:30','20:30'],
+  ['u-lunSa','🍽','Real lunch break',[6],'12:00','14:00'],
+  ['u-chore','🧹','Chores: tidy, clean',[6],'14:00','15:00'],
+  ['u-lunSu','🍽','Lunch',[0],'13:00','14:00'],
+  ['u-colle','📝','Colles prep',[0],'09:00','11:00'],
+  ['u-rattr','🔁','Catch-up',[0],'16:00','18:00']],
+ ref:[ /* id, subject, type (learn | ex), days, from, to */
+  ['u-pA','phys','learn',[1,3],'18:00','19:30'],['u-mA','maths','ex',[1,3],'19:30','21:00'],
+  ['u-pB','phys','ex',[4,5],'18:00','19:30'],['u-mB','maths','learn',[4,5],'19:30','21:00'],
+  ['u-pT','phys','learn',[2],'17:30','18:30'],['u-mT','maths','ex',[2],'18:30','19:30'],
+  ['u-cT','chim','learn',[2],'21:15','22:15'],['u-sT','ipt','ex',[3],'21:45','22:45'],
+  ['u-aT','ang','learn',[4],'21:45','22:45'],['u-iT','ipt','ex',[5],'21:45','22:45'],
+  ['u-cS','chim','ex',[6],'15:00','16:30'],['u-iS','ipt','ex',[6],'16:30','18:00'],
+  ['u-mS','maths','ex',[0],'11:00','13:00'],['u-pS','phys','ex',[0],'14:00','16:00'],['u-aS','ang','learn',[0],'18:00','19:00']],
+ rem:[ /* id, title, note, time, days ([] = every day) */
+  ['u-r1','🌅 Wake up','½ L of water, then 10 push-ups.','07:00',[]],
+  ['u-r2','🍎 Apple + water','1 apple before lunch. 1 L of water done by lunch (1.5 L so far).','11:30',[]],
+  ['u-r3','🥜 Nuts','One handful of nuts today.','16:30',[]],
+  ['u-r4','💧 Water','1 more litre by 18:00: you should be at 2.5 L.','17:45',[]],
+  ['u-r5','💧 Last ½ L','½ L before dinner. 3 L done.','20:45',[]],
+  ['u-r6','🌙 Wind down','Phone away. Bed by 23:00 for 8 h of sleep.','22:45',[]],
+  ['u-r7','🍲 Cook for 2','Cook portions for 2: Tuesday dinner is ready.','20:50',[1]],
+  ['u-r8','🏸 Sport at 19:30','Badminton or 20 min jog + hard sprints.','19:15',[2]],
+  ['u-r9','🧹 Chores in 5 min','Tidy and clean, 1 h. Then 3 h of work.','13:55',[6]]]
+};
+const ruIs=x=>String(x.id).startsWith('u-');
+function ruApply(){
+  const cfg=pwCfg();
+  cfg.life=(cfg.life||[]).filter(x=>!ruIs(x));cfg.ref=(cfg.ref||[]).filter(x=>!ruIs(x));
+  cfg.life.forEach(x=>{if(x.id==='l1')x.days=[1,2,3,4,5]});
+  RU.life.forEach(a=>cfg.life.push({id:a[0],ic:a[1],name:a[2],days:a[3].slice(),from:a[4],to:a[5],on:1}));
+  RU.ref.forEach(a=>cfg.ref.push({id:a[0],subj:a[1],type:a[2],days:a[3].slice(),from:a[4],to:a[5],on:1}));
+  cfg.dinner.on=0;
+  cfg.minb=Object.assign({},cfg.minb,{rev:45,ex:45,goal:20});
+  pwSave(cfg);
+  const t=tbCfg();js(TBK+'c',Object.assign({},t,{wd:{from:'17:30',to:'22:45'},we:{from:'09:00',to:'19:00'},max:120}));
+  NT.custom=(NT.custom||[]).filter(x=>!ruIs(x));
+  RU.rem.forEach(a=>NT.custom.push({id:a[0],title:a[1],note:a[2],time:a[3],days:a[4].slice(),date:'',on:true}));
+  try{ntSave()}catch(e){}
+  try{js(RU_FLAG,RU_V)}catch(e){}
+  try{if(typeof pSyncSoon==='function')pSyncSoon()}catch(e){}
+  try{pwRun2(false)}catch(e){}
+}
+function ruRemove(){
+  const cfg=pwCfg();cfg.life=(cfg.life||[]).filter(x=>!ruIs(x));cfg.ref=(cfg.ref||[]).filter(x=>!ruIs(x));cfg.life.forEach(x=>{if(x.id==='l1')x.days=[0,1,2,3,4,5,6]});pwSave(cfg);
+  NT.custom=(NT.custom||[]).filter(x=>!ruIs(x));try{ntSave()}catch(e){}
+  try{js(RU_FLAG,-1)}catch(e){}
+}
+function ruSheet(){
+  const days=[1,2,3,4,5,6,0],E={};days.forEach(d=>E[d]=[]);
+  RU.life.forEach(a=>{if(/^(Dinner|Lunch)$/.test(a[2]))return;a[3].forEach(d=>E[d].push([a[4],a[1]+' '+a[2].split(':')[0].split(' (')[0]]))});
+  RU.ref.forEach(a=>a[3].forEach(d=>E[d].push([a[4],(a[2]==='ex'?'📝 ':'📖 ')+SUBJ[a[1]].n])));
+  const rows=days.map(d=>'<div class="ru-d"><b>'+DAYN[d]+'</b><span>'+E[d].sort((p,q)=>p[0]<q[0]?-1:1).map(x=>x[0]+' '+esc(x[1])).join(' · ')+'</span></div>').join('');
+  openSheet('<h2>My weekly routine</h2><div class="sub" style="margin:0 0 10px">The same sessions every week. Aether proposes them in your calendar and sends the daily reminders: water, push-ups, apple, nuts, sleep.</div>'+rows+
+   '<div class="sub" style="margin:10px 0 4px">Every day: 07:00 water + 10 push-ups · 11:30 apple + 1 L · 16:30 nuts · 17:45 water · 20:45 last ½ L · 22:45 wind down.</div>'+
+   '<button class="btn primary" id="ru-a" style="margin-top:10px">Apply again</button><button class="btn" id="ru-t" style="margin-top:8px">Edit in Week template</button><button class="btn danger" id="ru-x" style="margin-top:8px">Remove my routine</button>');
+  $('ru-a').onclick=()=>{closeSheet();ruApply();toast('Routine applied · review the proposed blocks on Home')};
+  $('ru-t').onclick=()=>{closeSheet();setTimeout(pwTpl,300)};
+  $('ru-x').onclick=async()=>{if(await ask({title:'Remove my routine?',ok:'Remove',danger:1})){ruRemove();closeSheet();toast('Routine removed')}};
+}
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#pw-ru')){e.stopPropagation();closeSheet();setTimeout(ruSheet,300)}},true);
+setTimeout(()=>{try{if(jl(RU_FLAG,0)!==RU_V&&jl(RU_FLAG,0)!==-1){ruApply();toast('Your weekly routine is in · review the proposed blocks on Home')}}catch(e){}},3200);
+window.PN=window.PN||{};window.PN.ru={apply:ruApply,remove:ruRemove,sheet:ruSheet,data:RU};
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
-const HCARDS={balcard:'Screen balance',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
+const HCARDS={balcard:'Coach',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
 const PERIODS=[['morning','Morning'],['day','Daytime'],['night','Evening']],ALWAYS=['wkcard','balcard','hauto','xmcard','rxcard'];
 const hCfg=()=>{const c=Object.assign({mode:'auto',hide:[],order:[],when:{}},jl(PHK,{}));c.hide=c.hide||[];c.order=c.order||[];c.when=c.when||{};return c};
 function hKey(el,i){if(el.dataset&&el.dataset.wid)return 'w:'+el.dataset.wid;if(el.id&&HCARDS[el.id])return el.id;const l=el.querySelector('.lbl');const t=l?l.textContent.trim():'';if(HCARDS[t])return t;if(el.classList.contains('lazycard'))return 'lazycard';const j=el.getAttribute('onclick')||'';if(/showJournal/.test(j))return 'Journal';if(/stats/.test(j))return 'Stats';return null}
