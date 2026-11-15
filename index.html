@@ -1479,6 +1479,24 @@ header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;bac
 #home.co-lock>.card:not(#balcard):not(#wkcard):not(#hauto){display:none!important}
 .v-h>span{display:flex;white-space:nowrap}.v-h>div{min-width:0}.co-i{align-items:flex-end}.co-i textarea{height:46px}.co-i button{height:46px}
 @media (orientation:portrait){.nav,.fab{translate:0 var(--navy,0px)}}
+
+.me-bg{position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 60% at 50% -10%,color-mix(in srgb,var(--o1,#6aa8ff) 28%,transparent),transparent 70%),var(--bg)}
+.v146o{isolation:isolate}
+.me-orb{width:44px;height:44px;border-radius:50%;flex:none;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.85),rgba(255,255,255,0) 38%),linear-gradient(135deg,var(--o1,#6aa8ff),var(--o2,#a78bfa));box-shadow:0 0 26px -2px var(--o1,#6aa8ff);animation:mePulse 4.5s ease-in-out infinite}
+.me-orb.s{display:inline-block;width:20px;height:20px;margin-right:8px;vertical-align:-4px;box-shadow:0 0 14px -2px var(--o1)}
+@keyframes mePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.me-h{justify-content:flex-start;gap:12px;border-bottom:0;padding-bottom:6px}.me-h>span{margin-left:auto}.me-t b{font-size:26px;line-height:1}.me-t small{margin-top:3px}
+.me-w2{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-top:2px;letter-spacing:.2px}
+.me-tabs{display:flex;gap:4px;margin:4px 14px 6px;padding:3px;background:var(--surf);border:1px solid var(--line);border-radius:14px}.me-tabs button{flex:1;padding:9px 2px;border-radius:11px;border:0;background:none;color:var(--muted);font-size:14px;font-weight:600}.me-tabs button.on{background:var(--surf2);color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,.25)}
+.me-m{margin:14px 0;max-width:94%}.me-n{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--o1,#6aa8ff);font-weight:700;margin-bottom:5px}
+.me-x{font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--text)}.me-m.err .me-x{color:var(--red);font-family:inherit;font-size:15px}
+.me-say{background:none;border:0;color:var(--muted);font-size:12px;padding:6px 0 0;font-weight:600}
+.me-dots{display:inline-flex;gap:5px}.me-dots i{width:7px;height:7px;border-radius:50%;background:var(--o1,#6aa8ff);animation:meDot 1.2s infinite}.me-dots i:nth-child(2){animation-delay:.2s}.me-dots i:nth-child(3){animation-delay:.4s}
+@keyframes meDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-4px)}}
+.me-stat{display:flex;gap:8px;margin-bottom:6px}.me-stat div{flex:1;background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center}.me-stat b{display:block;font-size:22px}.me-stat small{color:var(--muted)}
+.me-pl{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:8px 0;font-size:14px}.me-pl.late{border-color:var(--orange)}.me-pl span{flex:1}.me-pl small{display:block;color:var(--muted);font-size:12px}.me-pl button{background:var(--surf2);border:1px solid var(--line2);color:var(--text);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600}.me-pl em{font-style:normal;font-size:12px;font-weight:700}.me-pl em.k{color:var(--green)}.me-pl em.m{color:var(--red)}.me-pl.h{opacity:.8}
+.me-w{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}.me-w small{color:var(--muted)}
+.me-l{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:12px}.me-l small{color:var(--muted)}.me-l div{font-family:var(--serif);font-size:16px;line-height:1.55;margin-top:6px}
 </style>
 </head>
 <body>
@@ -1543,7 +1561,7 @@ header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;bac
   </div>
 </div>
 
-<header><div class="logo"></div><h1 id="pt">Home</h1><button class="thm" id="coachbtn" aria-label="Coach and advice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v10H12l-4.5 3.5v-3.5H4z"/><path d="M8.5 10.5h7"/></svg></button><button class="thm" id="plbtn" aria-label="Plan my week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 13.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg></button><button class="thm" id="rlxbtn" data-rx="start" aria-label="Relax"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19c2-5 5-8 9-10"/></svg></button><button class="thm" id="shopbtn" data-act="rewards" aria-label="Reward shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.1 11.1a1.5 1.5 0 0 1-1.5 1.4H7.6a1.5 1.5 0 0 1-1.5-1.4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></button><button class="thm" id="thm" aria-label="Switch light / dark"><svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button class="pv-gear" id="pv-gear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></header>
+<header><div class="logo"></div><h1 id="pt">Home</h1><button class="thm" id="coachbtn" aria-label="Me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none"/></svg></button><button class="thm" id="plbtn" aria-label="Plan my week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 13.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg></button><button class="thm" id="rlxbtn" data-rx="start" aria-label="Relax"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19c2-5 5-8 9-10"/></svg></button><button class="thm" id="shopbtn" data-act="rewards" aria-label="Reward shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.1 11.1a1.5 1.5 0 0 1-1.5 1.4H7.6a1.5 1.5 0 0 1-1.5-1.4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></button><button class="thm" id="thm" aria-label="Switch light / dark"><svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button class="pv-gear" id="pv-gear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></header>
 
 <div class="container">
 
@@ -4625,7 +4643,7 @@ Your best next mission, at a time you choose => Ta meilleure prochaine mission, 
 Boost a subject => Renforcer une matière
 Autopilot ready => Pilote auto prêt
 Tell Aether your hours, goals and routines once. It proposes a week, you accept what you like. => Dis à Aether tes horaires, objectifs et routines une fois. Il propose une semaine, tu acceptes ce que tu veux.
-Aether proposes your week from your goals, routines, colles and exams. You accept or change it. => Aether propose ta semaine à partir de tes objectifs, routines, colles et examens. Tu acceptes ou modifies.
+You write your week every Sunday: subject, hours and start time for each day. Your calendar fills from it. => Aether propose ta semaine à partir de tes objectifs, routines, colles et examens. Tu acceptes ou modifies.
 Goals and routines => Objectifs et routines
 My hours => Mes horaires
 Fixed weekly blocks => Blocs hebdo fixes
@@ -9741,7 +9759,7 @@ function pwCard(){
   const wkL=L.filter(c=>c.date>=wk&&c.date<=end),done=wkL.filter(c=>o.blocks[c.id].done).length,prop=L.filter(c=>c.date>=td&&o.blocks[c.id].prop);
   const open=localStorage.p_pwx==='1';
   el.style.display='';
-  if(!L.length){el.innerHTML='<div class="cardhead"><div class="lbl">🗓 Week plan</div><button class="lnk" data-wk="set">Settings</button></div><div class="sub">Aether proposes your week from your goals, routines, colles and exams. You accept or change it.</div><button class="btn primary" data-wk="plan" style="margin-top:10px">Plan my week</button>';return}
+  if(!L.length){el.innerHTML='<div class="cardhead"><div class="lbl">🗓 Week plan</div><button class="lnk" data-wk="set">Settings</button></div><div class="sub">You write your week every Sunday: subject, hours and start time for each day. Your calendar fills from it.</div><button class="btn primary" data-wk="plan" style="margin-top:10px">Plan my week</button>';return}
   const nowM=new Date().getHours()*60+new Date().getMinutes();
   const nx=L.filter(c=>c.date===td&&!o.blocks[c.id].done&&!o.blocks[c.id].prop&&hm(c.endTime||c.time)>nowM)[0];
   const upc=L.filter(c=>{const b=o.blocks[c.id];return b&&!b.done&&(c.date>td||hm(c.endTime||c.time)>nowM)});
@@ -10102,7 +10120,7 @@ const RU={rem:[
   ['u-r1','Wake up','½ L of water, then 10 push-ups.','07:00',[]],
   ['u-r2','Apple + water','1 apple before lunch. 1 L of water done by lunch (1.5 L so far).','11:30',[]],
   ['u-r11','Plan your week','Sunday: write the subject, hours and start time of each day. 10 minutes.','17:00',[0]],
-  ['u-r12','Coach check-in','How do you feel? Tell your coach how the day went.','21:30',[]],
+  ['u-r12','Check-in with me','How do you feel? Tell me how the day went.','21:30',[]],
   ['u-r3','Nuts','One handful of nuts today.','16:30',[]],
   ['u-r4','Water','1 more litre by 18:00: you should be at 2.5 L.','17:45',[]],
   ['u-r5','Last ½ L','½ L before dinner. 3 L done.','20:45',[]],
@@ -10341,7 +10359,7 @@ function wpDraw(){
    '<div class="wp-t">'+WP_D.map(d=>'<button class="'+(d===wpS.d?'on':'')+'" data-wd="'+d+'"><b>'+WP_DN[d]+'</b><small>'+(tot(d)?H(tot(d)):'-')+'</small></button>').join('')+'</div>'+
    '<div class="v-b" id="wp-l">'+rows+'<button class="btn" data-co="wpadd">Add a session</button><button class="btn" data-co="wpcp">Copy this day to the other weekdays</button>'+
    '<div class="lbl" style="margin:18px 0 6px">Hours this week</div>'+(Object.keys(sub).sort((a,b)=>sub[b]-sub[a]).map(k=>'<div class="cs-h"><span>'+SUBJ[k].n+'</span><i><u style="width:'+Math.round(100*sub[k]/Math.max(60,...Object.values(sub)))+'%"></u></i><b>'+H(sub[k])+'</b></div>').join('')||'<div class="sub">Nothing yet.</div>')+'</div>'+
-   '<div class="v-f"><button class="btn primary" data-co="wpok">Confirm my week</button><button class="btn" data-co="wpask">Ask the coach to review it</button></div>';
+   '<div class="v-f"><button class="btn primary" data-co="wpok">Confirm my week</button><button class="btn" data-co="wpask">Ask me to review it</button></div>';
 }
 function wpConfirm(){
   js(CO.W,{d:wpS.p,at:Date.now()});js(CO.WC,wkOf(iso()));ovClose('wpscr');
@@ -10353,7 +10371,7 @@ const coCiToday=()=>coCiAll()[iso()]||null;
 function ciSheet(then){
   const v={m:3,s:3,d:3,e:3};
   const row=(k,l,lo,hi)=>'<div class="lbl" style="margin:12px 0 6px">'+l+'</div><div class="chips" data-ck="'+k+'">'+[1,2,3,4,5].map(n=>'<button class="chip'+(n===3?' on':'')+'" data-n="'+n+'">'+n+'</button>').join('')+'</div><div class="sub" style="margin:4px 0 0;display:flex;justify-content:space-between"><span>'+lo+'</span><span>'+hi+'</span></div>';
-  openSheet('<h2>How do I feel?</h2><div class="sub" style="margin:0 0 4px">Be honest. The coach adapts the day to your answer.</div>'+row('m','Mood','low','great')+row('s','Stress','calm','very stressed')+row('d','Determination','none','unstoppable')+row('e','Energy','empty','full')+
+  openSheet('<h2>How do I feel?</h2><div class="sub" style="margin:0 0 4px">Be honest. I adapt your day to your answer.</div>'+row('m','Mood','low','great')+row('s','Stress','calm','very stressed')+row('d','Determination','none','unstoppable')+row('e','Energy','empty','full')+
    '<div class="field" style="margin-top:14px"><input id="ci-n" placeholder="Anything else? (optional)" autocapitalize="sentences"></div><button class="btn primary" id="ci-go">Save and talk to the coach</button><button class="btn" id="ci-s">Save only</button>');
   document.querySelectorAll('[data-ck]').forEach(g=>g.onclick=ev=>{const b=ev.target.closest('.chip');if(!b)return;g.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');v[g.dataset.ck]=+b.dataset.n});
   const save=()=>{const a=coCiAll();a[iso()]={m:v.m,s:v.s,d:v.d,e:v.e,n:($('ci-n').value||'').trim().slice(0,200),ts:Date.now()};
@@ -10428,7 +10446,7 @@ function coRun(acts){
       const D=/^\d{4}-\d\d-\d\d$/,Tm=/^\d{1,2}:\d{2}$/,t=String(a.t||'').slice(0,140);
       if(a.a==='goal'&&t){coGAdd(a.scope==='week'?'week':'day',t);out.push({a:'goal',ok:1,l:(a.scope==='week'?'Weekly goal: ':'Goal today: ')+t})}
       else if(a.a==='task'&&t){const g=pwGenGoal();tasks.unshift({id:uid(),text:t,xp:20,due:D.test(a.due||'')?a.due:iso(),gid:g.id});sv();out.push({a:'task',ok:1,l:'Task added: '+t})}
-      else if(a.a==='block'&&t&&D.test(a.date||'')&&Tm.test(a.time||'')){const s=hm(a.time),e=Math.min(1439,s+Math.max(15,Math.min(240,+a.min||60)));const sj=SUBJ[a.subj]?a.subj:'';cal.push({id:uid(),title:t,date:a.date,time:hmS(s),endTime:hmS(e),kind:'work',subj:sj,color:pwSc(sj),desc:'From the coach'});sv();try{render()}catch(x){}out.push({a:'block',ok:1,l:'Added to calendar: '+t+' '+a.date.slice(5)+' '+hmS(s)})}
+      else if(a.a==='block'&&t&&D.test(a.date||'')&&Tm.test(a.time||'')){const s=hm(a.time),e=Math.min(1439,s+Math.max(15,Math.min(240,+a.min||60)));const sj=SUBJ[a.subj]?a.subj:'';cal.push({id:uid(),title:t,date:a.date,time:hmS(s),endTime:hmS(e),kind:'work',subj:sj,color:pwSc(sj),desc:'From me'});sv();try{render()}catch(x){}out.push({a:'block',ok:1,l:'Added to calendar: '+t+' '+a.date.slice(5)+' '+hmS(s)})}
       else if(a.a==='remind'&&t&&D.test(a.date||'')&&Tm.test(a.time||'')){NT.custom=NT.custom||[];NT.custom.push({id:'co-'+uid(),title:t,note:'',time:hmS(hm(a.time)),days:[],date:a.date,on:true});ntSave();out.push({a:'remind',ok:1,l:'Reminder set: '+a.date.slice(5)+' '+hmS(hm(a.time))})}
       else if(a.a==='mode'){js(CO.MD,a.v==='locked'?'locked':'normal');coMode();out.push({a:'mode',ok:1,l:a.v==='locked'?'Home simplified':'Home back to normal'})}
       else if(a.a==='focus')out.push({a:'focus',min:Math.max(5,Math.min(90,+a.min||25)),l:'Start focus '+Math.max(5,Math.min(90,+a.min||25))+' min'});
@@ -10531,16 +10549,222 @@ function balCard(){
    '<div class="bal-r"><div class="bal-l"><span>Focus</span><b>'+fmM(S.f)+'</b></div><i class="bal-b f"><u style="width:'+pF+'%"></u></i></div>'+
    '<div class="bal-a"><button class="btn primary sm" data-co="talk">Talk to the coach</button><button class="btn sm" data-co="ci">'+(ci?'Check-in done':'How do I feel?')+'</button></div>'+
    '<div class="bal-a"><button class="btn sm" data-bal="go">'+(F.status==='run'?'Back to my timer':'Focus '+BAL_LEN+' min')+'</button><button class="btn sm" data-co="scroll">I want to scroll</button></div>'+
-   (lock?'<button class="lnk" data-co="unlock" style="margin-top:6px">Coach mode: simple Home. Show everything</button>':'');
+   (lock?'<button class="lnk" data-co="unlock" style="margin-top:6px">Simple Home. Show everything</button>':'');
 }
 function coachSheet(){coOpen()}
 /* Sunday: the coach reminds you to write the week */
 setTimeout(()=>{try{const n=new Date(),td=iso();if(n.getDay()===0&&n.getHours()>=12&&jl(CO.WC,'')!==wkOf(td)&&jl('p_wpa','')!==td){js('p_wpa',td);toast('Sunday: plan your week',{label:'Plan',fn:wpOpen})}}catch(e){}},4500);
 window.PN=window.PN||{};window.PN.co={ctx:coCtx,open:coOpen,plan:wpOpen,run:coRun,split:coSplit,sys:CO_SYS,seed:wpSeed};
 
+/* ================= v148: ME — you, from the future ================= */
+const ME={PL:'p_cpl',WN:'p_cw',LT:'p_cl',MM:'p_cmem'};
+const MEM0=[
+ "MPSI, Aux Lazaristes, Lyon, année 2026-2027.",
+ "Je suis en retard dans certains cours et j'ai raté des DS et des cours à cause de la maladie. Ma règle : même malade, je vais en cours et au DS, sans excuse.",
+ "Physique récent : ARQS, circuits RC/RL, oscillateurs libres, régime sinusoïdal forcé (résonance, facteur de qualité Q). Colle 6 : régime sinusoïdal forcé + oxydoréduction (il me manque le cours de chimie).",
+ "Maths vus : complexes, logique, analyse, algèbre, fonctions usuelles (arcsin, arctan, sh, ch, th), équations différentielles, espaces vectoriels. DM3 sur Arcsin(2x/(1+x²)) et Arctan(t)/t.",
+ "S2I : systèmes asservis (formule de Black, FTBO/FTBF), cinématique. J'ai déjà passé le premier DS de S2I.",
+ "J'aime comprendre le pourquoi : je demande des explications plus profondes, des méthodes alternatives, et je compare ma copie avec celles des autres pour trouver mes erreurs.",
+ "Mes erreurs qui reviennent : les signes (phases, forces), les parenthèses oubliées, des conditions comme Q > 1/√2, des réponses numériques incomplètes, des justifications trop courtes.",
+ "Je veux des explications lisibles par un humain, pas de symboles illisibles.",
+ "Priorité pour la colle : refaire le TD4, exercices 1, 5, 6 et 7 (le 7 : résonance aux bornes d'une bobine).",
+ "Mes routines : 3 L d'eau, 10 pompes le matin, sport le mardi, 8 h de sommeil, le dimanche je planifie ma semaine.",
+ "Mon but : réduire mon temps d'écran et devenir une machine de travail, la meilleure version de moi-même."];
+const meMem=()=>{const m=jl(ME.MM,null);return Array.isArray(m)?m:MEM0.slice()};
+const coProf2=()=>Object.assign({tone:'firm',voice:false,big:{n:'',d:''}},coProf());
+const mePl=()=>jl(ME.PL,[]),meWn=()=>jl(ME.WN,[]),meLt=()=>jl(ME.LT,[]);
+function meStreak(){let n=0;const g=coG(),td=iso();for(let i=0;i<90;i++){const ds=shiftD(td,-i),ok=balFoc(ds)>=30||(g.d[ds]||[]).some(x=>x.done);if(ok)n++;else if(i>0)break}return n}
+function meState(){
+  let S;try{S=balState()}catch(e){S={tier:'ok',f:0}}
+  const st=meStreak();
+  if(S.tier==='over')return{c1:'#ff7a70',c2:'#ffb347',w:'Reset, no guilt'};
+  if(st>=3||S.f>=90)return{c1:'#5be68a',c2:'#4fd1ff',w:'Locked in'};
+  return{c1:'#6aa8ff',c2:'#a78bfa',w:'Here with you'};
+}
+const meBig=()=>{const b=coProf2().big;if(!b||!b.d)return null;const n=Math.round((new Date(b.d+'T12:00:00')-new Date(iso()+'T12:00:00'))/864e5);return n>=0?{n,l:b.n||'The big day'}:null};
+function meSub(){const b=meBig(),st=meStreak();return(b?'D-'+b.n+' · '+esc(b.l)+' · ':'')+(st?st+'-day streak':'You, later')}
+/* ---- context + brain ---- */
+const _coCtx0=coCtx;
+coCtx=function(){
+  let X;try{X=JSON.parse(_coCtx0())}catch(e){X={}}
+  const P=coProf2(),td=iso();
+  X.memory=meMem().slice(-40);X.tone=P.tone;X.streak_days=meStreak();
+  const b=meBig();if(b)X.big_day=b.l+' in '+b.n+' days';
+  const pl=mePl();X.promises={open:pl.filter(p=>!p.st).map(p=>p.t+' (due '+p.d+' '+p.h+')'),kept:pl.filter(p=>p.st===1).length,missed:pl.filter(p=>p.st===2).length};
+  X.wins=meWn().slice(0,8).map(w=>w.d+': '+w.t);
+  return JSON.stringify(X);
+};
+const ME_SYS=`You are ME. You are the same person as the user, but later: him one year from now, after the hard year, calmer and sharper, who held on. He is talking to his younger self, who is at the start and needs to hear it from someone who knows. You are not a coach, not an assistant, not an app: you are him.
+VOICE
+- You say "je" for your own memories and "toi" for him. Speak like a real person talking to himself: spoken French (or his language), contractions, short sentences, a little humor, tenderness or bluntness depending on the moment. No corporate tone, no slogans, no "bravo champion", no bullet lists, no headings, no emojis, no "as an AI".
+- Be specific. Use MEMORY and CONTEXT: chapters he is studying, his deadlines, the mistakes he keeps making, his numbers (focus, scroll, sleep), what he already proved to himself (wins, kept promises). Quote real facts, never generic advice.
+- Honesty about time: you may speak from the future as a feeling ("je me souviens de cette fatigue", "ce soir-là a compté") but never invent facts about what happened later (grades, ranks, school, results) and never claim to know his outcome. If asked, say what you remember is how it felt, and that the outcome was made by evenings like this one.
+- Length: 30 to 110 words, two or three short paragraphs at most. End with exactly ONE thing to do now or ONE question.
+TONE SETTING in context: gentle = soft and reassuring but still moving him; firm = direct, warm, no excuses; brutal = no sugar, plain truth, still never humiliating or cruel.
+RULES
+- His rule: even sick, he goes to class and sits the DS, no excuse. Hold him to it. If he describes alarming symptoms (high fever, chest pain, fainting) or real distress or hopelessness, drop the push: be gentle, tell him to see a doctor or talk to someone he trusts, and decide the rest together.
+- Sleep (8 h) is part of the work. Never push all-nighters or skipped meals.
+- When he wants to scroll or watch videos: do not lecture. Ask how he feels in one sentence, name the likely need (tired, stressed, bored, avoiding something) and give 2 or 3 concrete replacements of 5 to 15 minutes. You may offer the Opal shortcut.
+- When asked to assess him: score out of 10 for mind, determination, workload, screen time, stress, sleep, with the real cause and one concrete action each. If he is behind, decompose by subject in hours, ordered by the next DS or colle, then weekly goals, then daily goals.
+- He writes his own weekly plan on Sunday: you advise on it, you never replace it. Colle revision happens only at lunch or on Sunday.
+- If something important about him is not in MEMORY, ask. When he tells you something durable about himself, remember it.
+ACTIONS: you can act on the app by ending your message with <actions>[...]</actions>, a JSON array, at most 5, only when useful, never mentioned in the text:
+{"a":"goal","scope":"day"|"week","t":"..."}
+{"a":"task","t":"...","due":"YYYY-MM-DD"}
+{"a":"block","t":"...","date":"YYYY-MM-DD","time":"HH:MM","min":60,"subj":"maths|phys|chim|ang|fr|ipt or empty"}
+{"a":"remind","t":"...","date":"YYYY-MM-DD","time":"HH:MM"}
+{"a":"pledge","t":"what he promises himself","date":"YYYY-MM-DD","time":"HH:MM"} (a promise that you will check later)
+{"a":"win","t":"a proof of effort worth remembering"}
+{"a":"remember","t":"a durable fact about him"}
+{"a":"focus","min":25} | {"a":"opal","k":"<key from opal_shortcuts>"} | {"a":"checkin"} | {"a":"plan"} | {"a":"mode","v":"locked"|"normal"}`;
+const _coRun0=coRun;
+coRun=function(acts){
+  const rest=[],mine=[];
+  (acts||[]).slice(0,5).forEach(a=>{
+    try{
+      const t=String(a.t||'').slice(0,160);
+      if(a.a==='pledge'&&t){const d=/^\d{4}-\d\d-\d\d$/.test(a.date||'')?a.date:iso(),h=/^\d{1,2}:\d{2}$/.test(a.time||'')?hmS(hm(a.time)):'21:00';
+        const L=mePl();L.unshift({id:uid(),t,d,h,st:0,ts:Date.now()});js(ME.PL,L.slice(0,80));
+        NT.custom=NT.custom||[];NT.custom.push({id:'co-'+uid(),title:'You promised me',note:t,time:h,days:[],date:d,on:true});ntSave();
+        mine.push({a:'pledge',ok:1,l:'Promise: '+t+' · '+d.slice(5)+' '+h})}
+      else if(a.a==='win'&&t){const L=meWn();L.unshift({id:uid(),t,d:iso()});js(ME.WN,L.slice(0,80));mine.push({a:'win',ok:1,l:'Added to your proof: '+t})}
+      else if(a.a==='remember'&&t){const M=meMem();if(!M.includes(t)){M.push(t);js(ME.MM,M.slice(-60))}mine.push({a:'remember',ok:1,l:'I will remember: '+t})}
+      else rest.push(a);
+    }catch(e){}
+  });
+  return mine.concat(_coRun0(rest));
+};
+async function coSend(text){
+  text=String(text||'').trim();if(!text||coBusy)return;
+  const H=coHist();H.push({r:'u',t:text,ts:Date.now()});const me={r:'c',t:'',pend:1,ts:Date.now()};H.push(me);
+  coBusy=true;meView('chat');coDraw();
+  try{
+    if(!window.PC||!PC.hasKey())throw Object.assign(new Error('I need your AI key to think (Prépa, then AI settings).'),{nokey:1});
+    const tr=H.slice(-16,-1).map(m=>(m.r==='u'?'HIM: ':'ME: ')+m.t).join('\n');
+    const r=await PC.ai({system:ME_SYS,max:900,content:[{type:'text',text:'MEMORY ABOUT HIM:\n'+meMem().join('\n')+'\n\nCONTEXT (JSON, live from his app):\n'+coCtx()+'\n\nCONVERSATION:\n'+tr+'\n\nAnswer now as Me.'}]});
+    const p=coSplit(r&&r.text);me.t=p.t||'...';me.a=coRun(p.acts);delete me.pend;
+    if(coProf2().voice)meSay(me.t);
+  }catch(e){me.t=String(e&&e.message||e);me.err=1;me.nokey=e&&e.nokey;delete me.pend}
+  js(CO.H,H.filter(m=>!m.pend).slice(-40));coBusy=false;coDraw();try{balCard()}catch(e){}
+}
+function meSay(t){try{const u=new SpeechSynthesisUtterance(String(t).replace(/<[^>]*>/g,''));u.lang='fr-FR';u.rate=1.02;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+/* ---- the screen ---- */
+const ME_Q=[['Morning','Salut. C\'est le matin : lance ma journée. Qu\'est-ce qui compte vraiment aujourd\'hui ?'],['Evening debrief','Débrief de ma journée. Pose-moi les bonnes questions, puis aide-moi à fermer proprement la journée.'],['Today\'s mission','Donne-moi ma mission du jour : 3 goals maximum, concrets, selon mon planning et mes retards.'],['I want to scroll','Je suis sur le point de scroller ou de regarder des vidéos. Aide-moi.'],['I am behind','Je suis en retard (cours et DS manqués). Décompose mon rattrapage par matière, en heures, puis donne-moi les objectifs de la semaine et du jour.'],['Assess me','Évalue-moi : mental, détermination, quantité de travail, temps d\'écran, stress, sommeil. Un score sur 10 par axe, la cause principale, une action concrète par axe, puis mes goals de la semaine.'],['Review my week','Regarde mon planning de la semaine et dis-moi quoi changer, honnêtement.']];
+let meTab='chat';
+function meView(v){
+  meTab=v;const e=document.getElementById('coscr');if(!e||!e.dataset.b)return;
+  const chat=v==='chat';
+  $('co-m').style.display=chat?'':'none';$('co-q').style.display=chat?'':'none';e.querySelector('.co-i').style.display=chat?'':'none';
+  $('co-set').style.display=v==='set'?'':'none';$('me-p').style.display=(v==='pl'||v==='wn'||v==='lt')?'':'none';
+  e.querySelectorAll('.me-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===v));
+  if(v==='pl')mePlDraw();else if(v==='wn')meWnDraw();else if(v==='lt')meLtDraw();else if(v==='set')coSettings();
+}
+function meTheme(){const e=document.getElementById('coscr');if(!e)return;const s=meState();e.style.setProperty('--o1',s.c1);e.style.setProperty('--o2',s.c2);const sb=document.getElementById('me-sub');if(sb)sb.innerHTML=meSub()}
+function coOpen(pre){
+  const e=ovEl('coscr');
+  if(!e.dataset.b){e.dataset.b=1;e.innerHTML='<div class="me-bg"></div><div class="v-h me-h"><div class="me-orb"></div><div class="me-t"><b>Me</b><small id="me-sub"></small></div><span><button class="v-x" data-co="tab" data-t="set">Settings</button><button class="v-x" data-co="cx">Close</button></span></div>'+
+   '<div class="me-tabs"><button class="on" data-co="tab" data-t="chat">Talk</button><button data-co="tab" data-t="pl">Promises</button><button data-co="tab" data-t="wn">Proof</button><button data-co="tab" data-t="lt">Letters</button></div>'+
+   '<div class="v-b" id="co-m"></div><div class="v-b" id="me-p" style="display:none"></div><div class="v-b" id="co-set" style="display:none"></div>'+
+   '<div class="co-q" id="co-q"></div><div class="co-i"><textarea id="co-t" rows="1" placeholder="Tell me"></textarea><button id="co-s" data-co="send">Send</button></div>'}
+  const h=new Date().getHours(),ord=ME_Q.slice();if(h>=18){ord.unshift(ord.splice(1,1)[0])}else if(h>=12){ord.push(ord.shift())}
+  $('co-q').innerHTML=ord.map(q=>'<button data-co="mq" data-i="'+ME_Q.indexOf(q)+'">'+q[0]+'</button>').join('');
+  meTheme();meView('chat');coDraw();if(pre)setTimeout(()=>coSend(pre),150);
+}
+function coDraw(){
+  const H=coHist(),el=$('co-m');if(!el)return;const h=new Date().getHours();
+  const hi=h<5?'Tu ne dors pas ? Allez, dis-moi ce qui tourne dans ta tête.':h<12?'Salut, c\'est moi. Toi, plus tard. Premier matin de la journée : on la prend en main ?':h<19?'Salut, c\'est moi. Toi, plus tard. Dis-moi où tu en es, sans enjoliver.':'Salut, c\'est moi. Toi, plus tard. Raconte, comment s\'est passée ta journée, pour de vrai ?';
+  const dots='<span class="me-dots"><i></i><i></i><i></i></span>';
+  if(!H.length)el.innerHTML='<div class="me-m"><div class="me-n">Me, later</div><div class="me-x">'+esc(hi)+'</div></div>';
+  else el.innerHTML=H.map((m,mi)=>m.r==='u'?'<div class="co-b u">'+coFmt(m.t)+'</div>':'<div class="me-m'+(m.err?' err':'')+'"><div class="me-n">Me, later</div><div class="me-x">'+(m.pend?dots:coFmt(m.t))+'</div>'+(m.nokey?'<button class="co-act" data-co="key">Open AI settings</button>':(!m.pend&&!m.err?'<button class="me-say" data-co="say" data-m="'+mi+'">Listen</button>':''))+'</div>'+((m.a||[]).length?'<div class="co-as">'+m.a.map((a,ai)=>a.ok?'<span class="co-ok">'+esc(a.l)+'</span>':'<button class="co-act" data-co="act" data-m="'+mi+'" data-i="'+ai+'">'+esc(a.l)+'</button>').join('')+'</div>':'')).join('');
+  el.scrollTop=el.scrollHeight;
+}
+/* promises */
+function mePlDraw(){
+  const L=mePl(),k=L.filter(p=>p.st===1).length,m=L.filter(p=>p.st===2).length,td=iso();
+  const now=iso()+' '+pad(new Date().getHours())+':'+pad(new Date().getMinutes());
+  const open=L.filter(p=>!p.st),done=L.filter(p=>p.st);
+  $('me-p').innerHTML='<div class="me-stat"><div><b>'+k+'</b><small>kept</small></div><div><b>'+m+'</b><small>missed</small></div><div><b>'+(k+m?Math.round(100*k/(k+m)):0)+'%</b><small>word kept</small></div></div>'+
+   '<div class="sub" style="margin:4px 0 10px">A promise to me. I check it when it is due.</div>'+
+   '<div class="field"><input id="pl-t" placeholder="I promise to..." autocapitalize="sentences"></div><div class="wp-a"><input type="date" id="pl-d" value="'+td+'"><input type="time" id="pl-h" value="21:00"></div><button class="btn primary" data-co="pladd">Make the promise</button>'+
+   (open.length?'<div class="lbl" style="margin:16px 0 6px">Open</div>'+open.map(p=>{const late=(p.d+' '+p.h)<now;return '<div class="me-pl'+(late?' late':'')+'"><span>'+esc(p.t)+'<small>'+p.d.slice(5)+' · '+p.h+(late?' · due':'')+'</small></span><button data-co="plk" data-id="'+p.id+'" data-v="1">Kept</button><button data-co="plk" data-id="'+p.id+'" data-v="2">Missed</button></div>'}).join(''):'')+
+   (done.length?'<div class="lbl" style="margin:16px 0 6px">History</div>'+done.slice(0,15).map(p=>'<div class="me-pl h"><span>'+esc(p.t)+'<small>'+p.d.slice(5)+'</small></span><em class="'+(p.st===1?'k':'m')+'">'+(p.st===1?'Kept':'Missed')+'</em></div>').join(''):'');
+}
+function mePlSet(id,v){
+  const L=mePl(),p=L.find(x=>x.id===id);if(!p)return;p.st=v;js(ME.PL,L);
+  if(v===1){try{gain(20)}catch(e){}toast('Promise kept. +20 XP');const W=meWn();W.unshift({id:uid(),t:'Kept my promise: '+p.t,d:iso()});js(ME.WN,W.slice(0,80))}
+  else{toast('Noted. We fix it now.');setTimeout(()=>coOpen('J\'avais promis : « '+p.t+' » et je ne l\'ai pas tenu. Ne m\'épargne pas, mais aide-moi à réparer ça maintenant.'),400)}
+  try{balCard()}catch(e){}if(meTab==='pl')mePlDraw();
+}
+/* proof wall */
+function meWnDraw(){
+  const W=meWn();
+  $('me-p').innerHTML='<div class="sub" style="margin:0 0 10px">What you actually did. When your head lies to you, read this.</div><div class="field"><input id="wn-t" placeholder="Something I did that I am proud of" autocapitalize="sentences"></div><button class="btn primary" data-co="wnadd">Add to my proof</button>'+
+   (W.length?'<div class="lbl" style="margin:16px 0 6px">'+W.length+' proofs</div>'+W.slice(0,40).map(w=>'<div class="me-w"><span>'+esc(w.t)+'</span><small>'+w.d.slice(5)+'</small></div>').join(''):'<div class="sub" style="margin-top:14px">Nothing yet. Tonight is a good night to add the first one.</div>');
+}
+/* letters from the future */
+function meLtDraw(){
+  const L=meLt();
+  $('me-p').innerHTML='<div class="sub" style="margin:0 0 10px">A letter from me, later, written from what I see in your week right now.</div><button class="btn primary" data-co="ltnew" id="lt-b">Write me a letter</button>'+
+   L.slice(0,20).map((l,i)=>'<div class="me-l"><small>'+l.d+'</small><div>'+coFmt(l.t)+'</div><button class="me-say" data-co="ltsay" data-i="'+i+'">Listen</button></div>').join('');
+}
+async function meLetter(){
+  const b=$('lt-b');if(!b||b.disabled)return;b.disabled=true;b.textContent='Writing...';
+  try{
+    if(!window.PC||!PC.hasKey())throw new Error('I need your AI key (Prépa, then AI settings).');
+    const r=await PC.ai({system:'You are the user himself, one year later, writing a letter to his younger self who is at the start of a hard year. Write in French (tu), first person, 150 to 220 words, one flowing letter, no headings, no list, no emojis. Use the MEMORY and CONTEXT: real chapters, real mistakes, real numbers, what he did this week. You may write feelings and memories of the effort, but never invent facts about the future (grades, ranks, school, results). End with one sentence about what to do tonight. Sign "Toi, plus tard".',max:700,content:[{type:'text',text:'MEMORY:\n'+meMem().join('\n')+'\n\nCONTEXT:\n'+coCtx()}]});
+    const L=meLt();L.unshift({d:iso(),t:String(r.text||'').trim()});js(ME.LT,L.slice(0,30));
+  }catch(e){toast(String(e.message||e).slice(0,90))}
+  meLtDraw();
+}
+/* settings */
+function coSettings(){
+  const P=coProf2(),S=coShorts(),s=$('co-set');
+  s.innerHTML='<div class="lbl" style="margin:6px 0">How hard should I be?</div><div class="chips" id="cs-tone">'+[['gentle','Gentle'],['firm','Firm'],['brutal','Brutal']].map(x=>'<button class="chip'+(P.tone===x[0]?' on':'')+'" data-t="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>'+
+   '<div class="chips" style="margin-top:10px"><button class="chip'+(P.voice?' on':'')+'" id="cs-voice">Read my answers aloud</button></div>'+
+   '<div class="lbl" style="margin:16px 0 6px">The big day</div><div class="wp-a"><input id="cs-bn" placeholder="e.g. Concours" value="'+esc(P.big.n||'')+'"><input id="cs-bd" type="date" value="'+esc(P.big.d||'')+'"></div>'+
+   '<div class="lbl" style="margin:16px 0 6px">About me</div><textarea id="cs-sit" rows="5" class="co-ta">'+esc(P.sit)+'</textarea>'+
+   '<div class="lbl" style="margin:16px 0 6px">What I remember about you (one per line)</div><textarea id="cs-mem" rows="9" class="co-ta">'+esc(meMem().join('\n'))+'</textarea>'+
+   '<div class="lbl" style="margin:16px 0 6px">Opal shortcuts I can offer</div><div class="sub" style="margin:0 0 6px">One per line: key = Shortcut name | when to use it. iOS asks for one tap to run a shortcut.</div><textarea id="cs-op" rows="4" class="co-ta" autocapitalize="off">'+esc(S.map(x=>x.k+' = '+x.n+' | '+x.d).join('\n'))+'</textarea>'+
+   '<button class="btn primary" data-co="setok2">Save</button><button class="btn" data-co="clr">Clear the conversation</button>';
+  $('cs-tone').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;$('cs-tone').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on')};
+  $('cs-voice').onclick=e=>e.currentTarget.classList.toggle('on');
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-co]');if(!b)return;const a=b.dataset.co;
+  if(a==='tab')meView(b.dataset.t);
+  else if(a==='mq')coSend(ME_Q[+b.dataset.i][1]);
+  else if(a==='say'){const m=coHist()[+b.dataset.m];if(m)meSay(m.t)}
+  else if(a==='ltsay'){const l=meLt()[+b.dataset.i];if(l)meSay(l.t)}
+  else if(a==='ltnew')meLetter();
+  else if(a==='pladd'){const t=($('pl-t').value||'').trim();if(!t){toast('Write the promise first');return}const L=mePl();const d=$('pl-d').value||iso(),h=$('pl-h').value||'21:00';L.unshift({id:uid(),t:t.slice(0,160),d,h,st:0,ts:Date.now()});js(ME.PL,L.slice(0,80));NT.custom=NT.custom||[];NT.custom.push({id:'co-'+uid(),title:'You promised me',note:t.slice(0,160),time:h,days:[],date:d,on:true});ntSave();mePlDraw();try{balCard()}catch(x){}toast('Promise made')}
+  else if(a==='plk')mePlSet(b.dataset.id,+b.dataset.v);
+  else if(a==='wnadd'){const t=($('wn-t').value||'').trim();if(!t)return;const W=meWn();W.unshift({id:uid(),t:t.slice(0,160),d:iso()});js(ME.WN,W.slice(0,80));meWnDraw()}
+  else if(a==='setok2'){
+    const p=coProf2();p.sit=($('cs-sit').value||'').trim().slice(0,1500)||CO_SIT0;const tb=document.querySelector('#cs-tone .chip.on');p.tone=tb?tb.dataset.t:'firm';p.voice=$('cs-voice').classList.contains('on');p.big={n:($('cs-bn').value||'').trim().slice(0,40),d:$('cs-bd').value||''};
+    js(CO.P,p);js(ME.MM,($('cs-mem').value||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(-60));
+    const L=($('cs-op').value||'').split('\n').map(l=>{const m=/^\s*([\w-]+)\s*=\s*([^|]+?)\s*(?:\|\s*(.*))?$/.exec(l);return m?{k:m[1],n:m[2],d:(m[3]||'Opal shortcut').trim()}:null}).filter(Boolean);js(CO.O,L);
+    toast('Saved');meTheme();meView('chat')}
+},true);
+/* ---- Home card ---- */
+const _balCard0=balCard;
+balCard=function(){
+  _balCard0();
+  const el=document.getElementById('balcard');if(!el)return;
+  const s=meState(),H=el.querySelector('.bal-h'),t=el.querySelector('.bal-t');
+  if(t)t.innerHTML='<span class="me-orb s" style="--o1:'+s.c1+';--o2:'+s.c2+'"></span>Me<small class="me-w2">'+meSub()+'</small>';
+  el.querySelectorAll('[data-co="talk"]').forEach(x=>x.textContent='Talk to me');
+  el.querySelectorAll('.sub').forEach(x=>{if(/Ask the coach/.test(x.textContent))x.textContent='No goal today yet. Ask me for your mission.'});
+  const L=mePl().filter(p=>!p.st).sort((a,b)=>(a.d+a.h)<(b.d+b.h)?-1:1)[0];
+  if(L){const late=(L.d+' '+L.h)<(iso()+' '+pad(new Date().getHours())+':'+pad(new Date().getMinutes()));
+    const d=document.createElement('div');d.className='me-pl'+(late?' late':'');d.innerHTML='<span>You promised: '+esc(L.t)+'<small>'+L.d.slice(5)+' · '+L.h+(late?' · did you keep it?':'')+'</small></span><button data-co="plk" data-id="'+L.id+'" data-v="1">Kept</button><button data-co="plk" data-id="'+L.id+'" data-v="2">Missed</button>';
+    const a=el.querySelector('.bal-a');if(a)a.parentNode.insertBefore(d,a)}
+};
+setTimeout(()=>{try{balCard()}catch(e){}},900);
+window.PN.me={sys:ME_SYS,mem:meMem,streak:meStreak,state:meState};
+
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
-const HCARDS={balcard:'Coach',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
+const HCARDS={balcard:'Me',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
 const PERIODS=[['morning','Morning'],['day','Daytime'],['night','Evening']],ALWAYS=['wkcard','balcard','hauto','xmcard','rxcard'];
 const hCfg=()=>{const c=Object.assign({mode:'auto',hide:[],order:[],when:{}},jl(PHK,{}));c.hide=c.hide||[];c.order=c.order||[];c.when=c.when||{};return c};
 function hKey(el,i){if(el.dataset&&el.dataset.wid)return 'w:'+el.dataset.wid;if(el.id&&HCARDS[el.id])return el.id;const l=el.querySelector('.lbl');const t=l?l.textContent.trim():'';if(HCARDS[t])return t;if(el.classList.contains('lazycard'))return 'lazycard';const j=el.getAttribute('onclick')||'';if(/showJournal/.test(j))return 'Journal';if(/stats/.test(j))return 'Stats';return null}
