@@ -1460,6 +1460,25 @@ header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;bac
 .cs-n{font-size:14px;margin:4px 0}.cs-r{padding:10px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
 .cs-r small{color:var(--muted)}.cs-r span{font-size:13px;color:var(--muted)}
 .cs-h{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px}.cs-h span{width:86px}.cs-h i{flex:1;height:8px;border-radius:6px;background:var(--inset);overflow:hidden}.cs-h u{display:block;height:100%;background:var(--lime);border-radius:6px}.cs-h b{width:44px;text-align:right}
+
+.v146o{position:fixed;inset:0;z-index:600;background:var(--bg);display:none;flex-direction:column;height:100dvh;padding-top:env(safe-area-inset-top)}
+.v-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:14px 18px 10px;border-bottom:1px solid var(--line)}.v-h b{display:block;font-size:22px;font-family:var(--serif)}.v-h small{color:var(--muted);font-size:12px;display:block;max-width:210px}
+.v-x{background:var(--surf2);border:1px solid var(--line2);color:var(--text);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;margin-left:6px}
+.v-b{flex:1;overflow-y:auto;padding:14px 18px;-webkit-overflow-scrolling:touch}
+.v-f{padding:10px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg)}.v-f .btn{margin-top:8px}
+.wp-t{display:flex;gap:6px;padding:10px 12px;overflow-x:auto}.wp-t button{flex:1;min-width:44px;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:8px 2px;color:var(--text);display:flex;flex-direction:column;align-items:center}.wp-t button.on{background:var(--lime);color:var(--ink)}.wp-t small{font-size:11px;opacity:.8}
+.wp-r{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px}.wp-r.ov{border-color:var(--red)}
+.wp-a{display:flex;gap:8px}.wp-a select,.wp-a input,.wp-n{flex:1;min-width:0;background:var(--inset);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:10px;font-size:16px}
+.wp-x{background:none;border:1px solid var(--line2);color:var(--red);border-radius:12px;padding:0 10px;font-size:13px}.wp-r small{color:var(--red)}
+.co-b{max-width:88%;padding:11px 14px;border-radius:18px;margin:8px 0;font-size:15px;line-height:1.45}.co-b.c{background:var(--surf);border:1px solid var(--line);border-bottom-left-radius:6px}.co-b.u{background:var(--lime);color:var(--ink);margin-left:auto;border-bottom-right-radius:6px}.co-b.pend{opacity:.6}.co-b.err{border-color:var(--red)}
+.co-as{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}.co-act{background:var(--surf2);border:1px solid var(--lime);color:var(--lime);border-radius:999px;padding:8px 13px;font-size:13px;font-weight:600;margin-top:8px}.co-as .co-act{margin-top:0}.co-ok{border:1px solid var(--line2);color:var(--muted);border-radius:999px;padding:6px 11px;font-size:12px}
+.co-q{display:flex;gap:6px;overflow-x:auto;padding:6px 12px}.co-q button{white-space:nowrap;background:var(--surf);border:1px solid var(--line2);color:var(--text);border-radius:999px;padding:9px 14px;font-size:13px;font-weight:600}
+.co-i{display:flex;gap:8px;padding:8px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}.co-i textarea{flex:1;background:var(--inset);border:1px solid var(--line);border-radius:18px;color:var(--text);padding:11px 14px;font-size:16px;font-family:inherit;resize:none;max-height:120px}.co-i button{background:var(--lime);color:var(--ink);border:0;border-radius:18px;padding:0 18px;font-weight:700}
+.co-ta{width:100%;background:var(--inset);border:1px solid var(--line);border-radius:14px;color:var(--text);padding:12px;font-size:16px;font-family:inherit}
+.co-g{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:14px}.co-g i{width:20px;height:20px;border-radius:7px;border:2px solid var(--line2);flex:none;margin-top:1px}.co-g.dn i{background:var(--green);border-color:var(--green)}.co-g.dn span{text-decoration:line-through;color:var(--muted)}
+#home.co-lock>.card:not(#balcard):not(#wkcard):not(#hauto){display:none!important}
+.v-h>span{display:flex;white-space:nowrap}.v-h>div{min-width:0}.co-i{align-items:flex-end}.co-i textarea{height:46px}.co-i button{height:46px}
+@media (orientation:portrait){.nav,.fab{translate:0 var(--navy,0px)}}
 </style>
 </head>
 <body>
@@ -2026,7 +2045,8 @@ function dkExpand(id){
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(nudge,250)});
 })();
 (function(){const vv=window.visualViewport,r=document.documentElement.style;
-  function sync(){if(vv){r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px')}}
+  function sync(){if(vv){r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px');r.setProperty('--navy',Math.max(0,Math.round(vv.offsetTop+vv.height-window.innerHeight))+'px')}}
+  ['scroll','resize','orientationchange','touchend'].forEach(ev=>window.addEventListener(ev,()=>setTimeout(sync,60),{passive:true}));document.addEventListener('focusout',()=>[80,300,700,1500].forEach(t=>setTimeout(sync,t)),true);setInterval(()=>{if(!document.hidden)sync()},1200);
   if(vv){vv.addEventListener('resize',sync);vv.addEventListener('scroll',sync)}sync();
   try{const sc=localStorage.getItem('scr');if(sc)r.setProperty('--scr',sc+'px')}catch(e){}
 })();
@@ -9785,7 +9805,7 @@ function pwOpen(pg){
   const onoff=(id,v)=>'<div class="chips" id="'+id+'"><button class="chip '+(v?'on':'')+'" data-v="1">On</button><button class="chip '+(v?'':'on')+'" data-v="0">Off</button></div>';
   const mins=(id,v,l)=>'<div class="chips" id="'+id+'">'+(l||[15,20,30,45,60]).map(x=>'<button class="chip '+(v===x?'on':'')+'" data-v="'+x+'">'+x+' min</button>').join('')+'</div>';
   const FULL=('<h2 class="sh">🗓 Week planner</h2><div class="sub" style="margin:0 0 10px">Tell Aether your hours, goals and routines once. It proposes a week (dark and transparent), you accept what you like. It learns from what you finish or skip.</div>'+
-   '<button class="btn primary" id="pw-go">'+(nb?'Re-plan my week':'Plan my week')+'</button><button class="btn" id="pw-tp" style="margin-top:8px">📐 Week template</button><button class="btn" id="pw-ru" style="margin-top:8px">My weekly timetable</button><button class="btn" id="pw-fx" style="margin-top:8px">🧩 Flex block</button>'+(np?'<button class="btn" id="pw-all" style="margin-top:8px">Accept all ('+np+')</button>':'')+
+   '<button class="btn primary" id="pw-go">'+(nb?'Re-plan my week':'Plan my week')+'</button><button class="btn" id="pw-tp" style="margin-top:8px">📐 Week template</button><button class="btn" id="pw-ru" style="margin-top:8px">My weekly plan</button><button class="btn" id="pw-fx" style="margin-top:8px">🧩 Flex block</button>'+(np?'<button class="btn" id="pw-all" style="margin-top:8px">Accept all ('+np+')</button>':'')+
    '<div class="card" style="margin-top:12px"><div class="lbl">My hours</div>'+
     '<div class="field"><label>Weekdays</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+tin('pw-a',t.wd.from)+tin('pw-b',t.wd.to)+'</div></div>'+
     '<div class="field"><label>Weekend</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+tin('pw-c',t.we.from)+tin('pw-d',t.we.to)+'</div></div>'+
@@ -9840,7 +9860,7 @@ function pwRender(full,pg,cfg,t,nb,np){
     h='<h2 class="sh">🗓 Week planner</h2><div class="sub" style="margin:0 0 12px">Tell Aether your hours, goals and routines once. It proposes a week, you accept what you like.</div>'+
      pwStrip(nb,np)+
      q('pw-go')+(np?q('pw-all'):'')+
-     '<div class="pv-h">Plan</div><div class="pv-g"><button class="pv-btn" id="pw-tp" data-i="📐">Week template<small>Fixed weekly blocks</small></button><button class="pv-btn" id="pw-ru" data-i="⭐">My weekly timetable<small>One timetable every week</small></button><button class="pv-btn" id="pw-fx" data-i="🧩">Flex block<small>Floating work time</small></button></div>'+
+     '<div class="pv-h">Plan</div><div class="pv-g"><button class="pv-btn" id="pw-tp" data-i="📐">Week template<small>Fixed weekly blocks</small></button><button class="pv-btn" id="pw-ru" data-i="⭐">My weekly plan<small>You write it every Sunday</small></button><button class="pv-btn" id="pw-fx" data-i="🧩">Flex block<small>Floating work time</small></button></div>'+
      '<div class="pv-h">Settings</div><div class="pv-g">'+meta.map((m,i)=>'<button class="pv-btn" data-pg="'+i+'" data-i="'+m[1][0]+'">'+esc(m[0].replace('▶ ',''))+'<small>'+(i===0?hrs:i===1?cfg.rules.length+' rule'+(cfg.rules.length===1?'':'s'):m[1][1])+'</small></button>').join('')+'</div>'+
      '<div class="pv-g" style="margin-top:12px"><button class="pv-btn" id="pw-fg" data-i="♻️">Reset learning</button>'+(nb?'<button class="pv-btn danger" id="pw-x" data-i="🗑">Remove plan</button>':'')+'</div>';
   }else{
@@ -10042,7 +10062,7 @@ function balSheet(){
    '<div class="lbl" style="margin:16px 0 8px">Your numbers</div>'+
    '<div class="two"><div class="field"><label>Scroll budget, min/day</label><input id="bl-b" type="number" inputmode="numeric" value="'+c.b+'"></div><div class="field"><label>Earned per 25 min focus</label><input id="bl-e" type="number" inputmode="numeric" value="'+c.e+'"></div></div>'+
    '<button class="btn primary" id="bl-s">Save</button>'+
-   (typeof ruSheet==='function'?'<button class="btn" id="bl-ru" style="margin-top:8px">My weekly timetable</button>':'')+
+   (typeof ruSheet==='function'?'<button class="btn" id="bl-ru" style="margin-top:8px">My weekly plan</button>':'')+
    '<button class="btn" id="bl-h" style="margin-top:8px">How apps are counted</button>');
   $('bl-s').onclick=()=>{
     const b=Math.max(10,Math.min(600,Math.round(+$('bl-b').value||60))),e=Math.max(0,Math.min(25,Math.round(+$('bl-e').value||0)));
@@ -10077,11 +10097,12 @@ document.addEventListener('click',e=>{
 /* ================= v145: ONE FIXED WEEK — the same timetable every week, no emojis =================
    The timetable below is generated for the next 7 days, every day. Lunch (weekdays) is 1 h of work whose subject depends on what is close:
    vocabulary test tomorrow > colle in the next days > exam within 5 days > the default rotation. Colles are revised only at lunch or on Sunday. */
-const RU_V=3,RU_FLAG='p_ru';
+const RU_V=4,RU_FLAG='p_ru';
 const RU={rem:[
   ['u-r1','Wake up','½ L of water, then 10 push-ups.','07:00',[]],
   ['u-r2','Apple + water','1 apple before lunch. 1 L of water done by lunch (1.5 L so far).','11:30',[]],
-  ['u-r10','Lunch work, 1 h','Open Home: the subject of the lunch hour depends on your next colle, exam or vocabulary test.','12:25',[1,2,3,4,5]],
+  ['u-r11','Plan your week','Sunday: write the subject, hours and start time of each day. 10 minutes.','17:00',[0]],
+  ['u-r12','Coach check-in','How do you feel? Tell your coach how the day went.','21:30',[]],
   ['u-r3','Nuts','One handful of nuts today.','16:30',[]],
   ['u-r4','Water','1 more litre by 18:00: you should be at 2.5 L.','17:45',[]],
   ['u-r5','Last ½ L','½ L before dinner. 3 L done.','20:45',[]],
@@ -10201,7 +10222,7 @@ function ruSheet(){
     const t=k==='lunch'?'Lunch work (1 h)':k==='colles'?'Colles revision (2 h)':k==='review'?'Day review':k==='dm'?'Catch-up DM':(k==='td'&&!sp[3])?'Catch-up TD':(sp[5]||pwSj(sp[3]))+' '+TT_LB[k].toLowerCase();
     return sp[1]+' '+esc(t)}).filter(Boolean).join(' · ')+'</span></div>').join('');
   const tx=jl('p_tx',0);
-  openSheet('<h2>My weekly timetable</h2><div class="sub" style="margin:0 0 10px">One timetable, the same every week. Aether puts the next 7 days in your calendar. At lunch the subject changes: vocabulary the day before the test, then the next colle, then the next exam. Colles are revised only at lunch or on Sunday.</div>'+rows+
+  openSheet('<h2>My weekly plan</h2><div class="sub" style="margin:0 0 10px">One timetable, the same every week. Aether puts the next 7 days in your calendar. At lunch the subject changes: vocabulary the day before the test, then the next colle, then the next exam. Colles are revised only at lunch or on Sunday.</div>'+rows+
    '<div class="sub" style="margin:10px 0 4px">Every day: 07:00 water + 10 push-ups · apple + 1 L before lunch · nuts · 3 L of water · bed 23:00, up 07:00. Week: 1 vocabulary test, 2 exams, 2 colles, 6 subjects, day reviews, 1 DM, 2-3 TD.</div>'+
    '<button class="btn primary" id="ru-a" style="margin-top:10px">Regenerate my week</button><button class="btn" id="ru-x2" style="margin-top:8px">Extras (goal blocks): '+(tx?'on':'off')+'</button><button class="btn" id="ru-c" style="margin-top:8px">Coach and advice</button><button class="btn danger" id="ru-x" style="margin-top:8px">Remove my timetable</button>');
   $('ru-a').onclick=()=>{closeSheet();ruApply();toast('Your week is regenerated')};
@@ -10239,6 +10260,283 @@ function coachSheet(){
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#coachbtn,[data-bal="adv"]')){e.stopPropagation();vib(8);coachSheet()}},true);
 window.PN=window.PN||{};
 window.PN.ru={apply:ruApply,remove:ruRemove,sheet:ruSheet,events:ruEvents,daily:ruDaily,spec:ttSpec,lunch:ttLunch,coach:coachSheet};
+
+/* ================= v146: THE COACH (alter ego, mentor, idol) + A WEEKLY PLAN THAT YOU WRITE ================= */
+const CO={P:'p_cp',M:'p_cm',G:'p_cg',H:'p_cc',O:'p_cop',W:'p_wp',WC:'p_wpc',MD:'p_cmode'};
+const CO_SIT0='I am in MPSI (Aux Lazaristes, Lyon). I am behind in some courses, and I missed some DS and lessons in the past because of illness. My rule: even sick, I go to class and I sit the DS, no excuse. My goal: cut my screen time and become a work machine, the best version of myself.';
+const coProf=()=>Object.assign({sit:CO_SIT0},jl(CO.P,{}));
+const wkMon=ds=>{const wd=new Date(ds+'T12:00:00').getDay();return shiftD(ds,-((wd+6)%7))};
+const wkOf=ds=>wkMon(shiftD(ds,1)); /* Sunday already belongs to next week: it is when you plan it */
+/* ---------- the weekly plan: you write subject, hours and start time for each day ---------- */
+const WP_K={learn:'Learn',ex:'Exercises',td:'TD',rev:'Revision',colle:'Colle revision',exam:'Exam revision',catch:'Catch-up',review:'Day review'};
+const wpTitle=x=>x.k==='review'?'Day review':x.k==='catch'?'Catch-up'+(x.n?' · '+x.n:''):(pwSj(x.s)||x.n||'Work')+' · '+(WP_K[x.k]||'Work');
+function wpSeed(){
+  const d={};
+  for(let wd=0;wd<7;wd++){d[wd]=[];ttSpec(wd).forEach(sp=>{
+    if(sp[0]!=='work')return;const k=sp[4],a=hm(sp[1]),e=hm(sp[2]);
+    if(k==='lunch'){const x=TT_LUN[wd]||['maths','ex'];d[wd].push({s:x[0],k:x[1],t:sp[1],m:e-a});return}
+    if(k==='colles'){d[wd].push({s:'maths',k:'colle',t:sp[1],m:60},{s:'phys',k:'colle',t:hmS(a+60),m:60});return}
+    if(k==='review'){d[wd].push({s:'',k:'review',t:sp[1],m:e-a});return}
+    if(k==='dm'||(k==='td'&&!sp[3])){d[wd].push({s:'',k:'catch',t:sp[1],m:e-a,n:k==='dm'?'DM':'TD'});return}
+    d[wd].push({s:sp[3],k:k==='learn'?'learn':k==='td'?'td':'ex',t:sp[1],m:e-a});
+  })}
+  return d;
+}
+/* the calendar blocks come from YOUR plan only. Nothing is planned for you. */
+function pwRefs(o,days,nowM){
+  const W=jl(CO.W,null);if(!W||!W.d)return[];
+  const made=[],td=iso();
+  days.forEach(ds=>(W.d[pwWd(ds)]||[]).forEach(x=>{
+    const a=hm(x.t),len=Math.min(+x.m||0,1439-(a||0));if(a==null||len<15)return;const e=a+len;
+    if(ds===td&&e<=nowM)return;
+    const id='tb-'+ds+'-'+pad(Math.floor(a/60))+pad(a%60);if(cal.some(c=>c.id===id)||(o.blocks[id]&&o.blocks[id].done))return;
+    if(evOn(ds).some(y=>y.time&&y.kind!=='focus'&&hm(y.time)<e&&(y.endTime?hm(y.endTime):hm(y.time)+60)>a))return;
+    const title=wpTitle(x),ex=x.k==='ex'||x.k==='td',plain=x.k==='review'||x.k==='catch'||!x.s,xp=pwXp(ex?'ex':plain?'task':'rev',len);
+    const m={id:'w:ref:'+ds+':'+pad(Math.floor(a/60))+pad(a%60),type:ex?'mock':plain?'task':'read',subj:x.s||'',min:len,why:'My weekly plan',xp,title,go:ex?{k:'tab',id:'exams'}:plain?{k:'tab',id:'tasks'}:{k:'lessons'}};
+    cal.push({id,title,date:ds,time:hmS(a),endTime:hmS(e),kind:'work',subj:x.s||'',color:pwSc(x.s),prop:1,desc:pwDesc(m)});
+    o.blocks[id]={ms:[m],done:0,wk:'wp',pl:len,hr:a,xp,prop:1,snap:{title,date:ds,time:hmS(a),endTime:hmS(e),subj:x.s||'',color:pwSc(x.s)}};made.push(id);
+  }));
+  return made;
+}
+function ruEvents(){ /* the old automatic meal and sport events are gone: one-time cleanup only */
+  if(jl('p_tt',0)>=2)return 0;
+  const td=iso();for(let i=cal.length-1;i>=0;i--){const c=cal[i];if(String(c.id).startsWith('ru-')&&c.date>=td)cal.splice(i,1)}
+  js('p_ruev',[]);js('p_tt',2);sv();return 1;
+}
+function ruDaily(force){
+  if(jl(RU_FLAG,0)!==RU_V||!jl(CO.W,null))return;
+  const td=iso();if(!force&&jl('p_rud','')===td)return;js('p_rud',td);ruRefresh();
+}
+function ruApply(){
+  const cfg=pwCfg();
+  cfg.life=(cfg.life||[]).filter(x=>!ruIs(x));cfg.ref=(cfg.ref||[]).filter(x=>!ruIs(x));
+  cfg.life.forEach(x=>{if(x.id==='l1')x.days=[0,1,2,3,4,5,6]});pwSave(cfg);
+  NT.custom=(NT.custom||[]).filter(x=>!ruIs(x));
+  RU.rem.forEach(a=>NT.custom.push({id:a[0],title:a[1],note:a[2],time:a[3],days:a[4].slice(),date:'',on:true}));
+  try{ntSave()}catch(e){}
+  js(RU_FLAG,RU_V);ruEvents();js('p_rud',iso());ruRefresh();
+}
+function ruSheet(){wpOpen()}
+/* ---------- full screen helper ---------- */
+function ovEl(id){let e=document.getElementById(id);if(!e){e=document.createElement('div');e.id=id;e.className='v146o';document.body.appendChild(e)}e.style.display='flex';return e}
+const ovClose=id=>{const e=document.getElementById(id);if(e)e.style.display='none'};
+/* ---------- weekly plan screen ---------- */
+let wpS={p:{},d:1};
+const WP_D=[1,2,3,4,5,6,0],WP_DN={1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri',6:'Sat',0:'Sun'};
+function wpOpen(){
+  const W=jl(CO.W,null);wpS={p:JSON.parse(JSON.stringify(W&&W.d?W.d:wpSeed())),d:(new Date().getDay()===0?1:new Date().getDay()),fresh:!W};
+  wpDraw();
+}
+const wpEnd=x=>(hm(x.t)||0)+(+x.m||0);
+function wpDraw(){
+  const e=ovEl('wpscr'),P=wpS.p,list=(P[wpS.d]=(P[wpS.d]||[]).sort((a,b)=>(hm(a.t)||0)-(hm(b.t)||0)));
+  const tot=d=>(P[d]||[]).reduce((s,x)=>s+(+x.m||0),0),H=m=>(Math.round(m/6)/10)+'h';
+  const sub={};WP_D.forEach(d=>(P[d]||[]).forEach(x=>{if(x.s)sub[x.s]=(sub[x.s]||0)+(+x.m||0)}));
+  const sOpt=v=>'<option value="">No subject</option>'+Object.keys(SUBJ).map(k=>'<option value="'+k+'"'+(v===k?' selected':'')+'>'+SUBJ[k].n+'</option>').join('');
+  const kOpt=v=>Object.keys(WP_K).map(k=>'<option value="'+k+'"'+(v===k?' selected':'')+'>'+WP_K[k]+'</option>').join('');
+  const mOpt=v=>{const a=[];for(let m=15;m<=300;m+=15)a.push(m);if(!a.includes(+v))a.push(+v);a.sort((x,y)=>x-y);return a.map(m=>'<option value="'+m+'"'+(m===+v?' selected':'')+'>'+(m<60?m+' min':(m/60)+' h')+'</option>').join('')};
+  const rows=list.map((x,i)=>{const ov=list.some((y,j)=>j!==i&&(hm(y.t)||0)<wpEnd(x)&&wpEnd(y)>(hm(x.t)||0));
+    return '<div class="wp-r'+(ov?' ov':'')+'" data-i="'+i+'"><div class="wp-a"><select data-f="s">'+sOpt(x.s)+'</select><select data-f="k">'+kOpt(x.k)+'</select></div><div class="wp-a"><input type="time" data-f="t" value="'+esc(x.t||'18:00')+'"><select data-f="m">'+mOpt(x.m||60)+'</select><button class="wp-x" data-f="x" aria-label="Delete">Delete</button></div>'+((!x.s||x.k==='catch')?'<input class="wp-n" data-f="n" placeholder="Note (optional)" value="'+esc(x.n||'')+'">':'')+(ov?'<small>Overlaps another session</small>':'')+'</div>'}).join('')||'<div class="sub" style="padding:18px 0">Nothing planned this day. Add a session.</div>';
+  e.innerHTML='<div class="v-h"><div><b>Plan my week</b><small>'+(wpS.fresh?'Start from my usual week, then change what you want.':'Keep last week or change what you need.')+'</small></div><button class="v-x" data-co="wpx">Close</button></div>'+
+   '<div class="wp-t">'+WP_D.map(d=>'<button class="'+(d===wpS.d?'on':'')+'" data-wd="'+d+'"><b>'+WP_DN[d]+'</b><small>'+(tot(d)?H(tot(d)):'-')+'</small></button>').join('')+'</div>'+
+   '<div class="v-b" id="wp-l">'+rows+'<button class="btn" data-co="wpadd">Add a session</button><button class="btn" data-co="wpcp">Copy this day to the other weekdays</button>'+
+   '<div class="lbl" style="margin:18px 0 6px">Hours this week</div>'+(Object.keys(sub).sort((a,b)=>sub[b]-sub[a]).map(k=>'<div class="cs-h"><span>'+SUBJ[k].n+'</span><i><u style="width:'+Math.round(100*sub[k]/Math.max(60,...Object.values(sub)))+'%"></u></i><b>'+H(sub[k])+'</b></div>').join('')||'<div class="sub">Nothing yet.</div>')+'</div>'+
+   '<div class="v-f"><button class="btn primary" data-co="wpok">Confirm my week</button><button class="btn" data-co="wpask">Ask the coach to review it</button></div>';
+}
+function wpConfirm(){
+  js(CO.W,{d:wpS.p,at:Date.now()});js(CO.WC,wkOf(iso()));ovClose('wpscr');
+  ruRefresh();try{balCard()}catch(e){}toast('Week confirmed. Your calendar is filled.');
+}
+/* ---------- check-ins, goals, mode ---------- */
+const coCiAll=()=>jl(CO.M,{});
+const coCiToday=()=>coCiAll()[iso()]||null;
+function ciSheet(then){
+  const v={m:3,s:3,d:3,e:3};
+  const row=(k,l,lo,hi)=>'<div class="lbl" style="margin:12px 0 6px">'+l+'</div><div class="chips" data-ck="'+k+'">'+[1,2,3,4,5].map(n=>'<button class="chip'+(n===3?' on':'')+'" data-n="'+n+'">'+n+'</button>').join('')+'</div><div class="sub" style="margin:4px 0 0;display:flex;justify-content:space-between"><span>'+lo+'</span><span>'+hi+'</span></div>';
+  openSheet('<h2>How do I feel?</h2><div class="sub" style="margin:0 0 4px">Be honest. The coach adapts the day to your answer.</div>'+row('m','Mood','low','great')+row('s','Stress','calm','very stressed')+row('d','Determination','none','unstoppable')+row('e','Energy','empty','full')+
+   '<div class="field" style="margin-top:14px"><input id="ci-n" placeholder="Anything else? (optional)" autocapitalize="sentences"></div><button class="btn primary" id="ci-go">Save and talk to the coach</button><button class="btn" id="ci-s">Save only</button>');
+  document.querySelectorAll('[data-ck]').forEach(g=>g.onclick=ev=>{const b=ev.target.closest('.chip');if(!b)return;g.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');v[g.dataset.ck]=+b.dataset.n});
+  const save=()=>{const a=coCiAll();a[iso()]={m:v.m,s:v.s,d:v.d,e:v.e,n:($('ci-n').value||'').trim().slice(0,200),ts:Date.now()};
+    const ks=Object.keys(a).sort();while(ks.length>30)delete a[ks.shift()];js(CO.M,a);try{moods[iso()]=v.m;sv()}catch(e){}try{balCard()}catch(e){}return a[iso()]};
+  $('ci-s').onclick=()=>{save();closeSheet();toast('Check-in saved')};
+  $('ci-go').onclick=()=>{const c=save();closeSheet();setTimeout(()=>coOpen('Check-in du jour : humeur '+c.m+'/5, stress '+c.s+'/5, détermination '+c.d+'/5, énergie '+c.e+'/5.'+(c.n?' Note : '+c.n:'')+' Réagis et adapte ma journée.'),300)};
+}
+const coG=()=>jl(CO.G,{d:{},w:{}});
+function coGAdd(scope,t){
+  const g=coG(),k=scope==='week'?wkOf(iso()):iso(),L=scope==='week'?g.w:g.d;(L[k]=L[k]||[]).push({id:uid(),t:String(t).slice(0,140),done:0});
+  [g.d,g.w].forEach((O,i)=>{const ks=Object.keys(O).sort();while(ks.length>(i?8:14))delete O[ks.shift()]});js(CO.G,g);
+}
+function coGTog(id){
+  const g=coG();[g.d,g.w].forEach((O,i)=>Object.values(O).forEach(L=>L.forEach(x=>{if(x.id===id){x.done=x.done?0:1;if(x.done){try{gain(i?25:10)}catch(e){}}}})));js(CO.G,g);
+}
+function coMode(){const h=document.getElementById('home');if(h)h.classList.toggle('co-lock',jl(CO.MD,'normal')==='locked')}
+setTimeout(coMode,600);
+/* ---------- the coach: context, brain, actions ---------- */
+const coShorts=()=>{const o=OPL(),c=jl(CO.O,null);return c&&c.length?c:[{k:'focus',n:o.start,d:'Start the Opal blocking session'},{k:'stop',n:o.stop,d:'Stop the Opal session'},{k:'relax',n:o.relax,d:'Relax mode'}]};
+function coCtx(){
+  const td=iso(),now=new Date(),X={},PCx=window.PC,SS=PCx&&PCx.S?PCx.S:{};
+  const day=ds=>Math.round((new Date(ds+'T12:00:00')-new Date(td+'T12:00:00'))/864e5);
+  const evs=ds=>evOn(ds).filter(c=>c.time).sort(evSort).map(c=>c.time+(c.endTime?'-'+c.endTime:'')+' '+String(c.title).replace(/^✓ /,'')+(/^✓/.test(c.title)?' (done)':''));
+  const T=(f)=>{try{return f()}catch(e){return null}};
+  X.now=now.toLocaleDateString('en',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+  const P=coProf();X.profile=P.sit;
+  X.today=T(()=>evs(td));X.tomorrow=T(()=>evs(shiftD(td,1)));
+  X.deadlines=T(()=>{const o=[],K={colle:'Colle',ds:'DS',cb:'Mock exam',vt:'Vocab test'};ttEvs(td,14).forEach(e=>{if(K[e.kind])o.push(K[e.kind]+' '+String(e.title)+' '+(e.subj||'')+' in '+day(e.date)+' d')});return o});
+  X.tasks=T(()=>tasks.filter(t=>isOpen(t)&&!t.gen).slice(0,12).map(t=>t.text+(t.due?' (due '+t.due+(t.due<td?', OVERDUE':'')+')':'')));
+  X.courses=T(()=>{const o={};(SS.lessons||[]).forEach(l=>{const k=(SUBJ[l.subj]||{}).n||l.subj;(o[k]=o[k]||{})[l.status||'new']=((o[k]||{})[l.status||'new']||0)+1});return o});
+  X.open_mistakes=T(()=>{const o={};(SS.mist||[]).filter(m=>!m.done).forEach(m=>{const k=(SUBJ[m.subj]||{}).n||m.subj;o[k]=(o[k]||0)+1});return o});
+  X.exams=T(()=>Object.values(SS.exams||{}).slice(-6).map(e=>({t:e.title,d:e.date,subj:e.subj,score:e.score!=null?e.score:e.grade})));
+  const D7=Array.from({length:7},(_,i)=>shiftD(td,i-6));
+  X.focus_min_7d=T(()=>D7.map(balFoc));X.scroll_min_7d=T(()=>D7.map(balScr));X.scroll_budget=T(()=>balBud(td));
+  X.sleep_h_7d=T(()=>D7.map(d=>dayh[d]&&dayh[d].s!=null?dayh[d].s:null));
+  X.mood_7d=T(()=>D7.map(d=>moods[d]||null));
+  X.checkins=T(()=>Object.entries(coCiAll()).slice(-5).map(([d,c])=>d+': mood '+c.m+', stress '+c.s+', determination '+c.d+', energy '+c.e+(c.n?' ('+c.n+')':'')));
+  X.goals_today=T(()=>(coG().d[td]||[]).map(g=>(g.done?'[x] ':'[ ] ')+g.t));X.goals_week=T(()=>(coG().w[wkOf(td)]||[]).map(g=>(g.done?'[x] ':'[ ] ')+g.t));
+  X.done_by_subject_7d_min=T(()=>{const o={},lim=Date.now()-7*864e5;fhist.forEach(h=>{if((h.ts||0)>=lim){const k=(SUBJ[h.subj]||{}).n||'other';o[k]=(o[k]||0)+(h.min||0)}});return o});
+  X.weekly_plan=T(()=>{const W=jl(CO.W,null);if(!W)return'NOT WRITTEN YET';const o={};WP_D.forEach(d=>{o[WP_DN[d]]=(W.d[d]||[]).map(x=>x.t+' '+wpTitle(x)+' '+x.m+'min')});o.confirmed_this_week=jl(CO.WC,'')===wkOf(td);return o});
+  X.opal_shortcuts=T(()=>coShorts().map(s=>s.k+' = '+s.d));
+  return JSON.stringify(X);
+}
+const CO_SYS=`You are the COACH of this student: his alter ego, his mentor and his idol in one voice. You are the best version of himself that he is becoming: relentless, disciplined, calm under pressure, proud of his effort. Speak to him directly. He is a French MPSI student (prépa). Answer in the language he writes (French by default, "tu"). His mission: cut his screen time, catch up his delays, become a work machine.
+How you behave:
+- Demanding and warm. You push hard on effort, never on shame. No insults, no humiliation. You celebrate every proof of work.
+- You know everything in the CONTEXT block: timetable, deadlines, courses, tasks, mistakes, focus time, scroll time, sleep, mood, check-ins, goals. Use real numbers and real names. Never invent data that is not in the context; if something is missing, ask for it.
+- Short: 40 to 120 words, one idea at a time, ending with ONE clear next action or ONE question. At most 4 short lines of list. No emojis.
+- His rule: even sick, he goes to class and sits the DS, no excuse. Hold him to it. Only if he describes alarming symptoms (high fever, chest pain, fainting, etc.) or deep distress or hopelessness, switch to a caring tone: tell him to see a doctor or talk to someone he trusts, and decide the rest with him.
+- Sleep (8 h) is part of performance. Never push all-nighters or skipped meals.
+- When he wants to scroll or watch videos, do not lecture: ask how he feels in one sentence, name the likely need (tired, stressed, bored, avoiding something) and give 2 or 3 concrete replacements of 5 to 15 minutes (cold water, 20 push-ups, a walk, one exercise, a 10 minute focus, a message to a friend). You may offer the Opal shortcut that blocks his apps.
+- When asked to assess him: a score out of 10 for mind, determination, workload, screen time, stress and sleep, the main cause of each, and one concrete action each, based on the data.
+- When he is behind: decompose. What is missing, by subject, ordered by the next DS or colle, sized in hours. Turn it into weekly goals, then daily goals.
+- He writes his own weekly plan every Sunday (subject, hours, start time for each day). You advise on it, you never replace it. Colle revision happens only at lunch or on Sunday.
+You can act on the app by ending your message with an actions block: <actions>[...]</actions>, a JSON array. Allowed actions:
+{"a":"goal","scope":"day","t":"..."} (scope "week" for a weekly goal)
+{"a":"task","t":"...","due":"YYYY-MM-DD"}
+{"a":"block","t":"...","date":"YYYY-MM-DD","time":"HH:MM","min":60,"subj":"maths|phys|chim|ang|fr|ipt or empty"} adds a calendar block
+{"a":"remind","t":"...","date":"YYYY-MM-DD","time":"HH:MM"} a push reminder
+{"a":"focus","min":25} offers a focus timer button
+{"a":"opal","k":"<key from opal_shortcuts>"} offers a button that runs that Opal shortcut
+{"a":"checkin"} asks him to rate mood, stress and determination
+{"a":"plan"} opens his weekly plan screen
+{"a":"mode","v":"locked"} hides the non essential cards on Home ("normal" brings them back)
+Use actions sparingly, only when they help, and at most 5. Never mention the actions block in the text.`;
+const coHist=()=>jl(CO.H,[]);
+const coFmt=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+function coRun(acts){
+  const out=[];
+  (acts||[]).slice(0,5).forEach(a=>{
+    try{
+      const D=/^\d{4}-\d\d-\d\d$/,Tm=/^\d{1,2}:\d{2}$/,t=String(a.t||'').slice(0,140);
+      if(a.a==='goal'&&t){coGAdd(a.scope==='week'?'week':'day',t);out.push({a:'goal',ok:1,l:(a.scope==='week'?'Weekly goal: ':'Goal today: ')+t})}
+      else if(a.a==='task'&&t){const g=pwGenGoal();tasks.unshift({id:uid(),text:t,xp:20,due:D.test(a.due||'')?a.due:iso(),gid:g.id});sv();out.push({a:'task',ok:1,l:'Task added: '+t})}
+      else if(a.a==='block'&&t&&D.test(a.date||'')&&Tm.test(a.time||'')){const s=hm(a.time),e=Math.min(1439,s+Math.max(15,Math.min(240,+a.min||60)));const sj=SUBJ[a.subj]?a.subj:'';cal.push({id:uid(),title:t,date:a.date,time:hmS(s),endTime:hmS(e),kind:'work',subj:sj,color:pwSc(sj),desc:'From the coach'});sv();try{render()}catch(x){}out.push({a:'block',ok:1,l:'Added to calendar: '+t+' '+a.date.slice(5)+' '+hmS(s)})}
+      else if(a.a==='remind'&&t&&D.test(a.date||'')&&Tm.test(a.time||'')){NT.custom=NT.custom||[];NT.custom.push({id:'co-'+uid(),title:t,note:'',time:hmS(hm(a.time)),days:[],date:a.date,on:true});ntSave();out.push({a:'remind',ok:1,l:'Reminder set: '+a.date.slice(5)+' '+hmS(hm(a.time))})}
+      else if(a.a==='mode'){js(CO.MD,a.v==='locked'?'locked':'normal');coMode();out.push({a:'mode',ok:1,l:a.v==='locked'?'Home simplified':'Home back to normal'})}
+      else if(a.a==='focus')out.push({a:'focus',min:Math.max(5,Math.min(90,+a.min||25)),l:'Start focus '+Math.max(5,Math.min(90,+a.min||25))+' min'});
+      else if(a.a==='opal'){const s=coShorts().find(x=>x.k===a.k);if(s)out.push({a:'opal',k:s.k,l:'Run: '+s.n})}
+      else if(a.a==='plan')out.push({a:'plan',l:'Open my weekly plan'});
+      else if(a.a==='checkin')out.push({a:'checkin',l:'Check-in: how do I feel?'});
+    }catch(e){}
+  });
+  try{balCard()}catch(e){}
+  return out;
+}
+function coSplit(txt){
+  let acts=[],t=String(txt||'');const m=/<actions>([\s\S]*?)(<\/actions>|$)/.exec(t);
+  if(m){t=t.slice(0,m.index).trim();try{acts=JSON.parse(m[1])}catch(e){acts=[]}}
+  return{t,acts:Array.isArray(acts)?acts:[]};
+}
+let coBusy=false;
+async function coSend(text){
+  text=String(text||'').trim();if(!text||coBusy)return;
+  const H=coHist();H.push({r:'u',t:text,ts:Date.now()});const me={r:'c',t:'...',pend:1,ts:Date.now()};H.push(me);
+  coBusy=true;coDraw(true);
+  try{
+    if(!window.PC||!PC.hasKey())throw Object.assign(new Error('Add your AI key first (Prépa, then AI settings). The coach needs it to think.'),{nokey:1});
+    const tr=H.slice(-16,-1).map(m=>(m.r==='u'?'USER: ':'COACH: ')+m.t).join('\n');
+    const r=await PC.ai({system:CO_SYS,max:900,content:[{type:'text',text:'CONTEXT (JSON, live from his app):\n'+coCtx()+'\n\nCONVERSATION:\n'+tr+'\n\nReply now as the coach.'}]});
+    const p=coSplit(r&&r.text);me.t=p.t||'...';me.a=coRun(p.acts);delete me.pend;
+  }catch(e){me.t=String(e&&e.message||e);me.err=1;me.nokey=e&&e.nokey;delete me.pend}
+  js(CO.H,H.filter(m=>!m.pend).slice(-40).concat(H.filter(m=>m.pend)));coBusy=false;coDraw(true);
+}
+const CO_Q=[['Today\'s mission','Donne-moi ma mission du jour : 3 goals maximum, concrets, selon mon planning et mes retards.'],['Assess me','Évalue-moi : mental, détermination, quantité de travail, temps d\'écran, stress, sommeil. Un score sur 10 par axe, la cause principale, une action concrète par axe, puis mes goals de la semaine.'],['I am behind','Je suis en retard (cours et DS manqués). Décompose mon rattrapage par matière, en heures, puis donne-moi les objectifs de la semaine et du jour.'],['I want to scroll','Je suis sur le point de scroller ou de regarder des vidéos. Aide-moi.'],['Review my week','Regarde mon planning de la semaine et dis-moi quoi changer, honnêtement.']];
+function coOpen(pre){
+  const e=ovEl('coscr');
+  if(!e.dataset.b){e.dataset.b=1;e.innerHTML='<div class="v-h"><div><b>Coach</b><small>Your best self. He knows your week.</small></div><span><button class="v-x" data-co="cset">Settings</button><button class="v-x" data-co="cx">Close</button></span></div><div class="v-b" id="co-m"></div><div class="co-q" id="co-q">'+CO_Q.map((q,i)=>'<button data-co="q" data-i="'+i+'">'+q[0]+'</button>').join('')+'</div><div class="co-i"><textarea id="co-t" rows="1" placeholder="Talk to your coach"></textarea><button id="co-s" data-co="send">Send</button></div><div class="v-b" id="co-set" style="display:none"></div>'}
+  $('co-set').style.display='none';$('co-m').style.display='';$('co-q').style.display='';document.querySelector('#coscr .co-i').style.display='';
+  coDraw();if(pre)setTimeout(()=>coSend(pre),150);
+}
+function coDraw(){
+  const H=coHist(),el=$('co-m');if(!el)return;
+  if(!H.length){el.innerHTML='<div class="co-b c">Je suis ta meilleure version. Je vois ton planning, tes cours, ton temps d\'écran, ton sommeil. Dis-moi comment tu vas, ou choisis une action ci-dessous. Pas d\'excuses, on avance.</div>'}
+  else el.innerHTML=H.map((m,mi)=>'<div class="co-b '+m.r+(m.err?' err':'')+(m.pend?' pend':'')+'">'+coFmt(m.t)+(m.nokey?'<div><button class="co-act" data-co="key">Open AI settings</button></div>':'')+'</div>'+((m.a||[]).length?'<div class="co-as">'+m.a.map((a,ai)=>a.ok?'<span class="co-ok">'+esc(a.l)+'</span>':'<button class="co-act" data-co="act" data-m="'+mi+'" data-i="'+ai+'">'+esc(a.l)+'</button>').join('')+'</div>':'')).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function coSettings(){
+  const P=coProf(),S=coShorts();
+  $('co-m').style.display='none';$('co-q').style.display='none';document.querySelector('#coscr .co-i').style.display='none';
+  const s=$('co-set');s.style.display='';
+  s.innerHTML='<div class="lbl" style="margin:6px 0">About me (the coach reads this)</div><textarea id="cs-sit" rows="7" class="co-ta">'+esc(P.sit)+'</textarea>'+
+   '<div class="lbl" style="margin:14px 0 6px">Opal shortcuts the coach can offer</div><div class="sub" style="margin:0 0 6px">One per line: key = Shortcut name | when to use it. iOS asks for one tap to run a shortcut.</div><textarea id="cs-op" rows="5" class="co-ta" autocapitalize="off">'+esc(S.map(x=>x.k+' = '+x.n+' | '+x.d).join('\n'))+'</textarea>'+
+   '<button class="btn primary" data-co="setok">Save</button><button class="btn" data-co="clr">Clear the conversation</button><button class="btn" data-co="back">Back to the coach</button>';
+}
+document.addEventListener('click',async e=>{
+  const b=e.target.closest&&e.target.closest('[data-co]');if(!b)return;e.stopPropagation();try{vib(8)}catch(x){}
+  const a=b.dataset.co;
+  if(a==='talk')coOpen();
+  else if(a==='scroll')coOpen(CO_Q[3][1]);
+  else if(a==='ci')ciSheet();
+  else if(a==='plan'||a==='wpedit')wpOpen();
+  else if(a==='cx')ovClose('coscr');
+  else if(a==='wpx')ovClose('wpscr');
+  else if(a==='cset')coSettings();
+  else if(a==='back')coOpen();
+  else if(a==='q')coSend(CO_Q[+b.dataset.i][1]);
+  else if(a==='send'){const t=$('co-t');const v=t.value;t.value='';coSend(v)}
+  else if(a==='key'){ovClose('coscr');try{P._A.settings()}catch(x){}}
+  else if(a==='g'){coGTog(b.dataset.id);try{balCard()}catch(x){}}
+  else if(a==='unlock'){js(CO.MD,'normal');coMode()}
+  else if(a==='setok'){const p=coProf();p.sit=($('cs-sit').value||'').trim().slice(0,1500)||CO_SIT0;js(CO.P,p);
+    const L=($('cs-op').value||'').split('\n').map(l=>{const m=/^\s*([\w-]+)\s*=\s*([^|]+?)\s*(?:\|\s*(.*))?$/.exec(l);return m?{k:m[1],n:m[2],d:(m[3]||'Opal shortcut').trim()}:null}).filter(Boolean);js(CO.O,L);toast('Saved');coOpen()}
+  else if(a==='clr'){if(await ask({title:'Clear the conversation?',ok:'Clear',danger:1})){js(CO.H,[]);coOpen()}}
+  else if(a==='act'){const m=coHist()[+b.dataset.m],x=m&&m.a&&m.a[+b.dataset.i];if(!x)return;
+    if(x.a==='focus'){ovClose('coscr');F.mode='short';F.cust=x.min;F.kind='focus';F.task='Focus';F.status='idle';show('focus');setTimeout(fStart,350)}
+    else if(x.a==='opal'){const s=coShorts().find(y=>y.k===x.k);if(s)oplGo(s.n)}
+    else if(x.a==='plan'){ovClose('coscr');wpOpen()}
+    else if(x.a==='checkin')ciSheet();}
+  else if(a==='wpadd'){const L=wpS.p[wpS.d]=wpS.p[wpS.d]||[];const last=L.length?Math.max(...L.map(wpEnd)):17*60+30;L.push({s:'maths',k:'ex',t:hmS(Math.min(last,22*60)),m:60});wpDraw()}
+  else if(a==='wpcp'){const src=JSON.parse(JSON.stringify(wpS.p[wpS.d]||[]));[1,2,3,4,5].forEach(d=>{if(d!==wpS.d)wpS.p[d]=JSON.parse(JSON.stringify(src))});toast('Copied to the other weekdays');wpDraw()}
+  else if(a==='wpok')wpConfirm();
+  else if(a==='wpask'){js(CO.W,{d:wpS.p,at:Date.now()});ovClose('wpscr');coOpen('Voici mon planning de la semaine prochaine. Regarde-le : équilibre des matières, mes retards, mes colles et DS. Dis-moi quoi changer.')}
+},true);
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('#wpscr [data-wd]');if(t){wpS.d=+t.dataset.wd;wpDraw()}},true);
+document.addEventListener('change',e=>{
+  const f=e.target.dataset&&e.target.dataset.f,r=e.target.closest&&e.target.closest('#wpscr .wp-r');if(!f||!r)return;
+  const L=wpS.p[wpS.d],x=L[+r.dataset.i];if(!x)return;
+  if(f==='m')x.m=+e.target.value;else x[f]=e.target.value;if(f==='s'&&!x.s&&x.k==='ex')x.k='catch';wpDraw();
+},true);
+document.addEventListener('click',e=>{const x=e.target.closest&&e.target.closest('#wpscr [data-f="x"]');if(!x)return;e.stopPropagation();const r=x.closest('.wp-r');wpS.p[wpS.d].splice(+r.dataset.i,1);wpDraw()},true);
+/* ---------- Home card: the mission ---------- */
+function balCard(){
+  const el=document.getElementById('balcard');if(!el)return;
+  const S=balState(),M=coachMsg(S),c=balCol[S.tier],g=coG(),td=iso(),dg=g.d[td]||[],wg=g.w[wkOf(td)]||[],ci=coCiToday(),unp=jl(CO.WC,'')!==wkOf(td),sun=new Date().getDay()===0,lock=jl(CO.MD,'normal')==='locked';
+  el.style.display='';el.dataset.tier=S.tier;
+  const pS=S.b?Math.min(100,Math.round(100*S.s/S.b)):0,pF=Math.min(100,Math.round(100*S.f/Math.max(60,S.f)));
+  const gl=(L,t)=>L.length?'<div class="lbl" style="margin:12px 0 4px">'+t+' · '+L.filter(x=>x.done).length+'/'+L.length+'</div>'+L.map(x=>'<div class="co-g'+(x.done?' dn':'')+'" data-co="g" data-id="'+x.id+'"><i></i><span>'+esc(x.t)+'</span></div>').join(''):'';
+  el.innerHTML='<div class="bal-h"><span class="bal-t"><i style="color:'+M.c+'">'+balIc+'</i>Coach</span><button class="lnk" data-bal="det">Screen balance</button></div>'+
+   '<div class="bal-co"><b style="color:'+M.c+'">'+esc(M.t)+'</b><span>'+esc(M.x)+'</span></div>'+
+   (unp?'<button class="btn '+(sun?'primary':'')+' sm" data-co="plan" style="margin:6px 0 0">'+(sun?'Sunday: plan my week':'Plan my week')+'</button>':'')+
+   gl(dg,'Today')+gl(wg,'This week')+
+   (!dg.length?'<div class="sub" style="margin:10px 0 0">No goal today yet. Ask the coach for your mission.</div>':'')+
+   (S.has?'<div class="bal-r" style="margin-top:12px"><div class="bal-l"><span>Scrolling</span><b style="color:'+c+'">'+fmM(S.s)+'<small> / '+fmM(S.b)+'</small></b></div><i class="bal-b"><u style="width:'+pS+'%;background:'+c+'"></u></i></div>':'')+
+   '<div class="bal-r"><div class="bal-l"><span>Focus</span><b>'+fmM(S.f)+'</b></div><i class="bal-b f"><u style="width:'+pF+'%"></u></i></div>'+
+   '<div class="bal-a"><button class="btn primary sm" data-co="talk">Talk to the coach</button><button class="btn sm" data-co="ci">'+(ci?'Check-in done':'How do I feel?')+'</button></div>'+
+   '<div class="bal-a"><button class="btn sm" data-bal="go">'+(F.status==='run'?'Back to my timer':'Focus '+BAL_LEN+' min')+'</button><button class="btn sm" data-co="scroll">I want to scroll</button></div>'+
+   (lock?'<button class="lnk" data-co="unlock" style="margin-top:6px">Coach mode: simple Home. Show everything</button>':'');
+}
+function coachSheet(){coOpen()}
+/* Sunday: the coach reminds you to write the week */
+setTimeout(()=>{try{const n=new Date(),td=iso();if(n.getDay()===0&&n.getHours()>=12&&jl(CO.WC,'')!==wkOf(td)&&jl('p_wpa','')!==td){js('p_wpa',td);toast('Sunday: plan your week',{label:'Plan',fn:wpOpen})}}catch(e){}},4500);
+window.PN=window.PN||{};window.PN.co={ctx:coCtx,open:coOpen,plan:wpOpen,run:coRun,split:coSplit,sys:CO_SYS,seed:wpSeed};
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
