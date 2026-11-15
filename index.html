@@ -1388,6 +1388,7 @@ html.bgp *,html.bgp *::before,html.bgp *::after{animation-play-state:paused!impo
 .sda{all:unset;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;padding:11px 2px;border-top:1px solid var(--line2);cursor:pointer}.sda:first-of-type{border-top:0}
 .sda-i{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:17px;flex:none}.sda-n{flex:1;display:flex;flex-direction:column;min-width:0}.sda-n b{font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sda-n small,.sda-t small{font-size:11.5px;color:var(--muted);font-weight:600}.sda-t{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}.sda-t.o{color:#ff7a70}
 .sda-p{flex:0 0 100%;height:5px;border-radius:5px;background:var(--line2);overflow:hidden}.sda-p u{display:block;height:100%;border-radius:5px}
+.ld-nav{display:flex;align-items:center;gap:10px;margin:2px 0 8px}.ld-nav .btn{width:44px;flex:none;margin:0;font-size:20px;padding:8px 0}.ld-mid{flex:1;text-align:center;min-width:0}.ld-mid b{display:block;font-size:16px;margin-bottom:6px}.ld-mid input{width:100%;text-align:center}.ld-apps{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ld-ap{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:14px;padding:8px 10px}.ld-ap input{width:100%}
 </style>
 <script>try{if(localStorage.getItem('pin_aether_hash'))document.documentElement.classList.add('locked')}catch(e){}</script>
 </head>
@@ -2069,8 +2070,31 @@ function scrRender(){
   const vl=D.map(x=>x[1].vl),vw=vl.reduce((t,x)=>t+x,0),vm=Math.max(30,...vl),dot=vlSt==='ok'?'ok':vlSt==='nf'?'bad':vlSt==='off'?'warn':'';
   h+='<div class="sd-vl"><div class="sd-vh"><b>VLite</b><span class="sd-dot '+dot+'"></span><span class="sd-s">'+(vlSt==='nf'?'no usage.json':vlSt==='off'?'offline':sd?'synced '+sdAgo(sd.u)+' ago':'linking…')+'</span></div>'+
    '<div class="sd-vb">'+vl.map((m,i)=>'<i class="'+(D[i][0]===cur[0]?'on':'')+'" style="height:'+Math.max(3,Math.round(m/vm*34))+'px"></i>').join('')+'</div><div class="sd-s">'+fmM(vw)+' this week · '+fmM(Math.round(vw/7))+' a day</div></div>'+
-   '<div class="sd-row"><button class="btn sm" id="scr-op">Log today</button><button class="btn sm" id="scr-retry">Refresh</button><button class="btn sm" id="scr-in">Paste</button><button class="btn sm" id="scr-repo">Repo</button></div>';
+   '<div class="sd-row"><button class="btn sm" id="scr-op">'+(isT?'Log today':'Log '+new Date(cur[0]+'T12:00:00').toLocaleDateString('en',{weekday:'short'}))+'</button><button class="btn sm" id="scr-retry">Refresh</button><button class="btn sm" id="scr-in">Paste</button><button class="btn sm" id="scr-repo">Repo</button></div>';
   el.innerHTML=h;
+}
+
+function logDay(k){
+  const td=iso();if(!k||k>td)k=td;
+  const o=opalDays(),a=appleDays(),at=lj('apptime',{}),cl=appCls(),al=lj('applim',{});
+  const names=[...new Set([...Object.keys(cl),...Object.keys(al),...Object.keys(at[k]||{})])].slice(0,10);
+  const lab=k===td?'Today':new Date(k+'T12:00:00').toLocaleDateString('en',{weekday:'long',day:'numeric',month:'long'});
+  openSheet('<h2>Log screen time</h2><div class="ld-nav"><button class="btn sm" id="ld-p" aria-label="Previous day">‹</button><div class="ld-mid"><b>'+lab+'</b><input type="date" id="ld-d" value="'+k+'" max="'+td+'"></div><button class="btn sm" id="ld-n" aria-label="Next day"'+(k>=td?' disabled':'')+'>›</button></div>'+
+   '<div class="sub" style="margin:2px 0 12px">Neither Opal nor Apple Screen Time can be read by an app, so type the minutes for the day (iPhone Settings › Screen Time, or the Opal app). VLite is read automatically. Leave a field empty to clear it.</div>'+
+   '<div class="two"><div class="field"><label>Opal, min</label><input id="ld-o" type="number" inputmode="numeric" value="'+(o[k]||'')+'" placeholder="min"></div><div class="field"><label>Apple total, min</label><input id="ld-a" type="number" inputmode="numeric" value="'+(a[k]!=null?a[k]:'')+'" placeholder="min"></div></div>'+
+   (names.length?'<div class="lbl" style="margin:6px 0 8px">Per app (optional)</div><div class="ld-apps">'+names.map((n,i)=>'<label class="ld-ap"><span>'+esc(n)+'</span><input type="number" inputmode="numeric" data-n="'+esc(n)+'" value="'+((at[k]||{})[n]||'')+'" placeholder="min"></label>').join('')+'</div>':'')+
+   '<button class="btn primary" id="ld-s" style="margin-top:12px">Save</button>');
+  const go=d=>logDay(d);
+  $('ld-p').onclick=()=>go(shiftD(k,-1));$('ld-n').onclick=()=>{if(k<td)go(shiftD(k,1))};
+  $('ld-d').onchange=()=>{const v=$('ld-d').value;if(v)go(v>td?td:v)};
+  $('ld-s').onclick=()=>{
+    const ov=$('ld-o').value.trim(),av=$('ld-a').value.trim(),o2=opalDays(),a2=appleDays(),t2=lj('apptime',{});
+    if(ov==='')delete o2[k];else o2[k]=Math.max(0,Math.min(1440,Math.round(+ov||0)));
+    if(av==='')delete a2[k];else a2[k]=Math.max(0,Math.min(1440,Math.round(+av||0)));
+    document.querySelectorAll('.ld-ap input').forEach(i=>{const n=i.dataset.n,v=i.value.trim();t2[k]=t2[k]||{};if(v==='')delete t2[k][n];else t2[k][n]=Math.max(0,Math.min(1440,Math.round(+v||0)))});
+    if(t2[k]&&!Object.keys(t2[k]).length)delete t2[k];
+    try{localStorage.setItem('opaldays',JSON.stringify(o2));localStorage.setItem('appledays',JSON.stringify(a2));localStorage.setItem('apptime',JSON.stringify(t2))}catch(x){}
+    scrSel=k;closeSheet();scrRender();toast('Saved for '+(k===td?'today':lab))};
 }
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sd]');if(b){scrSel=b.dataset.sd;vib(6);scrRender()}});
 function scrImport(txt){const d=scrParse(txt);if(!d)return false;try{localStorage.setItem('sigdata',JSON.stringify(d))}catch(e){}scrRender();toast('Screen time updated');vib(15);return true}
@@ -2096,8 +2120,7 @@ document.addEventListener('click',e=>{
   if(e.target.id==='scr-retry'){vlSt='';scrAuto(true);scrRender();return}
   if(e.target.id==='scr-repo'){openSheet('<h2>VLite link</h2><div class="sub" style="margin-bottom:10px">Same repo as in VLite (e.g. name/vlite). Aether then reads your watch time by itself.</div><div class="field"><input id="scr-r" value="'+esc(vlRepo())+'" placeholder="name/vlite" autocapitalize="off"></div><button class="btn primary" id="scr-rs">Save</button>');
     $('scr-rs').onclick=()=>{try{localStorage.setItem('vlrepo',$('scr-r').value.trim().replace(/^https:\/\/github\.com\//,''))}catch(x){}closeSheet();vlSt='';scrAuto(true)}}
-  if(e.target.id==='scr-op'){const o=opalDays(),a=appleDays(),k=iso();openSheet('<h2>Screen time today</h2><div class="sub" style="margin-bottom:10px">Neither Opal nor Apple Screen Time can be read by an app, so type the minutes once a day (Settings › Screen Time on iPhone, or the Opal app). VLite is read automatically.</div><div class="field"><label>Opal (distracting apps), min</label><input id="scr-om" type="number" inputmode="numeric" value="'+(o[k]||'')+'" placeholder="minutes"></div><div class="field"><label>Apple Screen Time, min</label><input id="scr-am" type="number" inputmode="numeric" value="'+(a[k]||'')+'" placeholder="minutes"></div><button class="btn primary" id="scr-os">Save</button>');
-    $('scr-os').onclick=()=>{o[k]=Math.max(0,+$('scr-om').value||0);a[k]=Math.max(0,+$('scr-am').value||0);try{localStorage.setItem('opaldays',JSON.stringify(o));localStorage.setItem('appledays',JSON.stringify(a))}catch(x){}closeSheet();scrRender()}}
+  if(e.target.id==='scr-op'){logDay(scrSel&&scrSel<=iso()?scrSel:iso());return}
 });
 setTimeout(scrAuto,1500);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')scrAuto()});
 
