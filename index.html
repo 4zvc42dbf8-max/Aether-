@@ -10098,6 +10098,28 @@ const RU={
   ['u-r9','🧹 Chores in 5 min','Tidy and clean, 1 h. Then 3 h of work.','13:55',[6]]]
 };
 const ruIs=x=>String(x.id).startsWith('u-');
+/* the life items that deserve a place of their own in the calendar (meals and lunch stay as reserved time) */
+const RU_EV=['u-dinM','u-sport','u-lunSa','u-chore','u-colle','u-rattr'];
+function ruEvents(){
+  const td=iso(),nowM=new Date().getHours()*60+new Date().getMinutes(),made=new Set(jl('p_ruev',[]));let n=0;
+  for(let i=0;i<7;i++){
+    const ds=shiftD(td,i),wd=new Date(ds+'T12:00:00').getDay();
+    RU.life.forEach(a=>{
+      if(!RU_EV.includes(a[0])||!a[3].includes(wd))return;
+      if(i===0&&hm(a[5])<=nowM)return;
+      const id='ru-'+ds+'-'+a[0];if(made.has(id)||cal.some(c=>c.id===id))return;
+      cal.push({id,title:a[1]+' '+a[2],date:ds,time:a[4],endTime:a[5],desc:'From My weekly routine',color:4,kind:'life'});made.add(id);n++;
+    });
+  }
+  js('p_ruev',[...made].slice(-400));if(n)sv();return n;
+}
+/* once a day, the first time you open Aether: the next 7 days are filled from your routine */
+function ruDaily(force){
+  if(jl(RU_FLAG,0)!==RU_V)return;
+  const td=iso();if(!force&&jl('p_rud','')===td)return;js('p_rud',td);
+  try{ruEvents()}catch(e){}
+  try{pwPlan();pwCard();try{render()}catch(e){}if(typeof cur!=='undefined'&&cur==='calendar')rCal()}catch(e){}
+}
 function ruApply(){
   const cfg=pwCfg();
   cfg.life=(cfg.life||[]).filter(x=>!ruIs(x));cfg.ref=(cfg.ref||[]).filter(x=>!ruIs(x));
@@ -10113,12 +10135,14 @@ function ruApply(){
   try{ntSave()}catch(e){}
   try{js(RU_FLAG,RU_V)}catch(e){}
   try{if(typeof pSyncSoon==='function')pSyncSoon()}catch(e){}
+  try{ruEvents();js('p_rud',iso())}catch(e){}
   try{pwRun2(false)}catch(e){}
 }
 function ruRemove(){
   const cfg=pwCfg();cfg.life=(cfg.life||[]).filter(x=>!ruIs(x));cfg.ref=(cfg.ref||[]).filter(x=>!ruIs(x));cfg.life.forEach(x=>{if(x.id==='l1')x.days=[0,1,2,3,4,5,6]});pwSave(cfg);
   NT.custom=(NT.custom||[]).filter(x=>!ruIs(x));try{ntSave()}catch(e){}
-  try{js(RU_FLAG,-1)}catch(e){}
+  for(let i=cal.length-1;i>=0;i--)if(String(cal[i].id).startsWith('ru-'))cal.splice(i,1);sv();
+  try{js(RU_FLAG,-1);js('p_ruev',[])}catch(e){}
 }
 function ruSheet(){
   const days=[1,2,3,4,5,6,0],E={};days.forEach(d=>E[d]=[]);
@@ -10133,8 +10157,9 @@ function ruSheet(){
   $('ru-x').onclick=async()=>{if(await ask({title:'Remove my routine?',ok:'Remove',danger:1})){ruRemove();closeSheet();toast('Routine removed')}};
 }
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#pw-ru')){e.stopPropagation();closeSheet();setTimeout(ruSheet,300)}},true);
-setTimeout(()=>{try{if(jl(RU_FLAG,0)!==RU_V&&jl(RU_FLAG,0)!==-1){ruApply();toast('Your weekly routine is in · review the proposed blocks on Home')}}catch(e){}},3200);
-window.PN=window.PN||{};window.PN.ru={apply:ruApply,remove:ruRemove,sheet:ruSheet,data:RU};
+setTimeout(()=>{try{const f=jl(RU_FLAG,0);if(f!==RU_V&&f!==-1){ruApply();toast('Your weekly routine is in · review the proposed blocks on Home')}else ruDaily()}catch(e){}},3200);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>{try{ruDaily()}catch(e){}},1500)});
+window.PN=window.PN||{};window.PN.ru={apply:ruApply,remove:ruRemove,sheet:ruSheet,data:RU,events:ruEvents,daily:ruDaily};
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
