@@ -1474,6 +1474,7 @@ html.bgp *,html.bgp *::before,html.bgp *::after{animation-play-state:paused!impo
     <div class="pv-h">Focus & distraction</div>
     <div class="pv-g">
       <button class="pv-btn" id="pv-opal" data-i="🛡">Opal link<small>Auto start</small></button>
+      <button class="pv-btn" id="pv-bal" data-i="⚖️">Screen balance<small>Budget, pause, Study first</small></button>
       <button class="pv-btn" id="pv-app" data-i="📲">App time from Shortcuts<small>Count an app by itself</small></button>
       <button class="pv-btn" id="pv-ck" data-i="🛏">Daily check-ins<small>Sleep and screen time popups</small></button>
       <button class="pv-btn" id="pv-vl" data-i="📺">VLite link<small>Watch time, repo</small></button>
@@ -8577,7 +8578,7 @@ function homeIcons(){
 })();
 
 /* ---- Settings rows: tinted icon chips instead of emoji ---- */
-const PVIC={'pv-home':['puzzle','#a78bfa'],'pv-opal':['shield-check','#60a5fa'],'pv-app':['cellphone','#34d399'],'pv-ck':['sleep','#818cf8'],'pv-vl':['television','#f87171'],'pv-rlx':['leaf','#4ade80'],
+const PVIC={'pv-home':['puzzle','#a78bfa'],'pv-opal':['shield-check','#60a5fa'],'pv-app':['cellphone','#34d399'],'pv-bal':['chart-bar','#fb923c'],'pv-ck':['sleep','#818cf8'],'pv-vl':['television','#f87171'],'pv-rlx':['leaf','#4ade80'],
   'pv-notif':['bell','#fbbf24'],'pv-studio':['star-four-points','#f472b6'],'pv-wk':['calendar-star','#a78bfa'],'pv-hub':['folder-open','#38bdf8'],'pv-ai':['robot','#22d3ee'],
   'pv-setpin':['lock','#94a3b8'],'pv-rmpin':['lock-open','#f87171'],'pv-snaps':['database','#fb923c'],'pv-export':['file-document','#34d399'],'pv-import':['file-document-edit','#60a5fa']};
 function pvIcons(){Object.keys(PVIC).forEach(id=>{const b=document.getElementById(id);if(!b||b.querySelector('.hico'))return;const m=PVIC[id],c=hicoEl(m[0],m[1]);c.classList.add('pvi');b.classList.add('pvx');b.insertBefore(c,b.firstChild)})}
@@ -10027,7 +10028,7 @@ function balSheet(){
    '<div class="field"><label>Pause when I pass my budget</label><div class="chips" id="bl-p"><button class="chip '+(c.p?'on':'')+'" data-v="1">On</button><button class="chip '+(c.p?'':'on')+'" data-v="0">Off</button></div></div>'+
    (pcfg().on?'<div class="field"><label>Live nudge (push when you open an app)</label><div class="chips" id="bl-l"><button class="chip '+(c.l?'on':'')+'" data-v="1">On</button><button class="chip '+(c.l?'':'on')+'" data-v="0">Off</button></div></div><button class="btn" id="bl-ping" style="margin-bottom:8px">Set up the live nudge</button>':'<div class="sub" style="margin:2px 0 10px">Live nudges need push notifications: turn them on in Settings › Notifications.</div>')+
    '<div class="field"><label>Study first: lock Home until I reach my focus goal</label><div class="chips" id="bl-sf"><button class="chip '+(c.s?'':'on')+'" data-v="0">Off</button><button class="chip '+(c.s?'on':'')+'" data-v="1">On</button></div></div><div class="field"><label>Daily focus goal, min</label><input id="bl-g" type="number" inputmode="numeric" value="'+c.g+'"></div>'+
-   (c.s&&pcfg().on?'<button class="btn" id="bl-sfs" style="margin-bottom:8px">Bring me back to Aether from Instagram</button>':'')+
+   (c.s&&pcfg().on?'<button class="btn" id="bl-sfs" style="margin-bottom:8px">What happens when I open Instagram</button>':'')+
    '<button class="btn primary" id="bl-s">Save</button><button class="btn" id="bl-h" style="margin-top:8px">How apps are counted</button>');
   let pv=c.p,lv=c.l,sv2=c.s;
   $('bl-sf').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sv2=+b.dataset.v;[...$('bl-sf').children].forEach(x=>x.classList.toggle('on',x===b))};
@@ -10041,14 +10042,10 @@ function balSheet(){
   $('bl-h').onclick=()=>{try{appTimeHelp()}catch(x){}};
 }
 function balBack(){
-  const u=pUrl(),tk=!!pcfg().token;
-  openSheet('<h2>Back to Aether</h2><div class="sub" style="margin:0 0 12px">While Study first is locked, opening a distracting app can send you straight to Aether instead. Your Shortcut asks the worker whether your day is still locked.</div>'+
-   '<ol class="bal-ol"><li>Open your <b>Is Opened</b> automation for the app (you must already have the live nudge address from the previous screen).</li>'+
-   '<li>After <b>Get Contents of URL</b> (the <b>/ev?a=…&amp;e=o</b> one):</li>'+
-   '<li>Right after that action add <b>Set Variable</b> named <b>Lock</b>. Then add <b>If</b>: <b>Lock</b> · <b>contains</b> · <code>true</code> (just the word, no quotes).</li>'+
-   '<li>Inside the If, add <b>Open App</b> and choose <b>Aether</b>. Leave Otherwise empty.</li>'+
-   '<li>Repeat for each distracting app. Opening it then brings you to Aether while the day is locked, and does nothing once you reached your goal.</li></ol>'+
-   '<div class="sub" style="margin-top:10px">iOS cannot block the app itself: Instagram opens for a moment, then Aether comes in front.</div>');
+  openSheet('<h2>When Study first is locked</h2><div class="sub" style="margin:0 0 12px">iOS does not let a Shortcut open Aether (home screen web apps are not in the Open App list). Two things work instead:</div>'+
+   '<ol class="bal-ol"><li><b>The notification.</b> When you open a distracting app while your day is locked, you get a "Study first" push. Tap it: Aether opens and starts a 25 min focus. Nothing to add in Shortcuts.</li>'+
+   '<li><b>An alert on top of the app (optional).</b> In the <b>Is Opened</b> automation, right after the <b>/ev?a=…&amp;e=o</b> action add <b>Set Variable</b> named <b>Lock</b>, then <b>If</b> <b>Lock</b> · <b>contains</b> · <code>true</code>, and inside it <b>Show Alert</b> with the text "Study first: do your focus before scrolling". Leave Otherwise empty.</li></ol>'+
+   '<div class="sub" style="margin-top:10px">iOS cannot block the app itself. This is a nudge, not a lock.</div>');
 }
 function balPing(){
   const u=pUrl(),bad=Object.keys(lj('apptime',{})).length?[...new Set(Object.values(lj('apptime',{})).flatMap(o=>Object.keys(o)))].filter(k=>appCls()[k]!=='n')[0]:'';
@@ -12077,7 +12074,7 @@ P.boot();
 
   (function(){const tap=id=>{const b=document.createElement('button');b.id=id;document.body.appendChild(b);b.click();b.remove()};
    const go=(id,fn)=>{const el=$(id);if(el)el.addEventListener('click',function(){sheet.classList.remove('show');setTimeout(function(){try{fn()}catch(e){note('Not available')}},260)})};
-   go('pv-studio',()=>PV.studio());go('pv-home',()=>{show('home');setTimeout(()=>PH.layout(),250)});go('pv-opal',()=>oplSheet());go('pv-vl',()=>tap('scr-repo'));go('pv-ck',()=>ckSettings());go('pv-app',()=>appTimeHelp());go('pv-rlx',()=>rlxStart());})();
+   go('pv-studio',()=>PV.studio());go('pv-home',()=>{show('home');setTimeout(()=>PH.layout(),250)});go('pv-opal',()=>oplSheet());go('pv-bal',()=>{try{PN.bal.sheet()}catch(e){toast('Open Home › Screen balance')}});go('pv-vl',()=>tap('scr-repo'));go('pv-ck',()=>ckSettings());go('pv-app',()=>appTimeHelp());go('pv-rlx',()=>rlxStart());})();
   $('pv-wk').addEventListener('click',function(){sheet.classList.remove('show');setTimeout(function(){try{PW.open()}catch(e){note('Planner not available')}},120)});
   $('pv-hub').addEventListener('click',function(){sheet.classList.remove('show');setTimeout(function(){try{window.PI&&PI.open()}catch(e){note('Import is not available')}},120)});
   fileIn.addEventListener('change',function(){
