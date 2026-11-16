@@ -1883,6 +1883,24 @@ window.scrollBy=function(a,b){const o=norm(a,b);B.scrollBy({top:o.top||0,left:o.
 try{Object.defineProperty(document,'scrollingElement',{get:()=>B,configurable:true})}catch(e){}
 B.addEventListener('scroll',()=>{window.dispatchEvent(new Event('scroll'))},{passive:true});
 })();
+
+/* v159: iOS sometimes leaves the web view SHORTER than the screen (black strip under the nav). Nothing can be drawn there, so the page asks iOS to measure again. */
+(function(){let tries=0,last=0;
+ const stand=()=>navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+ const bad=()=>{const vv=window.visualViewport;if(!stand()||!matchMedia('(orientation:portrait)').matches||(vv&&vv.scale>1.01))return false;if(/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||''))return false;const d=screen.height-Math.max(window.innerHeight,vv?vv.height+vv.offsetTop:0);return d>8&&d<400};
+ function heal(){
+  if(document.hidden||!bad()){if(!bad())tries=0;return}
+  if(tries>=6||Date.now()-last<1500)return;tries++;last=Date.now();
+  const m=document.querySelector('meta[name=viewport]');const c=m&&m.content;
+  try{if(m){m.content='width=device-width, initial-scale=1.0, viewport-fit=cover';}}catch(e){}
+  const h=document.documentElement;h.style.height='calc(100% + 1px)';
+  requestAnimationFrame(()=>setTimeout(()=>{try{if(m&&c)m.content=c}catch(e){}h.style.height='';try{window.dispatchEvent(new Event('resize'))}catch(e){}},80));
+ }
+ ['resize','orientationchange','pageshow','focus','touchend','scroll'].forEach(ev=>window.addEventListener(ev,()=>setTimeout(heal,120),{passive:true}));
+ document.addEventListener('visibilitychange',()=>{tries=0;[200,700,1500,3000].forEach(t=>setTimeout(heal,t))});
+ if(window.visualViewport)visualViewport.addEventListener('resize',()=>setTimeout(heal,120));
+ setInterval(heal,2500);setTimeout(heal,800);
+})();
 </script>
 <script>
 /* ================= helpers ================= */
@@ -2270,7 +2288,7 @@ function dkExpand(id){
 })();
 (function(){const vv=window.visualViewport,r=document.documentElement.style;
   let lastN=0,rafT=0;
-  function sync(){if(vv){let ny=Math.max(0,Math.round(vv.offsetTop+vv.height-window.innerHeight));try{const sa=(navigator.standalone||matchMedia('(display-mode: standalone)').matches)&&matchMedia('(orientation:portrait)').matches&&vv.scale<=1.01&&!/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'');if(sa){const d=Math.round(screen.height-Math.max(window.innerHeight,vv.height+vv.offsetTop));if(d>8&&d<400)ny=Math.max(ny,d)}}catch(_e){}r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px');r.setProperty('--navy',ny+'px');
+  function sync(){if(vv){const ny=Math.max(0,Math.round(vv.offsetTop+vv.height-window.innerHeight));r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px');r.setProperty('--navy',ny+'px');
     /* the fixed layer (nav, glow) is stuck higher than the real screen bottom: re-lay out the page the way iOS accepts */
     if(ny>6&&Date.now()-lastN>700&&!/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'')){lastN=Date.now();try{const y=window.scrollY;window.scrollTo(0,y+1);window.scrollTo(0,y)}catch(e){}}}}
   const burst=()=>{const t0=Date.now();cancelAnimationFrame(rafT);const f=()=>{sync();if(Date.now()-t0<900)rafT=requestAnimationFrame(f)};rafT=requestAnimationFrame(f)};
@@ -11392,6 +11410,9 @@ const VIDS0=[
  {id:'v10',a:'audio/v10.m4a',t:'The Odyssey, the path and the cost',by:'@sebprez',k:'push',n:'The path has a cost, and it is worth it.'},
  {id:'v11',a:'audio/v11.m4a',t:'Phone, attention and meta-cognition',by:'@henryearls',k:'push',n:'Take your attention back from the phone.'},
  {id:'v12',a:'audio/v12.m4a',t:'Passion and the whole package (Chris Hemsworth)',by:'@colejaczko',k:'push',n:'Passion is the package.'},
+ {id:'v13',a:'audio/v13.m4a',t:'My mindset for the last part of 2026 (Creed, Rocky, Tyson)',by:'@wealth',k:'push',n:'Brick by brick. I do not lose. There is no tomorrow. Cowards quit, you are better than that.'},
+ {id:'v14',a:'audio/v14.m4a',t:'When your life is cooked, being sad will not change anything (Suits)',by:'@wasted',k:'comfort',n:'Being sad changes nothing. Move, keep going, one step at a time.'},
+ {id:'v15',a:'audio/v15.m4a',t:'Success is the sum of small efforts',by:'@samfelixm',k:'push',n:'Trained habits, repeated effort. Extraordinary success is made of ordinary efforts, done every day.'},
  {id:'r1',t:'Saved reel 1',u:'https://www.instagram.com/reel/Dd8HtfeMuL_/',k:'push',n:'Add why it moves you.'},
  {id:'r2',t:'Saved reel 2',u:'https://www.instagram.com/reel/DfFKysykmAM/',k:'push',n:'Add why it moves you.'},
  {id:'r3',t:'Saved reel 3',u:'https://www.instagram.com/reel/DfDc9zogkq1/',k:'push',n:'Add why it moves you.'},
