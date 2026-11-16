@@ -1591,6 +1591,45 @@ header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;bac
 .rvbar input[type=range]::-moz-range-track{height:5px;border-radius:9px;background:rgba(255,255,255,.18)}
 .rvbar input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#5b9bff;border:3px solid #0e1018}
 #pview .rvbar input[type=range]{border:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;outline:0}
+/* ---- water gauge ---- */
+#hydcard{padding:16px}
+.hy-row{display:flex;align-items:center;gap:16px}
+.hy-g{position:relative;flex:none;width:112px;height:112px}
+.hy-g svg{width:100%;height:100%;display:block;overflow:visible}
+.hy-fill{transition:transform .9s cubic-bezier(.3,.9,.3,1)}
+.hy-w1{animation:hyw 5s linear infinite}.hy-w2{animation:hyw 3.4s linear infinite reverse}
+@keyframes hyw{to{transform:translateX(-50px)}}
+.hy-g.pop{animation:hypop .6s var(--spring)}@keyframes hypop{40%{transform:scale(1.07)}}
+.hy-n{position:absolute;inset:0;display:grid;place-content:center;text-align:center;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.hy-n b{font-size:27px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.hy-n small{font-size:12px;color:#d8e6ff;font-weight:600}
+.hy-r{flex:1;min-width:0}
+.hy-t{display:flex;align-items:center;justify-content:space-between;font-weight:750;font-size:16px}
+.hy-goal{font-size:12px;font-weight:700;color:#8fb8ff;background:rgba(91,155,255,.14);border-radius:99px;padding:4px 10px}
+.hy-s{font-size:13px;color:var(--muted);margin:3px 0 10px}
+.hy-b{display:flex;gap:7px}
+.hy-b button{flex:1;height:38px;border-radius:12px;background:rgba(91,155,255,.15);border:1px solid rgba(91,155,255,.35);color:#9dc2ff;font-weight:750;font-size:14px;transition:transform .2s var(--spring)}
+.hy-b button:active{transform:scale(.92)}
+.hy-b button.u{flex:none;width:38px;background:rgba(255,255,255,.06);border-color:var(--line2);color:var(--muted)}
+.hy-w{display:flex;align-items:flex-end;gap:5px;height:24px;margin-top:10px}
+.hy-w i{flex:1;border-radius:3px;background:rgba(255,255,255,.14)}.hy-w i.ok{background:#4fb4ff}
+/* ---- fuel tab ---- */
+.fu-go{display:flex;gap:10px}.fu-go .btn{margin:0}
+.fu-v{position:relative;padding:14px;border-radius:20px;background:linear-gradient(180deg,var(--surf2),var(--surf));box-shadow:0 0 0 1px var(--line) inset;margin-bottom:10px}
+.fu-v.cf{box-shadow:0 0 0 1px rgba(79,209,255,.3) inset}
+.fu-k{font-size:10.5px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:#ff9f6b}.fu-v.cf .fu-k{color:#6fd0ff}
+.fu-t{font-weight:700;font-size:15.5px;margin-top:3px}.fu-b{font-size:12px;color:var(--dim);margin-top:2px}.fu-n{font-size:13.5px;color:var(--muted);margin:7px 0 10px;line-height:1.4}
+.fu-a{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.fu-a .btn{display:inline-flex;align-items:center;width:auto;min-height:36px;margin:0;padding:6px 14px;font-size:13.5px;text-decoration:none}.fu-a .pmini{margin-left:auto}
+.me-tabs button{font-size:12.5px}
+/* ---- map: practice links ---- */
+.kmp{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:10px 12px;margin:0 0 8px;border-radius:16px;background:rgba(91,155,255,.09);border:1px solid rgba(91,155,255,.3);color:var(--text);transition:transform .22s var(--spring)}
+.kmp:active{transform:scale(.97)}
+.kmp-i{flex:none;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#8fb8ff;background:rgba(91,155,255,.18);border-radius:8px;padding:5px 7px}
+.kmp-m{flex:1;min-width:0}.kmp-m b{display:block;font-size:14px;line-height:1.3;overflow-wrap:anywhere}
+.kmp-m small{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin-top:2px}.kmp-w{color:#8fb8ff!important}
+.kmp .go{color:var(--dim);font-size:20px}
+.kmp-top{margin:0 0 14px;padding:12px 12px 4px;border-radius:20px;background:linear-gradient(180deg,rgba(91,155,255,.12),rgba(91,155,255,.03));border:1px solid rgba(91,155,255,.25)}
+.kmp-h{font-size:12px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:#8fb8ff;margin:0 0 2px}
 </style>
 </head>
 <body>
@@ -1664,6 +1703,7 @@ header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;bac
   <div class="card hero" id="hero" data-act="lvls"></div>
   <div class="card" id="wkcard" style="display:none"></div>
   <div class="card" id="balcard" style="display:none"></div>
+  <div class="card" id="hydcard"></div>
   <div class="card motiv" id="motiv"></div>
   <div class="card"><div class="lbl">How was your day?</div>
     <div class="dnav" id="dnav"></div>
@@ -1870,7 +1910,13 @@ function chime(){
 
 /* ================= sheet + dialog ================= */
 let _cst=0;
-function openSheet(html){clearTimeout(_cst);$('sbody').innerHTML=html;const s=$('sheet');s.classList.remove('closing');s.classList.add('show');$('sheet').querySelector('.sbox').scrollTop=0}
+function openSheet(html){
+  clearTimeout(_cst);const s=$('sheet'),box=s.querySelector('.sbox'),sb=$('sbody');
+  const hh=h=>{const m=/<h2[^>]*>([\s\S]*?)<\/h2>/.exec(h||'');return m?m[1].replace(/<[^>]*>/g,'').trim():''};
+  const was=s.classList.contains('show')&&!s.classList.contains('closing'),prev=was?hh(sb.innerHTML):'',y=box.scrollTop;
+  sb.innerHTML=html;s.classList.remove('closing');s.classList.add('show');
+  box.scrollTop=(was&&prev&&prev===hh(html))?y:0;
+}
 function closeSheet(){const s=$('sheet');if(!s.classList.contains('show'))return;s.classList.add('closing');clearTimeout(_cst);_cst=setTimeout(()=>{s.classList.remove('show','closing')},280)}
 (function(){
   const s=$('sheet'),box=s.querySelector('.sbox');
@@ -6839,6 +6885,7 @@ function render(kind){
   if(st.tab==='td'||st.tab==='exos'){st.wk=st.tab;st.tab='work'}
   const b=body();if(!b)return;
   const top=st.stack[st.stack.length-1],y=window.scrollY;
+  const _rk=top?top.v+'|'+top.id:'t:'+st.tab+'|'+(st.ctab||'')+'|'+(st.wk||'')+'|'+(st.seg||''),_same=_rk===st._rk;st._rk=_rk;
   $('ptabs').style.display=top?'none':'';
   $('ptabs').innerHTML=tabsHTML(top);
   let h='';
@@ -6853,7 +6900,7 @@ function render(kind){
   if(top&&top.v==='vlist'&&$('v-dir'))bindChips('v-dir',v=>{vopt.dir=v});
   fillBars();
   if(kind==='card')return;
-  if(kind==='push'||kind==='pop'||kind==='tab')window.scrollTo(0,0);else if(y)window.scrollTo(0,y);
+  if((kind==='push'||kind==='pop'||kind==='tab')&&!_same)window.scrollTo(0,0);else if(y)window.scrollTo(0,y);
   
 }
 async function post(top){
@@ -9413,6 +9460,43 @@ function kmSubjCard(sj,ns,urg){
   if(chs.length)h+='<div class="sub" style="margin:10px 2px 4px">Programme chapters without a lesson yet</div>'+chs.map(n=>'<div class="prow" style="--c:'+mcol(n.m)+';cursor:pointer" data-a="mapnode" data-i="'+esc(n.id)+'"><span class="m"><div class="t">'+esc(n.title)+'</div></span><span class="chip">'+Math.round(n.m*100)+'%</span></div>').join('');
   return h+'</div>';
 }
+
+/* ---------- v151: the map links lessons, TDs and exercises: it proposes what to practise and why ---------- */
+const KP_STOP=new Set('pour dans avec sans cette entre leurs comme faire cours exercice exercices question questions partie calculer montrer determiner donner trouver etude soit alors ainsi donc plus tout tous toute toutes sont etre avoir aussi dont chaque lequel quel quelle quand lorsque voir cas'.split(' '));
+const kpNorm=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const kpTok=x=>{const m=new Map();String(x||'').split(/[^A-Za-zÀ-ÿ0-9]+/).forEach(w=>{const n=kpNorm(w);if(n.length>=4&&!KP_STOP.has(n)){const k=n.slice(0,5);if(!m.has(k))m.set(k,w.toLowerCase())}});return m};
+function kpCands(subj){
+  const out=[];
+  S.tds.filter(t=>t.subj===subj).forEach(t=>{
+    const base=t.title||'TD';
+    if((t.exos||[]).length)t.exos.forEach(e=>out.push({k:'td|'+t.id+'|'+e.id,kind:'TD',src:base,t:e.title,s:e.summary||'',diff:e.diff,done:e.done,txt:base+' '+e.title+' '+(e.summary||''),go:['td',t.id]}));
+    else out.push({k:'td|'+t.id,kind:'TD',src:'',t:base,s:'Open it and tap "Read the TD" to find the right exercise',txt:base,go:['td',t.id],raw:1});
+  });
+  S.exos.filter(x=>x.subj===subj&&x.status!=='done').forEach(x=>out.push({k:'ex|'+x.id,kind:'Exo',src:'',t:x.title||'Exercise',s:x.chapter||x.note||'',diff:x.diff,txt:(x.title||'')+' '+(x.chapter||'')+' '+(x.note||''),go:['exo',x.id]}));
+  return out;
+}
+function kpFor(l,x,cands){
+  const it=kpTok(x.t+' '+(x.full||'')),lt=kpTok(l.title),res=[];
+  (cands||kpCands(l.subj)).forEach(c=>{
+    const ct=kpTok(c.txt),hit=[];let lh=0;
+    it.forEach((w,k)=>{if(ct.has(k))hit.push(w)});lt.forEach((w,k)=>{if(ct.has(k))lh++});
+    const sc=hit.length*2+lh*1.2+(c.raw?-1:0)-(c.done?3:0);
+    if(c.raw?(lh>=1&&sc>=0.2):(hit.length>=1&&sc>=2.5)||(lh>=2&&sc>=2.4))res.push({c,sc,hit:hit.length?hit:[...lt.values()].filter((w,i)=>ct.has([...lt.keys()][i]))});
+  });
+  return res.sort((a,b)=>b.sc-a.sc).slice(0,2);
+}
+function kpBtn(m){
+  const c=m.c,d=c.diff?' · '+'●'.repeat(Math.min(5,c.diff))+'○'.repeat(5-Math.min(5,c.diff)):'';
+  return '<button class="kmp" data-kp="'+esc(c.k)+'"><i class="kmp-i">'+c.kind+'</i><span class="kmp-m"><b>'+esc(c.t)+'</b><small>'+(c.src?esc(c.src)+' · ':'')+(c.s?esc(c.s.slice(0,120)):'')+'</small>'+(m.hit&&m.hit.length&&!c.raw?'<small class="kmp-w">Why: '+m.hit.slice(0,3).map(w=>'«'+esc(w)+'»').join(' ')+d+'</small>':'')+'</span><span class="go">›</span></button>';
+}
+function kpTop(l,it){
+  const cands=kpCands(l.subj);if(!cands.length)return '';
+  const tally=new Map();
+  it.filter(x=>kmLv(l.id+'|'+x.k)<3).forEach(x=>kpFor(l,x,cands).forEach(m=>{const o=tally.get(m.c.k)||{c:m.c,sc:0,hit:new Set(),n:0};o.sc+=m.sc;o.n++;m.hit.forEach(w=>o.hit.add(w));tally.set(m.c.k,o)}));
+  const top=[...tally.values()].sort((a,b)=>b.sc-a.sc).slice(0,3);
+  if(!top.length)return '<div class="sub" style="margin:0 2px 10px">No exercise or TD matches this lesson yet. Add TDs and exercises of '+SUBJ[l.subj].n+' and I will link them.</div>';
+  return '<div class="kmp-top"><div class="kmp-h">Practise now</div><div class="sub" style="margin:0 0 8px">Picked for the items you do not master yet.</div>'+top.map(o=>kpBtn({c:o.c,hit:[...o.hit],sc:o.sc})).join('')+'</div>';
+}
 A.kmls=async id=>{
   const l=S.lessons.find(x=>x.id===id);if(!l)return;
   if(!(id in KMI)){try{KMI[id]=await kmGet(id)}catch(e){KMI[id]=[]}}
@@ -9425,6 +9509,7 @@ function kmSheet(id){
   const ax=S.kmx[id];
   h+='<button class="btn '+(ax?'':'primary')+'" data-a="kmai" data-i="'+id+'" style="margin:0 0 10px">'+(live['KX'+id]?'Analyse en cours…':ax?'Refaire l\'analyse':'Analyser ce cours avec l\'IA')+'</button>';
   if(!ax)h+='<div class="sub" style="margin:-4px 2px 10px">Sans l\'IA, seules les lignes qui commencent par « Théorème », « Définition », « Méthode »… sont reprises, tronquées. L\'analyse donne les noms exacts.</div>';
+  h+=kpTop(l,it);
   if(!it.length)h+='<div class="card"><div class="sub">Aucun élément trouvé dans ce cours.</div></div>';
   KM_T.forEach(([ty,name])=>{const g=it.filter(x=>x.ty===ty);if(!g.length)return;
     h+='<div class="pv-h" style="margin:14px 0 6px">'+name+' ('+g.length+')</div>'+g.map(x=>{const k=id+'|'+x.k,v=kmLv(k);
@@ -9432,12 +9517,13 @@ function kmSheet(id){
       return '<div class="card" style="padding:12px;margin:0 0 8px" data-km="'+k+'">'+body+
       '<div class="kmdots" style="display:flex;gap:6px;margin:10px 0 6px">'+[0,1,2,3,4].map(i=>'<button class="chip '+(i===v?'on':'')+'" data-kv="'+i+'" data-k="'+k+'" style="padding:6px 11px;min-width:36px" aria-label="'+KM_L[i]+'">'+(i===0?'·':i)+'</button>').join('')+'</div>'+
       '<div class="sub" style="margin:0 0 8px">'+KM_L[v]+'</div>'+
-      '<div class="chips" style="gap:6px"><button class="chip" data-kc="'+k+'">🃏 Make a card</button><button class="chip" data-kl="'+l.subj+'">🎙 Colle Live</button><button class="chip" data-kx="1">✏️ Exercises</button></div></div>'}).join('')});
+      kpFor(l,x).map(kpBtn).join('')+'<div class="chips" style="gap:6px"><button class="chip" data-kc="'+k+'">🃏 Make a card</button><button class="chip" data-kl="'+l.subj+'">🎙 Colle Live</button><button class="chip" data-kx="1">All exercises</button></div></div>'}).join('')});
   h+='<button class="btn" id="km-open" style="margin-top:6px">Open the lesson</button>';
   openSheet(h);
   const B=document.getElementById('sbody');
   B.onclick=e=>{
     const v=e.target.closest('[data-kv]');if(v){const k=v.dataset.k;S.km[k]={lv:+v.dataset.kv,t:Date.now()};save.km();kmSheet(id);return}
+    const kp=e.target.closest('[data-kp]');if(kp){const c=kpCands(l.subj).find(y=>y.k===kp.dataset.kp);if(c){closeSheet();st.tab=st.tab||'map';toast(c.kind+': '+c.t.slice(0,48));go(c.go[0],c.go[1])}return}
     const c=e.target.closest('[data-kc]');if(c){const k=c.dataset.kc.split('|')[1],x=it.find(y=>y.k===k);if(x){S.cards.push({id:uid(),lid:id,subj:l.subj,q:x.ai?x.t:(x.t.replace(/^[^:.–-]*[:.–-]\s*/,'')||x.t),a:x.full,box:0,due:iso()});save.cards();toast('Card added')}return}
     const lv=e.target.closest('[data-kl]');if(lv){closeSheet();setTimeout(()=>liveSetup(lv.dataset.kl),300);return}
     if(e.target.closest('[data-kx]')){closeSheet();st.tab='work';render();return}
@@ -10924,7 +11010,7 @@ async function coSend(text){
   try{
     if(!window.PC||!PC.hasKey())throw Object.assign(new Error('I need your AI key to think (Prépa, then AI settings).'),{nokey:1});
     const tr=H.slice(-16,-1).map(m=>(m.r==='u'?'HIM: ':'ME: ')+m.t).join('\n');
-    const r=await PC.ai({system:ME_SYS,max:900,content:[{type:'text',text:'MEMORY ABOUT HIM:\n'+meMem().join('\n')+'\n\nCONTEXT (JSON, live from his app):\n'+coCtx()+'\n\nCONVERSATION:\n'+tr+'\n\nAnswer now as Me.'}]});
+    const r=await PC.ai({system:ME_SYS+meSys2(),max:900,content:[{type:'text',text:'MEMORY ABOUT HIM:\n'+meMem().join('\n')+'\n\nCONTEXT (JSON, live from his app):\n'+coCtx()+'\n\nCONVERSATION:\n'+tr+'\n\nAnswer now as Me.'}]});
     const p=coSplit(r&&r.text);me.t=p.t||'...';me.a=coRun(p.acts);delete me.pend;
     if(coProf2().voice)meSay(me.t);
   }catch(e){me.t=String(e&&e.message||e);me.err=1;me.nokey=e&&e.nokey;delete me.pend}
@@ -11044,6 +11130,110 @@ balCard=function(){
 };
 setTimeout(()=>{try{balCard()}catch(e){}},900);
 window.PN.me={sys:ME_SYS,mem:meMem,streak:meStreak,state:meState};
+
+/* ================= v150: water gauge, what lights me up, comfort, safer data ================= */
+const HY={K:'p_hyd',I:'p_cinsp'};
+const hyD=()=>{const d=jl(HY.K,null)||{};return{goal:+d.goal>0?+d.goal:3000,log:d.log&&typeof d.log==='object'?d.log:{}}};
+const hyMl=(d,ds)=>((d.log[ds]||[]).reduce((a,b)=>a+(+b.ml||0),0));
+function hyAdd(ml){
+  const d=hyD(),ds=iso(),before=hyMl(d,ds);(d.log[ds]=d.log[ds]||[]).push({t:Date.now(),ml});
+  const keep=Object.keys(d.log).sort().slice(-60),o={};keep.forEach(k=>o[k]=d.log[k]);d.log=o;js(HY.K,d);
+  hyDraw(true);
+  if(before<d.goal&&before+ml>=d.goal){toast('Goal reached: '+(d.goal/1000)+' L. Done for today.');try{vib(20)}catch(e){}}
+}
+function hyUndo(){const d=hyD(),ds=iso();if(!(d.log[ds]||[]).length)return;d.log[ds].pop();js(HY.K,d);hyDraw()}
+function hyGoal(){
+  const d=hyD();
+  openSheet('<h2 class="sh">Water goal</h2><div class="sub" style="margin:-6px 0 12px">Your routine says 3 L a day.</div><div class="chips" id="hy-g">'+[2000,2500,3000,3500,4000].map(x=>'<button class="chip'+(d.goal===x?' on':'')+'" data-g="'+x+'">'+(x/1000)+' L</button>').join('')+'</div>');
+  $('hy-g').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;const n=hyD();n.goal=+b.dataset.g;js(HY.K,n);closeSheet();hyDraw()};
+}
+function hyDraw(pop){
+  const el=document.getElementById('hydcard');if(!el)return;
+  const d=hyD(),ml=hyMl(d,iso()),p=Math.max(0,Math.min(1,ml/d.goal)),h=new Date().getHours();
+  const expect=Math.max(0,Math.min(1,(h-7)/(21-7))),late=p<expect-.25&&h>=11&&p<1;
+  const wk=[];for(let i=6;i>=0;i--){const ds=shiftD(iso(),-i);wk.push(Math.min(1,hyMl(d,ds)/d.goal))}
+  el.innerHTML='<div class="hy-row"><div class="hy-g'+(pop?' pop':'')+'" style="--p:'+p+'"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><clipPath id="hyc"><circle cx="50" cy="50" r="44"/></clipPath><linearGradient id="hyl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fd0ff"/><stop offset="1" stop-color="#2f7bff"/></linearGradient></defs><circle cx="50" cy="50" r="46" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.14)" stroke-width="2"/><g clip-path="url(#hyc)"><g class="hy-fill" style="transform:translateY('+((1-p)*88)+'px)"><path class="hy-w1" d="M-100 6 q25 -7 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 V120 H-100z" fill="url(#hyl)" opacity=".55"/><path class="hy-w2" d="M-100 8 q25 7 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 V120 H-100z" fill="url(#hyl)"/></g></g></svg><div class="hy-n"><b>'+(ml/1000).toFixed(ml%1000?2:1).replace(/0$/,'')+'</b><small>/ '+(d.goal/1000)+' L</small></div></div>'+
+   '<div class="hy-r"><div class="hy-t"><span>Water</span><button class="hy-goal" data-hy="goal">goal '+(d.goal/1000)+' L</button></div><div class="hy-s">'+(p>=1?'Goal reached. Well done.':late?'You are behind. A glass now.':Math.round(p*100)+'% of today')+'</div><div class="hy-b"><button data-hy="250">+250</button><button data-hy="500">+500</button><button data-hy="1000">+1 L</button><button class="u" data-hy="undo" aria-label="Undo">↺</button></div><div class="hy-w">'+wk.map((v,i)=>'<i class="'+(v>=1?'ok':'')+'" style="height:'+(4+Math.round(v*18))+'px"></i>').join('')+'</div></div></div>';
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-hy]');if(!b)return;e.preventDefault();e.stopPropagation();
+  const a=b.dataset.hy;if(a==='undo')hyUndo();else if(a==='goal')hyGoal();else hyAdd(+a);
+},true);
+{const hc=document.getElementById('hydcard');if(!hc){const bc=document.getElementById('balcard');if(bc){const d=document.createElement('div');d.className='card';d.id='hydcard';bc.after(d)}}}
+setTimeout(hyDraw,700);document.addEventListener('visibilitychange',()=>{if(!document.hidden)hyDraw()});setInterval(()=>{if(!document.hidden)hyDraw()},600000);
+/* ---- what lights me up ---- */
+const IDOLS0=['Max Verstappen','Charles Leclerc','Robert Downey Jr','Tom Holland','Cristiano Ronaldo'];
+const VIDS0=[
+ {id:'v1',t:'You fell off bro',by:'@r7.zay',k:'push',n:'Night drive. Falling off is not the end, you get back on the road.'},
+ {id:'v2',t:'The 14-second message (Henry Cavill)',by:'@bypeaklume',k:'comfort',n:'A short message that can change a day.'},
+ {id:'v3',t:'Failure is necessary for greatness (Lewis Hamilton)',by:'@primee.boost',k:'comfort',n:'Failure is part of the way to greatness. Do not take it personally.'},
+ {id:'v4',t:'Stop worrying (Spider-Man)',by:'',k:'comfort',n:'What are you worrying about? Life is a journey. Build your character.'},
+ {id:'v5',t:'It is simple (Whiplash, Creed, Blade Runner)',by:'@caswellcustoms',k:'push',n:'They tell you how they do it. It is simple.'},
+ {id:'v6',t:'Gym, the why',by:'@odai_ballouta',k:'push',n:'Know your why, then lift.'},
+ {id:'v7',t:'Obsessed, or just talented? (Verstappen, Uncut Gems)',by:'@bypeaklume',k:'push',n:'Obsession is what makes the best.'},
+ {id:'v8',t:'Dreamers (Verstappen, Joker)',by:'@deangraziosi',k:'push',n:'Dreamers who work for it.'},
+ {id:'v9',t:'This message will find you when you need it',by:'@yanismeharfi_',k:'comfort',n:'Spoken to someone having a hard moment. Hold on.'},
+ {id:'v10',t:'The Odyssey, the path and the cost',by:'@sebprez',k:'push',n:'The path has a cost, and it is worth it.'},
+ {id:'v11',t:'Phone, attention and meta-cognition',by:'@henryearls',k:'push',n:'Take your attention back from the phone.'},
+ {id:'v12',t:'Passion and the whole package (Chris Hemsworth)',by:'@colejaczko',k:'push',n:'Passion is the package.'},
+ {id:'r1',t:'Saved reel 1',u:'https://www.instagram.com/reel/Dd8HtfeMuL_/',k:'push',n:'Add why it moves you.'},
+ {id:'r2',t:'Saved reel 2',u:'https://www.instagram.com/reel/DfFKysykmAM/',k:'push',n:'Add why it moves you.'},
+ {id:'r3',t:'Saved reel 3',u:'https://www.instagram.com/reel/DfDc9zogkq1/',k:'push',n:'Add why it moves you.'},
+ {id:'r4',t:'Saved reel 4',u:'https://www.instagram.com/reel/Dc_nBH_FWIQ/',k:'push',n:'Add why it moves you.'}];
+const inD=()=>{const d=jl(HY.I,null);return d&&Array.isArray(d.idols)?d:{idols:IDOLS0.slice(),vids:VIDS0.map(x=>Object.assign({},x))}};
+const inS=d=>js(HY.I,d);
+function meSys2(){return `
+MOTIVATION AND COMFORT
+- CONTEXT.inspiration lists his idols and the videos that move him, with the idea he keeps from each. Use them like a close friend who knows what lights him up: the spirit of an idol's publicly known path (Verstappen's obsession with preparation, Leclerc's way of coming back after a bad weekend, Downey's comeback, Holland's work rate, Cristiano's discipline) or the idea of a video. Never invent quotes, never say a real person told you something. If unsure of a fact, speak in your own words. Do not use the same idol twice in a row.
+- Read his state first. If he is struggling (tired, sick, discouraged, ashamed of being behind, anxious, crying): COMFORT FIRST. One or two sentences that really land: name what he feels, say it is allowed to be hard and that being behind is not who he is. Then one very small step (5 minutes) or rest if he needs it. Do not push and do not bring up the class rule in that moment unless he does; the push comes once he is steady. If he is avoiding or lazy: pull him up, with an idol or a video.
+- CONTEXT.water gives millilitres drunk today and his goal. Mention it only when it matters (tired, headache, before a work block).`}
+const _ctx150=coCtx;
+coCtx=function(){
+  let X;try{X=JSON.parse(_ctx150())}catch(e){X={}}
+  const d=inD();X.inspiration={idols:d.idols,videos:d.vids.filter(v=>!/^Saved reel/.test(v.t)||(v.n&&!/^Add why/.test(v.n))).slice(0,16).map(v=>({title:v.t,kind:v.k==='comfort'?'comfort':'push',idea:v.n}))};
+  const h=hyD();X.water={ml_today:hyMl(h,iso()),goal_ml:h.goal};
+  return JSON.stringify(X);
+};
+ME_Q.push(['Motivate me','Motive-moi. Pioche dans mes idoles et dans les vidéos qui me touchent, et fais-moi passer à l\'action maintenant.'],['It is hard','C\'est dur là. Réconforte-moi d\'abord, sans me pousser, puis aide-moi à trouver la plus petite chose à faire.']);
+function fuDraw(){
+  const d=inD(),el=$('me-p');if(!el)return;
+  const vcard=v=>'<div class="fu-v '+(v.k==='comfort'?'cf':'')+'"><div class="fu-k">'+(v.k==='comfort'?'Comfort':'Push')+'</div><div class="fu-t">'+esc(v.t)+'</div>'+(v.by?'<div class="fu-b">'+esc(v.by)+'</div>':'')+'<div class="fu-n">'+esc(v.n||'')+'</div><div class="fu-a">'+(v.u?'<a class="btn sm" href="'+esc(v.u)+'" target="_blank" rel="noopener">Watch</a>':'')+'<button class="btn sm" data-fu="use" data-id="'+v.id+'">Use it now</button><button class="btn sm" data-fu="edit" data-id="'+v.id+'">Edit</button><button class="pmini" data-fu="del" data-id="'+v.id+'" aria-label="Remove">✕</button></div></div>';
+  el.innerHTML='<div class="fu"><div class="sub" style="margin:2px 2px 12px">What lights you up. I use it when you need a push, and when you need a hug.</div>'+
+   '<div class="fu-go"><button class="btn primary" data-fu="mot">Motivate me</button><button class="btn" data-fu="hard">It is hard right now</button></div>'+
+   '<div class="lbl" style="margin:18px 0 8px">My idols</div><div class="chips" id="fu-i">'+d.idols.map((x,i)=>'<button class="chip on" data-fu="idol" data-i="'+i+'">'+esc(x)+' ✕</button>').join('')+'</div><div class="wp-a" style="margin-top:8px"><input id="fu-in" placeholder="Add an idol" autocapitalize="words"><button class="btn sm" data-fu="idadd">Add</button></div>'+
+   '<div class="lbl" style="margin:18px 0 8px">Videos that move me ('+d.vids.length+')</div>'+d.vids.map(vcard).join('')+
+   '<div class="lbl" style="margin:18px 0 8px">Add one</div><div class="field"><input id="fu-vt" placeholder="Title"></div><div class="field"><input id="fu-vu" placeholder="Link (optional)" inputmode="url" autocapitalize="off"></div><div class="field"><textarea id="fu-vn" rows="2" class="co-ta" placeholder="Why does it move you? (what I should remember)"></textarea></div><div class="chips" id="fu-vk"><button class="chip on" data-k="push">Push</button><button class="chip" data-k="comfort">Comfort</button></div><button class="btn" data-fu="vadd" style="margin-top:10px">Add this video</button>'+
+   '<div class="sub" style="margin:14px 2px 30px">Saved on this phone and included in your backup.</div></div>';
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-fu]');if(!b)return;e.preventDefault();e.stopPropagation();
+  const a=b.dataset.fu,d=inD();
+  if(a==='mot'){meView('chat');coSend(ME_Q.find(q=>q[0]==='Motivate me')[1])}
+  else if(a==='hard'){meView('chat');coSend(ME_Q.find(q=>q[0]==='It is hard')[1])}
+  else if(a==='idol'){d.idols.splice(+b.dataset.i,1);inS(d);fuDraw()}
+  else if(a==='idadd'){const v=($('fu-in').value||'').trim().slice(0,40);if(!v)return;if(!d.idols.includes(v))d.idols.push(v);inS(d);fuDraw()}
+  else if(a==='del'){d.vids=d.vids.filter(v=>v.id!==b.dataset.id);inS(d);fuDraw()}
+  else if(a==='use'){const v=d.vids.find(x=>x.id===b.dataset.id);if(!v)return;meView('chat');coSend('Inspire-toi de cette vidéo qui me touche : "'+v.t+'"'+(v.n?' ('+v.n+')':'')+'. '+(v.k==='comfort'?'Réconforte-moi avec ça.':'Pousse-moi avec ça.'))}
+  else if(a==='edit'){const v=d.vids.find(x=>x.id===b.dataset.id);if(!v)return;const t=prompt('Title',v.t);if(t===null)return;const n=prompt('Why it moves me',v.n||'');if(n===null)return;v.t=t.trim().slice(0,90)||v.t;v.n=n.trim().slice(0,240);inS(d);fuDraw()}
+  else if(a==='vadd'){const t=($('fu-vt').value||'').trim().slice(0,90);if(!t){toast('Give it a title');return}const k=(document.querySelector('#fu-vk .chip.on')||{dataset:{k:'push'}}).dataset.k;d.vids.unshift({id:'x'+Date.now().toString(36),t,u:($('fu-vu').value||'').trim().slice(0,300),n:($('fu-vn').value||'').trim().slice(0,240),k});inS(d);fuDraw();toast('Added')}
+},true);
+document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#fu-vk .chip');if(c){document.querySelectorAll('#fu-vk .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')}});
+const _meView150=meView;
+meView=function(v){
+  if(v!=='fu')return _meView150(v);
+  meTab=v;const e=document.getElementById('coscr');if(!e||!e.dataset.b)return;
+  $('co-m').style.display='none';$('co-q').style.display='none';e.querySelector('.co-i').style.display='none';
+  $('co-set').style.display='none';$('me-p').style.display='';
+  e.querySelectorAll('.me-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===v));
+  fuDraw();
+};
+const _coOpen150=coOpen;
+coOpen=function(pre){
+  _coOpen150(pre);
+  const t=document.querySelector('#coscr .me-tabs');if(t&&!t.querySelector('[data-t="fu"]')){const b=document.createElement('button');b.dataset.co='tab';b.dataset.t='fu';b.textContent='Fuel';t.appendChild(b)}
+};
+/* ---- keep it safe: everything of Me is part of the backup, the snapshots and the restore ---- */
+window.PN=window.PN||{};window.PN.hy={add:hyAdd,draw:hyDraw,data:hyD};
 
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
@@ -12804,7 +12994,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','p_nt','p_ninbox','p_ap','p_exos','p_tps','p_km','p_teach','p_tb','p_tbc','p_tbl','p_tbw','p_tbwf','p_pw','p_pws','p_pwb','p_hm','p_live','p_fault','p_boards','p_isl','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_mist','p_cards','p_vocab','p_set','p_removed','p_usage'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','p_nt','p_ninbox','p_ap','p_exos','p_tps','p_km','p_teach','p_tb','p_tbc','p_tbl','p_tbw','p_tbwf','p_pw','p_pws','p_pwb','p_hm','p_live','p_fault','p_boards','p_isl','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_mist','p_cards','p_vocab','p_set','p_removed','p_usage','p_cp','p_cm','p_cg','p_cc','p_cop','p_wp','p_wpc','p_cmode','p_cpl','p_cw','p_cl','p_cmem','p_hyd','p_cinsp','p_ru','p_ruev','p_rud','p_tt','ckin','spots','p_nlog'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
