@@ -1888,8 +1888,20 @@ B.addEventListener('scroll',()=>{window.dispatchEvent(new Event('scroll'))},{pas
 (function(){let tries=0,last=0;
  const stand=()=>navigator.standalone||matchMedia('(display-mode: standalone)').matches;
  const bad=()=>{const vv=window.visualViewport;if(!stand()||!matchMedia('(orientation:portrait)').matches||(vv&&vv.scale>1.01))return false;if(/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||''))return false;const d=screen.height-Math.max(window.innerHeight,vv?vv.height+vv.offsetTop:0);return d>8&&d<400};
+
+ function dbgShow(){try{
+  const vv=window.visualViewport,pr=document.createElement('div');pr.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:100vh;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)';
+  const mk=u=>{const e=document.createElement('div');e.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;height:'+u;document.body.appendChild(e);const h=e.offsetHeight;e.remove();return h};
+  document.body.appendChild(pr);const st=parseFloat(getComputedStyle(pr).paddingTop)||0,sb=parseFloat(getComputedStyle(pr).paddingBottom)||0,vh=pr.offsetHeight;pr.remove();
+  const nv=document.querySelector('.nav'),nr=nv?nv.getBoundingClientRect():{bottom:0};
+  const t='NAV DEBUG  inner '+innerWidth+'x'+innerHeight+' | vv '+(vv?Math.round(vv.height)+' top'+Math.round(vv.offsetTop)+' sc'+vv.scale.toFixed(2):'-')+' | screen '+screen.width+'x'+screen.height+' | clientH '+document.documentElement.clientHeight+' | vh '+vh+' svh '+mk('100svh')+' lvh '+mk('100lvh')+' dvh '+mk('100dvh')+' | safe T'+st+' B'+sb+' | navBottom '+Math.round(nr.bottom)+' | sY '+Math.round(window.scrollY);
+  let d=document.getElementById('navdbg');if(!d){d=document.createElement('div');d.id='navdbg';d.style.cssText='position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 4px);z-index:99999;background:rgba(0,0,0,.88);color:#9ff;font:11px/1.35 ui-monospace,monospace;padding:8px 10px;border-radius:10px;border:1px solid #4d8dff';document.body.appendChild(d)}
+  d.innerHTML=t+'<br><b id="navdbgr" style="color:#fff;text-decoration:underline">Tap to reload the app</b>';
+  d.onclick=()=>location.reload();clearTimeout(d._t);d._t=setTimeout(()=>d.remove(),20000);
+ }catch(e){}}
  function heal(){
   if(document.hidden||!bad()){if(!bad())tries=0;return}
+  if(tries===2)dbgShow();
   if(tries>=6||Date.now()-last<1500)return;tries++;last=Date.now();
   const m=document.querySelector('meta[name=viewport]');const c=m&&m.content;
   try{if(m){m.content='width=device-width, initial-scale=1.0, viewport-fit=cover';}}catch(e){}
@@ -2852,9 +2864,10 @@ function taskHTML(t,i,mini,fresh){
 const goalOf=t=>t&&t.gid?goals.find(g=>g.id===t.gid):null;
 const gTasks=gid=>tfF(sortedTasks()).filter(t=>!t.rem&&(gid==='_'?!goalOf(t):t.gid===gid));
 let tmode=(()=>{try{return localStorage.getItem('tmode')||'goal'}catch(e){return'goal'}})(),tsubj=null;
-const subjList=()=>{try{const C=window.PC;return C.LSUBJ.map(k=>[k,C.SUBJ[k].n,C.SUBJ[k].c])}catch(e){return[]}};
+const subjList=()=>[['maths','Maths',0],['phys','Physique',3],['chim','Chimie',5],['ang','Anglais',4],['si','SI',1],['info','Informatique',6],['philo','Philosophie',2]];
+const sjLegacy=(t,k)=>k==='ipt'?(/\b(python|informatique|info|sql|algorithm\w*|code)\b/i.test(String(t.text||''))?'info':'si'):k==='fr'?'philo':k;
 const isGen=t=>!!(t.rk||t.lk||t.gen);
-const sidsOf=t=>t.sids&&t.sids.length?t.sids:(sidOf(t)?[sidOf(t)]:[]);
+const sidsOf=t=>(t.sids&&t.sids.length?t.sids:(sidOf(t)?[sidOf(t)]:[])).map(k=>sjLegacy(t,k));
 const sidOf=t=>t.sid||(t.lk&&((cal||[]).find(c=>c.id===t.lk)||{}).subj)||'';
 const sTasks=sid=>tfF(sortedTasks()).filter(t=>!t.rem&&(sid==='_'?!sidsOf(t).length:sidsOf(t).includes(sid))).sort((a,b)=>(isGen(a)?1:0)-(isGen(b)?1:0));
 function rSubjects(anim){
@@ -6884,6 +6897,7 @@ const SYS_DSREV=(subj)=>"You are an experienced, exacting but kind teacher in a 
 "## Plan de travail\nA concrete plan for the next 7 days, small steps with minutes, tied to the failures above and to the course (e.g. 'Mardi · 40 min · refaire l'exercice 2 sans regarder'). Realistic for a student who also has lessons and colles.\n"+
 "Finish with one HTML comment holding ONLY valid JSON, nothing after it: <!--DATA {\"est\":{\"score\":12,\"low\":11,\"high\":13,\"exos\":[{\"n\":\"1\",\"t\":\"short title\",\"got\":3,\"max\":6,\"s\":\"ok|part|miss\"}]},\"plan\":[{\"t\":\"task text\",\"min\":40,\"d\":1}]} --> where d is the day offset from tomorrow (0 = tomorrow, max 6), 4 to 9 plan items. No other text after the comment.";
 const SYS_DSPLAN=(subj)=>"You are a prépa coach ("+subj+"). From the DS data given (grade, notes, tags, mistakes, readiness), write a realistic 7-day work plan in French, then finish with ONE HTML comment holding ONLY valid JSON: <!--DATA {\"plan\":[{\"t\":\"task text\",\"min\":40,\"d\":0}]} --> (d = day offset from tomorrow, 0 to 6, 4 to 8 items, each a concrete action of 20 to 60 minutes). Before the comment write at most 8 short lines.";
+const SYS_DSTRAIN=(subj)=>"You are an exacting, kind prépa teacher ("+subj+") building a PERSONAL training pack for ONE student after a DS, written in French (maths in LaTeX with $…$). You get the sujet, the corrigé, the review of his copy (where he lost points and why), his mistakes and his course. Find his 3 to 5 REAL weak points (the ones that cost him the most points, ordered by cost) and for EACH write exactly: '### Point faible N : title' then '**Ce qui s'est passé**' (2 lines, concrete, quoting the exercise and question), '**À (re)lire**' (the exact lessons by title from his course and the precise statements, definitions, theorems or formulas to relearn, written out in full, with the page or section if known), '**La méthode**' (numbered steps he applies every time, then the 2 or 3 traps that caught him), '**S'entraîner**' (three exercises of increasing difficulty: 1 échauffement, 2 type DS built on the one he missed, 3 variante plus dure; full statements, with the expected duration), then '**Correction détaillée**' (every exercise solved line by line, each step justified, exam style). Never invent a theorem. Do not repeat the whole corrigé. Finish with '### Ordre de travail' (5 lines max) and then ONE HTML comment holding ONLY valid JSON: <!--DATA {\"plan\":[{\"t\":\"Relire X puis refaire l'exercice 2 du point 1\",\"min\":45,\"d\":0}]} --> (d = day offset from tomorrow, 0 to 6, 4 to 8 concrete items of 20 to 60 minutes, covering reading, method and exercises).";
 async function dsCourse(subj){
   const ls=S.lessons.filter(l=>l.subj===subj&&l.status==='done');
   const budget=memOn()?110000:170000,texts=[];
@@ -6943,6 +6957,27 @@ function dsRev(kind,id){
     dsPlanFrom(r,p.data);save[kind]();toast('Review ready ✓');
   });
 }
+function dsTrain(kind,id){
+  const meta=metaOf(kind,id),r=recOf(kind,id,meta);
+  if(!r.drAt&&!(r.tags||[]).length&&!r.wrong)return toast('Run the review of your copy first (or note what went wrong)');
+  return run('DX'+id,'Building your training pack…',async(lab,txt)=>{
+    lab('Reading the sujet…');const sj=(r.sujet||[]).length?await tdSource(r.sujet,lab):[];
+    let ct=(await C.getText('DC'+id))||'';let corr=[];
+    if((r.corr||[]).length){lab('Reading the correction…');corr=await tdSource(r.corr,lab)}else if(ct)corr=[{type:'text',text:'=== CORRIGÉ ===\n'+ct.slice(0,50000)}];
+    const rv=(await C.getText('DR'+id))||'';
+    lab('Collecting your lessons…');const c=await dsCourse(meta.subj);
+    const mine=S.mist.filter(m=>m.ref===kind+'|'+id||m.src===kind+'|'+id).slice(0,12).map(m=>m.text.slice(0,140));
+    const info='DS: '+meta.title+' ('+SUBJ[meta.subj].n+'). Grade: '+(r.grade==null||r.grade===''?(r.est?'≈'+r.est.score+' (estimated)':'unknown'):r.grade+'/20')+'. Where I lost points: '+((r.tags||[]).join(', ')||'-')+'. What went wrong: '+(r.wrong||'-')+'. Why: '+(r.why||'-')+'. Mistakes logged: '+(mine.join(' | ')||'-')+'. '+(profileFor(meta.subj)||'');
+    lab('Targeting your weak points…');
+    const content=[{type:'text',text:'=== SUJET ==='}].concat(sj.slice(0,16),[{type:'text',text:'=== CORRIGÉ ==='}],corr.slice(0,16),[{type:'text',text:'=== REVIEW OF HIS COPY ===\n'+(rv||'(none: rely on his notes below)').slice(0,40000)},{type:'text',text:'=== HIS COURSE ==='+(c.txt||'\n(none)'),cache:true},{type:'text',text:info}]);
+    const res=await C.ai({subj:meta.subj,system:SYS_DSTRAIN(SUBJ[meta.subj].n),content,max:32000,onText:txt});
+    const p=dsParse(res.text);if(p.body.length<400)throw new C.AIError('The training pack came out empty. Try again.');
+    await C.setText('DX'+id,p.body+(res.stop==='max_tokens'?'\n\n*[The pack was cut. Run it again.]*':''));
+    r.dxAt=Date.now();
+    if(p.data&&Array.isArray(p.data.plan))r.dxItems=p.data.plan.slice(0,10).map(q=>({id:uid(),t:String(q.t||'').slice(0,160),min:Math.max(10,Math.min(120,+q.min||30)),d:Math.max(0,Math.min(6,Math.round(+q.d)||0)),done:false,added:false})).filter(q=>q.t);
+    save[kind]();toast('Training pack ready ✓');
+  });
+}
 function dsPlan(kind,id){
   const meta=metaOf(kind,id),r=recOf(kind,id,meta);
   return run('DP'+id,'Building your work plan…',async(lab,txt)=>{
@@ -6958,7 +6993,7 @@ const dsDay=d=>{const x=new Date();x.setDate(x.getDate()+1+d);return x.toLocaleD
 function dsIsOn(kind,r,meta){return kind==='exams'&&r.cat!=='vocab'&&!(meta.ev&&meta.ev.kind==='vt')}
 function dsHero(r,meta){
   const g=r.grade==null||r.grade===''?null:+r.grade,av=r.avg==null||r.avg===''?null:+r.avg,col=C.sc(meta.subj);
-  const st=[['Sujet',(r.sujet||[]).length>0],['Corrigé',(r.corr||[]).length>0||!!r.dcAt],['Copy',(r.copy||[]).length>0],['Review',!!r.drAt],['Plan',(r.plan||[]).length>0]];
+  const st=[['Sujet',(r.sujet||[]).length>0],['Corrigé',(r.corr||[]).length>0||!!r.dcAt],['Copy',(r.copy||[]).length>0],['Review',!!r.drAt],['Training',!!r.dxAt],['Plan',(r.plan||[]).length>0]];
   return '<div class="dshero" style="--c:'+col+'"><div class="dsh-eb"><i class="dot"></i>'+SUBJ[meta.subj].n+' · DS</div><div class="dsh-t">'+esc(meta.title)+'</div><div class="dsh-d">'+fd(meta.date)+'</div>'+
   '<div class="dsh-g">'+(g!=null?'<div class="dsh-n"><b>'+g.toFixed(1).replace(/\.0$/,'')+'</b><small>/20</small></div>'+(av!=null?'<div class="dsh-v '+(g>=av?'up':'dn')+'">'+(g>=av?'+':'')+(g-av).toFixed(1).replace(/\.0$/,'')+' vs class '+av+'</div>':''):r.est?'<div class="dsh-n est"><b>≈'+r.est.score+'</b><small>/20 estimated</small></div><div class="dsh-v">range '+r.est.low+'–'+r.est.high+' · before the teacher</div>':'<div class="dsh-v">No grade yet</div>')+'</div>'+
   '<div class="dsh-s">'+st.map(x=>'<span class="'+(x[1]?'on':'')+'">'+(x[1]?'✓ ':'')+x[0]+'</span>').join('')+'</div></div>';
@@ -6985,6 +7020,15 @@ function dsFlow(kind,id,r,meta){
     }else m+='<button class="btn primary" data-a="dsRev" data-i="'+k+'" style="margin-top:6px"'+(!(r.copy||[]).length?' disabled':'')+'>Correct my copy before the teacher</button><div class="sub" style="margin-top:6px">'+((r.copy||[]).length?'You get an estimated grade, the points to improve and detailed exercises on what you missed.'+((r.corr||[]).length||r.dcAt?'':' The corrigé is written first from your lessons.'):'Add your copy first.')+'</div>';
   }
   h+=step(3,'My copy, reviewed',!!r.drAt,m,r.est?'≈ '+r.est.score+'/20':'');
+  /* targeted training */
+  let x=liveBox('DX'+id)+errBox('DX'+id);
+  if(!live['DX'+id]){
+    if(r.dxAt){
+      const xi=r.dxItems||[];
+      x+='<div class="dsact"><button class="btn primary sm" data-pvt="DX'+id+'" data-pvn="Training · '+esc(meta.title)+'">Open my training</button><button class="btn sm" data-a="dsTrain" data-i="'+k+'">Redo</button><button class="btn sm" data-a="printDsTrain" data-i="'+k+'">Print</button>'+(xi.some(q=>!q.added)?'<button class="btn sm" data-a="dsXAdd" data-i="'+k+'">Add to my tasks</button>':'')+'</div><div class="sub">Weak points · what to read · method · exercises with full correction. '+new Date(r.dxAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+(xi.length?' · '+xi.filter(q=>q.added).length+'/'+xi.length+' in tasks':'')+'</div>';
+    }else x+='<button class="btn primary" data-a="dsTrain" data-i="'+k+'" style="margin-top:6px"'+(!(r.drAt||(r.tags||[]).length||r.wrong)?' disabled':'')+'>Build exercises on what I missed</button><div class="sub" style="margin-top:6px">'+((r.drAt||(r.tags||[]).length||r.wrong)?'Targets your real weak points: what to read, the method, and graduated exercises with a detailed correction.':'Run the review of your copy first.')+'</div>';
+  }
+  h+=step(4,'Training on my weak points',!!r.dxAt,x);
   /* plan */
   let p=liveBox('DP'+id)+errBox('DP'+id);
   const pl=r.plan||[];
@@ -6992,7 +7036,7 @@ function dsFlow(kind,id,r,meta){
     const dn=pl.filter(x=>x.done).length;
     p+='<div class="pbar" style="margin:2px 0 10px"><i style="width:'+Math.round(100*dn/pl.length)+'%"></i></div>'+pl.map(x=>'<div class="todo '+(x.done?'done':'')+'" data-a="dsTick" data-i="'+k+'|'+x.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(x.t)+'</b><div class="sub">'+dsDay(x.d)+' · '+x.min+' min'+(x.added?' · in tasks':'')+'</div></span></div>').join('')+'<div class="dsact"><button class="btn primary sm" data-a="dsAdd" data-i="'+k+'">Add to my tasks</button>'+(live['DP'+id]?'':'<button class="btn sm" data-a="dsPlan" data-i="'+k+'">New plan</button>')+'</div>';
   }else if(!live['DP'+id])p+='<div class="sub" style="margin-bottom:8px">'+(r.drAt?'':'The plan comes with the review of your copy. ')+'You can also build one from your grade and notes.</div><button class="btn '+(r.drAt?'':'primary')+'" data-a="dsPlan" data-i="'+k+'">Build my plan from my notes</button>';
-  h+=step(4,'Work plan after this DS',pl.length>0&&pl.every(x=>x.done),p,pl.length?pl.filter(x=>x.done).length+'/'+pl.length:'');
+  h+=step(5,'Work plan after this DS',pl.length>0&&pl.every(x=>x.done),p,pl.length?pl.filter(x=>x.done).length+'/'+pl.length:'');
   return h+'</div>';
 }
 function dsDebrief(){
@@ -7477,6 +7521,13 @@ A.feedback=i=>{
 A.dsCo=i=>{if(needKey()){const[k,id]=i.split('|');dsMk(k,id)}};
 A.dsRev=i=>{if(needKey()){const[k,id]=i.split('|');dsRev(k,id)}};
 A.dsPlan=i=>{if(needKey()){const[k,id]=i.split('|');dsPlan(k,id)}};
+A.dsTrain=i=>{if(needKey()){const[k,id]=i.split('|');dsTrain(k,id)}};
+A.dsXAdd=i=>{
+  const[k,id]=i.split('|'),r=S[k][id];if(!r||!(r.dxItems||[]).length)return;let n=0;
+  r.dxItems.filter(p=>!p.added&&!p.done).forEach(p=>{const d=new Date();d.setDate(d.getDate()+1+p.d);tasks.push({id:uid(),text:'['+SUBJ[r.subj].n+'] '+p.t+' ('+p.min+' min)',xp:25,due:iso(d)});p.added=true;n++});
+  sv();save[k]();toast(n?n+' task'+(n>1?'s':'')+' added to your week':'Already in your tasks');render('card');
+};
+A.printDsTrain=async i=>{const[k,id]=i.split('|'),meta=metaOf(k,id);await C.loadKatex();printHtml('<h1>Training — '+esc(meta.title)+'</h1>'+C.md((await C.getText('DX'+id))||''))};
 A.dsTick=i=>{const[k,id,pid]=i.split('|'),r=S[k][id],p=r&&(r.plan||[]).find(x=>x.id===pid);if(p){p.done=!p.done;save[k]();render('card')}};
 A.dsAdd=i=>{
   const[k,id]=i.split('|'),r=S[k][id];if(!r||!(r.plan||[]).length)return;let n=0;
@@ -11493,7 +11544,7 @@ coOpen=function(pre){
 /* ---- keep it safe: everything of Me is part of the backup, the snapshots and the restore ---- */
 window.PN=window.PN||{};window.PN.hy={add:hyAdd,draw:hyDraw,data:hyD};
 
-/* ================= v156: the 7 subjects as goals + automatic filing of every task ================= */
+/* ================= v156/161: the 7 subjects (Tasks → Subjects) + automatic filing of every task ================= */
 const SJ7=[['maths','Maths','#4d8dff'],['phys','Physique','#7c6bff'],['chim','Chimie','#34d399'],['ang','Anglais','#ffb86b'],['si','SI','#ff5d5d'],['info','Informatique','#2dd4bf'],['philo','Philosophie','#e879f9']];
 const sjFold=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
 const SJ_RX=[['info',/\b(python|informatique|info|sql|algorithm\w*|programm\w*|code|ipt|boucles?|recursi\w*|tri fusion|dichotomie|numpy|matplotlib)\b/],
@@ -11511,26 +11562,18 @@ function sjDetect(t){
   try{const p=subjOfT(t);if(p){if(p==='ipt')return /si\b|ingenieur|grafcet/.test(f)?'si':'info';if(p==='fr')return 'philo';if(SJ7.some(x=>x[0]===p))return p}}catch(e){}
   return '';
 }
-function sjEnsure(){
-  let ch=false;const ids={};
-  SJ7.forEach(([k,n,c])=>{
-    let g=goals.find(x=>x.id==='sj-'+k)||goals.find(x=>String(x.name||'').trim().toLowerCase()===n.toLowerCase());
-    if(!g){g={id:'sj-'+k,name:n,color:c,xp:0,lv:1};goals.push(g);ch=true}
-    ids[k]=g.id;
-  });
-  return{ids,ch};
-}
 let _sjBusy=false;
 function autoSubj(){
   if(_sjBusy)return 0;_sjBusy=true;let n=0;
-  try{
-    const e=sjEnsure();
-    (tasks||[]).forEach(t=>{if(t.gid||t.ga||t.rem)return;const k=sjDetect(t);if(k&&e.ids[k]){t.gid=e.ids[k];t.ga=e.ids[k];n++}});
-  }catch(x){}
+  try{(tasks||[]).forEach(t=>{if(t.rem||t.sa||sidsOf(t).length)return;const k=sjDetect(t);if(k){t.sids=[k];t.sa=1;n++}})}catch(x){}
   _sjBusy=false;return n;
 }
 window.autoSubj=autoSubj;
-try{if(!localStorage.sj156){const n=autoSubj();localStorage.sj156='1';sv();if(n)setTimeout(()=>toast('7 subjects created · '+n+' tasks filed automatically'),2500)}}catch(e){}
+try{if(!localStorage.sj161){
+  goals=goals.filter(g=>!(String(g.id).indexOf('sj-')===0&&!g.xp&&g.lv<=1));
+  tasks.forEach(t=>{if(t.ga){if(String(t.gid||'').indexOf('sj-')===0&&t.gid===t.ga)delete t.gid;delete t.ga}});
+  localStorage.sj161='1';try{localStorage.setItem('tmode','sub');tmode='sub'}catch(e){}
+  const n=autoSubj();sv();setTimeout(()=>{toast('7 subjects ready · '+n+' tasks filed'+(typeof rTasks==='function'&&cur==='tasks'?'':''));try{if(cur==='tasks')rTasks(true)}catch(e){}},2500)}}catch(e){}
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
 const HCARDS={balcard:'Alter Ego',hydcard:'Water',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
