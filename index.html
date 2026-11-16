@@ -1887,7 +1887,7 @@ B.addEventListener('scroll',()=>{window.dispatchEvent(new Event('scroll'))},{pas
 /* v159: iOS sometimes leaves the web view SHORTER than the screen (black strip under the nav). Nothing can be drawn there, so the page asks iOS to measure again. */
 (function(){let tries=0,last=0;
  const stand=()=>navigator.standalone||matchMedia('(display-mode: standalone)').matches;
- const bad=()=>{const vv=window.visualViewport;if(!stand()||!matchMedia('(orientation:portrait)').matches||(vv&&vv.scale>1.01))return false;if(/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||''))return false;const d=screen.height-Math.max(window.innerHeight,vv?vv.height+vv.offsetTop:0);return d>8&&d<400};
+ const bad=()=>{if(!/navdbg/.test(location.search))return false;const vv=window.visualViewport;if(!stand()||!matchMedia('(orientation:portrait)').matches||(vv&&vv.scale>1.01))return false;if(/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||''))return false;const d=screen.height-Math.max(window.innerHeight,vv?vv.height+vv.offsetTop:0);return d>8&&d<400};
 
  function dbgShow(){try{
   const vv=window.visualViewport,pr=document.createElement('div');pr.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:100vh;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)';
