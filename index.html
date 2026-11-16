@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#06070b">
 <meta name="color-scheme" content="dark">
 <title>Aether</title>
@@ -1896,17 +1896,15 @@ B.addEventListener('scroll',()=>{window.dispatchEvent(new Event('scroll'))},{pas
   const nv=document.querySelector('.nav'),nr=nv?nv.getBoundingClientRect():{bottom:0};
   const t='NAV DEBUG  inner '+innerWidth+'x'+innerHeight+' | vv '+(vv?Math.round(vv.height)+' top'+Math.round(vv.offsetTop)+' sc'+vv.scale.toFixed(2):'-')+' | screen '+screen.width+'x'+screen.height+' | clientH '+document.documentElement.clientHeight+' | vh '+vh+' svh '+mk('100svh')+' lvh '+mk('100lvh')+' dvh '+mk('100dvh')+' | safe T'+st+' B'+sb+' | navBottom '+Math.round(nr.bottom)+' | sY '+Math.round(window.scrollY);
   let d=document.getElementById('navdbg');if(!d){d=document.createElement('div');d.id='navdbg';d.style.cssText='position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 4px);z-index:99999;background:rgba(0,0,0,.88);color:#9ff;font:11px/1.35 ui-monospace,monospace;padding:8px 10px;border-radius:10px;border:1px solid #4d8dff';document.body.appendChild(d)}
-  d.innerHTML=t+'<br><b id="navdbgr" style="color:#fff;text-decoration:underline">Tap to reload the app</b>';
+  d.innerHTML=t+'<br><span style="color:#ffd60a">iOS 26 bug (WebKit 301108). Fix: delete the Aether icon, open the site in Safari, Share → Add to Home Screen.</span><br><b id="navdbgr" style="color:#fff;text-decoration:underline">Tap to reload the app</b>';
   d.onclick=()=>location.reload();clearTimeout(d._t);d._t=setTimeout(()=>d.remove(),20000);
  }catch(e){}}
  function heal(){
   if(document.hidden||!bad()){if(!bad())tries=0;return}
   if(tries===2)dbgShow();
   if(tries>=6||Date.now()-last<1500)return;tries++;last=Date.now();
-  const m=document.querySelector('meta[name=viewport]');const c=m&&m.content;
-  try{if(m){m.content='width=device-width, initial-scale=1.0, viewport-fit=cover';}}catch(e){}
   const h=document.documentElement;h.style.height='calc(100% + 1px)';
-  requestAnimationFrame(()=>setTimeout(()=>{try{if(m&&c)m.content=c}catch(e){}h.style.height='';try{window.dispatchEvent(new Event('resize'))}catch(e){}},80));
+  requestAnimationFrame(()=>setTimeout(()=>{h.style.height='';try{window.dispatchEvent(new Event('resize'))}catch(e){}},80));
  }
  ['resize','orientationchange','pageshow','focus','touchend','scroll'].forEach(ev=>window.addEventListener(ev,()=>setTimeout(heal,120),{passive:true}));
  document.addEventListener('visibilitychange',()=>{tries=0;[200,700,1500,3000].forEach(t=>setTimeout(heal,t))});
