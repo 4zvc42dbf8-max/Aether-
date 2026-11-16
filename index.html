@@ -1676,6 +1676,10 @@ html,body{overscroll-behavior-y:none}
 .fu-pb{height:4px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin:0 0 4px}.fu-pb i{display:block;height:100%;width:0;background:#6fd0ff;border-radius:9px}
 .fu-pt{font-size:11.5px;color:var(--dim);margin:0 0 8px;font-variant-numeric:tabular-nums}
 .fu-a .btn.on{background:#2f7bff}
+/* v156: the BODY is the scroller (document never scrolls) → iOS can no longer leave the fixed nav stuck mid-screen */
+html{height:100%;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0;height:auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none}
+@media print{html{height:auto;overflow:visible}body{position:static;inset:auto;overflow:visible;height:auto}}
 </style>
 </head>
 <body>
@@ -1864,6 +1868,18 @@ html,body{overscroll-behavior-y:none}
 <div id="lvl"><i class="rings"></i><i class="rings"></i><div class="big">Level up</div><div id="lvb" style="margin:10px 0 0;text-align:center"></div><div class="num" id="lvnum" style="font-size:80px">2</div><div class="sub" style="margin-top:8px">Tap to continue</div></div>
 <label class="hap" aria-hidden="true"><input type="checkbox" switch id="hap"></label>
 
+<script>
+/* v156 scroll shim: everything that used window scroll now drives the body scroller */
+(function(){const B=document.body;
+const top=()=>B.scrollTop;
+try{Object.defineProperty(window,'scrollY',{get:top,configurable:true});Object.defineProperty(window,'pageYOffset',{get:top,configurable:true});Object.defineProperty(window,'scrollX',{get:()=>B.scrollLeft,configurable:true})}catch(e){}
+const norm=(a,b)=>typeof a==='object'&&a?a:{left:a,top:b};
+window.scrollTo=window.scroll=function(a,b){const o=norm(a,b);B.scrollTo({top:o.top==null?B.scrollTop:o.top,left:o.left==null?B.scrollLeft:o.left,behavior:o.behavior||'auto'})};
+window.scrollBy=function(a,b){const o=norm(a,b);B.scrollBy({top:o.top||0,left:o.left||0,behavior:o.behavior||'auto'})};
+try{Object.defineProperty(document,'scrollingElement',{get:()=>B,configurable:true})}catch(e){}
+B.addEventListener('scroll',()=>{window.dispatchEvent(new Event('scroll'))},{passive:true});
+})();
+</script>
 <script>
 /* ================= helpers ================= */
 const $=id=>document.getElementById(id);
