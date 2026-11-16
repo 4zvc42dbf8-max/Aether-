@@ -1676,10 +1676,12 @@ html,body{overscroll-behavior-y:none}
 .fu-pb{height:4px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin:0 0 4px}.fu-pb i{display:block;height:100%;width:0;background:#6fd0ff;border-radius:9px}
 .fu-pt{font-size:11.5px;color:var(--dim);margin:0 0 8px;font-variant-numeric:tabular-nums}
 .fu-a .btn.on{background:#2f7bff}
-/* v156: the BODY is the scroller (document never scrolls) → iOS can no longer leave the fixed nav stuck mid-screen */
+/* v157: #scr is the ONLY scroller; nav, fab, sheets live in separate fixed layers that scrolling can never move */
 html{height:100%;overflow:hidden;overscroll-behavior:none}
-body{position:fixed;inset:0;height:auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none}
-@media print{html{height:auto;overflow:visible}body{position:static;inset:auto;overflow:visible;height:auto}}
+body{height:100%;overflow:hidden;margin:0;padding-bottom:0!important;min-height:0}
+#scr{position:fixed;top:0;left:0;right:0;bottom:calc(0px - var(--navy,0px));overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none;padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+.nav,.fab{-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;z-index:100}
+@media print{html,body{height:auto;overflow:visible}#scr{position:static;overflow:visible;bottom:auto;padding:0}}
 </style>
 </head>
 <body>
@@ -1744,6 +1746,7 @@ body{position:fixed;inset:0;height:auto;min-height:0;overflow-x:hidden;overflow-
   </div>
 </div>
 
+<div id="scr">
 <header><div class="logo"></div><h1 id="pt">Home</h1><button class="thm" id="coachbtn" aria-label="Alter Ego"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none"/></svg></button><button class="thm" id="plbtn" aria-label="Plan my week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 13.2l.9 1.9 1.9.9-1.9.9-.9 1.9-.9-1.9-1.9-.9 1.9-.9z" fill="currentColor" stroke="none"/></svg></button><button class="thm" id="rlxbtn" data-rx="start" aria-label="Relax"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19c2-5 5-8 9-10"/></svg></button><button class="thm" id="shopbtn" data-act="rewards" aria-label="Reward shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.1 11.1a1.5 1.5 0 0 1-1.5 1.4H7.6a1.5 1.5 0 0 1-1.5-1.4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></button><button class="thm" id="thm" aria-label="Switch light / dark"><svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button class="pv-gear" id="pv-gear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></header>
 
 <div class="container">
@@ -1847,6 +1850,7 @@ body{position:fixed;inset:0;height:auto;min-height:0;overflow-x:hidden;overflow-
 
 </div>
 
+</div>
 <button class="fab" id="fab" data-act="fab" aria-label="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
 
 <nav class="nav" id="nav">
@@ -1870,7 +1874,7 @@ body{position:fixed;inset:0;height:auto;min-height:0;overflow-x:hidden;overflow-
 
 <script>
 /* v156 scroll shim: everything that used window scroll now drives the body scroller */
-(function(){const B=document.body;
+(function(){const B=document.getElementById("scr");
 const top=()=>B.scrollTop;
 try{Object.defineProperty(window,'scrollY',{get:top,configurable:true});Object.defineProperty(window,'pageYOffset',{get:top,configurable:true});Object.defineProperty(window,'scrollX',{get:()=>B.scrollLeft,configurable:true})}catch(e){}
 const norm=(a,b)=>typeof a==='object'&&a?a:{left:a,top:b};
@@ -1921,7 +1925,7 @@ let lazy=ld('lazy',[]);
 goals.forEach(g=>{if(!g.id)g.id=uid();g.xp=g.xp||0;g.lv=g.lv||1});
 tasks.forEach(t=>{if(!t.id)t.id=uid()});
 cal.forEach(c=>{if(!c.id)c.id=uid()});
-function sv(){try{
+function sv(){try{try{autoSubj()}catch(_e){}
   localStorage.xp=xp;localStorage.lv=lv;
   localStorage.tasks=JSON.stringify(tasks);localStorage.cal=JSON.stringify(cal);
   localStorage.fhist=JSON.stringify(fhist);localStorage.moods=JSON.stringify(moods);localStorage.dayh=JSON.stringify(dayh);localStorage.xpd=JSON.stringify(xpd);localStorage.wgoal=JSON.stringify(wgoal);localStorage.why=JSON.stringify(why);localStorage.wrev=JSON.stringify(wrev);
@@ -2266,7 +2270,7 @@ function dkExpand(id){
 })();
 (function(){const vv=window.visualViewport,r=document.documentElement.style;
   let lastN=0,rafT=0;
-  function sync(){if(vv){const ny=Math.max(0,Math.round(vv.offsetTop+vv.height-window.innerHeight));r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px');r.setProperty('--navy',ny+'px');
+  function sync(){if(vv){let ny=Math.max(0,Math.round(vv.offsetTop+vv.height-window.innerHeight));try{const sa=(navigator.standalone||matchMedia('(display-mode: standalone)').matches)&&matchMedia('(orientation:portrait)').matches&&vv.scale<=1.01&&!/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'');if(sa){const d=Math.round(screen.height-Math.max(window.innerHeight,vv.height+vv.offsetTop));if(d>8&&d<400)ny=Math.max(ny,d)}}catch(_e){}r.setProperty('--vvh',vv.height+'px');r.setProperty('--vvt',vv.offsetTop+'px');r.setProperty('--navy',ny+'px');
     /* the fixed layer (nav, glow) is stuck higher than the real screen bottom: re-lay out the page the way iOS accepts */
     if(ny>6&&Date.now()-lastN>700&&!/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'')){lastN=Date.now();try{const y=window.scrollY;window.scrollTo(0,y+1);window.scrollTo(0,y)}catch(e){}}}}
   const burst=()=>{const t0=Date.now();cancelAnimationFrame(rafT);const f=()=>{sync();if(Date.now()-t0<900)rafT=requestAnimationFrame(f)};rafT=requestAnimationFrame(f)};
@@ -11468,6 +11472,44 @@ coOpen=function(pre){
 /* ---- keep it safe: everything of Me is part of the backup, the snapshots and the restore ---- */
 window.PN=window.PN||{};window.PN.hy={add:hyAdd,draw:hyDraw,data:hyD};
 
+/* ================= v156: the 7 subjects as goals + automatic filing of every task ================= */
+const SJ7=[['maths','Maths','#4d8dff'],['phys','Physique','#7c6bff'],['chim','Chimie','#34d399'],['ang','Anglais','#ffb86b'],['si','SI','#ff5d5d'],['info','Informatique','#2dd4bf'],['philo','Philosophie','#e879f9']];
+const sjFold=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const SJ_RX=[['info',/\b(python|informatique|info|sql|algorithm\w*|programm\w*|code|ipt|boucles?|recursi\w*|tri fusion|dichotomie|numpy|matplotlib)\b/],
+ ['si',/\b(si|sii|sciences? de l ?ingenieur\w*|grafcet|sysml|asservi\w*|schema[- ]bloc|chaine d.?energie|chaine d.?information|cao|systemes? (pluri|techniques?)\w*|statique|ingenierie)\b/],
+ ['philo',/\b(philo\w*|dissertation|lettres?|francais|kant|descartes|platon|nietzsche|hegel|spinoza|pascal|bergson|sartre|l.?inconscient|la technique|le travail)\b/],
+ ['ang',/\b(anglais|english|vocab\w*|colle ang\w*|translation|version|theme|essay|synthese)\b/],
+ ['chim',/\b(chimie|chim|redox|oxydo\w*|acide\w*|base\w*|nernst|pile\w*|cristallo\w*|atomistique|solutions?|dosage\w*|cinetique chimique|equilibre\w*|thermochimie|orbital\w*)\b/],
+ ['phys',/\b(physique|phys|optique|thermo\w*|electrocinetique|electromagnetisme|mecanique|ondes?|lentille\w*|circuits?|filtre\w*|oscillateur\w*|signal|signaux|cinematique|dynamique|energie)\b/],
+ ['maths',/\b(maths?|mathematiques?|algebre|analyse|suites?|series?|integrales?|complexes?|polynomes?|matrices?|derivees?|limites?|continuite|equations? diff\w*|espaces? vectoriels?|denombrement|dl|developpements? limites?|fonctions usuelles|ensembles?|applications?|groupes?|arithmetique|proba\w*)\b/]];
+function sjDetect(t){
+  const f=sjFold(t&&t.text||'');
+  const m=f.match(/^\s*\[([^\]]+)\]/),tag=m?m[1]:'';
+  if(tag){const ft=tag;for(const[k,rx]of SJ_RX)if(rx.test(ft))return k;if(/^(si|sii)\b/.test(ft))return 'si'}
+  for(const[k,rx]of SJ_RX)if(rx.test(f))return k;
+  try{const p=subjOfT(t);if(p){if(p==='ipt')return /si\b|ingenieur|grafcet/.test(f)?'si':'info';if(p==='fr')return 'philo';if(SJ7.some(x=>x[0]===p))return p}}catch(e){}
+  return '';
+}
+function sjEnsure(){
+  let ch=false;const ids={};
+  SJ7.forEach(([k,n,c])=>{
+    let g=goals.find(x=>x.id==='sj-'+k)||goals.find(x=>String(x.name||'').trim().toLowerCase()===n.toLowerCase());
+    if(!g){g={id:'sj-'+k,name:n,color:c,xp:0,lv:1};goals.push(g);ch=true}
+    ids[k]=g.id;
+  });
+  return{ids,ch};
+}
+let _sjBusy=false;
+function autoSubj(){
+  if(_sjBusy)return 0;_sjBusy=true;let n=0;
+  try{
+    const e=sjEnsure();
+    (tasks||[]).forEach(t=>{if(t.gid||t.ga||t.rem)return;const k=sjDetect(t);if(k&&e.ids[k]){t.gid=e.ids[k];t.ga=e.ids[k];n++}});
+  }catch(x){}
+  _sjBusy=false;return n;
+}
+window.autoSubj=autoSubj;
+try{if(!localStorage.sj156){const n=autoSubj();localStorage.sj156='1';sv();if(n)setTimeout(()=>toast('7 subjects created · '+n+' tasks filed automatically'),2500)}}catch(e){}
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
 const HCARDS={balcard:'Alter Ego',hydcard:'Water',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
