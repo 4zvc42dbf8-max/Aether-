@@ -1682,6 +1682,8 @@ body{height:100%;overflow:hidden;margin:0;padding-bottom:0!important;min-height:
 #scr{position:fixed;top:0;left:0;right:0;bottom:calc(0px - var(--navy,0px));overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none;padding-bottom:calc(110px + env(safe-area-inset-bottom))}
 .nav,.fab{-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;z-index:100}
 @media print{html,body{height:auto;overflow:visible}#scr{position:static;overflow:visible;bottom:auto;padding:0}}
+.fl-c{background:rgba(255,255,255,.04);border:1px solid var(--line2);border-radius:20px;padding:14px;margin:0 0 10px}.fl-t{font-weight:700;font-size:16px;margin-bottom:6px}.fl-n{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}.fl-n b{font-size:44px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}.fl-n span{font-size:15px;font-weight:700;opacity:.85}.fl-h{margin-top:10px;font-size:13px;opacity:.8;display:grid;gap:4px}.fl-h b{opacity:.6;margin-right:4px}
+.fg-int{display:grid;gap:8px}.fg-i{text-align:left;background:var(--inset);border:1px solid var(--line);border-radius:16px;padding:12px 14px;color:var(--text);display:flex;flex-direction:column;gap:2px}.fg-i b{font-size:16px}.fg-i span{font-size:13px;opacity:.7}.fg-i.on{border-color:#ff5d5d;background:linear-gradient(135deg,rgba(255,93,93,.18),transparent)}.fg-pr{margin:0 0 12px;padding:14px;border-radius:18px;border:1px solid rgba(255,93,93,.5);background:linear-gradient(135deg,rgba(255,93,93,.16),transparent)}.fg-pr b{display:block;font-size:16px}.fg-pr span{display:block;font-size:13px;opacity:.8;margin:2px 0 8px}
 </style>
 </head>
 <body>
@@ -3036,6 +3038,7 @@ const HOL0=[{n:'Toussaint',s:'2026-10-17',e:'2026-11-01'},{n:'Noël',s:'2026-12-
 let hh=Object.assign({lunch:true,aft:true,mult:1.5,l1:'13:00',l2:'13:45',a1:'16:00',a2:'21:00',pause:true,man:''},ld('hh',{}));
 let hols=ld('hols',null)||HOL0.map(x=>({...x}));
 let spent=ld('spent',0),rwd=ld('rwd',[{id:'r1',n:'30 min of a series',c:60},{id:'r2',n:'Order food I like',c:300}]),rlog=ld('rlog',[]),mil=ld('mil',{}),wch=ld('wch',{wk:'',cl:[]});
+try{if(!localStorage.hp166){if(!rwd.some(r=>r.hp)){rwd.push({id:'r-hp',n:'A real treat (I am happy about a DS or colle)',c:150,ico:'🍰',cat:'',hp:4,hpk:''})}localStorage.hp166='1'}}catch(e){}
 let rcat=ld('rcat',['🍕 Food','🎮 Games','📺 Leisure','🛍 Other']),rcf='',rsub=null;
 let shs=Object.assign({al:0,amt:700,roll:50,t1:200,t2:600,t3:1500,cb:50,arr:true,resc:true,gthr:14,gxp:100,cthr:14,cxp:60,vthr:16,vxp:15,xm:true,xl:'soft',xt:2,xd:2,pw:7,pxp:40,sth:7.5,sxp:10,snd:true,hap:true,ref:50},ld('shs',{}));
 if(!shs.xd2){shs.xd2=1;if(shs.xd===3)shs.xd=2}
@@ -3215,6 +3218,11 @@ const tierOf=c=>c<shs.t1?0:c<shs.t2?1:c<shs.t3?2:3;
 const worthTxt=c=>{const m=Math.round(c/30*60);return m<60?m+' min':Math.floor(m/60)+'h'+(m%60?pad(m%60):'')};
 const fdm=d=>new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 function allowLeft(){if(!shs.al)return Infinity;const wk=mondayOf(iso());if(alw.wk!==wk){const prev=alw.wk?Math.max(0,alw.left):0;alw={wk,left:shs.amt+Math.floor(prev*shs.roll/100)};sv()}return alw.left}
+const hpU=()=>{try{const a=JSON.parse(localStorage.getItem('p_hpu')||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}};
+const hpKey=x=>(x.kind||'')+'|'+(x.id||x.eid||x.title)+'|'+(x.date||'');
+const HPN={4:'happy',5:'very happy'};
+function recsHappy(r){try{const lim=shiftD(iso(),-21),u=hpU();return(P.recs()||[]).filter(x=>(x.date||'')>=lim&&(+x.sat||0)>=r.hp&&x.cat!=='vocab'&&(!r.hpk||x.kind===r.hpk)&&!u.includes(hpKey(x))).sort((a,b)=>(a.sat-b.sat)||(b.date||'').localeCompare(a.date||''))}catch(e){return[]}}
+function hpConsume(r){if(!r.hp)return;const l=recsHappy(r)[0];if(l){const u=hpU();u.push(hpKey(l));localStorage.setItem('p_hpu',JSON.stringify(u.slice(-200)))}}
 function recsRecent(k){try{const lim=shiftD(iso(),-21);return(P.recs()||[]).filter(r=>(r.date||'')>=lim&&r.grade!=null&&r.grade!==''&&(!k||(r.cat==='vocab'?'tests':r.kind)===k))}catch(e){return[]}}
 const focusToday=()=>fhist.filter(h=>h.date===fk()).reduce((a,h)=>a+(h.min||0),0);
 function rcheck(r){
@@ -3224,6 +3232,7 @@ function rcheck(r){
   {const x=examMode();if(x&&shs.xl==='hard'&&tierOf(r.c)>=(shs.xt||2))return'After your exam ('+fdm(x.e.date)+')'}
   if(r.fm&&focusToday()<r.fm)return'Focus '+(r.fm-focusToday())+' more min today';
   if(r.gr&&!recsRecent(r.grk).some(x=>+x.grade>=r.gr))return'Needs '+(r.grk==='colles'?'a colle':r.grk==='exams'?'an exam or DS':r.grk==='tests'?'a vocabulary test':'a')+' grade ≥ '+r.gr+' (last 3 weeks)';
+  if(r.hp&&!recsHappy(r).length)return'Be '+HPN[r.hp]+' about '+(r.hpk==='colles'?'a colle':r.hpk==='exams'?'a DS':'a DS or a colle')+' first (rate it in Prépa)';
   if(r.lim&&buys.filter(x=>iso(new Date(x.t))>=wk).length>=r.lim)return'Weekly limit reached';
   if(r.cd&&buys.length){const d=(Date.now()-buys[buys.length-1].t)/864e5;if(d<r.cd)return'Back in '+Math.ceil(r.cd-d)+' d'}
   if(shs.al&&r.c>allowLeft())return'Allowance: '+allowLeft()+' XP left this week';
@@ -3298,6 +3307,7 @@ async function rbuy(id,el){
   if(balance()<r.c){shake();toast(r.c-balance()+' XP to go for "'+r.n+'"');return}
   {const x=examMode();if(x&&shs.xl==='soft'&&tierOf(r.c)>=(shs.xt||2)&&!await ask({title:'Exam '+(x.days===0?'today':x.days===1?'tomorrow':'in '+x.days+' days')+' — still buy?',msg:'"'+r.n+'" is a big reward and your exam is close. Your call.',ok:'Yes, buy it',cancel:'Not now'}))return}
   if(!await ask({title:'Buy "'+r.n+'"?',msg:'−'+r.c+' XP from your balance'+(r.mins?' · starts a '+r.mins+' min timer':'')+'. Your level stays the same.',ok:'Buy',cancel:'Cancel'}))return;
+  try{hpConsume(r)}catch(e){}
   spent+=r.c;rlog.push({id:r.id,n:r.n,c:r.c,t:Date.now()});if(shs.al){allowLeft();alw.left=Math.max(0,alw.left-r.c)}
   if(r.mins)rtimer={n:r.n,c:r.c,mins:r.mins,end:Date.now()+r.mins*6e4};
   sv();if(shs.hap)vib(30);
@@ -3349,6 +3359,7 @@ function rwSheet(tab){
 <div class="two" style="margin:6px 0"><div><label class="hint">Max per week</label><input id="re-lim" type="number" inputmode="numeric" value="${d.lim||''}"></div><div><label class="hint">Cooldown (days)</label><input id="re-cd" type="number" inputmode="numeric" value="${d.cd||''}"></div></div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Min. level</label><input id="re-lv" type="number" inputmode="numeric" value="${d.minLv||''}"></div><div><label class="hint">Focus min today first</label><input id="re-fm" type="number" inputmode="numeric" value="${d.fm||''}"></div></div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Needs a grade ≥ /20</label><input id="re-gr" type="number" inputmode="decimal" value="${d.gr||''}"></div><div><label class="hint">Timer (minutes)</label><input id="re-mn" type="number" inputmode="numeric" value="${d.mins||''}"></div></div><div class="chips" id="re-gk" style="margin:4px 0">${[['','Any grade'],['exams','Exam / DS only'],['colles','Colle only'],['tests','Test only']].map(([v,l])=>`<button class="chip ${(d.grk||'')===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div>
+<div class="hint" style="text-align:left;margin:10px 0 4px">😄 Unlock with how I feel (not the grade)</div><div class="chips" id="re-hp" style="margin:4px 0">${[[0,'No condition'],[4,'Happy 🙂'],[5,'Very happy 😄']].map(([v,l])=>`<button class="chip ${(d.hp||0)===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div><div class="chips" id="re-hk" style="margin:4px 0">${[['','DS or colle'],['exams','DS only'],['colles','Colle only']].map(([v,l])=>`<button class="chip ${(d.hpk||'')===v?'on':''}" data-v="${v}">${l}</button>`).join('')}</div>
 <div class="two" style="margin:6px 0"><div><label class="hint">Available from</label><input id="re-fr" type="date" value="${d.from||''}"></div><div><label class="hint">Until</label><input id="re-to" type="date" value="${d.to||''}"></div></div></details>
 <div class="chips" style="margin-bottom:10px"><button class="chip ${rsub.id&&rsave===rsub.id?'on':''}" id="re-sv">📌 Save for this (shown on Home)</button></div><button class="btn primary" id="re-s">${r?'Save':'Add reward'}</button>${r?'<button class="btn danger" id="re-d">Delete</button>':''}`;
     }else{
@@ -3397,10 +3408,12 @@ function rwSheet(tab){
     if(e.target.closest('[data-sc]')){rsub={m:'cats'};rwSheet();return}
     if(e.target.closest('[data-ss]')){rsub={m:'set'};rwSheet();return}
     if(e.target.closest('[data-new]')){rsub={m:'edit',id:''};rwSheet();return}
+    if(q=e.target.closest('#re-hp .chip')){[...$('re-hp').children].forEach(c=>c.classList.toggle('on',c===q));return}
+    if(q=e.target.closest('#re-hk .chip')){[...$('re-hk').children].forEach(c=>c.classList.toggle('on',c===q));return}
     if(q=e.target.closest('#re-gk .chip')){[...$('re-gk').children].forEach(c=>c.classList.toggle('on',c===q));return}
     if(e.target.closest('#re-sv')){e.target.closest('#re-sv').classList.toggle('on');return}
     if(q=e.target.closest('#re-k .chip')){[...$('re-k').children].forEach(c=>c.classList.toggle('on',c===q));return}
-    if(e.target.closest('#re-s')){const n=$('re-n').value.trim(),c=Math.round(+$('re-c').value),k=$('re-k').querySelector('.on'),cat=k?k.dataset.v:'';if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}const ico=$('re-i').value.trim()||'🎁',nv=i=>Math.max(0,+$(i).value||0),ex={lim:nv('re-lim'),cd:nv('re-cd'),minLv:nv('re-lv'),fm:nv('re-fm'),gr:nv('re-gr'),mins:nv('re-mn'),from:$('re-fr').value,to:$('re-to').value,grk:($('re-gk').querySelector('.on')||{dataset:{v:''}}).dataset.v},sv1=$('re-sv').classList.contains('on');let rid=rsub.id;if(rid){Object.assign(rwd.find(r=>r.id===rid),{n,c,ico,cat},ex)}else{rid=uid();rwd.push(Object.assign({id:rid,n,c,ico,cat},ex))}if(sv1)rsave=rid;else if(rsave===rid)rsave='';rsub=null;sv();rwSheet();return}
+    if(e.target.closest('#re-s')){const n=$('re-n').value.trim(),c=Math.round(+$('re-c').value),k=$('re-k').querySelector('.on'),cat=k?k.dataset.v:'';if(!n||!(c>=1&&c<=100000)){toast('Name and XP cost needed');return}const ico=$('re-i').value.trim()||'🎁',nv=i=>Math.max(0,+$(i).value||0),ex={lim:nv('re-lim'),cd:nv('re-cd'),minLv:nv('re-lv'),fm:nv('re-fm'),gr:nv('re-gr'),mins:nv('re-mn'),from:$('re-fr').value,to:$('re-to').value,grk:($('re-gk').querySelector('.on')||{dataset:{v:''}}).dataset.v,hp:+(($('re-hp').querySelector('.on')||{dataset:{v:0}}).dataset.v)||0,hpk:($('re-hk').querySelector('.on')||{dataset:{v:''}}).dataset.v},sv1=$('re-sv').classList.contains('on');let rid=rsub.id;if(rid){Object.assign(rwd.find(r=>r.id===rid),{n,c,ico,cat},ex)}else{rid=uid();rwd.push(Object.assign({id:rid,n,c,ico,cat},ex))}if(sv1)rsave=rid;else if(rsave===rid)rsave='';rsub=null;sv();rwSheet();return}
     if(e.target.closest('#re-d')){if(await ask({title:'Delete this reward?',ok:'Delete',cancel:'Keep',danger:true})){rwd=rwd.filter(r=>r.id!==rsub.id);rsub=null;sv();rwSheet()}return}
     if(q=e.target.closest('[data-cd]')){const i=+q.dataset.cd,old=rcat[i];rcat.splice(i,1);rwd.forEach(r=>{if(r.cat===old)r.cat=''});if(rcf===old)rcf='';sv();rwSheet();return}
     if(e.target.closest('#ca-b')){const v=$('ca-n').value.trim();if(v&&!rcat.includes(v))rcat.push(v);sv();rwSheet();return}
@@ -7691,7 +7704,7 @@ A.buildMem=()=>{if(!needKey())return;
     toast('Memory updated ✓');
   });
 };
-A.sat=i=>{const[kind,id,n]=i.split('|'),meta=metaOf(kind,id);if(!meta)return;const r=recOf(kind,id,meta),v=+n;r.sat=r.sat===v?null:v;save[kind]();const box=document.querySelector('.sat[data-k="'+CSS.escape(kind+'|'+id)+'"]');if(box){[...box.children].forEach((b,j)=>b.classList.toggle('on',r.sat===j+1));const t=box.parentNode.querySelector('.satt');if(t)t.textContent=r.sat?SATT[r.sat-1]:'Tap a face'}};
+A.sat=i=>{const[kind,id,n]=i.split('|'),meta=metaOf(kind,id);if(!meta)return;const r=recOf(kind,id,meta),v=+n;r.sat=r.sat===v?null:v;save[kind]();try{if(r.sat>=4&&(r.cat!=='vocab')&&rwd.some(x=>x.hp&&x.hp<=r.sat))setTimeout(()=>toast('😄 You are '+(r.sat>=5?'very happy':'happy')+' about it: a treat is unlocked in the Shop'),300)}catch(_e){}const box=document.querySelector('.sat[data-k="'+CSS.escape(kind+'|'+id)+'"]');if(box){[...box.children].forEach((b,j)=>b.classList.toggle('on',r.sat===j+1));const t=box.parentNode.querySelector('.satt');if(t)t.textContent=r.sat?SATT[r.sat-1]:'Tap a face'}};
 A.gcfg=i=>{const[k,v]=i.split('|');S.set.gcfg=Object.assign(gcfg(),{[k]:v});save.set();render('card')};
 
 /* ----- import a sheet / mock made elsewhere, and a prompt to make one in a new Claude session ----- */
@@ -11462,11 +11475,22 @@ const VIDS0=[
  {id:'v13',a:'audio/v13.m4a',t:'My mindset for the last part of 2026 (Creed, Rocky, Tyson)',by:'@wealth',k:'push',n:'Brick by brick. I do not lose. There is no tomorrow. Cowards quit, you are better than that.'},
  {id:'v14',a:'audio/v14.m4a',t:'When your life is cooked, being sad will not change anything (Suits)',by:'@wasted',k:'comfort',n:'Being sad changes nothing. Move, keep going, one step at a time.'},
  {id:'v15',a:'audio/v15.m4a',t:'Success is the sum of small efforts',by:'@samfelixm',k:'push',n:'Trained habits, repeated effort. Extraordinary success is made of ordinary efforts, done every day.'},
+ {id:'v16',a:'audio/v16.m4a',t:'I dare you for the next… (it is not that hard)',by:'@joeysdayinthelifee',k:'push',n:'It is not that hard: be willing to do the things other people will not, and keep showing up. You are still here, destined for more.'},
+ {id:'v17',a:'audio/v17.m4a',t:'Fear and unwillingness stand between you and a different life',by:'@samfelixm',k:'comfort',n:'What separates you from a different life is fear and unwillingness. You find out by attempting.'},
+ {id:'v18',a:'audio/v18.m4a',t:'Study your life like you would study a book',by:'@beastbrain_',k:'push',n:'You would read, study and underline a book that mattered. Approach your life with the same care.'},
+ {id:'v19',a:'audio/v19.m4a',t:'Discipline does not have to mean being hard on yourself (Lewis Hamilton)',by:'@masterclass',k:'comfort',n:'Be kind to yourself when you are trying to be disciplined. Stay on course, and give yourself a reward at the end: a new game, some sweets after a first win.'},
+ {id:'v20',a:'audio/v20.m4a',t:'If you knew you were 50 failures away from success',by:'@cashmouzy',k:'push',n:'If you knew you were 50 (or 100) failures away from success, how quickly would you fail? Start learning to fail: it is what allows us to grow.'},
+ {id:'v21',a:'audio/v21.m4a',t:"Don't look back",by:'@elaafit_',k:'push',n:"Do not look back. What is behind you is done: keep your eyes on where you are going."},
  {id:'r1',t:'Saved reel 1',u:'https://www.instagram.com/reel/Dd8HtfeMuL_/',k:'push',n:'Add why it moves you.'},
  {id:'r2',t:'Saved reel 2',u:'https://www.instagram.com/reel/DfFKysykmAM/',k:'push',n:'Add why it moves you.'},
  {id:'r3',t:'Saved reel 3',u:'https://www.instagram.com/reel/DfDc9zogkq1/',k:'push',n:'Add why it moves you.'},
  {id:'r4',t:'Saved reel 4',u:'https://www.instagram.com/reel/Dc_nBH_FWIQ/',k:'push',n:'Add why it moves you.'}];
-const inD=()=>{const d=jl(HY.I,null),o=d&&Array.isArray(d.idols)?d:{idols:IDOLS0.slice(),vids:VIDS0.map(x=>Object.assign({},x))};o.vids.forEach(v=>{if(!v.a){const z=VIDS0.find(x=>x.id===v.id);if(z&&z.a)v.a=z.a}});return o};
+const inD=()=>{const d=jl(HY.I,null),o=d&&Array.isArray(d.idols)?d:{idols:IDOLS0.slice(),vids:VIDS0.map(x=>Object.assign({},x))};o.vids.forEach(v=>{if(!v.a){const z=VIDS0.find(x=>x.id===v.id);if(z&&z.a)v.a=z.a}});
+  /* new videos shipped with an update join the list once (a video you deleted stays deleted) */
+  if(d&&Array.isArray(d.idols)){const seen=Array.isArray(o.seen)?o.seen:VIDS0.filter(x=>/^v([1-9]|1[0-2])$/.test(x.id)).map(x=>x.id);let ch=!Array.isArray(o.seen);
+    VIDS0.forEach(z=>{if(!seen.includes(z.id)){seen.push(z.id);ch=true;if(!o.vids.some(v=>v.id===z.id))o.vids.push(Object.assign({},z))}});o.seen=seen;if(ch){try{js(HY.I,o)}catch(e){}}}
+  else o.seen=VIDS0.map(x=>x.id);
+  return o};
 const FA={el:null,id:null,u:{}};
 function fuFmt(t){t=Math.max(0,Math.round(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')}
 async function fuPlay(id){
@@ -11572,6 +11596,142 @@ try{if(!localStorage.sj161){
   tasks.forEach(t=>{if(t.ga){if(String(t.gid||'').indexOf('sj-')===0&&t.gid===t.ga)delete t.gid;delete t.ga}});
   localStorage.sj161='1';try{localStorage.setItem('tmode','sub');tmode='sub'}catch(e){}
   const n=autoSubj();sv();setTimeout(()=>{toast('7 subjects ready · '+n+' tasks filed'+(typeof rTasks==='function'&&cur==='tasks'?'':''));try{if(cur==='tasks')rTasks(true)}catch(e){}},2500)}}catch(e){}
+/* ================= v166: FAILURES AWAY — every failure is one step closer ================= */
+const FL_K='p_fail';
+const flD=()=>{const d=jl(FL_K,null)||{};return{goals:Array.isArray(d.goals)?d.goals:[]}};
+const flS=d=>js(FL_K,d);
+let flOpen='',flNew=false;
+const flLines=n=>n<=0?'You are past your count. You stayed, that is the whole game.':n===1?'ONE failure away.':n+' failures away.';
+function flHTML(){
+  const d=flD(),act=d.goals.filter(g=>!g.won),won=d.goals.filter(g=>g.won);
+  let h='<div class="fl"><div class="lbl" style="margin:18px 0 8px">Failures away</div><div class="sub" style="margin:0 2px 10px">Pick what you want and how many failures you accept before it works. Each failure is not a loss: it removes one from the count and gives you XP.</div>';
+  act.forEach(g=>{
+    const pct=Math.min(100,Math.round(100*(g.total-Math.max(0,g.left))/Math.max(1,g.total)));
+    h+='<div class="fl-c"><div class="fl-t">'+esc(g.name)+'</div><div class="fl-n"><b>'+Math.max(0,g.left)+'</b><span>'+flLines(g.left).replace(/^\d+ /,'').replace(/^ONE /,'')+'</span></div><div class="fu-pb"><i style="width:'+pct+'%"></i></div><div class="sub" style="margin:6px 0 10px">'+g.fails.length+' failure'+(g.fails.length===1?'':'s')+' so far · count '+g.total+'</div>';
+    if(flOpen===g.id){
+      h+='<div class="field"><input id="fl-w" placeholder="What happened? (one line)"></div><div class="field"><input id="fl-l" placeholder="What does it teach me?"></div><div class="field"><input id="fl-x" placeholder="Next tiny step (becomes a task)"></div><div class="fu-go"><button class="btn primary" data-fl="save" data-id="'+g.id+'">Count it</button><button class="btn" data-fl="cancel">Cancel</button></div>';
+    }else{
+      h+='<div class="fu-go"><button class="btn primary" data-fl="fail" data-id="'+g.id+'">I failed</button><button class="btn" data-fl="win" data-id="'+g.id+'">I did it 🎉</button></div>';
+    }
+    if(g.left<=0)h+='<div class="sub" style="margin-top:8px">Count reached. <button class="lnk" data-fl="more" data-id="'+g.id+'">Add 3 more tries</button></div>';
+    if(g.fails.length)h+='<div class="fl-h">'+g.fails.slice(-3).reverse().map(f=>'<div><b>'+f.d.slice(5)+'</b> '+esc(f.w||'Failed')+(f.l?' → <i>'+esc(f.l)+'</i>':'')+'</div>').join('')+'</div>';
+    h+='<div style="margin-top:8px"><button class="lnk" data-fl="del" data-id="'+g.id+'">Remove</button></div></div>';
+  });
+  if(flNew){
+    h+='<div class="fl-c"><div class="field"><input id="fl-name" placeholder="What do I want? (e.g. 14+ in the next Maths DS)"></div><div class="sub" style="margin:0 0 6px">Failures I accept before it works</div><div class="chips" id="fl-cnt">'+[5,10,20,30].map((n,i)=>'<button class="chip '+(n===10?'on':'')+'" data-n="'+n+'">'+n+'</button>').join('')+'</div><div class="fu-go" style="margin-top:10px"><button class="btn primary" data-fl="create">Start the count</button><button class="btn" data-fl="cancelnew">Cancel</button></div></div>';
+  }else h+='<button class="btn" data-fl="new" style="margin-top:4px">＋ New goal</button>';
+  if(won.length)h+='<div class="sub" style="margin:12px 2px 0">Done: '+won.slice(-4).reverse().map(g=>'✅ '+esc(g.name)+' — '+g.fails.length+' failure'+(g.fails.length===1?'':'s')).join(' · ')+'</div>';
+  return h+'</div>';
+}
+const _fuDraw166=fuDraw;
+fuDraw=function(){_fuDraw166();try{const f=document.querySelector('#me-p .fu .fu-go');if(f){const w=document.createElement('div');w.innerHTML=flHTML();const sec=f.nextElementSibling&&f.nextElementSibling.classList.contains('fu-go')?f.nextElementSibling:f;sec.parentNode.insertBefore(w.firstChild,sec.nextSibling)}}catch(e){}};
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-fl]');if(!b)return;e.preventDefault();e.stopPropagation();
+  const a=b.dataset.fl,d=flD(),g=d.goals.find(x=>x.id===b.dataset.id);
+  if(a==='new'){flNew=true;fuDraw();return}
+  if(a==='cancelnew'){flNew=false;fuDraw();return}
+  if(a==='cancel'){flOpen='';fuDraw();return}
+  if(a==='create'){const n=($('fl-name').value||'').trim().slice(0,80);if(!n){toast('Name your goal');return}const c=+((document.querySelector('#fl-cnt .chip.on')||{dataset:{n:10}}).dataset.n)||10;d.goals.push({id:'f'+Date.now().toString(36),name:n,total:c,left:c,fails:[],won:''});flS(d);flNew=false;fuDraw();toast(c+' failures away. Let us go.');return}
+  if(a==='fail'){flOpen=g?g.id:'';fuDraw();return}
+  if(a==='save'&&g){
+    const w=($('fl-w').value||'').trim().slice(0,140),l=($('fl-l').value||'').trim().slice(0,140),x=($('fl-x').value||'').trim().slice(0,140);
+    g.fails.push({d:iso(),w,l,x});g.left--;flS(d);flOpen='';
+    if(x){tasks.push({id:uid(),text:x+' ('+g.name+')',xp:25,due:iso(new Date(Date.now()+864e5))});}
+    try{gain(15,null,null)}catch(_e){}
+    try{sv()}catch(_e){}
+    fuDraw();
+    toast(g.left>0?g.left+' failure'+(g.left>1?'s':'')+' away · +15 XP':'Count reached · +15 XP. You stayed.');
+    return}
+  if(a==='win'&&g){g.won=iso();flS(d);try{gain(100,null,null);sv()}catch(_e){}fuDraw();toast('🎉 '+g.fails.length+' failure'+(g.fails.length===1?'':'s')+' to get there · +100 XP');try{meView('chat');coSend('J\'ai réussi : "'+g.name+'", après '+g.fails.length+' échec(s). Célèbre-le avec moi et rappelle-moi ce que ces échecs m\'ont appris : '+g.fails.map(f=>f.l||f.w).filter(Boolean).slice(0,5).join(' ; '))}catch(_e){}return}
+  if(a==='more'&&g){g.left+=3;g.total+=3;flS(d);fuDraw();return}
+  if(a==='del'&&g){if(!confirm('Remove this goal?'))return;d.goals=d.goals.filter(x=>x.id!==g.id);flS(d);fuDraw();return}
+},true);
+document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#fl-cnt .chip');if(c){document.querySelectorAll('#fl-cnt .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')}});
+/* Alter Ego knows the count: it turns every failure into a step */
+const _ctx166=coCtx;
+coCtx=function(){let X;try{X=JSON.parse(_ctx166())}catch(e){X={}}
+  try{const d=flD();X.failures_away=d.goals.filter(g=>!g.won).map(g=>({goal:g.name,failures_left:Math.max(0,g.left),failures_so_far:g.fails.length,last:g.fails.slice(-2).map(f=>({what:f.w,learned:f.l}))}));X.failure_mindset='The user hates failing and it breaks him mentally. Never blame. Reframe each failure as one of the failures he accepted on the way to the goal, name what it taught, then give ONE tiny next step.'}catch(e){}
+  return JSON.stringify(X)};
+/* ================= v168: FORGE — configure a real, aggressive ALTER EGO ================= */
+const FG_K='p_forge';
+const FG0={set:false,int:'aggr',style:['fire','mentor'],swear:'none',lang:'fr',down:true,trig:['excuses','promises','why','fails','videos'],red:'',words:'',iam:''};
+const fgD=()=>Object.assign({},FG0,jl(FG_K,{}));
+const fgS=d=>js(FG_K,d);
+const FG_INT=[['firm','Firm','Direct and warm. No excuses.'],['aggr','Aggressive','Confronts me. Short punches. Raises the stakes.'],['savage','Savage','Maximum heat. Sarcasm. Zero comfort zone.']];
+const FG_STY=[['fire','🔥 Fire (hype)'],['cold','🧊 Cold and precise'],['mentor','🧭 Mentor'],['sarc','😏 Sarcastic']];
+const FG_TRG=[['excuses','Call out my excuses by name'],['promises','Hold me to my promises'],['why','Throw my why back at me'],['fails','Use my failure count'],['videos','Quote my idols and videos'],['screen','Watch my screen time']];
+const FG_PLAY=`THE PLAYBOOK (his own videos, turned into plays). Pick ONE play per message, by his state:
+1 FIRE (when he avoids, hesitates or is comfortable): "Brick by brick" (the day is built, not found), "I don't lose" (identity before result), "there is no tomorrow", "you are better than that" (never say cowards, aim at the excuse, not at him), obsession beats talent, dreamers who work, passion is the whole package, "it is simple: they tell you how they do it". Short imperative sentences. Name the excuse, then the first 10 minutes.
+2 DARE (when he needs a spark): "I dare you for the next N days" with ONE concrete, measurable dare, small enough to be done today. Offer to log it as a pledge.
+3 FAILURES AWAY (the moment he failed, or fears failing): he hates failing and it breaks him. Never blame. "If you knew you were 50 failures away from success, how quickly would you fail?" Use CONTEXT.failures_away: say how many are left, what this one taught, ONE tiny next step. Start learning to fail: it is how he grows.
+4 STUDY YOUR LIFE (when he drifts or asks for an assessment): you would read, study and underline a book that mattered; do it with his week: read the numbers, underline the 2 things that matter, drop the rest.
+5 FEAR (when he stalls): what separates him from a different life is fear and unwillingness: name the fear in one sentence, then one small attempt now, because he finds out by attempting.
+6 DON'T LOOK BACK (after a bad result): what is behind is done and can only teach; one lesson, then forward.
+7 COMFORT (when he is down, tired, ashamed, or just failed hard): drop the heat completely. "Being sad will not change anything, but you are allowed to feel it": give him 10 minutes, then the smallest step. Falling off is not the end, you get back on the road. Discipline does not mean being hard on yourself: when he holds on, give himself a reward at the end (CONTEXT: the Shop treats unlock when he is happy about a DS or colle). Say what is true: he is still here.
+8 SUPPORT (always available, practical): decompose, pick the smallest next action, set a timer (focus action), plan the day, check sleep and food.
+Always end with ONE action or ONE question. Use the ACTIONS (task, block, pledge, focus, win, remember) whenever it makes the move real. You can do anything the app can do for him.`;
+function fgSys(){
+  const d=fgD(),I=d.int,hot=I!=='firm';
+  const INT={firm:'FIRM: direct, warm, no excuses.',aggr:'AGGRESSIVE: confront him. Short punches. Raise the stakes. Call the excuse by its name. Challenge, never coddle, push him out of comfort. Imperatives are welcome. Hard on the excuse, never on his worth.',savage:'SAVAGE: maximum heat, sarcasm, zero comfort zone, ruthless about the excuse and the standard, like a coach who refuses to let him settle. Still never cruel about who he is.'}[I]||'';
+  const STY=d.style.map(k=>({fire:'hype and fire',cold:'cold, precise, clinical',mentor:'mentor energy',sarc:'dry sarcasm'}[k])).filter(Boolean).join(', ');
+  const SW={none:'No swearing.',light:'Light swearing is allowed (damn, hell, crap), never aimed at him.',yes:'Strong language is allowed for emphasis, never aimed at him as a person.'}[d.swear]||'No swearing.';
+  const TR=d.trig.map(k=>({excuses:'name his excuses',promises:'hold him to his pledges (CONTEXT promises)',why:'throw his why back at him',fails:'use failures_away',videos:'use his idols and videos (CONTEXT.inspiration)',screen:'watch his screen time'}[k])).filter(Boolean).join('; ');
+  return `
+FORGE (his own configuration of you, it overrides the TONE SETTING line above):
+- ${INT}${STY?' Style: '+STY+'.':''} ${SW} Answer in ${d.lang==='en'?'English':'spoken French'}.
+- ${hot?'Your default is intense. Do not soften unless a safety or comfort rule below applies.':'Warm and firm.'}
+- ${d.down?'WHEN HE IS DOWN, COMFORT BEATS AGGRESSION: if he sounds low, tired, ashamed, anxious, just failed or says it is hard, drop the heat entirely (play 7) and only push once he is steady.':'He asked to keep pushing even when he is low, but never against a safety rule.'}
+- You may use: ${TR||'nothing special'}.
+${d.iam?'- WHO HE WANTS TO BECOME: '+d.iam+'\n':''}${d.words?'- WORDS THAT HIT HIM (use them, do not overuse): '+d.words+'\n':''}${d.red?'- RED LINES (never cross): '+d.red+'\n':''}- ABSOLUTE LIMITS: never insult his worth, intelligence, body, family or origins; never humiliate; never push him to skip sleep, meals or medical care; if he shows real distress, hopelessness or self-harm thoughts, stop every play, be gentle and human, and point to someone he trusts or a doctor. Aggression is a tool for his ambition, never a weapon against him.
+${FG_PLAY}`;
+}
+const _meSys2168=meSys2;
+meSys2=function(){return _meSys2168()+fgSys()};
+function fgHTML(){
+  const d=fgD(),chip=(on,attr,l)=>'<button class="chip '+(on?'on':'')+'" '+attr+'>'+l+'</button>';
+  return '<div class="fg"><div class="sub" style="margin:2px 2px 12px">Forge me. I am you at full power. Tell me how hard to hit, and what is off limits. You can change it any time.</div>'+
+  '<div class="lbl" style="margin:8px 0 6px">How hard</div><div class="fg-int">'+FG_INT.map(x=>'<button class="fg-i '+(d.int===x[0]?'on':'')+'" data-fg="int" data-v="'+x[0]+'"><b>'+x[1]+'</b><span>'+x[2]+'</span></button>').join('')+'</div>'+
+  '<div class="lbl" style="margin:16px 0 6px">My style (pick any)</div><div class="chips">'+FG_STY.map(x=>chip(d.style.includes(x[0]),'data-fg="sty" data-v="'+x[0]+'"',x[1])).join('')+'</div>'+
+  '<div class="lbl" style="margin:16px 0 6px">Swearing</div><div class="chips">'+[['none','None'],['light','Light'],['yes','Free']].map(x=>chip(d.swear===x[0],'data-fg="sw" data-v="'+x[0]+'"',x[1])).join('')+'</div>'+
+  '<div class="lbl" style="margin:16px 0 6px">Language</div><div class="chips">'+[['fr','Français'],['en','English']].map(x=>chip(d.lang===x[0],'data-fg="lg" data-v="'+x[0]+'"',x[1])).join('')+'</div>'+
+  '<div class="lbl" style="margin:16px 0 6px">When I am down</div><div class="chips">'+chip(d.down,'data-fg="down"','Comfort first, then push')+chip(!d.down,'data-fg="nodown"','Keep pushing')+'</div>'+
+  '<div class="lbl" style="margin:16px 0 6px">What I am allowed to use against my excuses</div><div class="chips">'+FG_TRG.map(x=>chip(d.trig.includes(x[0]),'data-fg="trg" data-v="'+x[0]+'"',x[1])).join('')+'</div>'+
+  '<div class="lbl" style="margin:16px 0 6px">Who I want to become</div><textarea id="fg-iam" rows="2" class="co-ta" placeholder="e.g. The one who does not quit after a bad DS">'+esc(d.iam)+'</textarea>'+
+  '<div class="lbl" style="margin:16px 0 6px">Words that hit me</div><textarea id="fg-w" rows="2" class="co-ta" placeholder="e.g. Brick by brick. No tomorrow.">'+esc(d.words)+'</textarea>'+
+  '<div class="lbl" style="margin:16px 0 6px">Red lines (never go there)</div><textarea id="fg-r" rows="2" class="co-ta" placeholder="e.g. Never compare me to my classmates">'+esc(d.red)+'</textarea>'+
+  '<div class="fu-go" style="margin-top:14px"><button class="btn primary" data-fg="save">Save my Alter Ego</button><button class="btn" data-fg="test">Test me now</button></div>'+
+  '<div class="sub" style="margin:12px 2px 30px">Aggression is aimed at the excuse, never at you. If you sound low I switch to comfort, and if it is serious I stop and ask you to talk to someone.</div></div>';
+}
+function fgDraw(){const el=$('me-p');if(el)el.innerHTML=fgHTML()}
+function fgRead(){const d=fgD();const t=id=>{const e=$(id);return e?e.value.trim().slice(0,300):''};d.iam=t('fg-iam')||d.iam;d.words=t('fg-w');d.red=t('fg-r');return d}
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-fg]');if(!b)return;e.preventDefault();e.stopPropagation();
+  const a=b.dataset.fg,v=b.dataset.v;let d=fgRead();
+  if(a==='open'){meView('fg');return}
+  if(a==='skip'){d.set=true;fgS(d);const n=document.getElementById('fg-pr');if(n)n.remove();return}
+  if(a==='int')d.int=v;else if(a==='sw')d.swear=v;else if(a==='lg')d.lang=v;else if(a==='down')d.down=true;else if(a==='nodown')d.down=false;
+  else if(a==='sty'){d.style=d.style.includes(v)?d.style.filter(x=>x!==v):d.style.concat(v)}
+  else if(a==='trg'){d.trig=d.trig.includes(v)?d.trig.filter(x=>x!==v):d.trig.concat(v)}
+  else if(a==='save'){d.set=true;fgS(d);toast('Alter Ego forged 🔥');const n=document.getElementById('fg-pr');if(n)n.remove();return}
+  else if(a==='test'){d.set=true;fgS(d);meView('chat');coSend('Test de ma configuration : parle-moi maintenant avec exactement ce réglage, et dis-moi ce que tu vois dans ma journée qui mérite d\'être secoué.');return}
+  fgS(d);fgDraw();
+},true);
+const _meView168=meView;
+meView=function(v){
+  if(v!=='fg')return _meView168(v);
+  meTab=v;const e=document.getElementById('coscr');if(!e||!e.dataset.b)return;
+  $('co-m').style.display='none';$('co-q').style.display='none';e.querySelector('.co-i').style.display='none';
+  $('co-set').style.display='none';$('me-p').style.display='';
+  e.querySelectorAll('.me-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===v));
+  fgDraw();
+};
+const _coOpen168=coOpen;
+coOpen=function(pre){
+  _coOpen168(pre);
+  const t=document.querySelector('#coscr .me-tabs');if(t&&!t.querySelector('[data-t="fg"]')){const b=document.createElement('button');b.dataset.co='tab';b.dataset.t='fg';b.textContent='Forge';t.appendChild(b)}
+  try{const d=fgD(),sc=document.getElementById('coscr');if(!d.set&&sc&&!document.getElementById('fg-pr')){const m=document.getElementById('co-m');if(m){const p=document.createElement('div');p.id='fg-pr';p.className='fg-pr';p.innerHTML='<b>I can hit much harder.</b><span>Forge me: how aggressive, what is off limits, what drives you.</span><div class="fu-go"><button class="btn primary sm" data-fg="open">Forge my Alter Ego</button><button class="btn sm" data-fg="skip">Later</button></div>';m.parentNode.insertBefore(p,m)}}}catch(e){}
+};
+ME_Q.push(['Kick me','Secoue-moi. Pas de politesse : où est-ce que je me raconte des histoires en ce moment, et qu\'est-ce que je fais dans les 10 prochaines minutes ?'],['Dare me','Lance-moi un défi (dare) concret, mesurable, que je peux commencer aujourd\'hui, et propose de le transformer en promesse.'],['I failed','J\'ai échoué. Sans me blâmer : combien d\'échecs il me reste avant d\'y arriver, ce que celui-ci m\'apprend, et UN tout petit prochain pas.']);
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
 const HCARDS={balcard:'Alter Ego',hydcard:'Water',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
@@ -13331,7 +13491,7 @@ P.boot();
 </script>
 <script>
 (function(){
-  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','p_nt','p_ninbox','p_ap','p_exos','p_tps','p_km','p_teach','p_tb','p_tbc','p_tbl','p_tbw','p_tbwf','p_pw','p_pws','p_pwb','p_hm','p_live','p_fault','p_boards','p_isl','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_mist','p_cards','p_vocab','p_set','p_removed','p_usage','p_cp','p_cm','p_cg','p_cc','p_cop','p_wp','p_wpc','p_cmode','p_cpl','p_cw','p_cl','p_cmem','p_hyd','p_cinsp','p_ru','p_ruev','p_rud','p_tt','ckin','spots','p_nlog'], K='pin_'+APP+'_';
+  var APP='aether', KEYS=['xp','lv','tasks','cal','fhist','moods','dayh','xpd','wgoal','why','wrev','hh','hols','spent','rwd','rcat','shs','commits','rtimer','rsave','bnd','alw','rlog','mil','wch','revs','plans','chatHist','p_nt','p_ninbox','p_ap','p_exos','p_tps','p_km','p_teach','p_tb','p_tbc','p_tbl','p_tbw','p_tbwf','p_pw','p_pws','p_pwb','p_hm','p_live','p_fault','p_boards','p_isl','donelog','goals','lazy','ftimer','p_lessons','p_exams','p_colles','p_progs','p_mocks','p_tds','p_mist','p_cards','p_vocab','p_set','p_removed','p_usage','p_cp','p_cm','p_cg','p_cc','p_cop','p_wp','p_wpc','p_cmode','p_cpl','p_cw','p_cl','p_cmem','p_hyd','p_cinsp','p_fail','p_hpu','p_forge','p_ru','p_ruev','p_rud','p_tt','ckin','spots','p_nlog'], K='pin_'+APP+'_';
   var root=document.documentElement;
   function $(id){return document.getElementById(id);}
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
