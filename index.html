@@ -1684,6 +1684,10 @@ body{height:100%;overflow:hidden;margin:0;padding-bottom:0!important;min-height:
 @media print{html,body{height:auto;overflow:visible}#scr{position:static;overflow:visible;bottom:auto;padding:0}}
 .fl-c{background:rgba(255,255,255,.04);border:1px solid var(--line2);border-radius:20px;padding:14px;margin:0 0 10px}.fl-t{font-weight:700;font-size:16px;margin-bottom:6px}.fl-n{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}.fl-n b{font-size:44px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}.fl-n span{font-size:15px;font-weight:700;opacity:.85}.fl-h{margin-top:10px;font-size:13px;opacity:.8;display:grid;gap:4px}.fl-h b{opacity:.6;margin-right:4px}
 .fg-int{display:grid;gap:8px}.fg-i{text-align:left;background:var(--inset);border:1px solid var(--line);border-radius:16px;padding:12px 14px;color:var(--text);display:flex;flex-direction:column;gap:2px}.fg-i b{font-size:16px}.fg-i span{font-size:13px;opacity:.7}.fg-i.on{border-color:#ff5d5d;background:linear-gradient(135deg,rgba(255,93,93,.18),transparent)}.fg-pr{margin:0 0 12px;padding:14px;border-radius:18px;border:1px solid rgba(255,93,93,.5);background:linear-gradient(135deg,rgba(255,93,93,.16),transparent)}.fg-pr b{display:block;font-size:16px}.fg-pr span{display:block;font-size:13px;opacity:.8;margin:2px 0 8px}
+/* v169: the status bar is opaque now, so the glow frame is flat at the top and only rounded at the bottom */
+#hhglow{border-radius:0 0 var(--scr) var(--scr)!important}
+#rbglow{border-radius:0 0 calc(var(--scr,44px) - 4px) calc(var(--scr,44px) - 4px)!important;inset:0 4px 4px 4px!important}
+body.noglow #hhglow,body.noglow #rbglow{display:none!important}
 </style>
 </head>
 <body>
@@ -1709,6 +1713,7 @@ body{height:100%;overflow:hidden;margin:0;padding-bottom:0!important;min-height:
     <div class="thmseg" id="pv-theme"><button class="chip" data-v="light"><b>☀️</b>Light</button><button class="chip" data-v="dark"><b>🌙</b>Dark</button><button class="chip" data-v="auto"><b>◐</b>Auto</button></div>
     <div id="pv-langhost"></div>
     <div class="pv-card"><div class="pv-note" style="margin-bottom:8px">Screen shape</div><div class="chips" id="pv-scr"><button class="chip" data-v="0">Square</button><button class="chip" data-v="47">iPhone 12–14</button><button class="chip" data-v="55">iPhone 15 / Pro</button><button class="chip" data-v="62">iPhone 16 Pro</button></div></div>
+    <div class="pv-card"><div class="pv-note" style="margin-bottom:8px">Screen glow (the coloured frame around the screen during Happy Hour and boosts)</div><div class="chips" id="pv-glow"><button class="chip" data-v="on">On</button><button class="chip" data-v="off">Off</button></div></div>
     <div class="pv-g">
       <button class="pv-btn" id="pv-home" data-i="🧱">Home blocks<small>Add, hide, reorder</small></button>
     </div>
@@ -1874,6 +1879,15 @@ body{height:100%;overflow:hidden;margin:0;padding-bottom:0!important;min-height:
 <div id="lvl"><i class="rings"></i><i class="rings"></i><div class="big">Level up</div><div id="lvb" style="margin:10px 0 0;text-align:center"></div><div class="num" id="lvnum" style="font-size:80px">2</div><div class="sub" style="margin-top:8px">Tap to continue</div></div>
 <label class="hap" aria-hidden="true"><input type="checkbox" switch id="hap"></label>
 
+<script>
+/* v169: Settings → Screen glow On/Off */
+(function(){
+ const get=()=>{try{return localStorage.getItem('glow')==='off'?'off':'on'}catch(e){return'on'}};
+ const apply=()=>{document.body.classList.toggle('noglow',get()==='off');document.querySelectorAll('#pv-glow .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===get()))};
+ apply();
+ document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#pv-glow .chip');if(!c)return;try{localStorage.setItem('glow',c.dataset.v)}catch(_e){}apply()});
+})();
+</script>
 <script>
 /* v156 scroll shim: everything that used window scroll now drives the body scroller */
 (function(){const B=document.getElementById("scr");
