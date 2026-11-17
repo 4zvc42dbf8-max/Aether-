@@ -1624,6 +1624,7 @@ header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;bac
 /* ---- map: practice links ---- */
 .kmp{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:10px 12px;margin:0 0 8px;border-radius:16px;background:rgba(91,155,255,.09);border:1px solid rgba(91,155,255,.3);color:var(--text);transition:transform .22s var(--spring)}
 .kmp:active{transform:scale(.97)}
+.kmp.kstar{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.5)}.kmp.kstar .kmp-i{color:#fbbf24;background:rgba(251,191,36,.18)}.tdex.kstar{box-shadow:inset 3px 0 0 #fbbf24}.kst{font-size:13px}
 .kmp-i{flex:none;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#8fb8ff;background:rgba(91,155,255,.18);border-radius:8px;padding:5px 7px}
 .kmp-m{flex:1;min-width:0}.kmp-m b{display:block;font-size:14px;line-height:1.3;overflow-wrap:anywhere}
 .kmp-m small{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin-top:2px}.kmp-w{color:#8fb8ff!important}
@@ -1747,9 +1748,10 @@ header h1{font-size:clamp(17px,5.1vw,21px)!important;letter-spacing:.2px!importa
     <div class="pv-g">
       <button class="pv-btn" id="pv-snaps" data-i="🛟">Daily snapshots on this phone</button>
       <button class="pv-btn" id="pv-export" data-i="⬆️">Export backup</button>
+      <button class="pv-btn" id="pv-exportf" data-i="📦">Export full backup (with my course files)</button>
       <button class="pv-btn" id="pv-import" data-i="⬇️">Import backup</button>
     </div>
-    <input type="file" id="pv-file" accept="application/json,.json" style="display:none">
+    <input type="file" id="pv-file" accept=".aether,.json,application/json,application/octet-stream" style="display:none">
     <button class="pv-btn" id="pv-close" style="margin-top:20px">Close</button>
   </div>
 </div>
@@ -4652,6 +4654,7 @@ Keys, backup model => Clés, modèle de secours
 providers · keys => fournisseurs · clés
 Calendar clean-up => Nettoyage du calendrier
 Export backup => Exporter une sauvegarde
+Export full backup (with my course files) => Sauvegarde complète (avec mes fichiers de cours)
 Import backup => Importer une sauvegarde
 Files, calendar, CSV => Fichiers, calendrier, CSV
 Import anything => Tout importer
@@ -6790,7 +6793,7 @@ function vTDpage(id){
     const tot=t.exos.reduce((a,e)=>a+XPD[e.diff||3],0),got=t.exos.filter(e=>e.got).reduce((a,e)=>a+XPD[e.diff||3],0);
     h+='<div class="card"><div class="cardhead"><div class="lbl">Exercises</div><span class="gpill todo">'+dn+'/'+nx+'</span></div><div class="pbar" style="margin-bottom:8px"><i style="width:'+Math.round(100*dn/nx)+'%"></i></div>';
     h+='<div class="sub" style="margin:0 0 8px">Tick an exercise when it is done: you earn XP by difficulty (tap the stars to change it). '+got+' / '+tot+' XP earned.</div>';
-    h+=t.exos.map(e=>'<div class="todo tdex '+(e.done?'done':'')+'" data-a="tdEx" data-i="'+id+'|'+e.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(e.title)+'</b>'+(e.summary?'<div class="sub">'+esc(e.summary)+'</div>':'')+'</span><span class="dpill" data-a="tdDiff" data-i="'+id+'|'+e.id+'" title="Change difficulty">'+'★'.repeat(e.diff||3)+'<small>+'+(window.xpv&&!e.got?xpv(XPD[e.diff||3]):XPD[e.diff||3])+(e.got?' ✓':'')+'</small></span></div>').join('');
+    h+=t.exos.map(e=>{const st=kpStar({subj:t.subj,diff:e.diff,done:e.done,txt:(t.title||'TD')+' '+e.title+' '+(e.summary||'')});return '<div class="todo tdex '+(e.done?'done':'')+(st?' kstar':'')+'" data-a="tdEx" data-i="'+id+'|'+e.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+(st?'<span class="kst" title="Key exercise: hard, linked to your course, or on what you missed in a DS">⭐</span> ':'')+esc(e.title)+'</b>'+(e.summary?'<div class="sub">'+esc(e.summary)+'</div>':'')+'</span><span class="dpill" data-a="tdDiff" data-i="'+id+'|'+e.id+'" title="Change difficulty">'+'★'.repeat(e.diff||3)+'<small>+'+(window.xpv&&!e.got?xpv(XPD[e.diff||3]):XPD[e.diff||3])+(e.got?' ✓':'')+'</small></span></div>'}).join('');
     h+='<div class="two2" style="margin-top:10px"><input id="td-new" placeholder="Add an exercise, e.g. Exercice 7"><button class="btn sm" style="flex:none" data-a="tdAddEx" data-i="'+id+'">Add</button></div></div>';
   }
   if((t.skills||[]).length){
@@ -6915,7 +6918,7 @@ function vRec(kind,id){
 }
 
 /* ---------- v153: DS pipeline: sujet → corrigé (all lessons) → my copy reviewed before the teacher → work plan ---------- */
-const SYS_DSREV=(subj)=>"You are an experienced, exacting but kind teacher in a French classe préparatoire (first year, "+subj+"). You receive: the DS SUJET, a CORRIGÉ (official or written from the course), the student's COURSE as reference, and photos/scans of the STUDENT'S COPY written BEFORE the teacher graded it. Correct the copy like a real examiner, in French, Markdown, LaTeX between $...$ and $$...$$. Be honest: never inflate the score, never invent what is not on the copy; if a page is unreadable say so for that part. Use EXACTLY these sections, in this order:\n"+
+const SYS_DSREV=(subj)=>"You are an experienced, exacting but kind teacher in a French classe préparatoire (first year, "+subj+"). You receive: the DS SUJET, a CORRIGÉ (official or written from the course), the student's COURSE as reference, and photos/scans of the STUDENT'S COPY written BEFORE the teacher graded it. Correct the copy like a real examiner, in French, Markdown, LaTeX between $...$ and $$...$$. Be honest: never inflate the score, never invent what is not on the copy; if a page is unreadable say so for that part. GRADING IS STRICT, like a real prépa DS (class averages sit around 8 to 10/20 and a weak copy gets 2 to 6): (1) build a barème from the corrigé, question by question, then grade EACH question separately and add them up, the total must equal your grade; (2) a final result that differs from the corrigé's result is a wrong answer, give at most a few points for it and 0 if the method is also wrong; (3) a correct result with no justification gets nothing or very little; (4) no points for an idea that is only named, only for steps that are written and correct; (5) incomplete, blank or unreadable questions get 0; (6) a copy that stops early or skips exercises loses all of them; (7) when you hesitate between two marks, take the LOWER one; (8) the range must be honest (for example 3–6), never above 5 points wide, and the number you retain is in the lower half of it. Think like the examiner who has 60 copies to grade and no patience for charity. Use EXACTLY these sections, in this order:\n"+
 "## Verdict\nAn estimated grade out of 20 (give a realistic range such as 11–13 and the single number you retain), then 3 short lines: what carried the copy, what cost the most points, the one thing to change.\n"+
 "## Exercice par exercice\nFor each exercise of the sujet ('### Exercice n — title (≈ points got / max)'): **Juste** (what is correct and earns points), **Perdu** (what is missing or wrong, quoting what the student wrote and the right idea), **Rigueur** (presentation, justification, quantifiers, conclusion).\n"+
 "## Points à améliorer\nAt most 6, ranked by points to win. For each: the habit or knowledge gap, a precise fix, and where it is in the course (name the lesson or result).\n"+
@@ -6975,7 +6978,7 @@ function dsRev(kind,id){
     lab('Reading your copy…');const cp=[];(await C.filesToParts(r.copy,lab)).forEach(p=>p.blocks.forEach(b=>cp.push(b)));
     if(!cp.length)throw new C.AIError('I could not read your copy. Try sharper photos.');
     lab('Correcting like an examiner…');
-    const content=[{type:'text',text:'=== SUJET ==='}].concat(sj.slice(0,20),[{type:'text',text:'=== CORRIGÉ ==='}],corr.slice(0,20),[{type:'text',text:'=== COURSE (reference) ==='+(c.txt||'\n(none)'),cache:true},{type:'text',text:'=== STUDENT COPY (before the teacher graded it) ==='}],cp.slice(0,24),[{type:'text',text:'Subject: '+SUBJ[meta.subj].n+'. '+meta.title+'. '+(r.wrong?'Student notes: '+r.wrong+'. ':'')+(profileFor(meta.subj)||'')}]);
+    const content=[{type:'text',text:'=== SUJET ==='}].concat(sj.slice(0,20),[{type:'text',text:'=== CORRIGÉ ==='}],corr.slice(0,20),[{type:'text',text:'=== COURSE (reference) ==='+(c.txt||'\n(none)'),cache:true},{type:'text',text:'=== STUDENT COPY (before the teacher graded it) ==='}],cp.slice(0,24),[{type:'text',text:'Subject: '+SUBJ[meta.subj].n+'. '+meta.title+'.'+dsCal()+((r.grade!=null&&r.grade!=='')?' THE TEACHER ALREADY GAVE '+r.grade+'/20: your estimate must land within 1.5 points of it and you explain where the other points went.':'')+' '+(r.wrong?'Student notes: '+r.wrong+'. ':'')+(profileFor(meta.subj)||'')}]);
     const res=await C.ai({subj:meta.subj,system:SYS_DSREV(SUBJ[meta.subj].n),content,max:30000,onText:txt});
     const p=dsParse(res.text);if(p.body.length<300)throw new C.AIError('The review came out empty. Try again.');
     await C.setText('DR'+id,p.body);r.drAt=Date.now();
@@ -6983,6 +6986,7 @@ function dsRev(kind,id){
     dsPlanFrom(r,p.data);save[kind]();toast('Review ready ✓');
   });
 }
+function dsCal(){return (()=>{try{const L=Object.values(S.exams).filter(x=>x&&x.est&&x.grade!=null&&x.grade!==''&&!isNaN(+x.grade)&&!isNaN(+x.est.score));if(!L.length)return'';const d=L.reduce((a,x)=>a+(+x.est.score-+x.grade),0)/L.length;return Math.abs(d)>=1?' CALIBRATION: on '+L.length+' earlier DS, your estimates were on average '+d.toFixed(1)+' points '+(d>0?'ABOVE':'BELOW')+' the real grade. Correct for it: be '+(d>0?'much stricter':'less severe')+'.':''}catch(e){return''}})()}
 function dsTrain(kind,id){
   const meta=metaOf(kind,id),r=recOf(kind,id,meta);
   if(!r.drAt&&!(r.tags||[]).length&&!r.wrong)return toast('Run the review of your copy first (or note what went wrong)');
@@ -6993,7 +6997,8 @@ function dsTrain(kind,id){
     const rv=(await C.getText('DR'+id))||'';
     lab('Collecting your lessons…');const c=await dsCourse(meta.subj);
     const mine=S.mist.filter(m=>m.ref===kind+'|'+id||m.src===kind+'|'+id).slice(0,12).map(m=>m.text.slice(0,140));
-    const info='DS: '+meta.title+' ('+SUBJ[meta.subj].n+'). Grade: '+(r.grade==null||r.grade===''?(r.est?'≈'+r.est.score+' (estimated)':'unknown'):r.grade+'/20')+'. Where I lost points: '+((r.tags||[]).join(', ')||'-')+'. What went wrong: '+(r.wrong||'-')+'. Why: '+(r.why||'-')+'. Mistakes logged: '+(mine.join(' | ')||'-')+'. '+(profileFor(meta.subj)||'');
+    const cal=dsCal();
+    const info='DS: '+meta.title+' ('+SUBJ[meta.subj].n+').'+cal+' Grade: '+(r.grade==null||r.grade===''?(r.est?'≈'+r.est.score+' (estimated)':'unknown'):r.grade+'/20')+'. Where I lost points: '+((r.tags||[]).join(', ')||'-')+'. What went wrong: '+(r.wrong||'-')+'. Why: '+(r.why||'-')+'. Mistakes logged: '+(mine.join(' | ')||'-')+'. '+(profileFor(meta.subj)||'');
     lab('Targeting your weak points…');
     const content=[{type:'text',text:'=== SUJET ==='}].concat(sj.slice(0,16),[{type:'text',text:'=== CORRIGÉ ==='}],corr.slice(0,16),[{type:'text',text:'=== REVIEW OF HIS COPY ===\n'+(rv||'(none: rely on his notes below)').slice(0,40000)},{type:'text',text:'=== HIS COURSE ==='+(c.txt||'\n(none)'),cache:true},{type:'text',text:info}]);
     const res=await C.ai({subj:meta.subj,system:SYS_DSTRAIN(SUBJ[meta.subj].n),content,max:32000,onText:txt});
@@ -7009,7 +7014,7 @@ function dsPlan(kind,id){
   return run('DP'+id,'Building your work plan…',async(lab,txt)=>{
     const mine=S.mist.filter(m=>m.ref===kind+'|'+id||m.src===kind+'|'+id).slice(0,10).map(m=>m.text.slice(0,120));
     const rd=readiness(meta.subj,meta.date);
-    const info='DS: '+meta.title+' ('+SUBJ[meta.subj].n+', '+meta.date+'). Grade: '+(r.grade==null?'unknown':r.grade+'/20')+(r.avg?' (class '+r.avg+')':'')+'. Where I lost points: '+((r.tags||[]).join(', ')||'unknown')+'. What went wrong: '+(r.wrong||'-')+'. Why: '+(r.why||'-')+'. Mistakes: '+(mine.join(' | ')||'-')+'. '+(rd?'Readiness '+rd.pct+'%.':'')+' '+(profileFor(meta.subj)||'');
+    const info='DS: '+meta.title+' ('+SUBJ[meta.subj].n+', '+meta.date+').'+dsCal()+' Grade: '+(r.grade==null?'unknown':r.grade+'/20')+(r.avg?' (class '+r.avg+')':'')+'. Where I lost points: '+((r.tags||[]).join(', ')||'unknown')+'. What went wrong: '+(r.wrong||'-')+'. Why: '+(r.why||'-')+'. Mistakes: '+(mine.join(' | ')||'-')+'. '+(rd?'Readiness '+rd.pct+'%.':'')+' '+(profileFor(meta.subj)||'');
     const res=await C.ai({subj:meta.subj,system:SYS_DSPLAN(SUBJ[meta.subj].n),content:[{type:'text',text:info}],max:2500,onText:txt});
     const p=dsParse(res.text);dsPlanFrom(r,p.data);if(!r.plan||!r.plan.length)throw new C.AIError('No plan came back. Try again.');save[kind]();toast('Plan ready ✓');
   });
@@ -7041,6 +7046,7 @@ function dsFlow(kind,id,r,meta){
   let m='<div class="slot">'+slot('copy','Photos or PDF of my copy')+'</div>'+liveBox('DR'+id)+errBox('DR'+id);
   if(!live['DR'+id]){
     if(r.drAt){
+      if(r.est&&r.grade!=null&&r.grade!==''&&!isNaN(+r.est.score)&&Math.abs(+r.est.score-+r.grade)>=2)m+='<div class="sub" style="margin:6px 0">AI estimate was '+(+r.est.score)+'/20, real grade '+(+r.grade)+'/20. The next reviews are stricter because of it.</div>';
       if(r.est&&(r.est.exos||[]).length)m+='<div class="dsx">'+r.est.exos.map(x=>'<span class="dsx-i '+(DS_ST[x.s]||'part')+'"><b>'+esc(x.n)+'</b>'+(isNaN(x.got)?'':x.got+'/'+x.max)+'</span>').join('')+'</div>';
       m+='<div class="dsact"><button class="btn primary sm" data-pvt="DR'+id+'" data-pvn="Review · '+esc(meta.title)+'">Open the review</button><button class="btn sm" data-a="dsRev" data-i="'+k+'">Redo</button><button class="btn sm" data-a="printDsRev" data-i="'+k+'">Print</button></div><div class="sub">Includes detailed redo exercises. '+new Date(r.drAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'</div>';
     }else m+='<button class="btn primary" data-a="dsRev" data-i="'+k+'" style="margin-top:6px"'+(!(r.copy||[]).length?' disabled':'')+'>Correct my copy before the teacher</button><div class="sub" style="margin-top:6px">'+((r.copy||[]).length?'You get an estimated grade, the points to improve and detailed exercises on what you missed.'+((r.corr||[]).length||r.dcAt?'':' The corrigé is written first from your lessons.'):'Add your copy first.')+'</div>';
@@ -9276,7 +9282,7 @@ function homeIcons(){
 /* ---- Settings rows: tinted icon chips instead of emoji ---- */
 const PVIC={'pv-home':['puzzle','#a78bfa'],'pv-opal':['shield-check','#60a5fa'],'pv-app':['cellphone','#34d399'],'pv-bal':['chart-bar','#fb923c'],'pv-ck':['sleep','#818cf8'],'pv-vl':['television','#f87171'],'pv-rlx':['leaf','#4ade80'],
   'pv-notif':['bell','#fbbf24'],'pv-studio':['star-four-points','#f472b6'],'pv-wk':['calendar-star','#a78bfa'],'pv-hub':['folder-open','#38bdf8'],'pv-ai':['robot','#22d3ee'],
-  'pv-setpin':['lock','#94a3b8'],'pv-rmpin':['lock-open','#f87171'],'pv-snaps':['database','#fb923c'],'pv-export':['file-document','#34d399'],'pv-import':['file-document-edit','#60a5fa']};
+  'pv-setpin':['lock','#94a3b8'],'pv-rmpin':['lock-open','#f87171'],'pv-snaps':['database','#fb923c'],'pv-export':['file-document','#34d399'],'pv-exportf':['package-variant','#34d399'],'pv-import':['file-document-edit','#60a5fa']};
 function pvIcons(){Object.keys(PVIC).forEach(id=>{const b=document.getElementById(id);if(!b||b.querySelector('.hico'))return;const m=PVIC[id],c=hicoEl(m[0],m[1]);c.classList.add('pvi');b.classList.add('pvx');b.insertBefore(c,b.firstChild)})}
 setTimeout(pvIcons,300);setInterval(pvIcons,1500);
 
@@ -9780,11 +9786,24 @@ function kpCands(subj){
   const out=[];
   S.tds.filter(t=>t.subj===subj).forEach(t=>{
     const base=t.title||'TD';
-    if((t.exos||[]).length)t.exos.forEach(e=>out.push({k:'td|'+t.id+'|'+e.id,kind:'TD',src:base,t:e.title,s:e.summary||'',diff:e.diff,done:e.done,txt:base+' '+e.title+' '+(e.summary||''),go:['td',t.id]}));
+    if((t.exos||[]).length)t.exos.forEach(e=>out.push({subj,k:'td|'+t.id+'|'+e.id,kind:'TD',src:base,t:e.title,s:e.summary||'',diff:e.diff,done:e.done,txt:base+' '+e.title+' '+(e.summary||''),go:['td',t.id]}));
     else out.push({k:'td|'+t.id,kind:'TD',src:'',t:base,s:'Open it and tap "Read the TD" to find the right exercise',txt:base,go:['td',t.id],raw:1});
   });
-  S.exos.filter(x=>x.subj===subj&&x.status!=='done').forEach(x=>out.push({k:'ex|'+x.id,kind:'Exo',src:'',t:x.title||'Exercise',s:x.chapter||x.note||'',diff:x.diff,txt:(x.title||'')+' '+(x.chapter||'')+' '+(x.note||''),go:['exo',x.id]}));
+  S.exos.filter(x=>x.subj===subj&&x.status!=='done').forEach(x=>out.push({subj,k:'ex|'+x.id,kind:'Exo',src:'',t:x.title||'Exercise',s:x.chapter||x.note||'',diff:x.diff,txt:(x.title||'')+' '+(x.chapter||'')+' '+(x.note||''),go:['exo',x.id]}));
   return out;
+}
+/* v173: "key exercise" mark: hard, linked to several course items, or hitting what I lost points on in a DS */
+function kpStar(c){
+  try{
+    if(!c||c.done||c.raw)return 0;
+    let sc=0;const d=+c.diff||0;if(d>=4)sc+=2;if(d>=5)sc+=1;
+    const ct=kpTok(c.txt||'');let n=0;
+    Object.keys(KMI||{}).forEach(id=>{const l=S.lessons.find(x=>x.id===id);if(!l||l.subj!==c.subj)return;(KMI[id]||[]).forEach(x=>{const it=kpTok(x.t+' '+(x.full||''));let h=0;it.forEach((w,k)=>{if(ct.has(k))h++});if(h>=1)n++})});
+    sc+=Math.min(3,n);
+    let wk='';Object.values(S.exams||{}).forEach(e=>{if(e.subj===c.subj)wk+=' '+(e.wrong||'')+' '+(e.why||'')+' '+((e.todo||[]).map(t=>t.t||t).join(' '))});
+    if(wk.trim()){let h=0;kpTok(wk).forEach((w,k)=>{if(ct.has(k))h++});if(h>=2)sc+=2}
+    return sc>=3?sc:0;
+  }catch(e){return 0}
 }
 function kpFor(l,x,cands){
   const it=kpTok(x.t+' '+(x.full||'')),lt=kpTok(l.title),res=[];
@@ -9798,7 +9817,8 @@ function kpFor(l,x,cands){
 }
 function kpBtn(m){
   const c=m.c,d=c.diff?' · '+'●'.repeat(Math.min(5,c.diff))+'○'.repeat(5-Math.min(5,c.diff)):'';
-  return '<button class="kmp" data-kp="'+esc(c.k)+'"><i class="kmp-i">'+c.kind+'</i><span class="kmp-m"><b>'+esc(c.t)+'</b><small>'+(c.src?esc(c.src)+' · ':'')+(c.s?esc(c.s.slice(0,120)):'')+'</small>'+(m.hit&&m.hit.length&&!c.raw?'<small class="kmp-w">Why: '+m.hit.slice(0,3).map(w=>'«'+esc(w)+'»').join(' ')+d+'</small>':'')+'</span><span class="go">›</span></button>';
+  const star=kpStar(c);
+  return '<button class="kmp'+(star?' kstar':'')+'" data-kp="'+esc(c.k)+'"><i class="kmp-i">'+(star?'⭐ ':'')+c.kind+'</i><span class="kmp-m"><b>'+esc(c.t)+'</b><small>'+(c.src?esc(c.src)+' · ':'')+(c.s?esc(c.s.slice(0,120)):'')+'</small>'+(m.hit&&m.hit.length&&!c.raw?'<small class="kmp-w">Why: '+m.hit.slice(0,3).map(w=>'«'+esc(w)+'»').join(' ')+d+'</small>':'')+'</span><span class="go">›</span></button>';
 }
 function kpTop(l,it){
   const cands=kpCands(l.subj);if(!cands.length)return '';
@@ -13696,6 +13716,37 @@ P.boot();
     }catch(e){note('Could not export: '+e.message);}
     setTimeout(clearBusy,3000);
   });
+  /* v172: full backup = settings + texts + every uploaded file (courses, TD, DS) in one .aether container */
+  $('pv-exportf').addEventListener('click',async function(){
+    setBusy(300000);
+    try{
+      var C=window.PC,out={app:APP,version:2,exported:new Date().toISOString(),data:{}};
+      KEYS.forEach(function(k){var v=get(k);if(v!==null)out.data[k]=v;});
+      if(window.P&&P.dump){try{out.idb=await P.dump();}catch(e){}}
+      var recs=await C.dbAll('blobs'),parts=[],meta=[];
+      recs.forEach(function(r){var b=r.buf||null;if(!b&&r.blob)return;if(!b)return;meta.push({id:r.id,name:r.name,type:r.type,size:b.byteLength});parts.push(b)});
+      for(var i=0;i<recs.length;i++){var r=recs[i];if(!r.buf&&r.blob){var ab=await r.blob.arrayBuffer();meta.push({id:r.id,name:r.name,type:r.type,size:ab.byteLength});parts.push(ab)}}
+      out.blobs=meta;
+      var hb=new TextEncoder().encode(JSON.stringify(out)),pre=new Uint8Array(12);
+      pre.set(new TextEncoder().encode('AETHBK01'),0);new DataView(pre.buffer).setUint32(8,hb.length,true);
+      var blob=new Blob([pre,hb].concat(parts),{type:'application/octet-stream'}),name=APP+'-full-backup-'+new Date().toISOString().slice(0,10)+'.aether';
+      try{localStorage.setItem('lastBackup',String(Date.now()))}catch(e){}
+      var file=new File([blob],name,{type:'application/octet-stream'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        try{await navigator.share({files:[file],title:name});clearBusy();note('Full backup: '+meta.length+' files, '+Math.round(blob.size/1048576)+' MB');return;}
+        catch(e){if(e&&e.name==='AbortError'){clearBusy();return;}}
+      }
+      var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+      note('Full backup: '+meta.length+' files');
+    }catch(e){note('Could not export: '+e.message);}
+    setTimeout(clearBusy,3000);
+  });
+  async function restoreBlobs(o,replace){
+    var L=o&&o._files;if(!L||!L.length)return 0;var C=window.PC,have=new Set();
+    try{have=new Set(await C.dbKeys('blobs'))}catch(e){}
+    var n=0;for(var i=0;i<L.length;i++){var f=L[i];if(!replace&&have.has(f.id))continue;try{await C.dbPut('blobs',f);n++}catch(e){}}
+    return n;
+  }
   function mergeVal(cur,inc){
     if(Array.isArray(cur)&&Array.isArray(inc)){var ids={};cur.forEach(function(x){if(x&&x.id!=null)ids[x.id]=1});var seen=cur.map(function(x){return JSON.stringify(x)});var add=inc.filter(function(x){return x&&x.id!=null?!ids[x.id]:seen.indexOf(JSON.stringify(x))<0});return cur.concat(add)}
     if(cur&&inc&&typeof cur==='object'&&typeof inc==='object'&&!Array.isArray(cur)&&!Array.isArray(inc)){var o=Object.assign({},cur);Object.keys(inc).forEach(function(k){o[k]=(k in cur)?mergeVal(cur[k],inc[k]):inc[k]});return o}
@@ -13708,8 +13759,8 @@ P.boot();
     bx.innerHTML='<h3>Import this backup ('+when+')</h3><p>Merge adds what is missing and keeps everything you have now. Replace erases the current data first.</p><div class="row2" style="margin-top:12px"><button class="btn" data-r="0">Cancel</button><button class="btn primary" data-r="m">Merge</button></div><button class="btn danger" style="margin-top:8px;width:100%" data-r="r">Replace everything</button>';
     d.classList.add('show');
     bx.onclick=function(e){var r=e.target.closest('[data-r]');if(!r)return;d.classList.remove('show');var v=r.dataset.r;if(v==='0')return;
-      if(v==='r'){KEYS.forEach(del);Object.keys(o.data).forEach(function(k){if(KEYS.indexOf(k)>-1&&typeof o.data[k]==='string')set(k,o.data[k])});if(o.idb&&window.P&&P.load){P.load(o.idb).then(function(){location.reload()},function(){location.reload()})}else location.reload()}
-      else{var n=mergeBackupData(o.data);var fin=function(){note('Merged: '+n+' sections updated');setTimeout(function(){location.reload()},700)};if(o.idb&&window.P&&P.loadMissing)P.loadMissing(o.idb).then(fin,fin);else fin()}
+      if(v==='r'){var rbp=restoreBlobs(o,true);KEYS.forEach(del);Object.keys(o.data).forEach(function(k){if(KEYS.indexOf(k)>-1&&typeof o.data[k]==='string')set(k,o.data[k])});var rl=function(){rbp.then(function(){location.reload()},function(){location.reload()})};if(o.idb&&window.P&&P.load){P.load(o.idb).then(rl,rl)}else rl()}
+      else{var rbp=restoreBlobs(o,false);var n=mergeBackupData(o.data);var fin=function(){note('Merged: '+n+' sections updated');rbp.then(function(){setTimeout(function(){location.reload()},700)})};if(o.idb&&window.P&&P.loadMissing)P.loadMissing(o.idb).then(fin,fin);else fin()}
     };
   }
   window.importBackup=importBackup;
@@ -13727,11 +13778,19 @@ P.boot();
     var f=fileIn.files&&fileIn.files[0]; if(!f)return;
     var r=new FileReader();
     r.onload=function(){
-      var o; try{o=JSON.parse(r.result);}catch(e){ask({title:'Invalid file',msg:'This file is not a valid backup.',single:true});return;}
+      var u8=new Uint8Array(r.result),o;
+      try{
+        if(String.fromCharCode.apply(null,u8.subarray(0,8))==='AETHBK01'){
+          var hl=new DataView(r.result).getUint32(8,true);
+          o=JSON.parse(new TextDecoder().decode(u8.subarray(12,12+hl)));
+          var off=12+hl;o._files=[];
+          (o.blobs||[]).forEach(function(m){o._files.push({id:m.id,name:m.name,type:m.type,size:m.size,buf:r.result.slice(off,off+m.size)});off+=m.size});
+        }else o=JSON.parse(new TextDecoder().decode(u8));
+      }catch(e){ask({title:'Invalid file',msg:'This file is not a valid backup.',single:true});return;}
       if(!o||o.app!==APP||!o.data||typeof o.data!=='object'){ask({title:'Wrong backup',msg:'This backup is not for this app.',single:true});return;}
       importBackup(o);
     };
-    r.readAsText(f);
+    r.readAsArrayBuffer(f);
   });
 
   /* ---------- auto-lock + app-switcher privacy cover ---------- */
