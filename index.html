@@ -1688,6 +1688,7 @@ body{height:100%;overflow:hidden;margin:0;padding-bottom:0!important;min-height:
 #hhglow{border-radius:0 0 var(--scr) var(--scr)!important}
 #rbglow{border-radius:0 0 calc(var(--scr,44px) - 4px) calc(var(--scr,44px) - 4px)!important;inset:0 4px 4px 4px!important}
 body.noglow #hhglow,body.noglow #rbglow{display:none!important}
+header h1{font-size:clamp(17px,5.1vw,21px)!important;letter-spacing:.2px!important;text-overflow:clip!important}
 </style>
 </head>
 <body>
@@ -1882,7 +1883,7 @@ body.noglow #hhglow,body.noglow #rbglow{display:none!important}
 <script>
 /* v169: Settings → Screen glow On/Off */
 (function(){
- const get=()=>{try{return localStorage.getItem('glow')==='off'?'off':'on'}catch(e){return'on'}};
+ const get=()=>{try{return localStorage.getItem('glow')==='on'?'on':'off'}catch(e){return'off'}};
  const apply=()=>{document.body.classList.toggle('noglow',get()==='off');document.querySelectorAll('#pv-glow .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===get()))};
  apply();
  document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#pv-glow .chip');if(!c)return;try{localStorage.setItem('glow',c.dataset.v)}catch(_e){}apply()});
