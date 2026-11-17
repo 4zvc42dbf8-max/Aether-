@@ -87,8 +87,9 @@ input[type=date],input[type=time]{text-align:left;color-scheme:dark}
 .chip:active{transform:scale(.92)}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:rgba(255,255,255,.07);color:var(--muted)}
 .pill.xp{background:rgba(77,141,255,.12);color:var(--lime)}
-.pill.over{background:rgba(255,77,66,.14);color:#ff7a70}
-.pill.today{background:rgba(79,209,255,.14);color:var(--cyan)}
+.pill.over{background:rgba(255,159,10,.14);color:#ffb340}
+.pill.today{background:repeating-linear-gradient(45deg,rgba(255,77,66,.26) 0 4px,rgba(255,77,66,.1) 4px 8px);color:#ff7a70;border:1px solid rgba(255,77,66,.5)}
+.pill.nodate{background:transparent;color:var(--muted);border:1px dashed rgba(150,155,170,.5);opacity:.75}
 .bar{height:8px;background:var(--inset);border-radius:99px;overflow:hidden;box-shadow:0 0 0 1px var(--line) inset}
 .bar-fill{height:100%;background:linear-gradient(90deg,#2f6fe8,var(--lime));border-radius:99px;transition:width .9s var(--ease);box-shadow:0 0 14px rgba(77,141,255,.6)}
 
@@ -644,7 +645,7 @@ textarea::placeholder{color:var(--dim)}
 #printarea{display:none}
 #prv{position:fixed;inset:0;z-index:885;background:#050609;display:none;flex-direction:column}#prv.show{display:flex;animation:fadein .25s}
 #prv .vh{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;border-bottom:1px solid var(--line);background:rgba(10,11,15,.9)}
-#prv .vt{flex:1;font-weight:700;text-align:center}#prv .vb{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px}
+#prv .vt{flex:1;font-weight:700;text-align:center}#prv .pvbody{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px}
 #prv .paper{background:#fff;color:#111;border-radius:6px;padding:22px 20px;box-shadow:0 10px 30px rgba(0,0,0,.6);max-width:760px;margin:0 auto}
 #prv .paper *{color:inherit}#prv .paper h1,#prv .paper h2,#prv .paper h3{color:#111}#prv .paper h2{border-bottom:1px solid #999}#prv .paper .ex{background:#fff;border:1px solid #bbb}
 @media print{
@@ -1690,6 +1691,73 @@ body{height:100%;overflow:hidden;margin:0;padding-bottom:0!important;min-height:
 #rbglow{border-radius:0 0 calc(var(--scr,44px) - 4px) calc(var(--scr,44px) - 4px)!important;inset:0 4px 4px 4px!important}
 body.noglow #hhglow,body.noglow #rbglow{display:none!important}
 header h1{font-size:clamp(17px,5.1vw,21px)!important;letter-spacing:.2px!important;text-overflow:clip!important}
+
+/* v175: settings redesign: sticky title, equal segmented controls, two-line rows */
+.pv-box .pv-top{display:flex!important;flex-direction:row!important;text-align:left!important;position:sticky;top:-22px;z-index:5;display:flex;align-items:center;justify-content:space-between;margin:-22px -20px 6px;padding:20px 20px 12px;background:color-mix(in srgb,var(--surf) 86%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line2);border-radius:30px 30px 0 0}
+.pv-box .pv-top b{font-size:26px;letter-spacing:-.02em}
+.pv-x{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--muted);font-size:15px;font-weight:800;display:grid;place-items:center}
+.pv-x:active{transform:scale(.9)}
+.pv-box .pv-h{margin:22px 4px 8px;font-size:11.5px;letter-spacing:.14em}
+#pv-theme.thmseg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:5px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid var(--line2);margin-bottom:10px}
+#pv-theme .chip{margin:0;border-radius:13px;min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:none!important;border-color:transparent;background:transparent}
+#pv-theme .chip.on{background:var(--acc,#4b8dff);color:#fff}
+#pv-theme .chip b{font-size:15px}
+#pv-scr,#pv-glow,#pv-langhost .chips{display:grid!important;gap:6px;padding:4px;border-radius:15px;background:rgba(255,255,255,.04)}
+#pv-scr{grid-template-columns:1fr 1fr}#pv-glow{grid-template-columns:1fr 1fr}#pv-langhost .chips{grid-template-columns:1fr 1fr}
+#pv-scr .chip,#pv-glow .chip,#pv-langhost .chip{margin:0;min-height:40px;border-radius:11px;justify-content:center;text-align:center;font-size:14.5px;box-shadow:none!important;background:transparent;border-color:transparent;white-space:nowrap}
+#pv-scr .chip.on,#pv-glow .chip.on,#pv-langhost .chip.on{background:var(--acc,#4b8dff);color:#fff}
+.pv-card .pv-note{font-weight:600;color:var(--text);font-size:14px}
+.pv-g{overflow:hidden;border-radius:20px}
+.pv-g .pv-btn{position:relative;flex-wrap:wrap;column-gap:12px;row-gap:0;align-content:center;padding:11px 38px 11px 14px;min-height:58px}
+.pv-g .pv-btn::before{grid-row:span 2;flex:none}
+.pv-g .pv-btn::after{position:absolute;right:14px;top:50%;transform:translateY(-52%);margin:0!important}
+.pv-g .pv-btn small,.pv-g .pv-btn.pvx small{flex:0 0 calc(100% - 44px)!important;margin:1px 0 0 42px!important;padding:0!important;text-align:left;font-size:12.5px;line-height:1.25;order:3}
+.pv-g .pv-btn.pvx{flex-wrap:wrap!important}
+.pv-g .pv-btn:not(:has(small)){flex-wrap:nowrap}
+[data-theme="light"] .pv-x{background:rgba(20,24,40,.08)}
+[data-theme="light"] #pv-theme.thmseg,[data-theme="light"] #pv-scr,[data-theme="light"] #pv-glow,[data-theme="light"] #pv-langhost .chips{background:rgba(20,24,40,.05)}
+
+/* v177: A4 corrected copy: paper, margin line, coloured blocks, method notes in the margin */
+#prv .paper.a4p{padding:0;background:transparent;box-shadow:none;max-width:none;overflow:auto}
+.a4{box-sizing:border-box;width:210mm;min-height:297mm;margin:0 auto;background-color:#fffdf8;color:#1d2433;font-family:Georgia,"Times New Roman",serif;font-size:11.2pt;line-height:1.55;padding:15mm 64mm 16mm 26mm;position:relative;
+ background-image:linear-gradient(90deg,transparent 20.4mm,#e8707a 20.4mm,#e8707a 20.9mm,transparent 20.9mm),linear-gradient(90deg,transparent 21.8mm,#f0b4ba 21.8mm,#f0b4ba 22.1mm,transparent 22.1mm),repeating-linear-gradient(180deg,transparent 0 7.6mm,#dfe8f5 7.6mm 8mm);
+ -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.a4 *{color:inherit}
+.a4 .a4h{border-bottom:2px solid #2f5fd0;margin:0 0 6mm;padding-bottom:3mm}
+.a4 .a4h b{display:block;font-size:19pt;color:#1f3f94;letter-spacing:-.2px}.a4 .a4h span{font-size:9.5pt;color:#6b7488;font-family:-apple-system,Helvetica,Arial,sans-serif}
+.a4 h2{font-size:14.5pt;color:#fff!important;background:#2f5fd0;border-radius:3mm;padding:1.6mm 4mm;margin:8mm 0 3mm;border:0;break-after:avoid;font-family:-apple-system,Helvetica,Arial,sans-serif}
+.a4 h3{font-size:12pt;color:#1f3f94;margin:5mm 0 2mm}
+.a4 p{margin:0 0 2.6mm}
+.a4 .k-i{background:#efe8ff;border-left:1.2mm solid #7c5cff;padding:1.6mm 3mm;border-radius:0 2mm 2mm 0}
+.a4 .k-r{background:#e5f7ec;border:.35mm solid #34a56a;padding:1.8mm 3mm;border-radius:2mm;font-weight:600}
+.a4 .k-p{background:#fff1de;border-left:1.2mm solid #f08a1c;padding:1.6mm 3mm;border-radius:0 2mm 2mm 0}
+.a4 blockquote{margin:0}
+.a4 aside.mn{float:right;clear:right;width:50mm;margin:0 -58mm 2mm 0;font:600 8.4pt/1.3 -apple-system,Helvetica,Arial,sans-serif;color:#4b2fb0;background:#f1ecff;border:.3mm solid #cdbfff;border-left:1.4mm solid var(--mc,#7c5cff);border-radius:2mm;padding:1.6mm 2.4mm;position:relative}
+.a4 aside.mn b{display:block;font-size:6.8pt;letter-spacing:.8px;text-transform:uppercase;color:#7a63d6;font-weight:800}
+.a4 aside.mn small{display:block;font-weight:500;color:#6d6a86;margin-top:.6mm}
+.a4 .katex{font-size:1.04em}
+.a4 hr{border:0;border-top:.3mm dashed #b8c3da;margin:4mm 0}
+.a4 .a4f{margin-top:8mm;font:8pt -apple-system,Helvetica,Arial,sans-serif;color:#8a93a8;text-align:right}
+@media print{.a4{zoom:1!important;margin:0}@page{size:A4;margin:0}}
+.hintb{flex:none;margin-left:6px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.4);font-size:16px}.hintb:active{transform:scale(.9)}
+.hn{border-radius:16px;padding:12px 14px;margin:0 0 10px;background:rgba(255,255,255,.05);border:1px solid var(--line2)}.hn .hk{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fbbf24}.hn.lock{text-align:center}.hn .bk{display:flex;gap:10px;align-items:flex-start;margin:8px 0 0}.hn .bk i{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border-radius:7px;padding:4px 6px;background:rgba(91,155,255,.18);color:#8fb8ff;flex:none}.hn .bk b{font-size:14.5px}.hn .bk small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.4}
+
+/* v179: the map as a summary: resources per lesson, bricks as clean paper cards */
+.rcs{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.rc{font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;border:1px dashed rgba(150,155,170,.45);color:var(--muted);opacity:.7}.rc.on{border:1px solid rgba(91,155,255,.5);background:rgba(91,155,255,.12);color:#9fc2ff;opacity:1}
+.kresg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}.kres{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:14px;background:rgba(91,155,255,.1);border:1px solid rgba(91,155,255,.35);color:var(--text);font-size:13.5px;font-weight:650;text-align:left}.kres b{font-size:18px}.kres.off{background:transparent;border:1px dashed rgba(150,155,170,.4);color:var(--muted);font-weight:500}
+.kph{background:#fffdf8;color:#1d2433;border-radius:12px;padding:10px 13px 10px 16px;border-left:5px solid #4d8dff;font-family:Georgia,"Times New Roman",serif;font-size:14.5px;line-height:1.5;box-shadow:0 1px 0 rgba(0,0,0,.08),0 6px 14px -8px rgba(0,0,0,.5)}
+.kph[data-ty=df]{border-left-color:#34d399}.kph[data-ty=me]{border-left-color:#a78bfa}.kph[data-ty=th]{border-left-color:#fb923c}
+.kph *{color:inherit}.kph .kph-t{font:800 9.5px/1 -apple-system,Helvetica,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#6b7488;margin-bottom:5px}.kph p{margin:0 0 4px}.kph ol{margin:4px 0 0 18px;padding:0}
+
+/* v182: one look for add / upload / empty drop zones / file rows */
+.addf,.add{--ac:#8fb8ff}
+.addf{white-space:nowrap;flex:none;min-height:34px;justify-content:center}
+.slot .hd{gap:10px}.slot .hd .lbl{min-width:0;flex:1;line-height:1.25}
+.add{border:1.5px dashed rgba(91,155,255,.55)!important;background:rgba(91,155,255,.07)!important;color:#8fb8ff!important;min-height:52px}
+.add:active{transform:scale(.97)}
+.slot .hd+.sub,.slot>.sub:first-of-type{border:1.5px dashed rgba(150,155,170,.45);border-radius:16px;padding:14px 12px;text-align:center;background:rgba(255,255,255,.02);margin:0 0 10px;color:var(--muted)}
+.filerow{border-radius:18px}
+.slot .hd .lbl,.lsec .lbl{font-size:11.5px;letter-spacing:.14em}
 </style>
 </head>
 <body>
@@ -1710,7 +1778,7 @@ header h1{font-size:clamp(17px,5.1vw,21px)!important;letter-spacing:.2px!importa
 </div>
 <div id="pv-sheet">
   <div class="pv-box">
-    <div class="pv-top"><b>Settings</b></div>
+    <div class="pv-top"><b>Settings</b><button class="pv-x" id="pv-x" aria-label="Close">✕</button></div>
     <div class="pv-h">Appearance</div>
     <div class="thmseg" id="pv-theme"><button class="chip" data-v="light"><b>☀️</b>Light</button><button class="chip" data-v="dark"><b>🌙</b>Dark</button><button class="chip" data-v="auto"><b>◐</b>Auto</button></div>
     <div id="pv-langhost"></div>
@@ -1795,6 +1863,7 @@ header h1{font-size:clamp(17px,5.1vw,21px)!important;letter-spacing:.2px!importa
     <div class="dstrip" id="dstrip"></div>
     <div class="hint" id="cnx" style="margin:0 0 12px;display:none"></div>
     <div id="cal"></div>
+    <button class="ftask" data-flog="1" style="margin-top:12px;width:100%;justify-content:center">＋ Log a session I forgot to record</button>
   </div>
 </section>
 
@@ -1832,6 +1901,7 @@ header h1{font-size:clamp(17px,5.1vw,21px)!important;letter-spacing:.2px!importa
   <div class="modes" id="modes"></div>
   <div class="fmsg" id="fmsg"></div>
   <button class="ftask" id="ftask" data-f="task"></button>
+  <button class="ftask" id="flogm" data-flog="1" style="margin-top:8px">＋ Log a session I forgot to record</button>
   <div id="fctl"></div>
   <div class="fchips" id="fchips"></div>
   </div>
@@ -2227,7 +2297,7 @@ function backupNudge(){
   try{
     const lb=+localStorage.getItem('lastBackup')||0,nd=+localStorage.getItem('backupNudge')||0,now=Date.now();
     if(!lb){localStorage.setItem('lastBackup',String(now));return}
-    if(now-lb>7*864e5&&now-nd>864e5){localStorage.setItem('backupNudge',String(now));toast('It has been over a week since your last backup.',{label:'Back up now',fn:()=>{try{document.getElementById('pv-export').click()}catch(e){}}})}
+    if(now-(+localStorage.getItem('lastFull')||0)>7*864e5&&now-nd>864e5){localStorage.setItem('backupNudge',String(now));toast('No full backup this week (your course files are not saved yet).',{label:'Back up now',fn:()=>{try{document.getElementById('pv-exportf').click()}catch(e){}}})}
   }catch(e){}
 }
 setTimeout(backupNudge,6000);
@@ -2753,7 +2823,7 @@ function rDnav(){
 }
 function dGoDay(n){const t=iso();let d=n===0?t:shiftD(rd(),n);if(d>t)d=t;if(d<shiftD(t,-60))d=shiftD(t,-60);rvDay=d===t?null:d;rDnav();rMood();rHrs();rRev();}
 const HRS=[['s','😴','Slept'],['c','🛋️','Chilled'],['w','📚','Worked']];
-function hAuto(d){let c=null,w=null;try{const a=appDay(d);if(a.has&&(a.dist+a.vl)>0)c=(a.dist+a.vl)/60}catch(e){}return{c,w}}
+function hAuto(d){let c=null,w=null;try{const a=appDay(d);if(a.has&&(a.dist+a.vl)>0)c=(a.dist+a.vl)/60}catch(e){}try{const m=fhist.reduce((t,x)=>x&&x.min>0&&(x.ts?iso(new Date(x.ts))===d:x.date===fk(new Date(d+'T12:00:00')))?t+(+x.min):t,0);if(m>0)w=m/60}catch(e){}return{c,w}}
 const hval=(d,k)=>{const x=dayh[d];if(x&&x[k]!=null)return+x[k];return k==='s'?null:hAuto(d)[k]};
 function rHrs(){
   const d=dayh[rd()]||{},el=$('hrs');if(!el)return;
@@ -2866,7 +2936,7 @@ function sortedTasks(){
 }
 function dueBadge(t){
   if(t.rep){const s=streakOf(t);return `<span class="pill hab">↻ ${REPL[t.rep]}</span>${isDone(t)?`<span class="pill">Done · ${nextTxt(t)}</span>`:''}${s>1?`<span class="pill str">🔥 ${s}</span>`:''}`}
-  if(!t.due)return '';const td=iso();
+  if(!t.due)return '<span class="pill nodate">No date</span>';const td=iso();
   if(t.due<td)return '<span class="pill over">Overdue</span>';
   if(t.due===td)return '<span class="pill today">Today</span>';
   return '<span class="pill">'+esc(new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}))+'</span>';
@@ -3992,6 +4062,38 @@ function fLog(endMs,mins){
   fhist.push({task:tt||'Focus',min:mins,date:fk(),ts:Date.now(),mode:F.mode,early:true,cal:1,subj:fSubj(),subjs:fSubjs()});
   if(F.ref&&window.P&&P.addTime)P.addTime(F.ref,mins);
 }
+/* v175: log a focus session after the fact: goes in the calendar AND in the focus time / day review */
+function logSession(pre){
+  pre=pre||{};const LS7=[['maths','Maths'],['phys','Physique'],['chim','Chimie'],['ang','Anglais'],['si','SI'],['info','Informatique'],['philo','Philosophie']];const now=new Date(),pd=n=>String(n).padStart(2,'0');
+  let dur=pre.min||45,day=pre.date||iso(),sj=pre.subj||'',ttl=pre.title||'';
+  const ends=new Date(now.getTime()-5*60000);let st=pre.time||(pd(Math.max(0,ends.getHours()-0))+':'+pd(ends.getMinutes()));
+  { const m0=(ends.getHours()*60+ends.getMinutes())-dur;const mm=Math.max(0,m0);st=pre.time||(pd(Math.floor(mm/60))+':'+pd(mm%60)); }
+  const fm=n=>n>=60?Math.floor(n/60)+' h'+(n%60?' '+pd(n%60):''):n+' min';
+  const sjs=[['','None']].concat(LS7.map(x=>[x[0],x[1]]));
+  openSheet('<h2 class="sh">Log a session</h2><div class="sub" style="margin:0 0 12px">Forgot to start the timer? Add it: it appears in your calendar, your focus time and your day review.</div>'+
+   '<div class="field"><label>What did you work on?</label><input id="ls-t" type="text" placeholder="e.g. Suites: exercises 3 to 6" value="'+esc(ttl)+'"></div>'+
+   '<div class="field"><label>Subject</label><div class="chips" id="ls-s">'+sjs.map(x=>'<button class="chip'+(x[0]===sj?' on':'')+'" data-v="'+x[0]+'">'+esc(x[1])+'</button>').join('')+'</div></div>'+
+   '<div class="two"><div class="field" style="flex:1"><label>Day</label><input id="ls-d" type="date" value="'+day+'" max="'+iso()+'"></div><div class="field" style="flex:1"><label>Start</label><input id="ls-h" type="time" value="'+st+'"></div></div>'+
+   '<div class="field"><label>Duration</label><div style="display:flex;align-items:center;justify-content:center;gap:14px"><button class="btn" id="ls-m" style="width:54px;font-size:22px">−</button><div id="ls-v" style="font-size:26px;font-weight:800;min-width:110px;text-align:center"></div><button class="btn" id="ls-p" style="width:54px;font-size:22px">+</button></div><div class="chips" style="justify-content:center;margin-top:8px"><button class="chip" data-ld="-15">−15</button><button class="chip" data-ld="15">+15</button><button class="chip" data-ld="30">+30</button><button class="chip" data-ld="60">+1 h</button></div></div>'+
+   '<button class="btn primary" id="ls-ok" style="margin-top:6px">Add to calendar and focus time</button>');
+  const q=i=>document.getElementById(i),draw=()=>{q('ls-v').textContent=fm(dur)};draw();
+  const adj=d=>{dur=Math.max(5,Math.min(600,dur+d));draw();try{vib(6)}catch(e){}};
+  q('ls-m').onclick=()=>adj(-5);q('ls-p').onclick=()=>adj(5);
+  const B=document.getElementById('sbody');
+  B.onclick=e=>{const c=e.target.closest('#ls-s .chip');if(c){sj=c.dataset.v;[...q('ls-s').children].forEach(x=>x.classList.toggle('on',x===c));return}const d=e.target.closest('[data-ld]');if(d)adj(+d.dataset.ld)};
+  q('ls-ok').onclick=()=>{
+    const t=(q('ls-t').value||'').trim(),d=q('ls-d').value||iso(),h=q('ls-h').value||st,[hh,mi]=h.split(':').map(Number),s0=hh*60+mi;
+    let e0=s0+dur,endT=e0>=1440?'23:59':pd(Math.floor(e0/60))+':'+pd(e0%60);
+    const title=t||(sj?(LS7.find(x=>x[0]===sj)||[0,'Focus'])[1]+' · focus':'Focus session'),ts=Math.min(new Date(d+'T'+h+':00').getTime()+dur*60000,new Date(d+'T23:59:00').getTime());
+    let col=FROST;try{if(sj&&window.PW)col=PW.sc(sj)}catch(x){}
+    cal.push({id:uid(),title,date:d,time:h,endTime:endT,desc:'Focus · logged afterwards · '+dur+' min',color:col,kind:'focus',subj:sj||undefined});
+    fhist.push({task:title,min:dur,date:fk(new Date(d+'T12:00:00')),ts,mode:'normal',early:true,cal:1,subj:sj||undefined,subjs:sj?[sj]:[],man:1});
+    sv();closeSheet();try{vib(15)}catch(x){}toast('Session added · '+fm(dur));
+    try{rCal()}catch(x){}try{rStats()}catch(x){}try{rHrs()}catch(x){}try{rHomeTasks()}catch(x){}try{fRender&&fRender()}catch(x){}
+  };
+}
+window.logSession=logSession;
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-flog]');if(b){e.preventDefault();try{logSession()}catch(x){toast('Not available')}}});
 function fPauseCheck(){
   if(F.status!=='pause'||!F.pAt||Date.now()-F.pAt<=180000)return;
   const m=Math.floor((fDur()-F.rem)/60);
@@ -5815,14 +5917,15 @@ const SYS_DIGEST=(others)=>"You build a compact MEMORY NOTE of one lesson from a
 const SYS_RESUME=(what,subj)=>"You are an excellent teacher in a French classe préparatoire (first year, "+subj+"). Write the student's REVISION RÉSUMÉ for "+what+": everything he or she needs to know and be able to do to get the best possible result, built ONLY from the student's own course below (their notations and results) and, for the order and emphasis, from the PROGRAMME or the list of main lessons. Write in French, Markdown, LaTeX between $...$ and $$...$$. Dense, scannable, no filler: at most about 1400 words. Structure:\n\n## Les priorités\nThe 5 to 8 things that earn the most points (what examiners always ask), ordered by importance.\n\n## Chapitre par chapitre\nFor each chapter or lesson (as a ### heading): **À savoir par cœur** (definitions, theorems with their hypotheses, key formulas), **Méthodes types** (how to attack the standard exercises, in 2 to 4 steps), **Pièges** (classic mistakes, units, signs, conditions forgotten).\n\n## Liens entre les chapitres\nHow chapters feed each other (a few bullets).\n\n## Check-list de dernière minute\nA short list of 8 to 12 checkboxes (- [ ]) the student can tick before the test.\n\nIf a STUDENT PROFILE is given, add a short '⚠️ Mes points faibles' section at the top aiming at his or her recurring mistakes, without quoting the profile. If the PROGRAMME gives an exact list of questions de cours, the priorities and chapters must follow that list and its exercise theme, and nothing outside it. Never invent results absent from the course: if something essential is missing from the course, list it under '## À compléter' as 'rappel' with the standard statement. Do not reveal or reuse any exam or exercise sheet text. No introduction or closing sentence.";
 const SYS_VOCAB_TEXT="You read the text of a vocabulary file for a French student (for example general vocabulary, linking words such as connectors, useful expressions, word lists with or without translations). Answer with ONLY a JSON object, no other text: {\"title\":\"short title of the list\",\"langA\":\"language of the entries, e.g. French\",\"langB\":\"the other language, e.g. English\",\"pairs\":[{\"a\":\"word or expression\",\"b\":\"translation or short meaning\"}]}. Rules: extract EVERY entry in reading order and keep spelling and accents exactly; if the file already gives a translation or definition, keep it as b; if it only lists words or expressions in one language, write b yourself as the short, natural equivalent in the other language (French <-> English by default; for a connector give the connector, e.g. 'néanmoins' -> 'nevertheless / however'); if an entry has several meanings join them with ' / '; ignore page numbers, headings and decoration; skip anything unclear. Inside JSON strings escape backslashes and double quotes.";
 const METH_FMT="For EVERY method use exactly this layout (Markdown, French, LaTeX between $...$ and $$...$$):\n\n### Nom de la méthode\n**Quand l'utiliser :** the typical statements or situations where it applies (recognise it from the wording).\n**Pourquoi ça marche :** the idea in one or two sentences.\n**Rédaction :** the model write-up exactly as it should appear on a graded copy (full sentences, the standard phrases and connectors a teacher expects, every step in order: for example for a proof by induction the statement P(n), initialisation, hérédité with the hypothesis written out, conclusion). THIS IS THE MOST IMPORTANT PART: write it completely, with blanks like $\\dots$ only where the content depends on the problem.\n**Exemple :** a short concrete example, fully written up with that rédaction.\n**Piège :** the classic mistake to avoid (one line).\n\n";
-const SYS_VISUAL=(subj,title,rules,others)=>"You are the best teacher of a French classe préparatoire (first year, MPSI, "+subj+"). Write the VISUAL COURSE of the lesson '"+title+"': the most important content of the lesson, but COMPLETE enough that a student who reads only this can understand it, remember it and solve the standard exercises. It is built ONLY from the student's own lesson below (same notation, same names of theorems, same order); never use a result the lesson does not contain without marking it 'admis'. Write in French (English only for the English subject), Markdown, LaTeX between $...$ and $$...$$. Dense and scannable, never long-winded: about 1200 to 1800 words.\n\nVISUAL VOCABULARY (use exactly these, the app renders them as coloured boxes):\n- A callout is a block of lines starting with '> ' whose first line begins with a tag: '> [!DEF] Title' (definition), '> [!THM] Name' (theorem or property, with its hypotheses), '> [!METH] Name' (method in 2 to 4 numbered steps written as '1)' '2)'), '> [!TRAP] ...' (classic trap), '> [!EX] ...' (tiny example), '> [!KEY] ...' (the one thing to remember), '> [!USE] ...' (where this knowledge is used in the exercise).\n- A flow is ONE line starting with '=> ' with steps separated by ' | ' (for example '=> Énoncé | [K1] borne | [K3] encadrement | Conclusion'); the app draws it as a chain of boxes with arrows.\n- Every piece of knowledge ('brique') gets a number tag [K1], [K2], ... used everywhere it appears, so the student SEES where each one is used.\n\nDIAGRAMS (mandatory, a 'visual' course needs real drawings): in the bricks and in the fil rouge, add 4 to 8 schematics where a picture teaches more than words (a circuit with its oriented quantities, a curve with its asymptotes, a geometric figure with angles/vectors, a graph of variation, a diagram of cases, a timeline, a labelled apparatus). Write each as a fenced block ```svg containing ONE self-contained <svg viewBox=\"0 0 400 220\"> (no script, no image, no external link, no style tag): thin strokes (stroke-width 2), fill none or light, text font-size 14 with font-family sans-serif, labels short, use currentColor for lines and text and #2f6fe8 / #e07b00 / #1fa56f for emphasis, arrowheads drawn as small <path>/<polygon>. Put a one-line caption in italics under each figure. A formula in a figure is written as plain text (x, t, U, R...), never LaTeX. Check every coordinate: nothing overlaps, nothing leaves the viewBox.\n\nSTRUCTURE (exactly this, nothing else):\n# 🧭 <lesson title>\n> [!KEY] The lesson in 3 lines: what it is for, what it lets you do, the main idea.\n\n## 🗺️ La carte\nOne flow line '=> ...' showing how the bricks chain together from the data of a typical problem to the conclusion, and under it the list of all bricks: '- [K1] name: one-line purpose'.\n\n## 🧱 Les briques\nFor each brick in the order of the lesson, a '### [Kn] Name' heading, then the callouts: [!DEF] or [!THM] (the exact statement with its hypotheses), a one-line intuition ('Idée :'), for the 2 or 3 key results the shortest honest proof or the key step of it ('Preuve en 3 lignes :'), a [!METH] when the brick is a technique, a [!TRAP] when there is a classic mistake, and a [!USE] line announcing in which step of the fil rouge exercise it will be used ('Utilisé à l'étape 2 du fil rouge'). Skip anything secondary (remarks, variants) or put it in one line.\n\n## 🎯 L'exercice fil rouge\nOne typical, complete exercise of the level of the course (the kind that appears in a DS or at the colle), stated fully. Then its solution as a table '| Étape | Ce qu'on écrit ou calcule | Brique |' where every step names the brick used ([K2], [K1]...) and why it applies (check the hypotheses!). End with a flow line '=> ...' of the path followed and a [!KEY] with the general pattern to recognise this kind of exercise.\n\n## 🔗 Quelle brique pour quel exercice\nA table '| Si l'énoncé dit... | Pense à... | Brique |' with 5 to 8 rows (the signals that trigger each brick).\n\n## ✅ Auto-test\n6 short questions (one line each) covering all the bricks, then '<!--REPONSES-->' on its own line, then the answers in one line each.\n\nRULES: recompute every calculation; every brick must appear at least once in the fil rouge or in the table of signals; no introduction or closing sentence; if the lesson is too short or has no real content, say so in one line instead of inventing."+(rules&&rules.length?"\nThe student's style rules for lessons (apply them): "+rules.join('; ')+".":"")+(others?"\nOther lessons already seen by the student (you may rely on them): "+others+".":"");
+const SYS_VISUAL=(subj,title,rules,others)=>"You are the best teacher of a French classe préparatoire (first year, MPSI, "+subj+"). Write the VISUAL COURSE of the lesson '"+title+"': the WHOLE content of the lesson presented in a clearer, more visual way: COMPLETENESS IS MANDATORY. Every definition, theorem, proposition, property, formula, named result and method that the lesson states MUST appear as a brick; nothing of the lesson may be removed, merged away or reduced to 'see the lesson'. Only the wording is made clearer (examples, intuition, colours, schematics), never the content. A student who reads only this must understand it, remember it and solve the standard exercises. It is built ONLY from the student's own lesson below (same notation, same names of theorems, same order); never use a result the lesson does not contain without marking it 'admis'. Write in French (English only for the English subject), Markdown, LaTeX between $...$ and $$...$$. Dense and scannable: there is NO word limit, the length follows the lesson (typically 2500 to 5000 words for a full chapter); before finishing, go through the lesson once more line by line and check that each of its statements has its brick.\n\nVISUAL VOCABULARY (use exactly these, the app renders them as coloured boxes):\n- A callout is a block of lines starting with '> ' whose first line begins with a tag: '> [!DEF] Title' (definition), '> [!THM] Name' (theorem or property, with its hypotheses), '> [!METH] Name' (method in 2 to 4 numbered steps written as '1)' '2)'), '> [!TRAP] ...' (classic trap), '> [!EX] ...' (tiny example), '> [!KEY] ...' (the one thing to remember), '> [!USE] ...' (where this knowledge is used in the exercise).\n- A flow is ONE line starting with '=> ' with steps separated by ' | ' (for example '=> Énoncé | [K1] borne | [K3] encadrement | Conclusion'); the app draws it as a chain of boxes with arrows.\n- Every piece of knowledge ('brique') gets a number tag [K1], [K2], ... used everywhere it appears, so the student SEES where each one is used.\n\nDIAGRAMS (mandatory, a 'visual' course needs real drawings): in the bricks and in the fil rouge, add 4 to 8 schematics where a picture teaches more than words (a circuit with its oriented quantities, a curve with its asymptotes, a geometric figure with angles/vectors, a graph of variation, a diagram of cases, a timeline, a labelled apparatus). Write each as a fenced block ```svg containing ONE self-contained <svg viewBox=\"0 0 400 220\"> (no script, no image, no external link, no style tag): thin strokes (stroke-width 2), fill none or light, text font-size 14 with font-family sans-serif, labels short, use currentColor for lines and text and #2f6fe8 / #e07b00 / #1fa56f for emphasis, arrowheads drawn as small <path>/<polygon>. Put a one-line caption in italics under each figure. A formula in a figure is written as plain text (x, t, U, R...), never LaTeX. Check every coordinate: nothing overlaps, nothing leaves the viewBox.\n\nSTRUCTURE (exactly this, nothing else):\n# 🧭 <lesson title>\n> [!KEY] The lesson in 3 lines: what it is for, what it lets you do, the main idea.\n\n## 🗺️ La carte\nOne flow line '=> ...' showing how the bricks chain together from the data of a typical problem to the conclusion, and under it the list of all bricks: '- [K1] name: one-line purpose'.\n\n## 🧱 Les briques\nFor each brick in the order of the lesson, a '### [Kn] Name' heading, then the callouts: [!DEF] or [!THM] (the exact statement with its hypotheses), a one-line intuition ('Idée :'), for the 2 or 3 key results the shortest honest proof or the key step of it ('Preuve en 3 lignes :'), a [!METH] when the brick is a technique, a [!TRAP] when there is a classic mistake, and a [!USE] line announcing in which step of the fil rouge exercise it will be used ('Utilisé à l'étape 2 du fil rouge'). Remarks, variants and secondary results also get a brick, but in a single short callout.\n\n## 🎯 L'exercice fil rouge\nOne typical, complete exercise of the level of the course (the kind that appears in a DS or at the colle), stated fully. Then its solution as a table '| Étape | Ce qu'on écrit ou calcule | Brique |' where every step names the brick used ([K2], [K1]...) and why it applies (check the hypotheses!). End with a flow line '=> ...' of the path followed and a [!KEY] with the general pattern to recognise this kind of exercise.\n\n## 🔗 Quelle brique pour quel exercice\nA table '| Si l'énoncé dit... | Pense à... | Brique |' with 5 to 8 rows (the signals that trigger each brick).\n\n## ✅ Auto-test\n6 short questions (one line each) covering all the bricks, then '<!--REPONSES-->' on its own line, then the answers in one line each.\n\nRULES: recompute every calculation; every brick must appear at least once in the fil rouge or in the table of signals; no introduction or closing sentence; if the lesson is too short or has no real content, say so in one line instead of inventing."+(rules&&rules.length?"\nThe student's style rules for lessons (apply them): "+rules.join('; ')+".":"")+(others?"\nOther lessons already seen by the student (you may rely on them): "+others+".":"");
 const SYS_COMPLETE=(subj,title,rules,others)=>"You are an excellent teacher in a French classe préparatoire aux grandes écoles (first year, scientific stream, lycée Aux Lazaristes in Lyon), with a deep knowledge of the official programme and of the usual style of French prépa lessons in "+subj+". You receive a BLANK lesson (course skeleton): definitions, theorems and propositions stated WITHOUT demonstration, proof, example or comment. Complete it into the full lesson the student will revise from, in French, in Markdown with LaTeX between $...$ (inline) and $$...$$ (display).\n\nRules:\n1. Keep the lesson's structure, numbering, notations, definitions and statements exactly as given. Never reword, reorder or drop what is already there. Insert your additions right after the item they belong to.\n2. After each theorem, proposition, property or formula that has no proof, add a complete and rigorous '**Démonstration.**' written the way a prépa teacher writes it on the board, ending with ∎. If the original says the result is admitted ('admis'), do not prove it. For long or delicate proofs, give the full argument in clear numbered steps.\n3. After the key definitions and theorems, add one or two '**Exemple.**' items (short, classic, with the full computation), and '**Méthode.**' (when and how to use it, with the model write-up) wherever a standard technique exists (double inclusion, récurrence, analyse-synthèse, changement de variable, ...). Add '**Attention.**' for the classic traps and '**Remarque.**' only when it really helps.\n4. In physics and chemistry: add the derivations, the physical justification, orders of magnitude and a dimensional check. In engineering sciences: justify models and relations.\n5. Use only tools that are available at this point of the programme. You may reuse results stated earlier in this lesson. If a statement of the blank lesson looks wrong or imprecise, keep it and add '⚠️ À vérifier :' with the issue.\n6. Mark everything you add so the student sees what was blank: use the bold labels above, and nothing else. No introduction, no closing sentence.\n7. Double-check every computation and every step of every proof. Correctness matters more than length."+(others?"\n\nOther lessons of the student in the same subject (for cross-references and prerequisites only): "+others:"")+(rules&&rules.length?"\n\nTHE STUDENT'S PREFERENCES (learned from how he corrected your earlier work: always follow them, they override your habits):\n"+rules.map((r,i)=>(i+1)+'. '+r).join('\n'):"");
 const SYS_LEARN="You compare an AI-written lesson with the version the student corrected by hand. You receive the lines REMOVED by the student and the lines ADDED by the student. Deduce what he wants for next times. Answer with ONLY a JSON object, no other text: {\"rules\":[\"...\"]} with at most 6 rules. Each rule is a short imperative instruction (English, under 160 characters) for a future writer of lessons, general and reusable (notation, level of detail of proofs, way of writing a method, what to add or leave out, vocabulary, layout), never tied to one specific sentence. Ignore typo fixes and one-off content corrections unless they reveal a general habit. If nothing general can be learned, return {\"rules\":[]}.";
 const SYS_DRILL=(subj)=>"You are an experienced teacher in a French classe préparatoire (first year, "+subj+"). From the list of the student's recurring MISTAKES (what went wrong, the fix, the type of error), write a short personal drill that makes him practise exactly those weaknesses. Write in French, Markdown, LaTeX between $...$ and $$...$$. Structure: '## Entraînement' with 6 exercises of 5 to 10 minutes (2 easy, 3 medium, 1 harder), each titled 'Exercice N', with the statement, a line '**Piège visé :**' naming the mistake it targets, and a one-line '**Indication :**'. Then a line containing only <!--CORRECTIONS--> and '## Corrections' with a complete, rigorous correction of every exercise (heading '#### Exercice N'), stating the final result and the method to remember. Use only tools of the first-year programme and the student's course when it is given. Double-check every calculation. No introduction or closing sentence.";
 const SYS_METHODS=(subj,title)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). From the student's lesson '"+title+"' below, write the sheet of KEY METHODS of this chapter: every technique the student must master to solve the standard exercises and prove the standard results of this chapter (typically 6 to 14 methods, ordered as in the lesson). Include the general proof or reasoning techniques that this chapter's exercises call for (for example double inclusion, équivalence par chaînes, récurrence, raisonnement par l'absurde, contraposée, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, majoration/encadrement, changement de variable...) when they genuinely apply, marked '(méthode transversale)'. Prefer examples and notation taken from the student's lesson; otherwise use a standard example of the chapter. "+METH_FMT+"Start with a one-line '## Méthodes du chapitre : "+title+"'. Rules: stay faithful to the student's notation and to results stated in the lesson; every write-up must be mathematically/physically correct and complete; double-check each example. No introduction or closing sentence.";
+const SYS_DEFS=(subj,title)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). From the student's lesson '"+title+"' below, write the sheet DÉFINITIONS & DÉMONSTRATIONS that the student must know by heart (a colle examiner asks them first). Follow the order of the lesson and do NOT drop anything the lesson states: every definition, every theorem/proposition/property, every named result. For each item use exactly this layout:\n### [D1] Définition : name (use [T1] for théorème, [P1] proposition, [F1] formule)\n**Énoncé** : the exact statement, in the student's notation, with all hypotheses and quantifiers.\n**À retenir** : one line: what to say first / the typical trap (hypothesis often forgotten, sign, domain).\n**Démonstration** (only for results that are proved in class or are standard proofs of the programme): a complete, rigorous proof in numbered steps; name the technique used in italics at the start of each proof ('*Méthode : double inclusion*', '*Méthode : récurrence*'...). If the lesson gives no proof but a classic one exists, give it and mark '(démonstration classique)'. For plain definitions write 'Pas de démonstration.'\n**Se demande avec** : the neighbouring results this one is used with (by their [D]/[T] numbers).\nEnd with '## À savoir réciter' : a checklist of the 5 to 12 items an examiner is most likely to ask, by number. Rules: stay faithful to the lesson's notation and wording; every proof must be mathematically correct and complete; no introduction or closing sentence.";
 const SYS_METHODS_T=(subj)=>"You are a rigorous teacher in a French classe préparatoire (first year, "+subj+"). Write the sheet of CROSS-CHAPTER METHODS (méthodes transversales) of "+subj+" that a first-year student must master: "+(/math/i.test(subj)?"all the standard reasoning and proof techniques: double inclusion, équivalence (chaîne d'équivalences), implication directe / réciproque, contraposée, raisonnement par l'absurde, récurrence simple, double, forte, récurrence avec hérédité à plusieurs rangs, disjonction de cas, analyse-synthèse, condition nécessaire puis suffisante, unicité (par l'absurde ou par différence), existence (construction, théorème des valeurs intermédiaires), contre-exemple, négation de quantificateurs, majoration/minoration, encadrement, passage aux inégalités, changement de variable, intégration par parties, symétrie/parité, raisonnement par analyse des cas limites, utilisation de la conjugaison/factorisation de l'angle moitié, etc.":"the standard reasoning habits of the subject: how to set up a problem, justify results, check homogeneity and orders of magnitude, approximations, structure of a clean answer, units and significant figures, and the typical solving methods of the year")+". Order them from the most frequent to the least. "+METH_FMT+"Start with '## Méthodes transversales : "+subj+"'. Every write-up must be correct and complete. No introduction or closing sentence.";
 const SYS_TD="You read a TD sheet (travaux dirigés: a series of exercises) given by a teacher in a French classe préparatoire. Answer with ONLY a JSON object, no other text: {\"title\":\"short title, e.g. TD 4 — Suites\",\"exercises\":[{\"title\":\"short name of the exercise, e.g. Exercice 3 — Suite de Fibonacci\",\"diff\":3,\"summary\":\"one short sentence on what it asks\"}],\"skills\":[{\"title\":\"a skill or thing to know or do to be able to solve this TD\",\"detail\":\"one short sentence\"}]}. Rules: list EVERY exercise in order (maximum 40); 'diff' is an integer from 1 (direct application of the course) to 5 (hard, multi-step or non-standard) judged from the statement and any star marks, 'ex: * or **' in the sheet, which raise the difficulty; 'skills' are 5 to 10 checkable items of the form 'Savoir démontrer ...', 'Maîtriser ...', 'Connaître ...' that a student ticks to say 'I am ready for this TD'. Keep the teacher's wording and language. Inside JSON strings escape backslashes and double quotes.";
-const SYS_TDCORR=(subj)=>"You are an experienced, rigorous teacher in a French classe préparatoire (first year, "+subj+"). You are given a TD sheet (the exercises, as text or pictures) and the student's COURSE as the reference. Write the full corrigé in French, Markdown, LaTeX between $...$ and $$...$$. For each exercise, in order, use a '## Exercice n' heading (use the sheet's own numbering) then: **Idée / méthode** (one or two lines naming the method, e.g. 'récurrence double', 'double inclusion'), then the complete, rigorous solution written exactly as a student should write it on a copy (hypotheses stated, each step justified, quantifiers and conclusions explicit), then **Résultat** clearly stated and, if relevant, **Piège** (a classic mistake). Stay faithful to the notations, definitions and results of the student's course, and cite which result is used ('d'après le théorème de ... du cours'); if a needed result is not in the course, state it as 'rappel'. Double-check every calculation before writing; correctness matters more than length. If a picture or part is unreadable, say so for that exercise instead of guessing. No introduction or closing sentence.";
+const SYS_TDCORR=(subj)=>"You are an experienced, rigorous teacher in a French classe préparatoire (first year, "+subj+"). You are given a TD sheet (the exercises, as text or pictures) and the student's COURSE as the reference. Write the full corrigé in French, Markdown, LaTeX between $...$ and $$...$$. For each exercise, in order, use a '## Exercice n' heading (use the sheet's own numbering) then: **Idée / méthode** (one or two lines naming the method, e.g. 'récurrence double', 'double inclusion'), then the complete, rigorous solution written exactly as a student should write it on a copy (hypotheses stated, each step justified, quantifiers and conclusions explicit), then **Résultat** clearly stated and, if relevant, **Piège** (a classic mistake). Stay faithful to the notations, definitions and results of the student's course, and cite which result is used ('d'après le théorème de ... du cours'); if a needed result is not in the course, state it as 'rappel'. Double-check every calculation before writing; correctness matters more than length. If a picture or part is unreadable, say so for that exercise instead of guessing. METHOD TAGS: each time a solution step uses a technique of the course's key methods, put on its own line, just before that step, the tag [[M: exact method name | chapter title]] (use the names of the KEY METHODS list when it is given, otherwise name the standard technique; at most 6 tags per exercise, only where the method really drives the step). The tags become margin notes on the corrected copy. No introduction or closing sentence.";
 const SYS_AUDIT="You are a strict inspector of French classe préparatoire colle sheets. You receive the PROGRAMME (QUESTIONS DE COURS, THEME OF THE EXERCISES, EXCLUDED, CHAPTERS), optionally the student's COURSE, and a generated SHEET. Check: (1) the questions de cours are exactly the programme's list (same count, order, topic); (2) each exercise stays inside the THEME, touches none of the EXCLUDED topics and uses only tools from the listed chapters/course; (3) each exercise is realistic for a colle (about 15-20 min at the board, standard MPSI level, clearly worded); (4) each correction is mathematically correct (recompute the key steps) and consistent with the statement. Answer with ONE line of JSON only, no markdown: {\"ok\":true} or {\"ok\":false,\"issues\":[\"Exercice 3: uses ... (chapter 12 not seen)\", ...]} with at most 6 short issues in French.";
 const SYS_FORMULAIRE=(subj,n)=>"You are a first-year French classe préparatoire (MPSI) teacher making a FORMULAIRE for "+subj+": a dense, printable summary (target: "+(n||2)+" A4 pages, two columns) the student reviews the day before an exam. You receive the student's own LESSONS (transcribed). Write in French, Markdown, LaTeX between $...$ and $$...$$. Structure: one '## <chapter title>' per lesson, in the order given. Under each: short bullet lines only, no prose paragraphs, no proofs: definitions and statements of the theorems and formulas exactly as in the student's course (same notation), the conditions of validity in brackets, the 2 or 3 key methods in one line each ('Méthode :'), and the classic traps in one line ('Piège :'). Never add a result that is not in the lessons; if something important seems missing, do not invent it. Double-check every formula. No introduction or closing sentence.";
 const SYS_DEBRIEF="You turn a French prépa student's spoken or typed debrief of an oral exam (a 'colle') into clean notes. The input may be an audio recording (French or English) or text. Write in French, Markdown, concise, using exactly these sections and nothing else:\n## Ce qui a été demandé\n(bullet list: each question or exercise as the colleur asked it, with the topic)\n## Où j'ai bloqué\n(bullet list: what went wrong or hesitated, and why if the student said)\n## À retravailler\n(bullet list of concrete things to review, each tied to a chapter or skill)\n## Le colleur\n(1 to 3 lines: style, what he insisted on, how he helped or graded; write 'rien de précis' if nothing was said)\nNever invent anything that was not said. If the audio is silent or unintelligible, answer only: AUDIO_VIDE";
@@ -5927,7 +6030,7 @@ async function loadMissing(o){if(o&&Array.isArray(o.texts)){let have=new Set();t
 async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&&t.id&&typeof t.text==='string')await dbPut('texts',t)}
 
 window.PC={loadMissing,isTextual,fileText,guessType,unzip,hooks,gateOn,claudeLast,estTokens,HOUSE,subjCtx,SYS_DRILL,SYS_COMPLETE,SYS_LEARN,provs,SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
-  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_AUDIT,SYS_VISUAL,SYS_FORMULAIRE,SYS_DEBRIEF,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+  SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_AUDIT,SYS_VISUAL,SYS_FORMULAIRE,SYS_DEBRIEF,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_DEFS,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -6301,22 +6404,23 @@ async function peek(key,title){
   if(!tx){toast('Nothing to preview yet');return}
   const v=$('pview'),vb=$('pvb');rvReset(v);$('pvt').textContent=title||'Document';$('pvn').textContent='';v._t=Math.random();
   vb.innerHTML='<div class="rvmsg"><span class="spin2"></span> Opening…</div>';v.classList.add('show');v.classList.add('rvdocmode');
-  let html='';try{html=await C.mdAsync(tx)}catch(e){html='<pre style="white-space:pre-wrap">'+esc(tx)+'</pre>'}
+  let html='';try{html=await C.mdAsync(mTags(tx))}catch(e){html='<pre style="white-space:pre-wrap">'+esc(tx)+'</pre>'}
   vb.innerHTML='<div class="rvdoc paper"><div class="doc">'+html+'</div></div>';
 }
 /* Printing: the page is first shown in an in-app print view; the Print button calls window.print() straight from the tap,
    so iOS never needs any extra permission and never blocks it (a print started after a delay or an await is refused). */
-function printHtml(html){
+function printHtml(html,opt){
   $('printarea').innerHTML='<div class="doc">'+html+'</div>';
   let o=$('prv');
   if(!o){
     o=document.createElement('div');o.id='prv';
-    o.innerHTML='<div class="vh"><button class="pmini" id="prv-c" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="vt">Print preview</div><button class="btn primary sm" id="prv-p" style="margin:0;flex:none">Print / PDF</button></div><div class="vb"><div class="paper doc" id="prv-d"></div><div class="sub" style="text-align:center;padding:10px 24px 40px">Tap <b>Print / PDF</b>. To keep a PDF, choose Save to Files in the print or share menu.</div></div>';
+    o.innerHTML='<div class="vh"><button class="pmini" id="prv-c" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="vt">Print preview</div><button class="btn primary sm" id="prv-p" style="margin:0;flex:none">Print / PDF</button></div><div class="pvbody"><div class="paper doc" id="prv-d"></div><div class="sub" style="text-align:center;padding:10px 24px 40px">Tap <b>Print / PDF</b>. To keep a PDF, choose Save to Files in the print or share menu.</div></div>';
     document.body.appendChild(o);
     $('prv-c').onclick=()=>o.classList.remove('show');
     $('prv-p').onclick=()=>{try{window.print()}catch(e){toast('Printing is not available here')}};
   }
-  $('prv-d').innerHTML=html;o.classList.add('show');o.querySelector('.vb').scrollTop=0;
+  $('prv-d').innerHTML=html;o.classList.add('show');o.querySelector('.pvbody').scrollTop=0;
+  try{const pp=o.querySelector('.paper');if(pp){pp.classList.toggle('a4p',!!(opt&&opt.a4));const a=$('prv-d').querySelector('.a4');if(a){a.style.zoom=Math.min(1,(Math.min(innerWidth,520)-28)/794)}}}catch(e){}
 }
 
 /* ---------- navigation ---------- */
@@ -6412,13 +6516,76 @@ function vMeth(id){
   if(l.mt&&!live[key])h+='<div class="card"><div class="doc" id="methdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
   return h;
 }
+/* v176: methods are illustrated by exercises of the student's own TDs; lesson ↔ TD / colle / DS links */
+const lsTok=x=>{try{return kpTok(x)}catch(e){return new Map()}};
+function lessonTDs(l){
+  const lt=lsTok(l.title),out=[];
+  S.tds.filter(t=>t.subj===l.subj).forEach(t=>{
+    const ex=(t.exos||[]).map(e=>{const et=lsTok(e.title+' '+(e.summary||'')+' '+(t.title||'')),h=[...lt.keys()].filter(k=>et.has(k)).length;return{e,h}});
+    const th=lsTok(t.title||''),tl2=[...lt.keys()].filter(k=>th.has(k)).length;
+    const linked=t.lid===l.id||tl2>=1||ex.some(x=>x.h>=1);
+    if(linked)out.push({t,ex:ex.filter(x=>x.h>=1||tl2>=1||t.lid===l.id).map(x=>x.e)});
+  });
+  return out;
+}
+function methIllus(l){
+  try{
+    const L=lessonTDs(l);if(!L.length)return{rule:'',txt:''};
+    const lines=L.slice(0,6).map(x=>'TD « '+(x.t.title||'TD')+' » : '+(x.ex.length?x.ex.slice(0,14).map((e,i)=>'exo '+(i+1)+' « '+e.title+' »'+(e.summary?' — '+e.summary:'')).join(' ; '):'(exercises not read yet)')).join('\n').slice(0,9000);
+    return{rule:" ILLUSTRATION RULE: for EACH method, the example must be an exercise (or a clearly stated part of an exercise) taken from the student's TD list given after the lesson, never from outside: write 'Illustré par : TD « title », exo n' and then solve that part using the method. If no listed exercise fits a method, say 'Pas d'exo de TD pour cette méthode' and give a short standard example instead.",txt:'\n\n=== THE STUDENT\'S TD EXERCISES (use them as the examples) ===\n'+lines};
+  }catch(e){return{rule:'',txt:''}}
+}
+function lessonLinks(l){
+  const o={tds:lessonTDs(l),colles:[],exams:[],exos:[]};
+  const lt=lsTok(l.title);
+  const hit=txt=>{const m=lsTok(txt);return [...lt.keys()].filter(k=>m.has(k)).length>=1};
+  S.progs.filter(p=>p.subj===l.subj).forEach(p=>{const ch=(p.chapters||[]).filter(c=>hit((c.title||'')+' '+(c.detail||'')));if(ch.length||hit(p.title||''))o.colles.push({p,ch})});
+  Object.values(S.exams||{}).filter(r=>r.subj===l.subj&&hit((r.title||'')+' '+(r.wrong||'')+' '+(r.why||''))).forEach(r=>o.exams.push(r));
+  (S.exos||[]).filter(x=>x.subj===l.subj&&x.status!=='done'&&hit((x.title||'')+' '+(x.chapter||''))).slice(0,6).forEach(x=>o.exos.push(x));
+  return o;
+}
+function linksCard(l){
+  const o=lessonLinks(l),btn=(a,i,ic,t,sub)=>'<button class="kmp" data-a="'+a+'" data-i="'+i+'"><i class="kmp-i">'+ic+'</i><span class="kmp-m"><b>'+esc(t)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'')+'</span><span class="go">›</span></button>';
+  let h='';
+  o.tds.slice(0,5).forEach(x=>{h+=btn('goTD',x.t.id,'TD',x.t.title||'TD',x.ex.length?x.ex.length+' exercise'+(x.ex.length>1?'s':'')+' on this chapter · corrigé by the methods':'open it and read the exercises')});
+  o.colles.slice(0,4).forEach(x=>{h+=btn('goProg',x.p.id,'Colle',x.p.title||('Programme '+(x.p.date||'')),x.ch.length?x.ch.map(c=>c.title).slice(0,3).join(' · '):'this chapter is in the programme')});
+  o.exams.slice(0,3).forEach(r=>{h+=btn('goRec',r.id,'DS',r.title||'DS',(r.grade!=null&&r.grade!==''?r.grade+'/20 · ':'')+'you lost points on this chapter')});
+  o.exos.slice(0,4).forEach(x=>{h+=btn('goExo',x.id,'Exo',x.title||'Exercise',x.chapter||'')});
+  if(!h)return '<div class="card"><div class="lbl">Linked</div><div class="sub" style="margin-top:6px">No TD, colle programme or DS matches this chapter yet. Add them and they appear here.</div></div>';
+  return '<div class="card"><div class="lbl">Linked to this chapter</div><div class="sub" style="margin:4px 0 10px">TDs, colles and DS that use this lesson. Tap to jump.</div>'+h+'</div>';
+}
+function mkDD(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l)return;
+  return run('DD'+id,'Writing definitions and proofs…',async(lab,txt)=>{
+    lab('Reading the lesson…');const t=(await C.getText('LC'+id))||(await C.getText('L'+id))||'';
+    if(t.length<300)throw new C.AIError('This lesson has no text yet. Read it first.');
+    lab('Listing every definition, theorem and its proof…');
+    const r=await C.ai({subj:l.subj,system:C.SYS_DEFS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+(l.lc?' (completed version, with proofs)':'')+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
+    if(r.text.length<400)throw new C.AIError('The sheet came out empty. Try again.');
+    await C.setText('DD'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
+    l.dd=Date.now();save.lessons();toast('Definitions & proofs ready ✓');
+  });
+}
+function vDD(id){
+  const l=S.lessons.find(x=>x.id===id);if(!l){st.stack.pop();return ''}
+  const key='DD'+id;
+  let h=backBar('Definitions & proofs','<button class="pmini" data-a="printDD" data-i="'+id+'" aria-label="Print">⎙</button>');
+  h+='<div class="card"><div class="t" style="font-size:17px;font-weight:700">'+esc(l.title)+'</div><div class="sub" style="margin-top:6px">'+SUBJ[l.subj].n+' · every definition and theorem of the lesson with its exact statement, the trap, and the full proof, naming the method used.</div>';
+  if(live[key])h+=liveBox(key);
+  else{if(errs[key])h+='<div class="hidecorr" style="margin-top:10px">'+esc(errs[key])+'</div>';h+='<button class="btn '+(l.dd?'':'primary')+'" style="margin-top:12px" data-a="mkDD" data-i="'+id+'">'+(l.dd?'Redo':'Write definitions & proofs')+'</button>'}
+  h+='</div>';
+  if(l.dd&&!live[key])h+='<div class="card"><div class="doc" id="dddoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  if(l.mt)h+='<button class="btn" data-a="meth" data-i="'+id+'" style="margin-bottom:8px">📐 Methods of this chapter</button>';
+  if(l.vc)h+='<button class="btn" data-a="vc" data-i="'+id+'">🧭 Visual course</button>';
+  return h;
+}
 function mkMeth(id){
   const l=S.lessons.find(x=>x.id===id);if(!l)return;
   return run('K'+id,'Writing the key methods…',async(lab,txt)=>{
     lab('Reading the lesson…');const t=(await C.getText('L'+id))||'';
     if(t.length<300)throw new C.AIError('This lesson has no text yet. Read it first.');
     lab('Writing the methods and their write-ups…');
-    const r=await C.ai({subj:l.subj,system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
+    const r=await C.ai({subj:l.subj,system:C.SYS_METHODS(SUBJ[l.subj].n,l.title)+methIllus(l).rule,content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)+methIllus(l).txt}],max:16000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The methods came out empty. Try again.');
     await C.setText('K'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
     l.mt=Date.now();save.lessons();toast('Key methods ready ✓');
@@ -6506,11 +6673,13 @@ function vLesson(id){
     h+=tsec('Study',tiles([
       T('lc','✍️',l.lc?'Completed lesson':'Complete the lesson',l.lc?'open':'proofs · examples'),
       T('vc','🧭','Visual course',l.vc?'open':'essentials + exercise'),
+      T('dd','📜','Definitions & proofs',l.dd?'open':'by heart'),
       T('meth','📐','Key methods',l.mt?'open':'write them'),
       T('makeCards','🃏','Flashcards','from this lesson'),
       T('printLesson','🖨','Typed PDF','clean copy'),T('mbOpen','📓','Mistakes',(()=>{const n=S.mist.filter(m=>!m.done&&m.lid===id).length;return n?n+' open':'none yet'})(),'wide',l.subj+'|'+id)]));
   }
   h+='</div>';
+  if(done)h+=linksCard(l);
   if(done)h+=fold('Source & text',filesBlock+tiles([T('transcribeAI','🔄',l.how==='text'?'Re-read with AI':'Read again','better formulas'),T('editText','✎','Fix by hand','edit the text'),T('upText','⬆','Upload read file','replace the text','wide')])+'<div class="doc" id="ltext" style="margin-top:12px"><div class="shimmer" style="height:120px;border-radius:14px"></div></div>',(l.files||[]).length+' file'+((l.files||[]).length===1?'':'s'));
   return h;
 }
@@ -6793,7 +6962,7 @@ function vTDpage(id){
     const tot=t.exos.reduce((a,e)=>a+XPD[e.diff||3],0),got=t.exos.filter(e=>e.got).reduce((a,e)=>a+XPD[e.diff||3],0);
     h+='<div class="card"><div class="cardhead"><div class="lbl">Exercises</div><span class="gpill todo">'+dn+'/'+nx+'</span></div><div class="pbar" style="margin-bottom:8px"><i style="width:'+Math.round(100*dn/nx)+'%"></i></div>';
     h+='<div class="sub" style="margin:0 0 8px">Tick an exercise when it is done: you earn XP by difficulty (tap the stars to change it). '+got+' / '+tot+' XP earned.</div>';
-    h+=t.exos.map(e=>{const st=kpStar({subj:t.subj,diff:e.diff,done:e.done,txt:(t.title||'TD')+' '+e.title+' '+(e.summary||'')});return '<div class="todo tdex '+(e.done?'done':'')+(st?' kstar':'')+'" data-a="tdEx" data-i="'+id+'|'+e.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+(st?'<span class="kst" title="Key exercise: hard, linked to your course, or on what you missed in a DS">⭐</span> ':'')+esc(e.title)+'</b>'+(e.summary?'<div class="sub">'+esc(e.summary)+'</div>':'')+'</span><span class="dpill" data-a="tdDiff" data-i="'+id+'|'+e.id+'" title="Change difficulty">'+'★'.repeat(e.diff||3)+'<small>+'+(window.xpv&&!e.got?xpv(XPD[e.diff||3]):XPD[e.diff||3])+(e.got?' ✓':'')+'</small></span></div>'}).join('');
+    h+=t.exos.map(e=>{const st=kpStar({subj:t.subj,diff:e.diff,done:e.done,txt:(t.title||'TD')+' '+e.title+' '+(e.summary||'')});return '<div class="todo tdex '+(e.done?'done':'')+(st?' kstar':'')+'" data-a="tdEx" data-i="'+id+'|'+e.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+(st?'<span class="kst" title="Key exercise: it trains course items you do not master yet, comes back in your colle programmes or DS, or is hard">⭐</span> ':'')+esc(e.title)+'</b>'+(e.summary?'<div class="sub">'+esc(e.summary)+'</div>':'')+'</span><span class="dpill" data-a="tdDiff" data-i="'+id+'|'+e.id+'" title="Change difficulty">'+'★'.repeat(e.diff||3)+'<small>+'+(window.xpv&&!e.got?xpv(XPD[e.diff||3]):XPD[e.diff||3])+(e.got?' ✓':'')+'</small></span><span class="hintb" data-a="tdHint" data-i="'+id+'|'+e.id+'" title="Hint from your course" aria-label="Hint">💡</span></div>'}).join('');
     h+='<div class="two2" style="margin-top:10px"><input id="td-new" placeholder="Add an exercise, e.g. Exercice 7"><button class="btn sm" style="flex:none" data-a="tdAddEx" data-i="'+id+'">Add</button></div></div>';
   }
   if((t.skills||[]).length){
@@ -6837,6 +7006,25 @@ function tdRead(id){
     save.tds();toast(t.exos.length+' exercises found ✓');
   });
 }
+async function tdMethodNames(subj,used){
+  try{
+    const u=new Set((used||[]).map(x=>String(x).replace(/ \(note\)$/,'')));let out='';
+    for(const l of S.lessons.filter(x=>x.subj===subj&&x.mt&&u.has(x.title))){
+      const k=(await C.getText('K'+l.id))||'';const names=k.split('\n').filter(r=>/^###\s/.test(r)).map(r=>r.replace(/^###\s*/,'').trim()).slice(0,16);
+      if(names.length)out+='\nChapter « '+l.title+' » : '+names.join(' ; ');
+    }
+    return out?'KEY METHODS OF THE COURSE (use these exact names in the [[M: ...]] tags):'+out:'(no key-methods sheet written yet: name the standard techniques)';
+  }catch(e){return ''}
+}
+function a4Html(md,title,sub){
+  const hues=['#7c5cff','#2f9e6b','#e07a1f','#d9467a','#2f7fd0','#b08a00'];const hc={};let hi=0;
+  let src=String(md||'').replace(/\[\[M:\s*([^|\]]+?)\s*(?:\|\s*([^\]]*?)\s*)?\]\]/g,(m,a,b)=>'\n\n@@M|'+a.replace(/\|/g,'/')+'|'+(b||'').replace(/\|/g,'/')+'@@\n\n');
+  let h=C.md(src);
+  h=h.replace(/<p>\s*@@M\|([^|]*)\|([^@]*)@@\s*<\/p>/g,(m,a,b)=>{const k=a.toLowerCase();if(!hc[k])hc[k]=hues[hi++%hues.length];return '<aside class="mn" style="--mc:'+hc[k]+'"><b>Méthode</b>'+a+(b?'<small>fiche « '+b+' »</small>':'')+'</aside>'});
+  h=h.replace(/<p>(\s*<(?:strong|b)>\s*Id[ée]e)/g,'<p class="k-i">$1').replace(/<p>(\s*<(?:strong|b)>\s*R[ée]sultat)/g,'<p class="k-r">$1').replace(/<p>(\s*<(?:strong|b)>\s*Pi[èe]ge)/g,'<p class="k-p">$1');
+  return '<div class="a4"><div class="a4h"><b>'+esc(title||'Corrigé')+'</b><span>'+esc(sub||'')+'</span></div>'+h+'<div class="a4f">Aether · corrected copy</div></div>';
+}
+const mTags=tx=>String(tx||'').replace(/\[\[M:\s*([^|\]]+?)\s*(?:\|\s*([^\]]*?)\s*)?\]\]/g,(m,a,b)=>'\n> 🏷 **Méthode :** '+a+(b?' *(fiche « '+b+' »)*':'')+'\n');
 function mkTdCo(id){
   const t=S.tds.find(x=>x.id===id);if(!t)return;
   return run('TCO'+id,'Writing the corrigé…',async(lab,txt)=>{
@@ -6845,7 +7033,7 @@ function mkTdCo(id){
     const fake={subj:t.subj,chapters:[{title:t.title||'',detail:(t.exos||[]).map(e=>e.title+' '+e.summary).join(' ')+' '+(t.skills||[]).map(c=>c.title).join(' ')}]};
     const c=await courseFor(fake);
     lab('Writing the corrections…');
-    const r=await C.ai({subj:t.subj,system:C.SYS_TDCORR(SUBJ[t.subj].n),content:src.slice(0,24).concat([{type:'text',text:'STUDENT COURSE:'+(c.txt||'\n(No lesson of this subject was read: use the standard French prépa programme and say so in one short note at the top.)'),cache:true},{type:'text',text:profileFor(t.subj)||'(no profile yet)'}]),max:30000,onText:txt});
+    const r=await C.ai({subj:t.subj,system:C.SYS_TDCORR(SUBJ[t.subj].n),content:src.slice(0,24).concat([{type:'text',text:await tdMethodNames(t.subj,c.used)},{type:'text',text:'STUDENT COURSE:'+(c.txt||'\n(No lesson of this subject was read: use the standard French prépa programme and say so in one short note at the top.)'),cache:true},{type:'text',text:profileFor(t.subj)||'(no profile yet)'}]),max:30000,onText:txt});
     if(r.text.length<300)throw new C.AIError('The corrigé came out empty. Try again.');
     await C.setText('TC'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[The corrigé was cut: write a new one, or split the TD in two files.]*':''));
     t.coAt=Date.now();t.coNote=c.used.length?'from '+c.used.length+' of your lessons':'no lesson used';save.tds();toast('Corrigé ready ✓');
@@ -6925,7 +7113,7 @@ const SYS_DSREV=(subj)=>"You are an experienced, exacting but kind teacher in a 
 "## Exercices détaillés\nFor EACH exercise or question that was missed or only partly done: **Ce qui a bloqué** (diagnosis in one or two sentences), **Reprise pas à pas** (the complete, rigorous solution of the part that failed, written as it should appear on a copy, every step justified and with the reason WHY each step is made), **À retenir** (the method in one line), then **À refaire seul** (a NEW similar exercise built on the same idea, with a short expected answer in italics at the end). Keep the student's notations from the course.\n"+
 "## Plan de travail\nA concrete plan for the next 7 days, small steps with minutes, tied to the failures above and to the course (e.g. 'Mardi · 40 min · refaire l'exercice 2 sans regarder'). Realistic for a student who also has lessons and colles.\n"+
 "Finish with one HTML comment holding ONLY valid JSON, nothing after it: <!--DATA {\"est\":{\"score\":12,\"low\":11,\"high\":13,\"exos\":[{\"n\":\"1\",\"t\":\"short title\",\"got\":3,\"max\":6,\"s\":\"ok|part|miss\"}]},\"plan\":[{\"t\":\"task text\",\"min\":40,\"d\":1}]} --> where d is the day offset from tomorrow (0 = tomorrow, max 6), 4 to 9 plan items. No other text after the comment.";
-const SYS_DSPLAN=(subj)=>"You are a prépa coach ("+subj+"). From the DS data given (grade, notes, tags, mistakes, readiness), write a realistic 7-day work plan in French, then finish with ONE HTML comment holding ONLY valid JSON: <!--DATA {\"plan\":[{\"t\":\"task text\",\"min\":40,\"d\":0}]} --> (d = day offset from tomorrow, 0 to 6, 4 to 8 items, each a concrete action of 20 to 60 minutes). Before the comment write at most 8 short lines.";
+const SYS_DSPLAN=(subj)=>"You are a prépa coach ("+subj+"). From the DS data given (grade, notes, tags, mistakes, readiness, and the lists WEAK SKILLS and EXERCISES AVAILABLE), write a realistic 7-day work plan in French, then finish with ONE HTML comment holding ONLY valid JSON: <!--DATA {\"plan\":[{\"t\":\"task text\",\"min\":40,\"d\":0}]} --> (d = day offset from tomorrow, 0 to 6, 4 to 8 items, each a concrete action of 20 to 60 minutes). NO generic advice: never write 'revise the course', 'do exercises' or 'review your mistakes' alone. Every item must name a precise skill of the WEAK SKILLS list (its exact name and chapter) and, when the list EXERCISES AVAILABLE has one for it, the exact exercise (TD or library title); the action must be specific ('Relearn and prove « ... » without notes, then do TD « ... » exo 3 timed'). If a lost point has no matching skill, name the exact technique in play. Before the comment write at most 8 short lines, each naming a skill.";
 const SYS_DSTRAIN=(subj)=>"You are an exacting, kind prépa teacher ("+subj+") building a PERSONAL training pack for ONE student after a DS, written in French (maths in LaTeX with $…$). You get the sujet, the corrigé, the review of his copy (where he lost points and why), his mistakes and his course. Find his 3 to 5 REAL weak points (the ones that cost him the most points, ordered by cost) and for EACH write exactly: '### Point faible N : title' then '**Ce qui s'est passé**' (2 lines, concrete, quoting the exercise and question), '**À (re)lire**' (the exact lessons by title from his course and the precise statements, definitions, theorems or formulas to relearn, written out in full, with the page or section if known), '**La méthode**' (numbered steps he applies every time, then the 2 or 3 traps that caught him), '**S'entraîner**' (three exercises of increasing difficulty: 1 échauffement, 2 type DS built on the one he missed, 3 variante plus dure; full statements, with the expected duration), then '**Correction détaillée**' (every exercise solved line by line, each step justified, exam style). Never invent a theorem. Do not repeat the whole corrigé. Finish with '### Ordre de travail' (5 lines max) and then ONE HTML comment holding ONLY valid JSON: <!--DATA {\"plan\":[{\"t\":\"Relire X puis refaire l'exercice 2 du point 1\",\"min\":45,\"d\":0}]} --> (d = day offset from tomorrow, 0 to 6, 4 to 8 concrete items of 20 to 60 minutes, covering reading, method and exercises).";
 async function dsCourse(subj){
   const ls=S.lessons.filter(l=>l.subj===subj&&l.status==='done');
@@ -7009,13 +7197,35 @@ function dsTrain(kind,id){
     save[kind]();toast('Training pack ready ✓');
   });
 }
+async function dsWeak(kind,id){
+  const meta=metaOf(kind,id),r=recOf(kind,id,meta);
+  const mine=S.mist.filter(m=>m.ref===kind+'|'+id||m.src===kind+'|'+id).map(m=>m.text||'').join(' ');
+  const wk=[(r.tags||[]).join(' '),r.wrong||'',r.why||'',mine,(r.todo||[]).map(t=>t.t||t).join(' '),(r.est&&r.est.exos||[]).map(e=>(e.title||'')+' '+(e.lost||e.note||'')).join(' ')].join(' ');
+  const wt=kpTok(wk),cands=kpCands(meta.subj),out=[];
+  for(const l of S.lessons.filter(x=>x.subj===meta.subj&&x.status==='done')){
+    let it=KMI[l.id];if(!it){try{it=KMI[l.id]=await kmGet(l.id)}catch(e){it=[]}}
+    const lt=kpTok(l.title);let lh=0;lt.forEach((w,k)=>{if(wt.has(k))lh++});
+    it.forEach(x=>{const xt=kpTok(x.t+' '+(x.full||''));const hit=[];xt.forEach((w,k)=>{if(wt.has(k))hit.push(w)});const lv=kmLv(l.id+'|'+x.k);
+      if(hit.length>=1&&(hit.length>=2||lh>=1)&&lv<4)out.push({l,x,hit,lv,sc:hit.length*2+lh*1.2+(3-Math.min(3,lv))*.8})});
+  }
+  out.sort((a,b)=>b.sc-a.sc);const top=out.slice(0,6);
+  top.forEach(o=>{o.ex=kpFor(o.l,o.x,cands)});
+  return{meta,r,top,wk};
+}
+async function dsFocusInfo(kind,id){
+  try{const w=await dsWeak(kind,id);
+    const sk=w.top.map(o=>'- « '+o.x.t+' » (chapter « '+o.l.title+' », level '+o.lv+'/4)').join('\n');
+    const ex=[...new Map(w.top.flatMap(o=>o.ex.map(m=>m.c)).map(c=>[c.k,c])).values()].slice(0,10).map(c=>'- '+c.kind+' « '+c.t+' »'+(c.src?' ('+c.src+')':'')).join('\n');
+    return (sk?'\nWEAK SKILLS:\n'+sk:'\nWEAK SKILLS: (none matched, name the exact techniques)')+(ex?'\nEXERCISES AVAILABLE:\n'+ex:'');
+  }catch(e){return ''}
+}
 function dsPlan(kind,id){
   const meta=metaOf(kind,id),r=recOf(kind,id,meta);
   return run('DP'+id,'Building your work plan…',async(lab,txt)=>{
     const mine=S.mist.filter(m=>m.ref===kind+'|'+id||m.src===kind+'|'+id).slice(0,10).map(m=>m.text.slice(0,120));
     const rd=readiness(meta.subj,meta.date);
     const info='DS: '+meta.title+' ('+SUBJ[meta.subj].n+', '+meta.date+').'+dsCal()+' Grade: '+(r.grade==null?'unknown':r.grade+'/20')+(r.avg?' (class '+r.avg+')':'')+'. Where I lost points: '+((r.tags||[]).join(', ')||'unknown')+'. What went wrong: '+(r.wrong||'-')+'. Why: '+(r.why||'-')+'. Mistakes: '+(mine.join(' | ')||'-')+'. '+(rd?'Readiness '+rd.pct+'%.':'')+' '+(profileFor(meta.subj)||'');
-    const res=await C.ai({subj:meta.subj,system:SYS_DSPLAN(SUBJ[meta.subj].n),content:[{type:'text',text:info}],max:2500,onText:txt});
+    const res=await C.ai({subj:meta.subj,system:SYS_DSPLAN(SUBJ[meta.subj].n),content:[{type:'text',text:info+await dsFocusInfo(kind,id)}],max:2500,onText:txt});
     const p=dsParse(res.text);dsPlanFrom(r,p.data);if(!r.plan||!r.plan.length)throw new C.AIError('No plan came back. Try again.');save[kind]();toast('Plan ready ✓');
   });
 }
@@ -7068,6 +7278,7 @@ function dsFlow(kind,id,r,meta){
     const dn=pl.filter(x=>x.done).length;
     p+='<div class="pbar" style="margin:2px 0 10px"><i style="width:'+Math.round(100*dn/pl.length)+'%"></i></div>'+pl.map(x=>'<div class="todo '+(x.done?'done':'')+'" data-a="dsTick" data-i="'+k+'|'+x.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(x.t)+'</b><div class="sub">'+dsDay(x.d)+' · '+x.min+' min'+(x.added?' · in tasks':'')+'</div></span></div>').join('')+'<div class="dsact"><button class="btn primary sm" data-a="dsAdd" data-i="'+k+'">Add to my tasks</button>'+(live['DP'+id]?'':'<button class="btn sm" data-a="dsPlan" data-i="'+k+'">New plan</button>')+'</div>';
   }else if(!live['DP'+id])p+='<div class="sub" style="margin-bottom:8px">'+(r.drAt?'':'The plan comes with the review of your copy. ')+'You can also build one from your grade and notes.</div><button class="btn '+(r.drAt?'':'primary')+'" data-a="dsPlan" data-i="'+k+'">Build my plan from my notes</button>';
+  h+='<button class="btn" data-a="dsSkills" data-i="'+k+'|'+id+'" style="margin:0 0 10px">🎯 What to rework: my weak skills, exos and lessons</button>';
   h+=step(5,'Work plan after this DS',pl.length>0&&pl.every(x=>x.done),p,pl.length?pl.filter(x=>x.done).length+'/'+pl.length:'');
   return h+'</div>';
 }
@@ -7093,7 +7304,7 @@ function vProg(id){
   if(p.chapters&&p.chapters.length){
     const n=p.chapters.filter(c=>c.ready).length;
     h+='<div class="card"><div class="cardhead"><div class="lbl">Am I ready?</div><span class="gpill todo">'+n+'/'+p.chapters.length+'</span></div><div class="pbar" style="margin-bottom:8px"><i style="width:'+Math.round(100*n/p.chapters.length)+'%"></i></div>';
-    h+=p.chapters.map(c=>'<div class="todo '+(c.ready?'done':'')+'" data-a="ready" data-i="'+id+'|'+c.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(c.title)+'</b>'+(c.detail?'<div class="sub">'+esc(c.detail)+'</div>':'')+'</span></div>').join('');
+    h+=p.chapters.map(c=>'<div class="todo '+(c.ready?'done':'')+'" data-a="ready" data-i="'+id+'|'+c.id+'"><span class="cb">'+ico.ck+'</span><span class="tx"><b>'+esc(c.title)+'</b>'+(c.detail?'<div class="sub">'+esc(c.detail)+'</div>':'')+'</span><span class="hintb" style="background:rgba(91,155,255,.14);border-color:rgba(91,155,255,.45)" data-a="chTrain" data-i="'+id+'|'+c.id+'" aria-label="Train on this chapter">🏋</span></div>').join('');
     if(p.remarks)h+='<div class="sub" style="margin-top:8px">Note from the teacher: '+esc(p.remarks)+'</div>';
     h+='</div>';
     h+=linkedCard(cal.filter(c=>c.kind==='colle'&&c.subj===p.subj&&c.date===p.date).map(c=>c.id));
@@ -7190,7 +7401,7 @@ function render(kind){
   let h='';
   if(top){
     const v=top.v;
-    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='vc'?vVC(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):v==='exo'?PE.page(top.id):v==='exsol'?PE.sol(top.id):v==='tp'?PTP.page(top.id):'';
+    h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='vc'?vVC(top.id):v==='dd'?vDD(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):v==='exo'?PE.page(top.id):v==='exsol'?PE.sol(top.id):v==='tp'?PTP.page(top.id):'';
   }else h=st.tab==='home'?vOver():st.tab==='map'?vMap():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='tests'?vTests():st.tab==='colles'?vColles():st.tab==='work'?vWork():st.tab==='tp'?PTP.list():st.tab==='grades'?vGrades():st.tab==='boards'?vBoards():st.tab==='py'?vPy():st.tab==='lcs'||st.tab==='vcs'||st.tab==='mths'?vCat(st.tab):st.tab==='mists'?vMistCat():st.tab==='teach'?PTC.list():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
@@ -7211,11 +7422,12 @@ async function post(top){
     if(top&&top.v==='sheet'){const p=S.progs.find(x=>x.id===top.id),tx=(await C.getText('S'+top.id))||'',sp=splitSheet(tx);into('sheetdoc',st.seg==='co'?(sp.co||'*No corrections found.*'):sp.ex)}
     if(top&&top.v==='vc'){const tx=(await C.getText('VC'+top.id))||'',[a,b]=tx.split('<!--REPONSES-->');if(!tx)into('vcdoc','*Nothing yet.*');else{await C.loadKatex();const html=C.md(a)+(b?'<details class="afold"><summary>Answers</summary>'+C.md(b)+'</details>':'');if(t===rtok&&$('vcdoc'))$('vcdoc').innerHTML=html}}
     if(top&&top.v==='lc'){const tx=(await C.getText('LC'+top.id))||'';if($('lcdoc'))into('lcdoc',tx||'*Nothing yet.*')}
+    if(top&&top.v==='dd'){const tx=(await C.getText('DD'+top.id))||'';if($('dddoc')){await C.loadKatex();into('dddoc',tx||'*Nothing yet.*')}}
     if(top&&top.v==='meth'){const tx=(await C.getText('K'+top.id))||'';if($('methdoc'))into('methdoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mbook'){const tx=await mbookText(top.id);if($('mbookdoc'))into('mbookdoc',tx||'*Nothing yet.*')}
     if(top&&(top.v==='exo'||top.v==='exsol'))await PE.after(top,into);
   if(top&&top.v==='tp')PTP.after(top);
-    if(top&&top.v==='tdco'){const tx=(await C.getText('TC'+top.id))||'';if($('tcdoc'))into('tcdoc',tx||'*Nothing yet.*')}
+    if(top&&top.v==='tdco'){const tx=(await C.getText('TC'+top.id))||'';if($('tcdoc'))into('tcdoc',mTags(tx)||'*Nothing yet.*')}
     if(top&&top.v==='fiche'){const tx=(await C.getText('F'+top.id.split('|')[1]))||'';if($('fichedoc'))into('fichedoc',tx||'*Nothing yet.*')}
     if(top&&top.v==='mock'){const tx=(await C.getText('M'+top.id))||'',sp=splitSheet(tx);if($('mockdoc'))into('mockdoc',st.seg==='co'?(sp.co||'*No corrigé found.*'):sp.ex)}
     if(top&&top.v==='rec'){const[k,id]=top.id.split('|'),r=S[k][id];if(r&&r.fb)into('fbtext',r.fb)}
@@ -7553,21 +7765,42 @@ A.feedback=i=>{
 A.dsCo=i=>{if(needKey()){const[k,id]=i.split('|');dsMk(k,id)}};
 A.dsRev=i=>{if(needKey()){const[k,id]=i.split('|');dsRev(k,id)}};
 A.dsPlan=i=>{if(needKey()){const[k,id]=i.split('|');dsPlan(k,id)}};
+A.dsSkills=async i=>{
+  const[k,id]=i.split('|');const w=await dsWeak(k,id);
+  const TY={df:'Definition',th:'Theorem',me:'Method'};
+  let h='<h2 class="sh">🎯 What to rework</h2><div class="sub" style="margin:0 0 12px">'+esc(w.meta.title)+' · matched from where you lost points, your notes and your mistakes, against your own course.</div>';
+  if(!w.top.length)h+='<div class="hn"><div class="sub">I cannot match your notes to named course items yet. Fill in "where I lost points" (tags and what went wrong), and run "Analyser ce cours avec l\'IA" on the chapters so items have exact names.</div></div>';
+  w.top.forEach((o,q)=>{
+    h+='<div class="hn"><div class="hk">'+(q+1)+' · '+(TY[o.x.ty]||'Skill')+' · '+esc(o.l.title)+'</div><div class="kph" data-ty="'+o.x.ty+'" style="margin-top:8px"><div class="kmd" data-md="'+encodeURIComponent('**'+o.x.t.replace(/\*/g,'')+'**'+(o.x.full&&o.x.full!==o.x.t?'\n\n'+o.x.full.slice(0,300):''))+'"></div></div>'+
+     '<div class="sub" style="margin:6px 2px">Level '+o.lv+'/4 · linked to: '+o.hit.slice(0,3).map(x=>'«'+esc(x)+'»').join(' ')+'</div>'+
+     o.ex.map(m=>kpBtn(m)).join('')+
+     '<div class="chips" style="gap:6px"><button class="chip" data-dl="'+o.l.id+'">Open the lesson</button>'+(o.l.dd?'<button class="chip" data-dd="'+o.l.id+'">📜 Proofs</button>':'')+(o.l.mt?'<button class="chip" data-dm="'+o.l.id+'">📐 Methods</button>':'')+'<button class="chip" data-dc="'+o.l.id+'|'+o.x.k+'">🃏 Make a card</button></div></div>';
+  });
+  openSheet(h);
+  C.loadKatex().then(()=>{document.querySelectorAll('#sbody .kmd').forEach(e=>{try{e.innerHTML=C.md(decodeURIComponent(e.dataset.md))}catch(x){}})}).catch(()=>{});
+  document.getElementById('sbody').onclick=ev=>{
+    const kp=ev.target.closest('[data-kp]');if(kp){const c=kpCands(w.meta.subj).find(y=>y.k===kp.dataset.kp);if(c){closeSheet();toast(c.kind+': '+c.t.slice(0,48));go(c.go[0],c.go[1])}return}
+    const a=ev.target.closest('[data-dl]');if(a){closeSheet();st.tab='lessons';go('lesson',a.dataset.dl);return}
+    const b=ev.target.closest('[data-dd]');if(b){closeSheet();go('dd',b.dataset.dd);return}
+    const m=ev.target.closest('[data-dm]');if(m){closeSheet();go('meth',m.dataset.dm);return}
+    const c=ev.target.closest('[data-dc]');if(c){const[lid,key]=c.dataset.dc.split('|');const o=w.top.find(z=>z.l.id===lid&&z.x.k===key);if(o){const x=o.x;S.cards.push({id:uid(),lid:lid,subj:o.l.subj,q:x.ai?x.t:(x.t.replace(/^[^:.–-]*[:.–-]\s*/,'')||x.t),a:x.full,box:0,due:iso()});save.cards();toast('Card added')}}
+  };
+};
 A.dsTrain=i=>{if(needKey()){const[k,id]=i.split('|');dsTrain(k,id)}};
 A.dsXAdd=i=>{
   const[k,id]=i.split('|'),r=S[k][id];if(!r||!(r.dxItems||[]).length)return;let n=0;
   r.dxItems.filter(p=>!p.added&&!p.done).forEach(p=>{const d=new Date();d.setDate(d.getDate()+1+p.d);tasks.push({id:uid(),text:'['+SUBJ[r.subj].n+'] '+p.t+' ('+p.min+' min)',xp:25,due:iso(d)});p.added=true;n++});
   sv();save[k]();toast(n?n+' task'+(n>1?'s':'')+' added to your week':'Already in your tasks');render('card');
 };
-A.printDsTrain=async i=>{const[k,id]=i.split('|'),meta=metaOf(k,id);await C.loadKatex();printHtml('<h1>Training — '+esc(meta.title)+'</h1>'+C.md((await C.getText('DX'+id))||''))};
+A.printDsTrain=async i=>{const[k,id]=i.split('|'),meta=metaOf(k,id);await C.loadKatex();printHtml(a4Html((await C.getText('DX'+id))||'','Training · '+meta.title,SUBJ[meta.subj].n+' · targeted on my weak points'),{a4:1})};
 A.dsTick=i=>{const[k,id,pid]=i.split('|'),r=S[k][id],p=r&&(r.plan||[]).find(x=>x.id===pid);if(p){p.done=!p.done;save[k]();render('card')}};
 A.dsAdd=i=>{
   const[k,id]=i.split('|'),r=S[k][id];if(!r||!(r.plan||[]).length)return;let n=0;
   (r.plan||[]).filter(p=>!p.added&&!p.done).forEach(p=>{const d=new Date();d.setDate(d.getDate()+1+p.d);tasks.push({id:uid(),text:'['+SUBJ[r.subj].n+'] '+p.t+' ('+p.min+' min)',xp:25,due:iso(d)});p.added=true;n++});
   sv();save[k]();toast(n?n+' task'+(n>1?'s':'')+' added to your week':'Already in your tasks');render('card');
 };
-A.printDsCo=async i=>{const[k,id]=i.split('|'),meta=metaOf(k,id);await C.loadKatex();printHtml('<h1>Corrigé — '+esc(meta.title)+'</h1>'+C.md((await C.getText('DC'+id))||''))};
-A.printDsRev=async i=>{const[k,id]=i.split('|'),meta=metaOf(k,id);await C.loadKatex();printHtml('<h1>Review of my copy — '+esc(meta.title)+'</h1>'+C.md((await C.getText('DR'+id))||''))};
+A.printDsCo=async i=>{const[k,id]=i.split('|'),meta=metaOf(k,id);await C.loadKatex();printHtml(a4Html((await C.getText('DC'+id))||'','Corrigé · '+meta.title,SUBJ[meta.subj].n+' · corrected by the methods of the course'),{a4:1})};
+A.printDsRev=async i=>{const[k,id]=i.split('|'),meta=metaOf(k,id);await C.loadKatex();printHtml(a4Html((await C.getText('DR'+id))||'','Review of my copy · '+meta.title,SUBJ[meta.subj].n),{a4:1})};
 A.printRec=async i=>{
   const[kind,id]=i.split('|'),meta=metaOf(kind,id),r=S[kind][id]||recOf(kind,id,meta);await C.loadKatex();
   const li=a=>a.length?'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'';
@@ -7684,6 +7917,7 @@ A.tdEx=(i,el,e)=>{
   const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;
   x.done=!x.done;let msg='';
   if(x.done&&!x.got){x.got=true;const n=XPD[x.diff||3];if(window.gain){gain(n,e&&e.clientX||200,e&&e.clientY||300,undefined,t.subj);if(window.sv)sv();msg='+'+(window.xpn?xpn(n):n)+' XP'}}
+  if(x.done&&!x.rv){x.rv=1;try{[3,10].forEach(dd=>{const d=new Date();d.setDate(d.getDate()+dd);tasks.push({id:uid(),text:'['+SUBJ[t.subj].n+'] Redo without hint: '+x.title+' ('+(t.title||'TD')+') · 20 min',xp:15,due:iso(d)})});if(window.sv)sv();msg=(msg?msg+' · ':'')+'redo planned in 3 and 10 days'}catch(_e){}}
   save.tds();render('card');if(msg)toast(msg+' · '+x.title);
 };
 A.tdDiff=(i,el,e)=>{if(e)e.stopPropagation();const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;if(x.got){toast('XP already earned for this exercise');return}x.diff=(x.diff||3)%5+1;save.tds();render('card')};
@@ -7691,12 +7925,75 @@ A.tdReady=i=>{const[id,cid]=i.split('|'),t=S.tds.find(x=>x.id===id),c=t.skills.f
 A.tdAddEx=id=>{const t=S.tds.find(x=>x.id===id),v=$('td-new').value.trim();if(!v){toast('Name the exercise');return}t.exos.push({id:uid(),title:v,diff:3,summary:'',done:false,got:false});save.tds();render('card')};
 A.tdEdit=id=>{const t=S.tds.find(x=>x.id===id);openSheet('<h2 class="sh">Rename</h2><div class="field"><input id="t-n" maxlength="80" value="'+esc(t.title||'')+'"></div><button class="btn primary" id="t-ns">Save</button>');$('t-ns').onclick=()=>{t.title=$('t-n').value.trim();save.tds();closeSheet();render()}};
 A.delTD=async id=>{if(!await ask({title:'Delete this TD?',msg:'Its files, exercises and corrigé are deleted.',ok:'Delete',danger:1}))return;const t=S.tds.find(x=>x.id===id);for(const f of (t.files||[]).concat(t.mine||[]))await C.delFile(f.id);await C.dbDel('texts','TC'+id).catch(()=>{});S.tds=S.tds.filter(x=>x.id!==id);save.tds();back()};
+A.tdHint=async(i,el,e)=>{if(e)e.stopPropagation();const[id,eid]=i.split('|'),t=S.tds.find(x=>x.id===id),x=t&&t.exos.find(q=>q.id===eid);if(!x)return;exoHint(t.subj,x.title,(x.title||'')+' '+(x.summary||'')+' '+(t.title||''),x.title)};
+async function exoHint(subj,title,text,label){
+  const ct=kpTok(text),L=S.lessons.filter(l=>l.subj===subj&&l.status==='done'),hits=[];
+  for(const l of L){
+    let it=KMI[l.id];if(!it){try{it=KMI[l.id]=await kmGet(l.id)}catch(e){it=[]}}
+    const lt=kpTok(l.title);let lh=0;lt.forEach((w,k)=>{if(ct.has(k))lh++});
+    it.forEach(x=>{const xt=kpTok(x.t+' '+(x.full||''));let h=0;xt.forEach((w,k)=>{if(ct.has(k))h++});const sc=h*2+lh*1.2;if(h>=1&&sc>=2.4)hits.push({l,x,sc,lv:kmLv(l.id+'|'+x.k)})});
+  }
+  hits.sort((a,b)=>(b.sc-a.sc)||(a.lv-b.lv));const top=hits.slice(0,5),lessons=[...new Map(top.map(h=>[h.l.id,h.l])).values()];
+  const TY={df:'Definition',th:'Theorem',me:'Method',fo:'Formula',ex:'Example'},ty=x=>TY[x.ty]||(x.ty==='me'?'Method':'Result');
+  let h='<h2 class="sh">💡 Hint</h2><div class="sub" style="margin:0 0 12px">'+esc(label||title)+'. Reveal one step at a time: try between each.</div>';
+  if(!top.length)h+='<div class="hn"><div class="hk">Course</div><div class="sub" style="margin-top:6px">I cannot match this exercise to a lesson yet. Read your lessons ("Read this lesson with AI") and run "Analyser ce cours avec l\'IA" on the chapter so the bricks are named.</div></div>';
+  else{
+    h+='<div class="hn"><div class="hk">1 · Where to look</div>'+lessons.map(l=>'<div class="bk"><i>Lesson</i><span><b>'+esc(l.title)+'</b><small><span data-hl="'+l.id+'" style="color:var(--acc,#6aa8ff);font-weight:700">Open the lesson ›</span></small></span></div>').join('')+'</div>';
+    h+='<div class="hn lock" id="hs2"><button class="chip" data-hr="2">Show 2 · What to use</button></div><div class="hn" id="hb2" style="display:none"><div class="hk">2 · What to use</div>'+top.map(o=>'<div class="bk"><i>'+ty(o.x)+'</i><span><b>'+esc(o.x.t)+'</b><small>'+esc(o.l.title)+(o.lv<3?' · you do not master this yet (level '+o.lv+')':' · mastered')+'</small></span></div>').join('')+'</div>';
+    h+='<div class="hn lock" id="hs3" style="display:none"><button class="chip" data-hr="3">Show 3 · How</button></div><div class="hn" id="hb3" style="display:none"><div class="hk">3 · How</div>'+top.slice(0,3).map(o=>'<div class="bk"><i>'+ty(o.x)+'</i><span><b>'+esc(o.x.t)+'</b><small>'+esc(o.x.ty==='me'&&o.x.st&&o.x.st.length?o.x.st.map((s,i)=>(i+1)+'. '+s).join('  '):(o.x.full||'').slice(0,260))+'</small></span></div>').join('')+'</div>';
+    h+='<div class="chips" style="margin-top:6px">'+lessons.slice(0,1).map(l=>(l.mt?'<button class="chip" data-hm="'+l.id+'">📐 Methods</button>':'')+(l.dd?'<button class="chip" data-hd="'+l.id+'">📜 Definitions</button>':'')).join('')+'</div>';
+  }
+  openSheet(h);const B=document.getElementById('sbody');
+  B.onclick=ev=>{const r=ev.target.closest('[data-hr]'),hl=ev.target.closest('[data-hl]'),hm=ev.target.closest('[data-hm]'),hd=ev.target.closest('[data-hd]');
+    if(r){const n=+r.dataset.hr;document.getElementById('hs'+n).style.display='none';document.getElementById('hb'+n).style.display='';if(n===2){const s3=document.getElementById('hs3');if(s3)s3.style.display=''}}
+    else if(hl){closeSheet();st.tab='lessons';go('lesson',hl.dataset.hl)}else if(hm){closeSheet();go('meth',hm.dataset.hm)}else if(hd){closeSheet();go('dd',hd.dataset.hd)}};
+}
+A.chTrain=(i,el,e)=>{
+  if(e)e.stopPropagation();const[id,cid]=i.split('|'),p=S.progs.find(x=>x.id===id),c=p&&(p.chapters||[]).find(q=>q.id===cid);if(!c)return;
+  const fl={title:c.title||'',subj:p.subj},fx={t:(c.title||'')+' '+(c.detail||''),full:''},cands=kpCands(p.subj);
+  const ex=kpFor(fl,fx,cands,8).filter(m=>!m.c.raw);
+  const lessons=S.lessons.filter(l=>l.subj===p.subj&&l.status==='done').map(l=>{const lt=kpTok(l.title),ct=kpTok((c.title||'')+' '+(c.detail||''));let h=0;lt.forEach((w,k)=>{if(ct.has(k))h++});return{l,h}}).filter(x=>x.h>=1).sort((a,b)=>b.h-a.h).slice(0,2).map(x=>x.l);
+  let h='<h2 class="sh">🏋 Train: '+esc(c.title)+'</h2><div class="sub" style="margin:0 0 12px">Exercises of your TDs and library that match this chapter of the colle, with their corrections.</div>';
+  if(lessons.length)h+='<div class="hn"><div class="hk">Course</div>'+lessons.map(l=>'<div class="chips" style="gap:6px;margin-top:8px"><span style="font-weight:700;flex:1">'+esc(l.title)+'</span><button class="chip" data-tl="'+l.id+'">Lesson</button>'+(l.dd?'<button class="chip" data-td2="'+l.id+'">📜</button>':'')+(l.mt?'<button class="chip" data-tm="'+l.id+'">📐</button>':'')+'</div>').join('')+'</div>';
+  if(!ex.length)h+='<div class="hn"><div class="sub">No TD exercise or library exo matches this chapter yet. Read your TDs ("Read the TD") or add exercises, and they appear here.</div></div>';
+  else h+='<div class="hn"><div class="hk">Exercises ('+ex.length+')</div><div style="margin-top:8px">'+ex.map(m=>{const t=m.c.k.startsWith('td|')?S.tds.find(x=>x.id===m.c.k.split('|')[1]):null,co=t&&t.coAt;return kpBtn(m).replace('<span class="go">›</span>',(co?'<span class="chip" data-cor="'+t.id+'" style="margin-right:6px;padding:4px 9px;font-size:11px">corrigé</span>':'')+'<span class="go">›</span>')}).join('')+'</div></div>';
+  h+='<div class="sub" style="margin:2px 4px">Tip: ⭐ = trains items of your course you do not master yet.</div>';
+  openSheet(h);
+  document.getElementById('sbody').onclick=ev=>{
+    const cr=ev.target.closest('[data-cor]');if(cr){ev.stopPropagation();closeSheet();go('tdco',cr.dataset.cor);return}
+    const kp=ev.target.closest('[data-kp]');if(kp){const c2=kpCands(p.subj).find(y=>y.k===kp.dataset.kp);if(c2){closeSheet();go(c2.go[0],c2.go[1])}return}
+    const a=ev.target.closest('[data-tl]');if(a){closeSheet();st.tab='lessons';go('lesson',a.dataset.tl);return}
+    const b=ev.target.closest('[data-td2]');if(b){closeSheet();go('dd',b.dataset.td2);return}
+    const m=ev.target.closest('[data-tm]');if(m){closeSheet();go('meth',m.dataset.tm)}};
+};
+A.mvSeen=async subj=>{
+  const by={};let n=0;
+  const scan=(txt,src)=>{let ex='';String(txt||'').split('\n').forEach((ln,i,arr)=>{
+    const h=/^##\s+(.*)$/.exec(ln);if(h){ex=h[1].trim();return}
+    const m=/\[\[M:\s*([^|\]]+?)\s*(?:\|\s*([^\]]*?)\s*)?\]\]/.exec(ln);if(!m)return;
+    let nxt='';for(let j=i+1;j<arr.length&&j<i+6&&!nxt;j++){const q=arr[j].trim();if(q&&!/^\[\[M:/.test(q)&&!/^#/.test(q))nxt=q}
+    const k=m[1].trim().toLowerCase();(by[k]=by[k]||{name:m[1].trim(),ch:m[2]||'',uses:[]}).uses.push({src,ex,sn:nxt.replace(/\*\*/g,'').slice(0,220)});n++});};
+  for(const t of S.tds.filter(x=>x.subj===subj&&x.coAt))scan(await C.getText('TC'+t.id),'TD « '+(t.title||'TD')+' »');
+  for(const r of Object.values(S.exams||{}).filter(x=>x.subj===subj&&x.dcAt))scan(await C.getText('DC'+r.id),'DS « '+(r.title||'DS')+' »');
+  if(!n){toast('No method tags yet: write or redo a corrigé (TD or DS) first');return}
+  const names=Object.values(by).sort((a,b)=>b.uses.length-a.uses.length);
+  let md='## Methods seen in my corrections\n\n'+names.length+' methods · '+n+' uses, from most to least frequent.\n\n';
+  names.forEach(m=>{md+='### '+m.name+(m.ch?' *('+m.ch+')*':'')+' · '+m.uses.length+'×\n\n'+m.uses.slice(0,6).map(u=>'- **'+u.src+(u.ex?' — '+u.ex:'')+'**'+(u.sn?' : '+u.sn:'')).join('\n')+'\n\n'});
+  await C.loadKatex();printHtml(a4Html(md,'Methods seen · '+SUBJ[subj].n,'from my own corrections, to revise before a colle'),{a4:1});
+};
 A.tdCo=id=>go('tdco',id);
 A.mkTdCo=async id=>{if(needKey())mkTdCo(id)};
-A.printTdCo=async id=>{await C.loadKatex();printHtml(C.md((await C.getText('TC'+id))||''))};
+A.printTdCo=async id=>{await C.loadKatex();const t=S.tds.find(x=>x.id===id)||{};printHtml(a4Html((await C.getText('TC'+id))||'',(t.title||'TD')+' · corrigé',(t.subj&&SUBJ[t.subj]?SUBJ[t.subj].n+' · ':'')+'corrected by the methods of the course'),{a4:1})};
 A.meth=i=>{const l=S.lessons.find(x=>x.id===i);if(!l)return;if(l.mt){go('meth',i);return}if(!needKey())return;go('meth',i);mkMeth(i)};
+A.goTD=i=>{st.tab='work';go('td',i)};
+A.goProg=i=>{st.tab='colles';go('prog',i)};
+A.goRec=i=>{st.tab='exams';go('rec','exams|'+i)};
+A.goExo=i=>{st.tab='work';go('exo',i)};
+A.dd=i=>{const l=S.lessons.find(x=>x.id===i);if(l)go('dd',i)};
+A.mkDD=i=>{if(needKey())mkDD(i)};
+A.printDD=async i=>{await C.loadKatex();const l=S.lessons.find(x=>x.id===i)||{};printHtml(a4Html((await C.getText('DD'+i))||'','Definitions & proofs · '+(l.title||''),(SUBJ[l.subj]?SUBJ[l.subj].n:'')),{a4:1})};
 A.mkMeth=i=>{if(needKey())mkMeth(i)};
-A.printMeth=async i=>{await C.loadKatex();printHtml(C.md((await C.getText('K'+i))||''))};
+A.printMeth=async i=>{await C.loadKatex();const l=S.lessons.find(x=>x.id===i)||{};printHtml(a4Html((await C.getText('K'+i))||'','Key methods · '+(l.title||''),(SUBJ[l.subj]?SUBJ[l.subj].n:'')),{a4:1})};
 A.mbook=s=>go('mbook',s);
 A.mkMethT=s=>{if(needKey())mkMethT(s)};
 A.printMBook=async s=>{await C.loadKatex();printHtml(C.md(await mbookText(s)))};
@@ -7705,7 +8002,7 @@ A.mkMethAll=()=>{if(!needKey())return;
     const todo=S.lessons.filter(l=>l.status==='done'&&!l.mt);let i=0,bad=0;
     for(const l of todo){lab('Chapter '+(++i)+' of '+todo.length+': '+l.title);
       try{const t=(await C.getText('L'+l.id))||'';if(t.length<300)continue;
-        const r=await C.ai({subj:l.subj,system:C.SYS_METHODS(SUBJ[l.subj].n,l.title),content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)}],max:16000,onText:txt});
+        const r=await C.ai({subj:l.subj,system:C.SYS_METHODS(SUBJ[l.subj].n,l.title)+methIllus(l).rule,content:[{type:'text',text:'LESSON: '+l.title+'\n\n'+t.slice(0,80000)+methIllus(l).txt}],max:16000,onText:txt});
         if(r.text.length>=400){await C.setText('K'+l.id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));l.mt=Date.now();save.lessons()}}
       catch(e){bad++;if(bad>=2)throw e}}
     toast('Key methods updated ✓');
@@ -7811,7 +8108,7 @@ async function learnFrom(id,before,after){
 }
 A.lc=i=>{const l=S.lessons.find(x=>x.id===i);if(!l)return;go('lc',i)};
 A.mkLC=i=>{if(needKey())mkLC(i)};
-A.printLC=async i=>{await C.loadKatex();printHtml(C.md((await C.getText('LC'+i))||''))};
+A.printLC=async i=>{await C.loadKatex();const l=S.lessons.find(x=>x.id===i)||{};printHtml(a4Html((await C.getText('LC'+i))||'','Completed lesson · '+(l.title||''),(SUBJ[l.subj]?SUBJ[l.subj].n:'')),{a4:1})};
 A.editLC=async i=>{
   const l=S.lessons.find(x=>x.id===i);if(!l)return;const cur0=(await C.getText('LC'+i))||'';
   openSheet('<h2 class="sh">Edit the lesson</h2><div class="sub" style="margin:-4px 0 10px">Change anything you like (Markdown, formulas between $…$). When you save, the app compares with the previous version and learns your preferences for the next lessons.</div><textarea id="lc-t" style="width:100%;height:55vh;font-size:13px;line-height:1.5;border-radius:12px;padding:10px;background:var(--surf2);color:var(--text);border:1px solid var(--line)" spellcheck="false"></textarea><button class="btn primary" id="lc-s" style="margin-top:10px">Save</button>');
@@ -8331,7 +8628,7 @@ function mkVC(id){
     if(t.length<300)throw new C.AIError('This lesson has no text yet. Read it first.');
     const others=S.lessons.filter(x=>x.id!==id&&x.subj===l.subj&&x.status==='done').map(x=>x.title).slice(0,25).join(' · ');
     lab('Choosing the bricks and the fil rouge exercise…');
-    const r=await C.ai({subj:l.subj,system:C.SYS_VISUAL(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others),content:[{type:'text',text:'LESSON: '+l.title+(l.lc?' (completed version)':'')+'\n\n'+t.slice(0,70000)}],max:12000,onText:txt});
+    const r=await C.ai({subj:l.subj,system:C.SYS_VISUAL(SUBJ[l.subj].n,l.title,lrules().map(x=>x.t),others),content:[{type:'text',text:'LESSON: '+l.title+(l.lc?' (completed version)':'')+'\n\n'+t.slice(0,70000)}],max:20000,onText:txt});
     if(r.text.length<400)throw new C.AIError('The course came out empty. Try again.');
     await C.setText('VC'+id,r.text.trim()+(r.stop==='max_tokens'?'\n\n*[Cut: write a new version.]*':''));
     l.vc=Date.now();save.lessons();toast('Visual course ready ✓');
@@ -9768,12 +10065,22 @@ function kmAll(){const ls=S.lessons.filter(l=>!S.kmx[l.id]);if(!ls.length)return
 A.kmai=id=>{if(needKey())kmAI(id).then(()=>kmSheet(id))};A.kmall=()=>{if(needKey())kmAll()};
 const kmLv=k=>(S.km[k]&&S.km[k].lv)||0;
 function kmLessonM(l,nodes){const it=KMI[l.id];if(it&&it.length)return{m:it.reduce((a,x)=>a+kmLv(l.id+'|'+x.k)/4,0)/it.length,n:it.length};const nd=nodes.find(n=>n.lids.includes(l.id));return{m:nd?nd.m:0,n:0}}
+function kmResChips(l){
+  const nTD=lessonTDs(l).reduce((a,x)=>a+x.ex.length,0),nf=(l.files||[]).length;
+  const c=(on,t)=>'<span class="rc'+(on?' on':'')+'">'+t+'</span>';
+  return '<div class="rcs">'+c(nf,'📄 '+nf)+c(l.vc,'🧭')+c(l.dd,'📜')+c(l.mt,'📐')+c(nTD,'TD '+nTD)+'</div>';
+}
+function kmRes(l){
+  const b=(a,ic,t,on)=>'<button class="kres'+(on?'':' off')+'" data-a="'+a+'" data-i="'+l.id+'"><b>'+ic+'</b><span>'+t+'</span></button>';
+  return '<div class="kresg">'+b('kmLesson','📄','Scan & text',(l.files||[]).length)+b('vc','🧭','Visual course',l.vc)+b('dd','📜','Definitions & proofs',l.dd)+b('meth','📐','Methods',l.mt)+'</div>';
+}
+A.kmLesson=i=>{closeSheet();st.tab='lessons';go('lesson',i)};
 function kmSubjCard(sj,ns,urg){
   const ls=S.lessons.filter(l=>l.subj===sj),rows=ls.map(l=>Object.assign({l},kmLessonM(l,ns))),avg=ns.reduce((a,n)=>a+n.m,0)/ns.length;
   const ex=cal.filter(e=>(e.kind==='ds'||e.kind==='colle')&&e.subj===sj&&e.date>=iso()).sort((a,b)=>a.date.localeCompare(b.date))[0];
   const chs=ns.filter(n=>n.type==='ch'&&!n.lids.length);
   let h='<div class="card"><div class="cardhead"><div class="lbl">'+SUBJ[sj].n+'</div><span class="sub">'+Math.round(avg*100)+'%'+(ex?' · '+(ex.kind==='ds'?'DS':'colle')+' in '+daysTo(ex.date)+' d':'')+'</span></div>';
-  h+=rows.sort((a,b)=>a.m-b.m).map(r=>'<div class="prow" style="--c:'+mcol(r.m)+';cursor:pointer" data-a="kmls" data-i="'+r.l.id+'"><span class="m"><div class="t">'+esc(r.l.title)+'</div><div class="s">'+(r.n?r.n+' savoirs et méthodes':'touche pour voir')+'</div><div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:'+Math.max(3,Math.round(r.m*100))+'%;background:'+mcol(r.m)+';box-shadow:none"></div></div></span><span class="chip">'+Math.round(r.m*100)+'%</span></div>').join('');
+  h+=rows.sort((a,b)=>a.m-b.m).map(r=>'<div class="prow" style="--c:'+mcol(r.m)+';cursor:pointer" data-a="kmls" data-i="'+r.l.id+'"><span class="m"><div class="t">'+esc(r.l.title)+'</div><div class="s">'+(r.n?r.n+' savoirs et méthodes':'touche pour voir')+'</div>'+kmResChips(r.l)+'<div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:'+Math.max(3,Math.round(r.m*100))+'%;background:'+mcol(r.m)+';box-shadow:none"></div></div></span><span class="chip">'+Math.round(r.m*100)+'%</span></div>').join('');
   if(chs.length)h+='<div class="sub" style="margin:10px 2px 4px">Programme chapters without a lesson yet</div>'+chs.map(n=>'<div class="prow" style="--c:'+mcol(n.m)+';cursor:pointer" data-a="mapnode" data-i="'+esc(n.id)+'"><span class="m"><div class="t">'+esc(n.title)+'</div></span><span class="chip">'+Math.round(n.m*100)+'%</span></div>').join('');
   return h+'</div>';
 }
@@ -9798,14 +10105,15 @@ function kpStar(c){
     if(!c||c.done||c.raw)return 0;
     let sc=0;const d=+c.diff||0;if(d>=4)sc+=2;if(d>=5)sc+=1;
     const ct=kpTok(c.txt||'');let n=0;
-    Object.keys(KMI||{}).forEach(id=>{const l=S.lessons.find(x=>x.id===id);if(!l||l.subj!==c.subj)return;(KMI[id]||[]).forEach(x=>{const it=kpTok(x.t+' '+(x.full||''));let h=0;it.forEach((w,k)=>{if(ct.has(k))h++});if(h>=1)n++})});
-    sc+=Math.min(3,n);
+    Object.keys(KMI||{}).forEach(id=>{const l=S.lessons.find(x=>x.id===id);if(!l||l.subj!==c.subj)return;(KMI[id]||[]).forEach(x=>{const it=kpTok(x.t+' '+(x.full||''));let h=0;it.forEach((w,k)=>{if(ct.has(k))h++});if(h>=1&&kmLv(id+'|'+x.k)<3)n++})});
+    sc+=Math.min(4,n);
+    try{let pc=0;(S.progs||[]).forEach(p=>{if(p.subj!==c.subj)return;(p.chapters||[]).forEach(ch=>{const m=kpTok((ch.title||'')+' '+(ch.detail||''));let h=0;ct.forEach((w,k)=>{if(m.has(k))h++});if(h>=2)pc++})});sc+=Math.min(2,pc)}catch(e){}
     let wk='';Object.values(S.exams||{}).forEach(e=>{if(e.subj===c.subj)wk+=' '+(e.wrong||'')+' '+(e.why||'')+' '+((e.todo||[]).map(t=>t.t||t).join(' '))});
     if(wk.trim()){let h=0;kpTok(wk).forEach((w,k)=>{if(ct.has(k))h++});if(h>=2)sc+=2}
     return sc>=3?sc:0;
   }catch(e){return 0}
 }
-function kpFor(l,x,cands){
+function kpFor(l,x,cands,n){
   const it=kpTok(x.t+' '+(x.full||'')),lt=kpTok(l.title),res=[];
   (cands||kpCands(l.subj)).forEach(c=>{
     const ct=kpTok(c.txt),hit=[];let lh=0;
@@ -9813,7 +10121,7 @@ function kpFor(l,x,cands){
     const sc=hit.length*2+lh*1.2+(c.raw?-1:0)-(c.done?3:0);
     if(c.raw?(lh>=1&&sc>=0.2):(hit.length>=1&&sc>=2.5)||(lh>=2&&sc>=2.4))res.push({c,sc,hit:hit.length?hit:[...lt.values()].filter((w,i)=>ct.has([...lt.keys()][i]))});
   });
-  return res.sort((a,b)=>b.sc-a.sc).slice(0,2);
+  return res.sort((a,b)=>b.sc-a.sc).slice(0,n||2);
 }
 function kpBtn(m){
   const c=m.c,d=c.diff?' · '+'●'.repeat(Math.min(5,c.diff))+'○'.repeat(5-Math.min(5,c.diff)):'';
@@ -9840,17 +10148,20 @@ function kmSheet(id){
   const ax=S.kmx[id];
   h+='<button class="btn '+(ax?'':'primary')+'" data-a="kmai" data-i="'+id+'" style="margin:0 0 10px">'+(live['KX'+id]?'Analyse en cours…':ax?'Refaire l\'analyse':'Analyser ce cours avec l\'IA')+'</button>';
   if(!ax)h+='<div class="sub" style="margin:-4px 2px 10px">Sans l\'IA, seules les lignes qui commencent par « Théorème », « Définition », « Méthode »… sont reprises, tronquées. L\'analyse donne les noms exacts.</div>';
+  h+=kmRes(l);
   h+=kpTop(l,it);
   if(!it.length)h+='<div class="card"><div class="sub">Aucun élément trouvé dans ce cours.</div></div>';
   KM_T.forEach(([ty,name])=>{const g=it.filter(x=>x.ty===ty);if(!g.length)return;
     h+='<div class="pv-h" style="margin:14px 0 6px">'+name+' ('+g.length+')</div>'+g.map(x=>{const k=id+'|'+x.k,v=kmLv(k);
-      const body=x.ai?'<div style="font-weight:700;font-size:15px;line-height:1.3">'+esc(x.t)+'</div>'+(x.ty==='me'?(x.w?'<div class="sub" style="margin-top:3px">Quand : '+esc(x.w)+'</div>':'')+(x.st&&x.st.length?'<ol style="margin:6px 0 0 18px;padding:0;font-size:13.5px;line-height:1.4">'+x.st.map(z=>'<li>'+esc(z)+'</li>').join('')+'</ol>':''):(x.full&&x.full!==x.t?'<div class="sub" style="margin-top:3px;line-height:1.4">'+esc(x.full)+'</div>':'')):'<div style="font-weight:600;font-size:14.5px;line-height:1.35">'+esc(x.t)+'</div>';
+      const TYN={df:'Definition',th:'Theorem · law',me:'Method'},mdx='**'+x.t.replace(/\*/g,'')+'**'+(x.ty==='me'?(x.w?'\n\n*Quand :* '+x.w:'')+(x.st&&x.st.length?'\n\n'+x.st.map((z,q)=>(q+1)+'. '+z).join('\n'):''):(x.full&&x.full!==x.t?'\n\n'+x.full:''));
+      const body='<div class="kph" data-ty="'+x.ty+'"><div class="kph-t">'+(TYN[x.ty]||'Result')+'</div><div class="kmd" data-md="'+encodeURIComponent(mdx)+'"></div></div>';
       return '<div class="card" style="padding:12px;margin:0 0 8px" data-km="'+k+'">'+body+
       '<div class="kmdots" style="display:flex;gap:6px;margin:10px 0 6px">'+[0,1,2,3,4].map(i=>'<button class="chip '+(i===v?'on':'')+'" data-kv="'+i+'" data-k="'+k+'" style="padding:6px 11px;min-width:36px" aria-label="'+KM_L[i]+'">'+(i===0?'·':i)+'</button>').join('')+'</div>'+
       '<div class="sub" style="margin:0 0 8px">'+KM_L[v]+'</div>'+
       kpFor(l,x).map(kpBtn).join('')+'<div class="chips" style="gap:6px"><button class="chip" data-kc="'+k+'">🃏 Make a card</button><button class="chip" data-kl="'+l.subj+'">🎙 Colle Live</button><button class="chip" data-kx="1">All exercises</button></div></div>'}).join('')});
   h+='<button class="btn" id="km-open" style="margin-top:6px">Open the lesson</button>';
   openSheet(h);
+  C.loadKatex().then(()=>{document.querySelectorAll('#sbody .kmd').forEach(e=>{try{e.innerHTML=C.md(decodeURIComponent(e.dataset.md))}catch(x){e.textContent=decodeURIComponent(e.dataset.md)}})}).catch(()=>{document.querySelectorAll('#sbody .kmd').forEach(e=>{e.textContent=decodeURIComponent(e.dataset.md)})});
   const B=document.getElementById('sbody');
   B.onclick=e=>{
     const v=e.target.closest('[data-kv]');if(v){const k=v.dataset.k;S.km[k]={lv:+v.dataset.kv,t:Date.now()};save.km();kmSheet(id);return}
@@ -10407,6 +10718,28 @@ function pwFocusDone(taskId,min,full){
   F.blk='';try{tbDone(id,min,true)}catch(e){}
   try{pwCard()}catch(e){}try{rTP()}catch(e){}try{rHomeTasks()}catch(e){}try{if(cur==='calendar')rCal()}catch(e){}
 }
+/* v174: tick a block in the week plan → say how long it really took (skipped when a finished focus already did it) */
+function pwTime(id){
+  const o=tbLoad(),b=o.blocks[id],g=pwGet(id),c=g&&g.c;if(!b||!c||b.done)return;
+  if(b.prop)pwAccept([id]);
+  let m=Math.max(5,+(tbLoad().blocks[id].pl)||30);const ttl=c.title.replace(/^✓ /,'').replace(/^[^\p{L}\p{N}]+/u,'');
+  const fmt2=n=>n>=60?Math.floor(n/60)+' h'+(n%60?' '+String(n%60).padStart(2,'0'):''):n+' min';
+  openSheet('<h2 class="sh">Done?</h2><div class="sub" style="margin:0 0 12px">'+pwEsc(ttl)+' · planned '+(b.pl||m)+' min. How long did you really work on it?</div>'+
+   '<div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 12px"><button class="btn" id="pt-m" style="width:56px;font-size:22px">−</button><div id="pt-v" style="font-size:30px;font-weight:800;min-width:110px;text-align:center;font-variant-numeric:tabular-nums"></div><button class="btn" id="pt-p" style="width:56px;font-size:22px">+</button></div>'+
+   '<div class="chips" style="justify-content:center;margin-bottom:12px"><button class="chip" data-pt="-15">−15</button><button class="chip" data-pt="15">+15</button><button class="chip" data-pt="30">+30</button></div>'+
+   '<button class="btn primary" id="pt-ok">Log it and tick</button><button class="btn" id="pt-no" style="margin-top:8px">No time to log (just tick)</button>');
+  const q=i=>document.getElementById(i),draw=()=>{q('pt-v').textContent=fmt2(m)};draw();
+  const adj=d=>{m=Math.max(5,Math.min(480,m+d));draw();try{hv()}catch(e){}};
+  q('pt-m').onclick=()=>adj(-5);q('pt-p').onclick=()=>adj(5);
+  document.getElementById('sbody').addEventListener('click',e=>{const x=e.target.closest('[data-pt]');if(x)adj(+x.dataset.pt)});
+  const fin=log=>{closeSheet();const now=Date.now(),sj=c.subj||undefined;
+    if(log){try{const n0=new Date(now),e0=new Date(now-m*60000);if(iso(e0)===iso(n0)){c.time=hmS(e0.getHours()*60+e0.getMinutes());c.endTime=hmS(n0.getHours()*60+n0.getMinutes())}}catch(e){}}
+    tbDone(id,log?m:0,false);
+    if(log)fhist.push({task:ttl||'Focus',min:m,date:fk(),ts:now,mode:'normal',early:true,cal:1,subj:sj,subjs:sj?[sj]:[],man:1});
+    sv();try{pwCard()}catch(e){}try{rTP()}catch(e){}try{rHomeTasks()}catch(e){}try{if(cur==='calendar')rCal()}catch(e){}
+    toast(log?'Logged '+m+' min ✓':'Ticked ✓')};
+  q('pt-ok').onclick=()=>fin(true);q('pt-no').onclick=()=>fin(false);
+}
 function pwRemove(id){
   const o=tbLoad(),b=o.blocks[id];if(b&&b.gt){const i=tasks.findIndex(t=>t.id===b.gt);if(i>-1)tasks.splice(i,1)}
   delete o.blocks[id];const i=cal.findIndex(c=>c.id===id);if(i>-1)cal.splice(i,1);tbSave(o);sv();
@@ -10466,7 +10799,7 @@ function pwCard(){
   const hero=nx||upc[0],rest=upc.filter(c=>!hero||c.id!==hero.id);
   const when=c=>c.date===td?c.time:DAYN[pwWd(c.date)]+' '+(+c.date.slice(8))+' · '+c.time;
   const pct=wkL.length?Math.round(done/wkL.length*100):0;
-  const row=c=>{const b=o.blocks[c.id],cl=b.done?'d':b.prop?'p':'a',tt=pwEsc(c.title.replace(/^✓ /,''));return '<button class="wk2 '+cl+'" data-wk="blk" data-i="'+c.id+'" style="--c:'+colorOf(c)+'"><span class="wt">'+when(c)+'</span><span class="wx"><b>'+tt+'</b><small>'+(b.pl||'')+' min'+(b.prop?' · proposed':'')+'</small></span>'+(b.done?'<span class="st">✓</span>':b.prop?'<span class="st">Review</span>':'<span class="st go">›</span>')+'</button>'};
+  const row=c=>{const b=o.blocks[c.id],cl=b.done?'d':b.prop?'p':'a',tt=pwEsc(c.title.replace(/^✓ /,''));return '<button class="wk2 '+cl+'" data-wk="blk" data-i="'+c.id+'" style="--c:'+colorOf(c)+'"><span class="wt">'+when(c)+'</span><span class="wx"><b>'+tt+'</b><small>'+(b.pl||'')+' min'+(b.prop?' · proposed':'')+'</small></span>'+(b.done?'<span class="st">✓</span>':b.prop?'<span class="st">Review</span>':'<span class="st go" data-wk="chk" data-i="'+c.id+'" role="checkbox" aria-label="Mark done" style="padding:8px 6px 8px 14px;margin:-8px -4px -8px 0">☐</span>')+'</button>'};
   let h='<div class="cardhead"><div class="lbl">🗓 Week plan</div><button class="lnk" data-wk="set">Settings</button></div>'+
    '<div class="wk-sum"><div class="wk-ring" style="--p:'+pct+'"><b>'+pct+'<small>%</small></b></div><div class="wk-st"><div class="wk-big">'+done+' of '+wkL.length+' done</div><div class="sub">this week'+(prop.length?' · '+prop.length+' proposed':'')+'</div></div></div>';
   if(hero){const hb=o.blocks[hero.id];h+='<div class="wk-next" style="--c:'+colorOf(hero)+'"><div class="wk-nm"><div class="wk-k">'+(nx?'Up next':'Coming up')+'</div><div class="wk-t">'+pwEsc(hero.title.replace(/^✓ /,''))+'</div><div class="wk-m">'+when(hero)+(hero.endTime?' – '+hero.endTime:'')+(hb&&hb.pl?' · '+hb.pl+' min':'')+'</div></div>'+(nx?'<button class="wk-go" data-wk="start" data-i="'+nx.id+'">Start</button>':'<button class="wk-go alt" data-wk="blk" data-i="'+hero.id+'">Open</button>')+'</div>'}
@@ -10495,7 +10828,7 @@ function pwBlock(id){
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-wk]');if(!b||!b.closest('#wkcard'))return;e.stopPropagation();hv();const a=b.dataset.wk;
   if(a==='set')pwOpen();else if(a==='flex')pwFlex();else if(a==='plan')pwRun();else if(a==='all'){const n=pwAccept('all');pwCard();toast(n+' blocks accepted · they are now tasks in “Generated”');try{rHomeTasks()}catch(_){}}
   else if(a==='more'){localStorage.p_pwx=localStorage.p_pwx==='1'?'0':'1';pwCard()}
-  else if(a==='blk')pwBlock(b.dataset.i);else if(a==='start')pwPlayBlock(b.dataset.i)},true);
+  else if(a==='chk')pwTime(b.dataset.i);else if(a==='blk')pwBlock(b.dataset.i);else if(a==='start')pwPlayBlock(b.dataset.i)},true);
 const PWH='p_pwh';let pwNoH=false;
 const pwhGet=()=>{const d=jl(PWH,null)||{};return{hrs:Object.assign({maths:5,phys:4,chim:2,ang:2,fr:1,ipt:2},d.hrs||{}),xtra:d.xtra==null?2:d.xtra}};
 function pwAsk(){
@@ -13313,6 +13646,7 @@ function vCat(kind){
   if(!ls.length)return h+'<div class="card"><div class="sub">Read a lesson first (Lessons tab).</div></div>';
   if(kind==='mths'){
     h+='<div class="sec2"><div class="lbl" style="margin:0">Formulaire per subject</div></div>';
+    h+='<div class="chips" style="margin:0 0 10px;gap:6px">'+C.LSUBJ.filter(s=>ls.some(l=>l.subj===s)).map(s=>'<button class="chip" data-a="mvSeen" data-i="'+s+'">📑 Seen in corrections · '+SUBJ[s].n+'</button>').join('')+'</div>';
     C.LSUBJ.forEach(s=>{const n=ls.filter(l=>l.subj===s).length;if(!n)return;const fm=(S.set.fm||{})[s];
       h+='<button class="prow lrow '+(fm?'ok':'')+'" style="--c:'+C.sc(s)+'" data-a="formu" data-i="'+s+'"><i class="dot"></i><span class="m"><div class="t">📚 '+SUBJ[s].n+'</div><div class="s">'+(fm?'Ready':'Not written yet')+'</div></span>'+ico.chev+'</button>'});
   }
@@ -13649,7 +13983,7 @@ P.boot();
   $('pv-snaps').addEventListener('click',async function(){
     var sn=await snapList();
     if(!sn.length){note('No snapshot yet. The first one is taken at the next launch.');return}
-    var pick=sn[0];
+    var pick=sn[0,'p_kmx','p_fdirs','p_fico','p_eng','p_pyx','p_pyd','p_pyc','p_tabord','p_lang','p_lsorts','p_vsort','p_lvth','p_hwi','p_wpa','p_tx'];
     ask({title:'Restore a snapshot?',msg:'Snapshots protect you from mistakes and bugs inside the app (they live on this phone, so they do not replace a file backup). Restore the one from '+pick+'? This replaces ALL current data. Older ones: '+(sn.slice(1).join(', ')||'none')+'.',ok:'Restore '+pick,danger:true}).then(async function(ok){
       if(!ok)return;
       var raw=await snapTx('readonly',function(s){return s.get(pick)});var o;try{o=JSON.parse(raw)}catch(e){note('Snapshot unreadable');return}
@@ -13689,7 +14023,7 @@ P.boot();
   setB.addEventListener('click',function(){if(has())verifyThen(newPin);else newPin();});
   rmB.addEventListener('click',function(){verifyThen(function(){ask({title:'Remove the PIN lock?',ok:'Remove',danger:true}).then(function(ok){if(ok)removePin();});});});
   $('pv-gear').addEventListener('click',function(){refresh();sheet.classList.add('show');});
-  $('pv-close').addEventListener('click',function(){sheet.classList.remove('show');});
+  $('pv-close').addEventListener('click',function(){sheet.classList.remove('show');});$('pv-x').addEventListener('click',function(){sheet.classList.remove('show');});
   $('pv-ai').addEventListener('click',function(){sheet.classList.remove('show');setTimeout(function(){try{window.P&&P._A.settings&&P._A.settings()}catch(e){}},120)});
   sheet.addEventListener('click',function(e){if(e.target===sheet)sheet.classList.remove('show');});
 
@@ -13730,7 +14064,7 @@ P.boot();
       var hb=new TextEncoder().encode(JSON.stringify(out)),pre=new Uint8Array(12);
       pre.set(new TextEncoder().encode('AETHBK01'),0);new DataView(pre.buffer).setUint32(8,hb.length,true);
       var blob=new Blob([pre,hb].concat(parts),{type:'application/octet-stream'}),name=APP+'-full-backup-'+new Date().toISOString().slice(0,10)+'.aether';
-      try{localStorage.setItem('lastBackup',String(Date.now()))}catch(e){}
+      try{localStorage.setItem('lastBackup',String(Date.now()));localStorage.setItem('lastFull',String(Date.now()))}catch(e){}
       var file=new File([blob],name,{type:'application/octet-stream'});
       if(navigator.canShare&&navigator.canShare({files:[file]})){
         try{await navigator.share({files:[file],title:name});clearBusy();note('Full backup: '+meta.length+' files, '+Math.round(blob.size/1048576)+' MB');return;}
