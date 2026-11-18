@@ -2956,15 +2956,16 @@ const sjLegacy=(t,k)=>k==='ipt'?(/\b(python|informatique|info|sql|algorithm\w*|c
 const isGen=t=>!!(t.rk||t.lk||t.gen);
 const sidsOf=t=>(t.sids&&t.sids.length?t.sids:(sidOf(t)?[sidOf(t)]:[])).map(k=>sjLegacy(t,k));
 const sidOf=t=>t.sid||(t.lk&&((cal||[]).find(c=>c.id===t.lk)||{}).subj)||'';
+const dueTd=t=>!!t.due&&t.due===iso();
 const sTasks=sid=>tfF(sortedTasks()).filter(t=>!t.rem&&(sid==='_'?!sidsOf(t).length:sidsOf(t).includes(sid))).sort((a,b)=>(isGen(a)?1:0)-(isGen(b)?1:0));
 function rSubjects(anim){
   const el=$('tlst'),lst=subjList(),C=window.PC;
   if(tsubj&&tsubj!=='_'&&!lst.find(x=>x[0]===tsubj))tsubj=null;
   if(!tsubj){
     $('tlbl').textContent='Subjects';$('thint').textContent='Tap a subject';
-    let h=lst.map(([k,n,c],i)=>{const col=vcol(EVC[c%EVC.length]),open=visTasks().filter(t=>!t.rem&&sidsOf(t).includes(k)&&isOpen(t)).length;
-      return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="sopen" data-id="${k}"><div class="gd" style="background:linear-gradient(145deg,${col},color-mix(in srgb,${col} 62%,#000));color:#fff">${esc(n[0])}</div><div class="gm"><div class="gn">${esc(n)}</div><div class="gs">${open?open+' open task'+(open>1?'s':''):'Nothing open'}</div></div>${open?`<div class="gbadge">${open}</div>`:''}</div>`}).join('');
-    const un=sTasks('_').filter(isOpen).length;h+=`<div class="goal" data-act="sopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No subject</div><div class="gs">Tasks not in a subject yet</div></div>${un?`<div class="gbadge">${un}</div>`:''}</div>`;
+    let h=lst.map(([k,n,c],i)=>{const col=vcol(EVC[c%EVC.length]),open=visTasks().filter(t=>!t.rem&&sidsOf(t).includes(k)&&isOpen(t)).length,tdn=visTasks().filter(t=>!t.rem&&sidsOf(t).includes(k)&&isOpen(t)&&dueTd(t)).length;
+      return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="sopen" data-id="${k}"><div class="gd" style="background:linear-gradient(145deg,${col},color-mix(in srgb,${col} 62%,#000));color:#fff">${esc(n[0])}</div><div class="gm"><div class="gn">${esc(n)}</div><div class="gs">${open?open+' open task'+(open>1?'s':'')+(tdn?' · '+tdn+' today':''):'Nothing open'}</div></div>${tdn?`<div class="gbadge" title="Due today">${tdn}</div>`:''}</div>`}).join('');
+    const un=sTasks('_').filter(isOpen).length,untd=sTasks('_').filter(t=>isOpen(t)&&dueTd(t)).length;h+=`<div class="goal" data-act="sopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No subject</div><div class="gs">Tasks not in a subject yet</div></div>${untd?`<div class="gbadge" title="Due today">${untd}</div>`:''}</div>`;
     el.innerHTML=h;
   }else{
     const nm=tsubj==='_'?'No subject':(lst.find(x=>x[0]===tsubj)||[])[1],l=sTasks(tsubj);
@@ -3024,9 +3025,9 @@ function rTasks(anim){
     $('tlbl').textContent='Goals';$('thint').textContent="Tap to open · hold to reorder";
     const un=gTasks('_');
     let h=goals.filter(g=>!tfsel||g.fold===tfsel).map((g,i)=>{
-      const n=visTasks().filter(t=>t.gid===g.id&&isOpen(t)).length,need=needed(g.lv);
+      const n=visTasks().filter(t=>t.gid===g.id&&isOpen(t)&&dueTd(t)).length,need=needed(g.lv);
       return `<div class="goal ${anim?'gfresh':''}" style="--i:${i}" data-act="gopen" data-hold="goal" data-id="${g.id}"><div class="gd" style="background:linear-gradient(145deg,${vcol(g.color)},color-mix(in srgb,${vcol(g.color)} 62%,#000));box-shadow:0 8px 20px -6px ${vcol(g.color)},0 0 0 1px rgba(255,255,255,.18) inset;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)">${g.ic?icoHTML(g.ic,30):g.lv}</div><div class="gm"><div class="gn">${esc(g.name)}</div><div class="gs">Level ${g.lv} · ${g.xp}/${need} XP</div><div class="bar"><div class="bar-fill" style="width:${clamp(g.xp/need*100,0,100)}%;background:linear-gradient(90deg,${vcol(g.color)},color-mix(in srgb,${vcol(g.color)} 70%,#fff));box-shadow:0 0 12px -2px ${vcol(g.color)}"></div></div></div>${n?`<div class="gbadge">${n}</div>`:''}</div>`}).join('');
-    if(un.length)h+=`<div class="goal" data-act="gopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No goal</div><div class="gs">Tasks not in a goal yet</div></div>${un.filter(isOpen).length?`<div class="gbadge">${un.filter(isOpen).length}</div>`:''}</div>`;
+    if(un.length)h+=`<div class="goal" data-act="gopen" data-id="_"><div class="gd" style="background:var(--line2);color:var(--text)">·</div><div class="gm"><div class="gn">No goal</div><div class="gs">Tasks not in a goal yet</div></div>${un.filter(t=>isOpen(t)&&dueTd(t)).length?`<div class="gbadge" title="Due today">${un.filter(t=>isOpen(t)&&dueTd(t)).length}</div>`:''}</div>`;
     h+=`<button class="btn" data-act="gnew" style="margin-top:4px">+ New goal</button>`;
     if(!goals.length&&!un.length)h=`<div class="orbempty">${orb(86)}<p>Create your first goal</p></div>`+h;
     el.innerHTML=h;
