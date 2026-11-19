@@ -1842,6 +1842,8 @@ body .nxk,body .dsdeb-h{letter-spacing:.06em}
 body .pwh{background:var(--surf);border:1px solid var(--line)}
 
 /* v193 full-screen constellation map */
+.skfo #sheet{z-index:9500}
+.sfn small{font-size:11px}
 .skfsb{margin:0 0 10px;background:linear-gradient(135deg,rgba(80,120,255,.22),rgba(150,90,255,.2));border-color:rgba(130,150,255,.4)}
 .skfs{position:fixed;inset:0;z-index:9000;background:radial-gradient(ellipse at 50% 40%,hsl(var(--h,215) 55% 12%) 0%,#05070f 62%,#02030a 100%);overflow:hidden;touch-action:none;color:#dfe8ff}
 .skfv{position:absolute;inset:0;touch-action:none;cursor:grab}
@@ -1872,6 +1874,7 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
 .skft{font-size:14px;color:#b9c8ee}.skft b{color:#fff}
 .skfch{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top) + 64px);display:flex;gap:8px;overflow-x:auto;padding:0 14px}
 .skfz{position:absolute;right:14px;bottom:calc(env(safe-area-inset-bottom) + 18px);display:flex;flex-direction:column;gap:10px}
+.ph-pin{position:relative}.ph-pin::after{content:"📌";position:absolute;top:8px;right:12px;font-size:14px;opacity:.9;pointer-events:none;filter:drop-shadow(0 1px 2px #000)}
 </style>
 </head>
 <body>
@@ -10372,6 +10375,18 @@ async function skGraph(sj){
 }
 const SKC={};
 function skRank(p){return p>=.95?'Grand master':p>=.75?'Master':p>=.5?'Adept':p>=.25?'Apprentice':p>0?'Initiate':'Seedling'}
+
+/* v194: readable node names ("Définition 1.3" -> "Déf 1.3 · sous-espace vectoriel") */
+function skLabel(x){
+  const t=String(x.t||'').replace(/\s+/g,' ').trim(),m=/^(Définition|Proposition|Théorème|Lemme|Corollaire|Propriété|Remarque|Exemple|Méthode|Notation)\s*([\d.]+)?\s*[:.\-–—]?\s*(.*)$/i.exec(t);
+  if(!m)return t.slice(0,44);
+  const ab={définition:'Déf',proposition:'Prop',théorème:'Thm',lemme:'Lemme',corollaire:'Cor',propriété:'Prop',remarque:'Rem',exemple:'Ex',méthode:'Méth',notation:'Not'}[m[1].toLowerCase()]||m[1],num=m[2]?' '+m[2].replace(/\.$/,''):'';
+  let rest=m[3]||'';
+  if(rest.length<4&&x.full){let f=String(x.full).replace(/\s+/g,' ').trim();f=f.replace(/^(Définition|Proposition|Théorème|Lemme|Corollaire|Propriété|Remarque|Exemple|Méthode|Notation)\s*[\d.]*\s*[:.\-–—]?\s*/i,'');rest=f}
+  rest=rest.replace(/^\(([^)]{3,60})\)\s*/,'$1 ').replace(/^[\s:.\-–—]+/,'').replace(/\$/g,'');
+  if(rest.length>34){const cut=rest.slice(0,34),i=cut.lastIndexOf(' ');rest=cut.slice(0,i>14?i:34)+'…'}
+  return ab+num+(rest?' · '+rest:'');
+}
 async function skRender(){
   const host=document.getElementById('sktree');if(!host)return;
   const sj=st.skj;let g;try{g=await skGraph(sj)}catch(e){host.innerHTML='<div class="sub">Could not build the tree.</div>';return}
@@ -10387,7 +10402,7 @@ async function skRender(){
     y+=HH;
     if(!o){b.nodes.forEach(n=>{pos[n.key]=null});return}
     b.nodes.forEach((n,i)=>{const r=Math.floor(i/C5),c=i%C5,cx=CW*c+CW/2,cy=y+r*RH+24;pos[n.key]={cx,cy};
-      const p=n.lv/4*100,lab=n.x.t.slice(0,38);
+      const p=n.lv/4*100,lab=skLabel(n.x);
       html+='<button class="skn '+n.st+'" data-a="sk" data-i="'+esc(n.key)+'" data-ty="'+n.ty+'" style="left:'+cx+'px;top:'+(cy-24)+'px;--p:'+p+'"><span class="skc"><b>'+(n.st==='lock'?'🔒':SKG[n.ty])+'</b></span><small>'+esc(lab||n.x.t.slice(0,30))+'</small></button>';
     });
     y+=Math.ceil(b.nodes.length/C5)*RH+6;
@@ -10408,22 +10423,18 @@ async function skfDraw(){
   const hue=SKH[sj]||215;root.style.setProperty('--h',hue);
   const ls=g.bands.filter(b=>b.nodes.length);
   if(!ls.length){wd.innerHTML='<div class="sub" style="padding:40px;color:#9fb0d0">No skills yet. Analyse your lessons first.</div>';return}
-  const pos={},dep={},K=ls.length,R0=200,STEP=135;let maxR=0;
+  const pos={},dep={},K=ls.length,GAP=120,LW=112,PER=5;let maxR=0;
   const depth=n=>{if(n.key in dep)return dep[n.key];dep[n.key]=0;const ps=n.pre.filter(p=>p.l.id===n.l.id);dep[n.key]=ps.length?1+Math.max(...ps.map(depth)):0;return dep[n.key]};
-  const lab=[];
-  ls.forEach((b,i)=>{
-    const th=-Math.PI/2+2*Math.PI*i/K,sec=Math.min(2*Math.PI/K*0.86,1.5),by={};
-    b.nodes.forEach(n=>{const d=Math.min(depth(n),8);(by[d]=by[d]||[]).push(n)});
-    let off=0;
-    Object.keys(by).map(Number).sort((a,c)=>a-c).forEach(d=>{
-      const row=by[d],m=row.length;
-      row.forEach((n,j)=>{
-        const r=R0+(d+off)*STEP+(m>1&&j%2?30:0),spread=m>1?Math.min(sec,0.5+m*0.2):0,a=th+(m>1?(j/(m-1)-.5)*spread*(1+d*0.0):0);
-        const rr=r+Math.max(0,m-4)*18*(d?1:0);
-        pos[n.key]={x:Math.cos(a)*rr,y:Math.sin(a)*rr};maxR=Math.max(maxR,rr);
-      });
-    });
-    lab.push({b,th});
+  const isl=ls.map(b=>{const by={};b.nodes.forEach(n=>{const d=Math.min(depth(n),10);(by[d]=by[d]||[]).push(n)});
+    const rows=[];Object.keys(by).map(Number).sort((x,y)=>x-y).forEach(d=>{const r=by[d];for(let i=0;i<r.length;i+=PER)rows.push(r.slice(i,i+PER))});
+    return{b,rows,w:Math.max(...rows.map(r=>r.length))*LW}});
+  const wmax=Math.max(...isl.map(o=>o.w)),u0=Math.max(300,K*(wmax+90)/(2*Math.PI)),lab=[];
+  isl.forEach((o,i)=>{
+    const th=-Math.PI/2+2*Math.PI*i/K,c=Math.cos(th),sn=Math.sin(th);
+    o.rows.forEach((row,ri)=>{row.forEach((n,j)=>{
+      const u=u0+ri*GAP+(row.length>1&&j%2?34:0),v=(j-(row.length-1)/2)*LW;
+      const x=c*u-sn*v,y=sn*u+c*v;pos[n.key]={x,y};maxR=Math.max(maxR,Math.hypot(x,y))})});
+    lab.push({b:o.b,th,r:u0-90});
   });
   const half=Math.ceil(maxR+260),sz=half*2;
   let edges='',nodes='',stars='';
@@ -10434,25 +10445,25 @@ async function skfDraw(){
     const d='M'+(C0+b.x)+' '+(C0+b.y)+' Q'+(C0+mx+dx*k)+' '+(C0+my+dy*k)+' '+(C0+a.x)+' '+(C0+a.y);
     edges+='<path d="'+d+'" class="'+(q.lv>=3?'on':n.st==='lock'?'off':'av')+'"/>'})});
   ls.forEach(b=>{const f=b.nodes[0];const a=pos[f.key];if(!f.pre.some(p=>p.l.id===b.l.id)&&a){edges+='<path d="M'+C0+' '+C0+' L'+(C0+a.x)+' '+(C0+a.y)+'" class="hub"/>'}});
-  g.nodes.forEach(n=>{const a=pos[n.key];if(!a)return;const lb=n.x.t.slice(0,34);
+  g.nodes.forEach(n=>{const a=pos[n.key];if(!a)return;const lb=skLabel(n.x);
     nodes+='<button class="sfn '+n.st+'" data-a="sk" data-i="'+esc(n.key)+'" data-ty="'+n.ty+'" style="left:'+(C0+a.x)+'px;top:'+(C0+a.y)+'px;--p:'+(n.lv/4*100)+'"><span class="sfh"><b>'+(n.st==='lock'?'🔒':SKG[n.ty])+'</b></span><small>'+esc(lb)+'</small></button>'});
   const ok=g.nodes.filter(n=>n.st==='ok').length,pct=ok/g.nodes.length;
-  let lbs='';lab.forEach(({b,th})=>{const r=R0-78;lbs+='<div class="sfl" style="left:'+(C0+Math.cos(th)*r)+'px;top:'+(C0+Math.sin(th)*r)+'px">'+esc(b.l.title.slice(0,26))+'</div>'});
+  let lbs='';lab.forEach(({b,th,r})=>{lbs+='<div class="sfl" style="left:'+(C0+Math.cos(th)*r)+'px;top:'+(C0+Math.sin(th)*r)+'px">'+esc(b.l.title.slice(0,26))+'</div>'});
   wd.style.width=wd.style.height=sz+'px';
   wd.innerHTML='<svg class="sfs" width="'+sz+'" height="'+sz+'" viewBox="0 0 '+sz+' '+sz+'"><g class="sst">'+stars+'</g><g class="sfe">'+edges+'</g></svg>'+lbs+'<div class="sfc" style="left:'+C0+'px;top:'+C0+'px"><b>'+Math.round(pct*100)+'%</b><small>'+esc(SUBJ[sj].n)+'</small></div>'+nodes;
   root.querySelector('.skft').innerHTML='<b>'+skRank(pct)+'</b> · '+ok+'/'+g.nodes.length+' mastered · '+g.nodes.filter(n=>n.st==='av').length+' ready';
-  SKF={sz,half,tx:0,ty:0,k:1,vp,wd,sj};skfFit();
+  SKF={sz,half,maxR,tx:0,ty:0,k:1,vp,wd,sj};skfFit();
 }
 function skfApply(){const f=SKF;if(!f)return;f.wd.style.transform='translate('+f.tx+'px,'+f.ty+'px) scale('+f.k+')'}
-function skfFit(){const f=SKF;if(!f)return;const W=f.vp.clientWidth,H=f.vp.clientHeight;f.k=Math.max(.15,Math.min(1,Math.min(W,H)/(f.sz*0.55)));f.tx=W/2-f.half*f.k;f.ty=H/2-f.half*f.k;skfApply()}
-function skfZoom(m,cx,cy){const f=SKF;if(!f)return;const k=Math.max(.12,Math.min(2.6,f.k*m)),r=k/f.k;f.tx=cx-(cx-f.tx)*r;f.ty=cy-(cy-f.ty)*r;f.k=k;skfApply()}
+function skfFit(){const f=SKF;if(!f)return;const W=f.vp.clientWidth,H=f.vp.clientHeight;f.k=Math.max(.05,Math.min(1,Math.min(W,H)/(2*(f.maxR+170))));f.tx=W/2-f.half*f.k;f.ty=H/2-f.half*f.k;skfApply()}
+function skfZoom(m,cx,cy){const f=SKF;if(!f)return;const k=Math.max(.04,Math.min(2.6,f.k*m)),r=k/f.k;f.tx=cx-(cx-f.tx)*r;f.ty=cy-(cy-f.ty)*r;f.k=k;skfApply()}
 function skfOpen(){
   if(document.getElementById('skfs'))return;
   const sjs=C.LSUBJ.filter(s=>S.lessons.some(l=>l.subj===s));if(!sjs.length)return;
   if(!st.skj||!sjs.includes(st.skj))st.skj=sjs[0];
   const r=document.createElement('div');r.id='skfs';r.className='skfs';
   r.innerHTML='<div class="skfv"><div class="skfw"></div></div><div class="skfb"><button class="skfx" id="skf-x" aria-label="Close">✕</button><div class="skft"></div></div><div class="skfch">'+sjs.map(s=>'<button class="chip '+(s===st.skj?'on':'')+'" data-s="'+s+'">'+SUBJ[s].n+'</button>').join('')+'</div><div class="skfz"><button id="skf-p" aria-label="Zoom in">＋</button><button id="skf-m" aria-label="Zoom out">－</button><button id="skf-f" aria-label="Fit">⤢</button></div>';
-  document.body.appendChild(r);
+  document.body.appendChild(r);document.body.classList.add('skfo');
   const vp=r.querySelector('.skfv'),pts=new Map();let moved=0,d0=0,k0=1,mid=null;
   const rect=()=>vp.getBoundingClientRect();
   vp.addEventListener('pointerdown',e=>{pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;if(pts.size===2){const[a,b]=[...pts.values()];d0=Math.hypot(a.x-b.x,a.y-b.y);k0=SKF.k}});
@@ -10462,7 +10473,8 @@ function skfOpen(){
   const up=e=>{pts.delete(e.pointerId)};vp.addEventListener('pointerup',up);vp.addEventListener('pointercancel',up);
   vp.addEventListener('wheel',e=>{e.preventDefault();const R=rect();skfZoom(e.deltaY<0?1.12:1/1.12,e.clientX-R.left,e.clientY-R.top)},{passive:false});
   vp.addEventListener('click',e=>{if(moved>8){e.stopPropagation();e.preventDefault()}},true);
-  r.querySelector('#skf-x').onclick=()=>{r.remove();SKF=null;render()};
+  vp.addEventListener('click',e=>{const n=e.target.closest('.sfn');if(!n||moved>8)return;vib&&vib(10);skOpen(n.dataset.i)});
+  r.querySelector('#skf-x').onclick=()=>{r.remove();SKF=null;document.body.classList.remove('skfo');render()};
   r.querySelector('#skf-p').onclick=()=>{const R=rect();skfZoom(1.3,R.width/2,R.height/2)};
   r.querySelector('#skf-m').onclick=()=>{const R=rect();skfZoom(1/1.3,R.width/2,R.height/2)};
   r.querySelector('#skf-f').onclick=skfFit;
@@ -10512,7 +10524,7 @@ async function skOpen(key){
   const l=n.l,x=n.x,hue=SKH[l.subj]||215,TYN={df:'Definition',th:'Law · theorem',me:'Method'};
   const mdx='**'+x.t.replace(/\*/g,'')+'**'+(x.ty==='me'?(x.w?'\n\n*Quand :* '+x.w:'')+(x.st&&x.st.length?'\n\n'+x.st.map((z,q)=>(q+1)+'. '+z).join('\n'):''):(x.full&&x.full!==x.t?'\n\n'+x.full:''));
   const hk=kmHash(key),exs=kpFor(l,x,null,3);
-  const lvl=KM_L[n.lv],chip=(m,t)=>'<button class="skx" data-a="sk" data-i="'+esc(m.key)+'"><b>'+(m.st==='lock'?'🔒':SKG[m.ty])+'</b>'+esc(m.x.t.slice(0,60))+'</button>';
+  const lvl=KM_L[n.lv],chip=(m,t)=>'<button class="skx" data-a="sk" data-i="'+esc(m.key)+'"><b>'+(m.st==='lock'?'🔒':SKG[m.ty])+'</b>'+esc(skLabel(m.x))+'</button>';
   let h='<div class="skp" style="--h:'+hue+'"><div class="skp-top"><span class="skp-g" data-st="'+n.st+'">'+SKG[n.ty]+'</span><div><div class="skp-k">'+TYN[n.ty]+' · '+esc(SUBJ[l.subj].n)+'</div><h2 class="sh skp-n">'+esc(x.t.slice(0,140))+'</h2><div class="sub">'+esc(l.title)+' · '+(n.st==='lock'?'🔒 locked: master a linked skill first':n.st==='ok'?'✦ mastered':'ready to train')+'</div></div></div>'+
   '<div class="skp-s">Description</div><div class="kph" data-ty="'+n.ty+'"><div class="kmd skt" id="sk-d"></div></div>'+
   '<div id="sk-sc" class="sksc"></div>'+
@@ -12605,9 +12617,9 @@ coOpen=function(pre){
 ME_Q.push(['Kick me','Secoue-moi. Pas de politesse : où est-ce que je me raconte des histoires en ce moment, et qu\'est-ce que je fais dans les 10 prochaines minutes ?'],['Dare me','Lance-moi un défi (dare) concret, mesurable, que je peux commencer aujourd\'hui, et propose de le transformer en promesse.'],['I failed','J\'ai échoué. Sans me blâmer : combien d\'échecs il me reste avant d\'y arriver, ce que celui-ci m\'apprend, et UN tout petit prochain pas.']);
 /* ================= v68: CALM HOME that adapts to the moment ================= */
 const PHK='p_hm';
-const HCARDS={balcard:'Alter Ego',hydcard:'Water',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
-const PERIODS=[['morning','Morning'],['day','Daytime'],['night','Evening']],ALWAYS=['wkcard','balcard','hydcard','hauto','xmcard','rxcard'];
-const hCfg=()=>{const c=Object.assign({mode:'auto',hide:[],order:[],when:{}},jl(PHK,{}));c.hide=c.hide||[];c.order=c.order||[];c.when=c.when||{};return c};
+const HCARDS={hero:'Level & XP',balcard:'Alter Ego',hydcard:'Water',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
+const PERIODS=[['morning','Morning'],['day','Daytime'],['night','Evening']],ALWAYS=['hero','wkcard','balcard','hydcard','hauto','xmcard','rxcard'];
+const hCfg=()=>{const c=Object.assign({mode:'auto',hide:[],order:[],when:{},pin:[]},jl(PHK,{}));c.pin=c.pin||[];c.hide=c.hide||[];c.order=c.order||[];c.when=c.when||{};return c};
 function hKey(el,i){if(el.dataset&&el.dataset.wid)return 'w:'+el.dataset.wid;if(el.id&&HCARDS[el.id])return el.id;const l=el.querySelector('.lbl');const t=l?l.textContent.trim():'';if(HCARDS[t])return t;if(el.classList.contains('lazycard'))return 'lazycard';const j=el.getAttribute('onclick')||'';if(/showJournal/.test(j))return 'Journal';if(/stats/.test(j))return 'Stats';return null}
 function hPeriod(){const h=new Date().getHours(),m=h*60+new Date().getMinutes();return m>=20*60+30||h<5?'night':h<12?'morning':'day'}
 const KEEP={morning:['Today','Objectives'].concat(ALWAYS),day:['Today','Objectives','hhcard','motiv'].concat(ALWAYS),night:['Objectives','motiv','How was your day?','Daily review','tpcard'].concat(ALWAYS)};
@@ -12621,10 +12633,11 @@ function hLayout(){
     else if(cfg.mode==='auto'){const w=cfg.when[k];hide=w?!w.includes(hPeriod()):!KEEP[hPeriod()].includes(k)}
     else if(cfg.mode==='custom')hide=cfg.hide.includes(k);
     if(k.slice(0,2)==='w:')hide=cfg.mode==='custom'&&cfg.hide.includes(k);
+    const pn=cfg.pin.includes(k);el.classList.toggle('ph-pin',pn);if(pn)hide=false;
     if(hide)el.classList.add('ph-hide');
   });
   const K=cards.filter(el=>hKey(el));K.forEach(el=>{el.dataset.hold='hcard';el.dataset.hk=hKey(el)});
-  if(cfg.order.length){const ix=k=>{const i=cfg.order.indexOf(k);return i<0?999:i},S=K.map((el,i)=>[el,i]).sort((a,b)=>ix(hKey(a[0]))-ix(hKey(b[0]))||a[1]-b[1]).map(x=>x[0]);
+  if(cfg.order.length||cfg.pin.length){const ix=k=>{const i=cfg.order.indexOf(k);return i<0?999:i},pw=k=>cfg.pin.includes(k)?0:1,S=K.map((el,i)=>[el,i]).sort((a,b)=>pw(hKey(a[0]))-pw(hKey(b[0]))||ix(hKey(a[0]))-ix(hKey(b[0]))||a[1]-b[1]).map(x=>x[0]);
     if(S.some((el,i)=>el!==K[i])){const M=K.map(el=>{const m=document.createComment('');el.before(m);return m});M.forEach((m,i)=>m.replaceWith(S[i]))}}
   let b=document.getElementById('ph-more');
   if(!b){b=document.createElement('div');b.id='ph-more';b.style.cssText='display:flex;gap:10px;justify-content:center;margin:6px 0 90px';b.innerHTML='<button class="btn" data-h="more" style="width:auto;margin:0;padding:10px 16px">Show everything</button><button class="btn primary" data-h="add" style="width:auto;margin:0;padding:10px 16px">＋ Block</button><button class="btn" data-h="cust" style="width:auto;margin:0;padding:10px 16px">Customise</button>';b.onclick=e=>{const x=e.target.closest('[data-h]');if(!x)return;if(x.dataset.h==='more'){home.classList.toggle('ph-more');hLayout()}else if(x.dataset.h==='add')hwLib();else hCustom()};}
@@ -12649,9 +12662,10 @@ function hEdit(k){
   if(k&&k.slice(0,2)==='w:'){hwEdit(k.slice(2));return}
   if(!HCARDS[k])return;
   const cfg=hCfg(),w=cfg.when[k],eff=w||PERIODS.map(p=>p[0]).filter(p=>KEEP[p].includes(k));
-  openSheet('<h2 class="sh">'+esc(HCARDS[k])+'</h2><div class="sub" style="margin:0 0 10px">Hold a block and drag it to move it. Here you choose when it shows.</div><div class="field"><label>Show it in the</label><div class="chips" id="he-p" style="flex-wrap:wrap">'+PERIODS.map(p=>'<button class="chip '+(eff.includes(p[0])?'on':'')+'" data-v="'+p[0]+'">'+p[1]+'</button>').join('')+'</div></div><div class="sub" style="margin:-4px 0 12px">'+(cfg.mode==='auto'?'Adaptive layout: this block follows these times.':'Changing this switches Home to the Adaptive layout.')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" id="he-top" style="margin:0">⬆︎ To the top</button><button class="btn" id="he-bot" style="margin:0">⬇︎ To the bottom</button></div><button class="btn danger" id="he-off" style="margin-top:10px">Hide this block</button><button class="btn" id="he-rs" style="margin-top:8px">Reset the order of all blocks</button>');
+  openSheet('<h2 class="sh">'+esc(HCARDS[k])+'</h2><div class="sub" style="margin:0 0 10px">Hold a block and drag it to move it. Here you choose when it shows.</div><div class="field"><label>Show it in the</label><div class="chips" id="he-p" style="flex-wrap:wrap">'+PERIODS.map(p=>'<button class="chip '+(eff.includes(p[0])?'on':'')+'" data-v="'+p[0]+'">'+p[1]+'</button>').join('')+'</div></div><div class="sub" style="margin:-4px 0 12px">'+(cfg.mode==='auto'?'Adaptive layout: this block follows these times.':'Changing this switches Home to the Adaptive layout.')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" id="he-top" style="margin:0">⬆︎ To the top</button><button class="btn" id="he-bot" style="margin:0">⬇︎ To the bottom</button></div><button class="btn" id="he-pin" style="margin-top:10px;border-color:#f5b94a;color:#f5b94a">'+(cfg.pin.includes(k)?'📌 Unpin (it follows the normal rules again)':'📌 Pin: always shown, at the top')+'</button><button class="btn danger" id="he-off" style="margin-top:10px">Hide this block</button><button class="btn" id="he-rs" style="margin-top:8px">Reset the order of all blocks</button>');
   const g=i=>document.getElementById(i),c=g('he-p');
   c.onclick=e=>{const b=e.target.closest('.chip');if(!b)return;b.classList.toggle('on');const c2=hCfg();c2.when[k]=[...c.querySelectorAll('.chip.on')].map(x=>x.dataset.v);c2.mode='auto';js(PHK,c2);hLayout()};
+  g('he-pin').onclick=()=>{const c2=hCfg(),i=c2.pin.indexOf(k);if(i<0)c2.pin.push(k);else c2.pin.splice(i,1);js(PHK,c2);hLayout();closeSheet();toast(i<0?'Pinned 📌 · always shown':'Unpinned')};
   g('he-top').onclick=()=>{hMove(k,'top');closeSheet()};g('he-bot').onclick=()=>{hMove(k,'bot');closeSheet()};
   g('he-rs').onclick=()=>{const c2=hCfg();c2.order=[];js(PHK,c2);closeSheet();toast('Order reset · it applies at the next refresh');try{render()}catch(e){}};
   g('he-off').onclick=()=>{const c2=hCfg();if(c2.mode==='custom'||c2.mode==='full'){c2.mode='custom';if(!c2.hide.includes(k))c2.hide.push(k)}else c2.when[k]=[];if(c2.mode==='calm')c2.mode='auto';js(PHK,c2);hLayout();closeSheet();toast(HCARDS[k]+' hidden · Customise Home brings it back')};
