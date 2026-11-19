@@ -1840,6 +1840,38 @@ body .ctiles button{background:var(--surf);border:1px solid var(--line);border-t
 body .nxk,body .dsdeb-h{letter-spacing:.06em}
 #amb i{opacity:.4}
 body .pwh{background:var(--surf);border:1px solid var(--line)}
+
+/* v193 full-screen constellation map */
+.skfsb{margin:0 0 10px;background:linear-gradient(135deg,rgba(80,120,255,.22),rgba(150,90,255,.2));border-color:rgba(130,150,255,.4)}
+.skfs{position:fixed;inset:0;z-index:9000;background:radial-gradient(ellipse at 50% 40%,hsl(var(--h,215) 55% 12%) 0%,#05070f 62%,#02030a 100%);overflow:hidden;touch-action:none;color:#dfe8ff}
+.skfv{position:absolute;inset:0;touch-action:none;cursor:grab}
+.skfw{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+.sfs{position:absolute;left:0;top:0;pointer-events:none}
+.sst circle{fill:#cfe0ff}
+.sfe path{fill:none;stroke-width:3;stroke-linecap:round}
+.sfe path.on{stroke:hsl(var(--h,215) 95% 68%);filter:drop-shadow(0 0 6px hsl(var(--h,215) 95% 62%));stroke-width:4}
+.sfe path.av{stroke:hsl(var(--h,215) 70% 55% / .65);stroke-dasharray:2 9}
+.sfe path.off{stroke:rgba(150,165,200,.2);stroke-dasharray:3 10}
+.sfe path.hub{stroke:hsl(var(--h,215) 60% 55% / .35);stroke-width:2}
+.sfc{position:absolute;width:104px;height:104px;margin:-52px 0 0 -52px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,hsl(var(--h,215) 80% 40%/.55),rgba(5,8,20,.9) 70%);box-shadow:0 0 40px hsl(var(--h,215) 90% 55%/.55),inset 0 0 18px hsl(var(--h,215) 90% 65%/.4);border:1.5px solid hsl(var(--h,215) 90% 70%/.7)}
+.sfc b{font-size:24px}.sfc small{font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:.08em}
+.sfl{position:absolute;transform:translate(-50%,-50%);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--h,215) 70% 78%);opacity:.75;white-space:nowrap;pointer-events:none;text-shadow:0 0 8px #000}
+.sfn{position:absolute;width:92px;margin:-34px 0 0 -46px;background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:5px;color:#dfe8ff;cursor:pointer;font:inherit}
+.sfh{width:60px;height:66px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:flex;align-items:center;justify-content:center;background:#0d1426;position:relative;font-size:24px}
+.sfh::before{content:"";position:absolute;inset:3px;clip-path:inherit;background:#0b1020;z-index:0}
+.sfh b{position:relative;z-index:1;font-weight:400}
+.sfn small{font-size:11px;line-height:1.15;text-align:center;max-width:92px;text-shadow:0 0 6px #000,0 0 10px #000}
+.sfn.lock{opacity:.45}.sfn.lock .sfh{background:#3b4566}
+.sfn.av .sfh{background:hsl(var(--h,215) 95% 62%);filter:drop-shadow(0 0 10px hsl(var(--h,215) 95% 60%));animation:sfp 2.4s ease-in-out infinite}
+.sfn.ok .sfh{background:linear-gradient(160deg,#ffe58a,#ffb84a);filter:drop-shadow(0 0 12px rgba(255,196,80,.85))}
+.sfn.ok .sfh::before{background:linear-gradient(160deg,#3a2a08,#6b4a10)}
+@keyframes sfp{50%{filter:drop-shadow(0 0 20px hsl(var(--h,215) 95% 66%))}}
+.skfb{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;display:flex;align-items:center;gap:12px;background:linear-gradient(#02030acc,transparent);pointer-events:none}
+.skfb>*{pointer-events:auto}
+.skfx,.skfz button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(160,180,255,.35);background:rgba(10,16,34,.8);color:#e6eeff;font-size:20px}
+.skft{font-size:14px;color:#b9c8ee}.skft b{color:#fff}
+.skfch{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top) + 64px);display:flex;gap:8px;overflow-x:auto;padding:0 14px}
+.skfz{position:absolute;right:14px;bottom:calc(env(safe-area-inset-bottom) + 18px);display:flex;flex-direction:column;gap:10px}
 </style>
 </head>
 <body>
@@ -7411,7 +7443,39 @@ function vSheet(id){
   return backBar('Prep sheet','<button class="pmini" data-a="printSheet" data-i="'+id+'" aria-label="Print">⎙</button>')+
   '<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Exercises</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrections</button></div><div class="card"><div class="doc" id="sheetdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
 }
+
+/* ----- v193 import normaliser: math-italic -> plain, headings, paragraphs, exercise/correction marker ----- */
+function impNorm(t){
+  t=String(t||'');
+  if(!/[\u{1D400}-\u{1D7FF}]/u.test(t)&&/^##\s/m.test(t)&&!/\n.{900,}/.test(t))return t;
+  t=t.replace(/[\u{1D400}-\u{1D7FF}]/gu,ch=>{const c=ch.codePointAt(0);if(c>=0x1D538&&c<=0x1D56B)return ch;return ch.normalize('NFKC')});
+  t=t.replace(/[∶]/g,':').replace(/∣/g,'|').replace(/ℱ/g,'F').replace(/ℒ/g,'L');
+  t=t.replace(/([ℝℂℕℤℚ])(\d)\b/g,(m,a,d)=>a+'⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]).replace(/ ([′″]+)/g,'$1').replace(/([A-Za-z])\s([′″])/g,'$1$2');
+  const had=/^##\s/m.test(t);
+  if(!had){
+    let corr=false;
+    const L=t.split('\n').map(l=>l.replace(/[ \t]+/g,' ').trim());
+    const out=[];
+    L.forEach(l=>{
+      if(/^Corrections?$/i.test(l)){corr=true;out.push('','<!--CORRECTIONS-->','## Corrections','');return}
+      if(/^(Questions? de cours|Exercices?|Probl[èe]mes?|Cours|Applications?)$/i.test(l)){out.push('','## '+l,'');return}
+      let m;
+      if((m=/^(Exercice|Probl[èe]me)\s+(\d+)\s*(.*)$/i.exec(l))&&(corr?!m[3]||m[3].length<3||/^[-–—:.]/.test(m[3])||true:true)){
+        out.push('','#### '+m[1]+' '+m[2]+(m[3]?(/^[-–—:.]/.test(m[3])?' '+m[3]:' · '+m[3]):''),'');
+        if(corr&&m[3]&&!/^[-–—:.]/.test(m[3])){out.pop();out.push(m[3])}
+        return}
+      if(/^Question\s+\d+\s*[.:–-]/i.test(l)){out.push('','**'+l.replace(/^(Question\s+\d+\s*[.:–-]?)\s*/i,'$1** '));return}
+      if(/^(Indication|Indications|Rappel|Remarque)\s*:/i.test(l)){out.push('','*'+l+'*');return}
+      if(/^\d{1,2}\.\s/.test(l)){out.push('',l);return}
+      out.push(l);
+    });
+    t=out.join('\n');
+  }
+  return t.replace(/\n{3,}/g,'\n\n').trim();
+}
+C.impNorm=impNorm;
 function splitSheet(t){
+  t=impNorm(t);
   let i=t.indexOf('<!--CORRECTIONS-->');if(i<0){const m=/^##\s*Corrections?/mi.exec(t);i=m?m.index:-1}
   if(i<0)return{ex:t,co:''};return{ex:t.slice(0,i).replace(/<!--CORRECTIONS-->/g,'').trim(),co:t.slice(i).replace(/<!--CORRECTIONS-->/g,'').trim()};
 }
@@ -8114,8 +8178,8 @@ A.gcfg=i=>{const[k,v]=i.split('|');S.set.gcfg=Object.assign(gcfg(),{[k]:v});save
 /* ----- import a sheet / mock made elsewhere, and a prompt to make one in a new Claude session ----- */
 function pickFile(accept,cb){const i=document.createElement('input');i.type='file';i.accept=accept;i.style.display='none';document.body.appendChild(i);i.onchange=()=>{const f=i.files[0];i.remove();if(f)cb(f)};i.click();setTimeout(()=>{if(!i.files.length)i.remove()},60000)}
 async function impText(f){
-  if(C.isPdf(f)){const r=await C.pdfText(f);if(r.avg<150)throw new Error('This PDF looks scanned (no text). Export it as text or Markdown, or as a PDF with selectable text.');return r.text.replace(/^## Page \d+\s*$/gm,'').trim()}
-  if(/^text\//.test(f.type)||/\.(txt|md|markdown)$/i.test(f.name||''))return(await f.text()).trim();
+  if(C.isPdf(f)){const r=await C.pdfText(f);if(r.avg<150)throw new Error('This PDF looks scanned (no text). Export it as text or Markdown, or as a PDF with selectable text.');return impNorm(r.text.replace(/^## Page \d+\s*$/gm,'').trim())}
+  if(/^text\//.test(f.type)||/\.(txt|md|markdown)$/i.test(f.name||''))return impNorm((await f.text()).trim());
   throw new Error('Use a PDF with text, a .md or a .txt file.');
 }
 const IMP_ACC='application/pdf,.md,.markdown,.txt,text/plain';
@@ -8778,10 +8842,13 @@ A.addCard=()=>{
 A.cardList=s0=>{
   let q='',sj=typeof s0==='string'&&SUBJ[s0]?s0:'';const subs=[...new Set(S.cards.map(c=>c.subj))];
   const draw=()=>{const l=S.cards.filter(c=>(!sj||c.subj===sj)&&(!q||((c.q||'')+' '+(c.a||'')).toLowerCase().includes(q)));
-    $('cl-l').innerHTML=l.length?l.map(c=>'<div class="cl-i"><div class="cl-q">'+esc(c.q||'')+'</div><div class="cl-a">'+esc(c.a||'')+'</div><div class="cl-m"><span>'+SUBJ[c.subj].n+' · level '+(c.box||0)+(c.due<=iso()?' · due':'')+'</span><button class="pmini" data-cdel="'+c.id+'" aria-label="Delete card">🗑</button></div></div>').join(''):'<div class="sub">No card.</div>';$('cl-n').textContent=l.length+' card'+(l.length>1?'s':'')};
+    $('cl-l').innerHTML=l.length?l.map(c=>'<div class="cl-i"><div class="cl-q">'+esc(c.q||'')+'</div><div class="cl-a">'+esc(c.a||'')+'</div><div class="cl-m"><span>'+SUBJ[c.subj].n+' · level '+(c.box||0)+(c.due<=iso()?' · due':'')+'</span><button class="pmini" data-cedit="'+c.id+'" aria-label="Rename card">✎</button><button class="pmini" data-cdel="'+c.id+'" aria-label="Delete card">🗑</button></div></div>').join(''):'<div class="sub">No card.</div>';$('cl-n').textContent=l.length+' card'+(l.length>1?'s':'')};
   openSheet('<h2 class="sh">All cards</h2><input id="cl-s" placeholder="Search…" style="margin:0 0 8px"><div class="chips" id="cl-c" style="margin:0 0 8px;flex-wrap:wrap"><button class="chip on" data-v="">All</button>'+subs.map(x=>'<button class="chip" data-v="'+x+'">'+SUBJ[x].n+'</button>').join('')+'</div><div class="sub" id="cl-n" style="margin:0 0 8px"></div><div id="cl-l"></div>');
   draw();$('cl-s').oninput=e=>{q=e.target.value.toLowerCase();draw()};
   bindChips('cl-c',v=>{sj=v;draw()});
+  $('cl-l').addEventListener('click',e=>{const b=e.target.closest('[data-cedit]');if(!b)return;e.stopPropagation();const c=S.cards.find(x=>x.id===b.dataset.cedit);if(!c)return;
+    const it=b.closest('.cl-i');it.innerHTML='<input class="ce-q" value="'+esc(c.q||'')+'" aria-label="Card title" style="margin:0 0 6px"><textarea class="ce-a" rows="3" aria-label="Card answer" style="margin:0 0 6px">'+esc(c.a||'')+'</textarea><div style="display:flex;gap:8px"><button class="btn primary ce-ok" style="flex:1;margin:0">Save</button><button class="btn ce-no" style="flex:1;margin:0">Cancel</button></div>';
+    it.querySelector('.ce-ok').onclick=()=>{const q=it.querySelector('.ce-q').value.trim();if(!q){toast('Title is empty');return}c.q=q;c.a=it.querySelector('.ce-a').value.trim();save.cards();draw();toast('Card renamed ✓')};it.querySelector('.ce-no').onclick=draw;it.querySelector('.ce-q').focus()},true);
   $('cl-l').onclick=async e=>{const d=e.target.closest('[data-cdel]');if(!d)return;if(!await ask({title:'Delete this card?',ok:'Delete',danger:1}))return;S.cards=S.cards.filter(c=>c.id!==d.dataset.cdel);save.cards();draw()};
 };
 A.delDeck=async s=>{if(!await ask({title:'Delete the '+SUBJ[s].n+' deck?',ok:'Delete',danger:1}))return;S.cards=S.cards.filter(c=>c.subj!==s);save.cards();render()};
@@ -8871,6 +8938,7 @@ function vList(id){
   const k=vKnown(l),n=l.items.length,p=n?k/n:0;
   let h=backBar(l.title,l.fav?'':'<button class="pmini" data-a="vdelList" data-i="'+id+'" aria-label="Delete">'+ico.trash+'</button>');
   h+='<div class="pmeta" style="margin:0 0 12px">'+folderPill('vocab',id)+'</div>';
+  if(l.theme||l.unit||l.page)h+='<div class="vgt"><span>📖</span><div><div class="vgk">Where in the book</div><b>'+esc(l.theme||l.title)+'</b><small>'+(l.unit?' · Unit/ch. '+esc(l.unit):'')+(l.page?' · p. '+esc(l.page):'')+'</small></div></div>';
   h+='<div class="card"><div class="pcard-h"><div class="ring2"><svg viewBox="0 0 62 62"><circle class="tr" cx="31" cy="31" r="26"/><circle class="pg" cx="31" cy="31" r="26" stroke-dasharray="163.4" stroke-dashoffset="163.4" data-off="'+(163.4*(1-p)).toFixed(1)+'"/></svg><b>'+Math.round(p*100)+'%</b></div><div style="flex:1"><div style="font-weight:700;font-size:17px">'+k+' of '+n+' known</div><div class="sub">'+esc(l.la)+' ↔ '+esc(l.lb)+'</div></div></div>';
   h+='<div class="field" style="margin-top:14px"><label>Show first</label><div class="chips" id="v-dir"><button class="chip '+(vdir(l)==='ab'?'on':'')+'" data-v="ab">'+esc(l.la)+'</button><button class="chip '+(vdir(l)==='ba'?'on':'')+'" data-v="ba">'+esc(l.lb)+'</button><button class="chip '+(vdir(l)==='mix'?'on':'')+'" data-v="mix">Mixed</button></div></div>';
   h+='<button class="btn primary" data-a="vstart" data-i="'+id+'|all">Study all '+n+' words</button>';
@@ -9022,16 +9090,16 @@ async function vocabFromPhotos(files,lab,txt){
 }
 A.addVocab=()=>{
   let files=[];const pre=st.vpre||{};st.vpre=null;
-  openSheet('<h2 class="sh">Vocabulary list</h2><div class="sub" style="margin-bottom:12px">Photos of a book page, or a file (PDF, .txt, .csv) with general vocabulary such as linking words and useful expressions. If the file has no translations, the AI adds them. You can add several files.</div><div class="field"><label>Name (optional)</label><input id="v-t" placeholder="e.g. Unit 3 — Politics" value="'+esc(pre.name||'')+'"></div><div id="v-f"></div><div class="two2"><button class="btn" id="v-cam">Add files</button></div><button class="btn primary" id="v-go">Make my cards</button>');
+  openSheet('<h2 class="sh">Vocabulary list</h2><div class="sub" style="margin-bottom:12px">Photos of a book page, or a file (PDF, .txt, .csv) with general vocabulary such as linking words and useful expressions. If the file has no translations, the AI adds them. You can add several files.</div><div class="field"><label>Name (optional)</label><input id="v-t" placeholder="e.g. Unit 3 — Politics" value="'+esc(pre.name||'')+'"></div><div class="field"><label>Next theme (optional)</label><input id="v-th" maxlength="80" placeholder="e.g. Political life, elections" value="'+esc(pre.theme||'')+'"></div><div class="two2"><div class="field"><label>Unit / chapter</label><input id="v-u" maxlength="20" placeholder="e.g. 60+61" value="'+esc(pre.unit||'')+'"></div><div class="field"><label>Page(s)</label><input id="v-p" maxlength="20" placeholder="e.g. 112-115" value="'+esc(pre.page||'')+'"></div></div><div id="v-f"></div><div class="two2"><button class="btn" id="v-cam">Add files</button></div><button class="btn primary" id="v-go">Make my cards</button>');
   const draw=()=>{$('v-f').innerHTML=files.map(f=>'<div class="filerow"><span class="n">'+esc(f.name)+'<small>'+C.kb(f.size)+'</small></span></div>').join('')};
   $('v-cam').onclick=async()=>{const fs=await C.pickFiles({accept:VACC});if(fs.length){files=files.concat(fs);draw()}};
   $('v-go').onclick=()=>{
     if(!files.length){toast('Add at least one file');return}
     if(!needKey())return;
-    const name=$('v-t').value.trim(),fl=files;closeSheet();st.tab='cards';st.ctab='vocab';st.stack=[];render('tab');
+    const name=$('v-t').value.trim(),theme=$('v-th').value.trim(),unit=$('v-u').value.trim(),page=$('v-p').value.trim(),fl=files;closeSheet();st.tab='cards';st.ctab='vocab';st.stack=[];render('tab');
     run('VOC','Preparing the photos…',async(lab,txt)=>{
       const r=await vocabFromFiles(fl,lab,txt);
-      const l={id:uid(),title:name||r.title||'Vocabulary '+fdl(iso()),la:r.la,lb:r.lb,date:iso(),fresh:true,items:r.pairs.map(p=>({id:uid(),a:p.a,b:p.b,k:0,n:0}))};
+      const l={id:uid(),title:name||theme||r.title||'Vocabulary '+fdl(iso()),theme,unit,page,la:r.la,lb:r.lb,date:iso(),fresh:true,items:r.pairs.map(p=>({id:uid(),a:p.a,b:p.b,k:0,n:0}))};
       S.vocab.push(l);save.vocab();if(pre.vt){const r=S.exams[pre.vt]||recOf('exams',pre.vt,metaOf('exams',pre.vt));r.vl=l.id;save.exams()}toast(l.items.length+' words found ✓');st.stack=[{v:'vlist',id:l.id}];
     });
   };
@@ -10136,11 +10204,12 @@ async function kmScanAll(){
   _kmBusy=0;if(st.tab==='map'&&!st.lesson&&todo.some(l=>KMI[l.id].length)&&!document.getElementById('sheet').classList.contains('show'))render();
 }
 S.kmx=ld('p_kmx',{});save.kmx=()=>put('p_kmx',S.kmx);
-const KMX_SYS="Tu analyses UN cours de classe préparatoire (MPSI, lycée Aux Lazaristes). Tu extrais avec PRÉCISION ce qu'il faut savoir et les méthodes, UNIQUEMENT à partir du texte fourni, avec les noms EXACTS utilisés dans le cours (ex : « Théorème de Rolle », « Inégalité de Cauchy-Schwarz », « Étudier la convergence d'une suite par encadrement »). N'invente rien, ne reformule pas les noms. Réponds par un unique objet JSON, sans texte autour ni balises : {\"savoirs\":[{\"nom\":\"nom exact\",\"type\":\"def|thm|formule\",\"enonce\":\"énoncé court et exact, 200 caractères max, notation unicode sans LaTeX\"}],\"methodes\":[{\"nom\":\"nom précis de la méthode\",\"quand\":\"comment la reconnaître, 120 caractères max\",\"etapes\":[\"étape courte\"]}]}. Maximum 45 savoirs et 15 méthodes, dans l'ordre du cours. Une méthode = une technique réutilisable pour résoudre une question type, pas un théorème.";
+const KMX_SYS="Tu analyses UN cours de classe préparatoire (MPSI, lycée Aux Lazaristes). Tu extrais avec PRÉCISION ce qu'il faut savoir et les méthodes, UNIQUEMENT à partir du texte fourni, avec les noms EXACTS utilisés dans le cours (ex : « Théorème de Rolle », « Inégalité de Cauchy-Schwarz », « Étudier la convergence d'une suite par encadrement »). N'invente rien, ne reformule pas les noms. Réponds par un unique objet JSON, sans texte autour ni balises : {\"savoirs\":[{\"nom\":\"nom exact\",\"type\":\"def|thm|formule\",\"enonce\":\"énoncé court et exact, 220 caractères max ; TOUTES les formules en LaTeX entre $...$ (ex : $f:x\\mapsto x^2$, $\\omega$, $\\mathbb{R}^3$), jamais de mots comme omega ou mapsto en clair\"}],\"methodes\":[{\"nom\":\"nom précis de la méthode\",\"quand\":\"comment la reconnaître, 120 caractères max\",\"etapes\":[\"étape courte\"]}]}. Maximum 45 savoirs et 15 méthodes, dans l'ordre du cours. Une méthode = une technique réutilisable pour résoudre une question type, pas un théorème.";
 const KMX_TY={def:'df',thm:'th',formule:'th'};
+const kmFix=t=>String(t||'').replace(/\bMAPSTO\b/g,'↦').replace(/\bIMPLIES\b/g,'⇒').replace(/\bFORALL\b/g,'∀').replace(/\bEXISTS\b/g,'∃').replace(/\bomega\b/g,'ω').replace(/\bmapsto\b/g,'↦');
 function kmFromAI(x){
   const out=[];
-  (x.know||[]).forEach(a=>{const t=String(a.n||'').trim();if(t)out.push({k:'a'+kmHash(t.toLowerCase()),ty:KMX_TY[a.ty]||'th',t,full:String(a.s||t),ai:1})});
+  (x.know||[]).forEach(a=>{const t=String(a.n||'').trim();if(t)out.push({k:'a'+kmHash(t.toLowerCase()),ty:KMX_TY[a.ty]||'th',t,full:kmFix(a.s||t),ai:1})});
   (x.meth||[]).forEach(a=>{const t=String(a.n||'').trim();if(t)out.push({k:'m'+kmHash(t.toLowerCase()),ty:'me',t,full:t+(a.w?' — '+a.w:''),w:a.w||'',st:a.st||[],ai:1})});
   return out;
 }
@@ -10329,6 +10398,78 @@ async function skRender(){
   host.style.setProperty('--h',hue);
   host.innerHTML='<div class="skhd"><div><div class="skrk">'+skRank(pct)+'</div><div class="sub">'+ok+' of '+g.nodes.length+' skills mastered · '+g.nodes.filter(n=>n.st==='av').length+' ready to unlock</div></div><div class="skpc">'+Math.round(pct*100)+'<small>%</small></div></div><div class="skbar"><i style="width:'+Math.max(2,Math.round(pct*100))+'%"></i></div><div class="skfld" style="height:'+y+'px;width:'+W+'px"><svg width="'+W+'" height="'+y+'">'+edges+'</svg>'+html+'</div><div class="skleg"><span><i class="lk"></i>locked</span><span><i class="av"></i>ready</span><span><i class="ok"></i>mastered</span><span class="sub">Df definition · Th law · Mé method</span></div>';
 }
+
+/* ===== v193 full-screen constellation map (pan / pinch-zoom) ===== */
+let SKF=null;
+async function skfDraw(){
+  const root=document.getElementById('skfs');if(!root)return;
+  const sj=st.skj,vp=root.querySelector('.skfv'),wd=root.querySelector('.skfw');
+  let g;try{g=await skGraph(sj)}catch(e){wd.innerHTML='<div class="sub">Could not build the map.</div>';return}
+  const hue=SKH[sj]||215;root.style.setProperty('--h',hue);
+  const ls=g.bands.filter(b=>b.nodes.length);
+  if(!ls.length){wd.innerHTML='<div class="sub" style="padding:40px;color:#9fb0d0">No skills yet. Analyse your lessons first.</div>';return}
+  const pos={},dep={},K=ls.length,R0=200,STEP=135;let maxR=0;
+  const depth=n=>{if(n.key in dep)return dep[n.key];dep[n.key]=0;const ps=n.pre.filter(p=>p.l.id===n.l.id);dep[n.key]=ps.length?1+Math.max(...ps.map(depth)):0;return dep[n.key]};
+  const lab=[];
+  ls.forEach((b,i)=>{
+    const th=-Math.PI/2+2*Math.PI*i/K,sec=Math.min(2*Math.PI/K*0.86,1.5),by={};
+    b.nodes.forEach(n=>{const d=Math.min(depth(n),8);(by[d]=by[d]||[]).push(n)});
+    let off=0;
+    Object.keys(by).map(Number).sort((a,c)=>a-c).forEach(d=>{
+      const row=by[d],m=row.length;
+      row.forEach((n,j)=>{
+        const r=R0+(d+off)*STEP+(m>1&&j%2?30:0),spread=m>1?Math.min(sec,0.5+m*0.2):0,a=th+(m>1?(j/(m-1)-.5)*spread*(1+d*0.0):0);
+        const rr=r+Math.max(0,m-4)*18*(d?1:0);
+        pos[n.key]={x:Math.cos(a)*rr,y:Math.sin(a)*rr};maxR=Math.max(maxR,rr);
+      });
+    });
+    lab.push({b,th});
+  });
+  const half=Math.ceil(maxR+260),sz=half*2;
+  let edges='',nodes='',stars='';
+  for(let i=0;i<160;i++){const x=Math.random()*sz,y=Math.random()*sz,r=Math.random()*1.6+.3;stars+='<circle cx="'+x.toFixed(0)+'" cy="'+y.toFixed(0)+'" r="'+r.toFixed(1)+'" opacity="'+(Math.random()*.6+.15).toFixed(2)+'"/>'}
+  const C0=half;
+  g.nodes.forEach(n=>{const a=pos[n.key];if(!a)return;n.pre.forEach(q=>{const b=pos[q.key];if(!b)return;
+    const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=a.y-b.y,dy=b.x-a.x,k=.12;
+    const d='M'+(C0+b.x)+' '+(C0+b.y)+' Q'+(C0+mx+dx*k)+' '+(C0+my+dy*k)+' '+(C0+a.x)+' '+(C0+a.y);
+    edges+='<path d="'+d+'" class="'+(q.lv>=3?'on':n.st==='lock'?'off':'av')+'"/>'})});
+  ls.forEach(b=>{const f=b.nodes[0];const a=pos[f.key];if(!f.pre.some(p=>p.l.id===b.l.id)&&a){edges+='<path d="M'+C0+' '+C0+' L'+(C0+a.x)+' '+(C0+a.y)+'" class="hub"/>'}});
+  g.nodes.forEach(n=>{const a=pos[n.key];if(!a)return;const lb=n.x.t.slice(0,34);
+    nodes+='<button class="sfn '+n.st+'" data-a="sk" data-i="'+esc(n.key)+'" data-ty="'+n.ty+'" style="left:'+(C0+a.x)+'px;top:'+(C0+a.y)+'px;--p:'+(n.lv/4*100)+'"><span class="sfh"><b>'+(n.st==='lock'?'🔒':SKG[n.ty])+'</b></span><small>'+esc(lb)+'</small></button>'});
+  const ok=g.nodes.filter(n=>n.st==='ok').length,pct=ok/g.nodes.length;
+  let lbs='';lab.forEach(({b,th})=>{const r=R0-78;lbs+='<div class="sfl" style="left:'+(C0+Math.cos(th)*r)+'px;top:'+(C0+Math.sin(th)*r)+'px">'+esc(b.l.title.slice(0,26))+'</div>'});
+  wd.style.width=wd.style.height=sz+'px';
+  wd.innerHTML='<svg class="sfs" width="'+sz+'" height="'+sz+'" viewBox="0 0 '+sz+' '+sz+'"><g class="sst">'+stars+'</g><g class="sfe">'+edges+'</g></svg>'+lbs+'<div class="sfc" style="left:'+C0+'px;top:'+C0+'px"><b>'+Math.round(pct*100)+'%</b><small>'+esc(SUBJ[sj].n)+'</small></div>'+nodes;
+  root.querySelector('.skft').innerHTML='<b>'+skRank(pct)+'</b> · '+ok+'/'+g.nodes.length+' mastered · '+g.nodes.filter(n=>n.st==='av').length+' ready';
+  SKF={sz,half,tx:0,ty:0,k:1,vp,wd,sj};skfFit();
+}
+function skfApply(){const f=SKF;if(!f)return;f.wd.style.transform='translate('+f.tx+'px,'+f.ty+'px) scale('+f.k+')'}
+function skfFit(){const f=SKF;if(!f)return;const W=f.vp.clientWidth,H=f.vp.clientHeight;f.k=Math.max(.15,Math.min(1,Math.min(W,H)/(f.sz*0.55)));f.tx=W/2-f.half*f.k;f.ty=H/2-f.half*f.k;skfApply()}
+function skfZoom(m,cx,cy){const f=SKF;if(!f)return;const k=Math.max(.12,Math.min(2.6,f.k*m)),r=k/f.k;f.tx=cx-(cx-f.tx)*r;f.ty=cy-(cy-f.ty)*r;f.k=k;skfApply()}
+function skfOpen(){
+  if(document.getElementById('skfs'))return;
+  const sjs=C.LSUBJ.filter(s=>S.lessons.some(l=>l.subj===s));if(!sjs.length)return;
+  if(!st.skj||!sjs.includes(st.skj))st.skj=sjs[0];
+  const r=document.createElement('div');r.id='skfs';r.className='skfs';
+  r.innerHTML='<div class="skfv"><div class="skfw"></div></div><div class="skfb"><button class="skfx" id="skf-x" aria-label="Close">✕</button><div class="skft"></div></div><div class="skfch">'+sjs.map(s=>'<button class="chip '+(s===st.skj?'on':'')+'" data-s="'+s+'">'+SUBJ[s].n+'</button>').join('')+'</div><div class="skfz"><button id="skf-p" aria-label="Zoom in">＋</button><button id="skf-m" aria-label="Zoom out">－</button><button id="skf-f" aria-label="Fit">⤢</button></div>';
+  document.body.appendChild(r);
+  const vp=r.querySelector('.skfv'),pts=new Map();let moved=0,d0=0,k0=1,mid=null;
+  const rect=()=>vp.getBoundingClientRect();
+  vp.addEventListener('pointerdown',e=>{pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;if(pts.size===2){const[a,b]=[...pts.values()];d0=Math.hypot(a.x-b.x,a.y-b.y);k0=SKF.k}});
+  vp.addEventListener('pointermove',e=>{const o=pts.get(e.pointerId);if(!o||!SKF)return;const nx=e.clientX,ny=e.clientY;
+    if(pts.size===1){const dx=nx-o.x,dy=ny-o.y;moved+=Math.abs(dx)+Math.abs(dy);if(moved>8){SKF.tx+=dx;SKF.ty+=dy;skfApply()}o.x=nx;o.y=ny}
+    else if(pts.size===2){o.x=nx;o.y=ny;const[a,b]=[...pts.values()],d=Math.hypot(a.x-b.x,a.y-b.y),R=rect();moved+=20;if(d0>0)skfZoom((k0*d/d0)/SKF.k,(a.x+b.x)/2-R.left,(a.y+b.y)/2-R.top)}});
+  const up=e=>{pts.delete(e.pointerId)};vp.addEventListener('pointerup',up);vp.addEventListener('pointercancel',up);
+  vp.addEventListener('wheel',e=>{e.preventDefault();const R=rect();skfZoom(e.deltaY<0?1.12:1/1.12,e.clientX-R.left,e.clientY-R.top)},{passive:false});
+  vp.addEventListener('click',e=>{if(moved>8){e.stopPropagation();e.preventDefault()}},true);
+  r.querySelector('#skf-x').onclick=()=>{r.remove();SKF=null;render()};
+  r.querySelector('#skf-p').onclick=()=>{const R=rect();skfZoom(1.3,R.width/2,R.height/2)};
+  r.querySelector('#skf-m').onclick=()=>{const R=rect();skfZoom(1/1.3,R.width/2,R.height/2)};
+  r.querySelector('#skf-f').onclick=skfFit;
+  r.querySelector('.skfch').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;st.skj=b.dataset.s;r.querySelectorAll('.skfch .chip').forEach(c=>c.classList.toggle('on',c===b));skfDraw()};
+  skfDraw();
+}
+A.skfs=()=>skfOpen();
 A.skt=id=>{const sj=st.skj;const b=S.lessons.find(l=>l.id===id);const cur=(id in SKC)?SKC[id]:null;SKC[id]=cur===null?false:!cur;skRender()};
 A.skj=sj=>{st.skj=sj;render()};A.mapv=v=>{st.mapv=v;render()};
 function skTree(){
@@ -10336,7 +10477,7 @@ function skTree(){
   if(!sjs.length)return '<div class="card"><div class="sub">Your skill tree grows with your lessons. Add a lesson (and analyse it) and every definition, law and method becomes a skill to unlock.</div></div>';
   if(!st.skj||!sjs.includes(st.skj))st.skj=sjs[0];
   setTimeout(skRender,0);
-  return '<div class="chips skch" style="margin:0 0 10px;flex-wrap:nowrap;overflow-x:auto">'+sjs.map(s=>'<button class="chip '+(s===st.skj?'on':'')+'" data-a="skj" data-i="'+s+'">'+SUBJ[s].n+'</button>').join('')+'</div><div class="skm" id="sktree"><div class="sub" style="padding:14px">Growing the tree…</div></div>';
+  return '<button class="btn skfsb" data-a="skfs">✦ Open the full-screen map</button><div class="chips skch" style="margin:0 0 10px;flex-wrap:nowrap;overflow-x:auto">'+sjs.map(s=>'<button class="chip '+(s===st.skj?'on':'')+'" data-a="skj" data-i="'+s+'">'+SUBJ[s].n+'</button>').join('')+'</div><div class="skm" id="sktree"><div class="sub" style="padding:14px">Growing the tree…</div></div>';
 }
 async function skMd(el,txt){try{await C.loadKatex();el.innerHTML=C.md(C.mTags?C.mTags(txt):txt)}catch(e){el.textContent=txt}}
 
