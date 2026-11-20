@@ -2011,6 +2011,63 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
 :root[data-bw="light"] header button,:root[data-bw="light"] .pv-gear{color:#101010!important;opacity:1!important}
 :root[data-bw="light"] .card :is(h2,h3,.big,b){color:#101010}
 :root[data-bw="light"] :is(.addf,.add,.pmini,.cardhead button){color:#101010!important;opacity:1!important;border-color:rgba(0,0,0,.3)!important}
+
+/* v207: Mental courses layout (long questions never overlap answers) */
+.zcstage{overflow-y:auto;overflow-x:hidden;align-items:flex-start!important;-webkit-overflow-scrolling:touch;scrollbar-width:none}.zcstage::-webkit-scrollbar{display:none}
+.zcstage .zcqc{margin:auto 0;flex:none}
+.zcans{flex:none;padding-top:8px}
+.zcqc.lg .zcq{font-size:clamp(17px,4.8vw,22px)!important;line-height:1.35}.zcqc.xl .zcq{font-size:clamp(15px,4.2vw,18px)!important;line-height:1.4}
+.zcqc.lg,.zcqc.xl{padding:18px 16px 16px}.zcqc.lg .zckind,.zcqc.xl .zckind{margin-bottom:10px}
+/* v207: lighter map (no filters or infinite animations while panning) */
+.sfe path.on,.sfn.av .sfh,.sfn.ok .sfh{filter:none!important}.sfn.av .sfh{animation:none!important}
+.sfn small{text-shadow:none!important}.sfc{box-shadow:0 0 24px hsl(var(--h,215) 90% 55%/.4)}
+.skfw{backface-visibility:hidden;contain:layout style}.skfw .sfn{contain:layout style}
+
+/* ===== v208 calm design: neutral buttons, clean week plan, today highlight ===== */
+html body .btn.primary{background:rgba(255,255,255,.09)!important;color:var(--text)!important;border:1px solid var(--line2)!important;box-shadow:none!important;text-shadow:none!important;font-weight:650;padding:12px 16px;border-radius:14px;animation:none!important}
+html[data-theme="light"] body .btn.primary{background:rgba(0,0,0,.05)!important}
+html body .btn.primary.pulse{animation:none!important}
+html body .chip.on{background:rgba(255,255,255,.15)!important;color:var(--text)!important;border-color:rgba(255,255,255,.34)!important;box-shadow:none!important;transform:none!important;animation:none!important;text-shadow:none!important}
+html[data-theme="light"] body .chip.on{background:rgba(0,0,0,.08)!important;border-color:rgba(0,0,0,.3)!important}
+html body .fab{width:50px;height:50px;background:var(--surf2)!important;color:var(--text)!important;border:1px solid var(--line2)!important;box-shadow:0 10px 24px -12px rgba(0,0,0,.7)!important;text-shadow:none!important}
+html body .fab svg{stroke:var(--text)!important}
+#sheet.calm .sub:not(.keep),#sheet.calm .sbox>.sub{display:none!important}
+#sheet.calm .pv-btn small{opacity:.6}
+/* today blocks sit just after pinned ones */
+#home>.card.ph-today{position:relative;border-color:color-mix(in srgb,var(--text) 22%,transparent)!important;box-shadow:inset 3px 0 0 rgba(255,255,255,.5),0 16px 30px -22px rgba(0,0,0,.8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.05),transparent 40%)}
+html[data-theme="light"] #home>.card.ph-today{box-shadow:inset 3px 0 0 rgba(0,0,0,.55),0 16px 30px -22px rgba(0,0,0,.25)!important}
+/* week plan */
+#wkcard .wkt{display:flex;align-items:center;gap:10px;margin-bottom:10px}#wkcard .wkt>b{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+#wkcard .wks{font-size:12.5px;color:var(--dim);font-variant-numeric:tabular-nums}#wkcard .wkx{margin-left:auto;display:flex;gap:6px}
+#wkcard .wkx button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:17px;line-height:1;padding:0}
+#wkcard .wkp{height:3px;border-radius:3px;background:var(--line);overflow:hidden;margin-bottom:14px}#wkcard .wkp i{display:block;height:100%;background:var(--text);opacity:.8;border-radius:3px}
+#wkcard .wke{text-align:center;color:var(--dim);font-size:13.5px;padding:14px 0}
+#wkcard .wkb{display:block;width:100%;padding:13px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.06);color:var(--text);font-weight:650;font-size:15px}
+#wkcard .wkh2,#wkcard .wkr2,.pwli{display:grid;grid-template-columns:44px 4px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;text-align:left;color:inherit;border:0;background:none}
+#wkcard .wkh2{padding:14px;border-radius:18px;background:color-mix(in srgb,var(--c) 14%,var(--surf2));border:1px solid color-mix(in srgb,var(--c) 38%,transparent);margin-bottom:6px}
+#wkcard .wkr2,.pwli{padding:9px 2px}
+#wkcard .tm,.pwli .tm{display:flex;flex-direction:column;font-variant-numeric:tabular-nums;line-height:1.2}#wkcard .tm b,.pwli .tm b{font-size:14px;font-weight:700}#wkcard .tm small,.pwli .tm small{font-size:11.5px;color:var(--dim)}
+#wkcard i,.pwli i{align-self:stretch;width:4px;border-radius:4px;background:var(--c)}
+#wkcard .tx,.pwli .tx{min-width:0;display:flex;flex-direction:column;gap:1px}#wkcard .tx b,.pwli .tx b{font-size:15px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#wkcard .tx small,.pwli .tx small{font-size:12px;color:var(--muted)}
+#wkcard .wkh2 .tx small:first-child{text-transform:uppercase;letter-spacing:.12em;font-size:10px;font-weight:800;color:var(--c)}
+#wkcard .wkgo{border:0;border-radius:99px;padding:10px 18px;font-weight:700;font-size:14px;background:var(--text);color:var(--bg)}
+#wkcard .ck{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line2);margin:-8px -4px -8px 8px;box-sizing:content-box;padding:0}
+#wkcard .wkd{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}#wkcard .wkd b{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}#wkcard .wkd span{font-size:12px;color:var(--dim)}
+#wkcard .wkm,#wkcard .wkpl{display:block;width:100%;margin-top:10px;padding:10px;border:0;border-radius:12px;background:none;color:var(--muted);font-weight:650;font-size:13px}
+#wkcard .wkpl{border:1px dashed var(--line2);color:var(--text)}
+/* simple editor + placement */
+.pwdays{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:none}.pwdays::-webkit-scrollbar{display:none}
+.pwdays button{flex:none;width:48px;padding:7px 0;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:1px}.pwdays small{font-size:10px;text-transform:uppercase;letter-spacing:.06em}.pwdays b{font-size:17px}
+.pwdays button.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.pwlist{margin:4px 0 12px}.pwli button{border:0;background:none;color:var(--dim);font-size:15px;padding:6px}
+.pwnew{display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--line)}.pwtm{display:flex;align-items:center;gap:8px}.pwtm input{flex:1;min-width:0;text-align:center}.pwtm span{color:var(--dim)}
+.plr{padding:12px 0;border-bottom:1px solid var(--line)}.plt{display:flex;align-items:center;gap:10px}.plt i{width:4px;align-self:stretch;border-radius:4px;background:var(--c)}.plt span{flex:1;min-width:0;display:flex;flex-direction:column}.plt b{font-size:15px}.plt small{font-size:12px;color:var(--muted)}.plt button{border:0;background:none;color:var(--dim);font-size:16px;padding:6px}
+.plc{display:grid;grid-template-columns:1fr 110px;gap:8px;margin-top:8px}.plc select,.plc input{width:100%;min-width:0}
+
+/* cohesion: one neutral accent instead of blue everywhere */
+html[data-theme="dark"]:not([data-bw]){--lime:#e9ecf5;--ink:#0a0b0f;--accent:#e9ecf5}
+html[data-theme="light"]:not([data-bw]){--lime:#16181f;--ink:#fff;--accent:#16181f}
+html body .lnk,html body .cardhead .pill,html body .cardhead button:not(.wkx button),html body #home .card .lnk{background:transparent!important;color:var(--muted)!important;border:1px solid var(--line)!important;box-shadow:none!important}
 </style>
 </head>
 <body>
@@ -3055,7 +3112,7 @@ function rToday(){
   }).join('')||`<div class="ghostline">Nothing planned today ✨<br><span style="font-size:12px;color:var(--dim)">Add something from the Calendar tab</span></div>`;
 }
 function rHomeTasks(){
-  const l=sortedTasks().filter(isOpen).slice(0,3);
+  const l=sortedTasks().filter(isOpen).filter(t=>t.gid!=='g-gen').slice(0,3);
   $('htasks').innerHTML=l.map((t,i)=>taskHTML(t,i,true)).join('')||`<div class="orbempty">${orb(64)}<p>All clear. Add an objective in Tasks.</p></div>`;
 }
 function rFocusBar(){
@@ -6027,7 +6084,6 @@ async function aiAuto(o){
     if(!provReady(pr)){skipped.push(nm+': no key or address.');return}
     if(pr.special){chain.push([nm,()=>aiGemini(Object.assign({},o,{model:undefined}))]);return}
     if(!txt){skipped.push(nm+': skipped (text only, this job has photos or PDFs).');return}
-    if(pr.use==='read'&&!isRead(o.system)){skipped.push(nm+': skipped (set for reading jobs only).');return}
     chain.push([nm,()=>aiProv(pr,o)]);
   });
   if(ck)chain.push(['Claude',()=>aiClaude(Object.assign({},o,{model:isRead(o.system)?S.set.mread:S.set.mwrite})),1]);
@@ -9327,7 +9383,7 @@ function provHTML(){
     return '<div class="card" style="padding:12px;margin:8px 0" data-row="'+i+'"><div class="two" style="align-items:center"><div style="flex:1;font-weight:700;min-width:0">'+(sp?'Gemini':'<input class="pv-n" value="'+esc(x.name)+'" maxlength="24" style="font-weight:700">')+'</div><button class="btn sm" data-pa="up" data-pi="'+i+'" style="flex:none;padding:6px 10px">▲</button><button class="btn sm" data-pa="dn" data-pi="'+i+'" style="flex:none;padding:6px 10px">▼</button>'+(sp?'':'<button class="btn sm danger" data-pa="del" data-pi="'+i+'" style="flex:none;padding:6px 10px">✕</button>')+'</div>'+
     '<input class="pv-k" type="password" placeholder="'+(has?'Key saved on this phone — paste to replace':'Paste your API key')+'" autocomplete="off" autocapitalize="off" style="margin-top:8px">'+
     (sp?'':'<details style="margin-top:8px"><summary class="sub" style="cursor:pointer">Address and model</summary><input class="pv-b" placeholder="https://… (address)" value="'+esc(x.base||'')+'" autocapitalize="off" autocomplete="off" spellcheck="false" style="margin-top:6px"><input class="pv-m" placeholder="model name" value="'+esc(x.model||'')+'" autocapitalize="off" autocomplete="off" spellcheck="false" style="margin-top:6px"></details>')+
-    '<div class="chips" style="margin-top:8px"><button class="chip '+(x.on!==false?'on':'')+'" data-pa="on" data-pi="'+i+'">'+(x.on!==false?'On':'Paused')+'</button>'+(sp?'':'<button class="chip" data-pa="use" data-pi="'+i+'">'+(x.use==='read'?'Reading jobs only':'Everything')+'</button>')+'<span class="pill">'+(has?'Key ✓':'No key')+'</span></div></div>'};
+    '<div class="chips" style="margin-top:8px"><button class="chip '+(x.on!==false?'on':'')+'" data-pa="on" data-pi="'+i+'">'+(x.on!==false?'On':'Paused')+'</button>'+(sp?'':'')+'<span class="pill">'+(has?'Key ✓':'No key')+'</span></div></div>'};
   return '<div class="field" style="margin-top:6px"><label>Paste all your keys at once</label><textarea id="pv-all" rows="3" placeholder="Paste your whole keys list here (Groq, Gemini, OpenRouter, Claude)" autocapitalize="off" autocomplete="off" spellcheck="false" style="width:100%"></textarea><button class="btn sm" id="pv-det" style="margin-top:8px">Detect and save</button><div class="sub" style="margin-top:6px">Aether sorts them by itself and keeps them only on this phone.</div></div>'+'<div class="lbl" style="margin-top:6px">AI keys, asked from top to bottom</div><div class="sub" style="margin:2px 0 8px">Aether tries the first one, and if it is out of quota or fails, the next, and so on. Use ▲▼ to change the order. Claude (paid) is always last: whenever the others fail, a button asks you before using it.</div><div id="s-pv">'+L.map(row).join('')+
   '<div class="sub" style="margin-top:8px">Add a provider:</div><div class="chips" style="margin-top:6px">'+PRESETS.map((p,k)=>'<button class="chip" data-pa="add" data-k="'+k+'" data-pi="0">＋ '+p[0]+'</button>').join('')+'</div></div><div class="sub" style="margin:8px 0 10px">Create a free key on each provider\'s website and paste it above. If a provider says “model not found”, open “Address and model” and copy a current free model name from its documentation. Photos and PDFs skip the providers that only read text (Groq, OpenRouter, Mistral, Cerebras) and go to Gemini or Claude. Free open models are weaker than Claude for long exams: keep them on “Reading jobs only” if the quality disappoints. Keys stay on this phone only.</div>';
 }
@@ -10596,7 +10652,7 @@ async function skfDraw(){
   root.querySelector('.skft').innerHTML='<b>'+skRank(pct)+'</b> · '+ok+'/'+g.nodes.length+' mastered · '+g.nodes.filter(n=>n.st==='av').length+' ready';
   SKF={sz,half,maxR,tx:0,ty:0,k:1,vp,wd,sj};skfFit();
 }
-function skfApply(){const f=SKF;if(!f)return;f.wd.style.transform='translate('+f.tx+'px,'+f.ty+'px) scale('+f.k+')'}
+let skfRaf=0;function skfApply(){const f=SKF;if(!f||skfRaf)return;skfRaf=requestAnimationFrame(()=>{skfRaf=0;const g=SKF;if(g)g.wd.style.transform='translate3d('+g.tx+'px,'+g.ty+'px,0) scale('+g.k+')'})}
 function skfFit(){const f=SKF;if(!f)return;const W=f.vp.clientWidth,H=f.vp.clientHeight;f.k=Math.max(.05,Math.min(1,Math.min(W,H)/(2*(f.maxR+170))));f.tx=W/2-f.half*f.k;f.ty=H/2-f.half*f.k;skfApply()}
 function skfZoom(m,cx,cy){const f=SKF;if(!f)return;const k=Math.max(.04,Math.min(2.6,f.k*m)),r=k/f.k;f.tx=cx-(cx-f.tx)*r;f.ty=cy-(cy-f.ty)*r;f.k=k;skfApply()}
 function skfOpen(){
@@ -10815,7 +10871,7 @@ A.zcStart=ch=>{
   const key=(Array.isArray(ch)?'sel':ch)+'|'+c.dur,isTF=o=>o.length===2&&/^(True|False|Vrai|Faux)$/.test(o[0]);
   const hud=()=>{const b=q$('.zcsc b');b.textContent=score;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');const f=q$('.zcfl');f.querySelector('b').textContent=streak;f.className='zcfl'+(streak>=10?' fire':streak>=5?' hot':streak>=2?' on':'')};
   const flash=(cls,txt)=>{card.classList.remove('okf','nof');void card.offsetWidth;card.classList.add(cls);if(txt){const p=document.createElement('em');p.className='zcplus';p.textContent=txt;card.appendChild(p);setTimeout(()=>p.remove(),700)}};
-  const next=()=>{cur=zcQ(ch,seen);val='';lock=false;card.classList.remove('okf','nof');q$('.zcq').innerHTML=zcFmt(cur.q);q$('.zcexp').textContent='';q$('.zcexp').className='zcexp';
+  const next=()=>{cur=zcQ(ch,seen);val='';lock=false;card.classList.remove('okf','nof');q$('.zcq').innerHTML=zcFmt(cur.q);{const L=String(cur.q).length;card.classList.toggle('lg',L>70&&L<=130);card.classList.toggle('xl',L>130)}q$('.zcexp').textContent='';q$('.zcexp').className='zcexp';
     q$('.zckind').textContent=cur.k==='ty'?'Type the answer':isTF(cur.o)?'True or false':/___/.test(cur.q)?'Complete the gap':'Choose the right one';
     if(cur.k==='ty'){ans.innerHTML='<div class="zmin" aria-live="polite"></div><div class="zmpad zc4">'+['7','8','9','del','4','5','6','−','1','2','3','/','0','√','π','i'].map(k=>'<button class="zmk '+(k==='del'?'fn':'')+'" data-k="'+k+'">'+(k==='del'?'⌫':k)+'</button>').join('')+'</div>'}
     else{const tf=isTF(cur.o);ans.innerHTML='<div class="zco'+(tf?' tf':'')+'">'+cur.o.map((o,i)=>'<button class="zcb" data-o="'+i+'"><b>'+(tf?(i?'✗':'✓'):'ABCDE'[i])+'</b><span>'+zcFmt(o)+'</span></button>').join('')+'</div>'}};
@@ -11580,7 +11636,8 @@ function pwPlayBlock(id){
   const tt=t||{min:b2.pl};show('focus');pwPlayGo(Object.assign({},tt,{min:b2.pl||tt.min}),id);
 }
 function pwFocusDone(taskId,min,full){
-  const id=F.blk;if(!id)return;const o=tbLoad(),b=o.blocks[id];if(!b||b.done)return;
+  const id=F.blk;
+  if(!id){if(full&&taskId){const t0=tasks.find(x=>x.id===taskId);if(t0&&!t0.rep)setTimeout(()=>{try{completeTask(taskId,{closest:()=>({classList:{add(){}}}),getBoundingClientRect:()=>({left:innerWidth/2,top:innerHeight*.4,width:0,height:0})})}catch(e){}try{rHomeTasks();pwCard()}catch(e){}},900)}return}const o=tbLoad(),b=o.blocks[id];if(!b||b.done)return;
   if(!taskId||(taskId!==b.gt&&taskId!==b.tid))return;
   const want=F.cust||b.pl||min;if(!full&&min<want*.8)return;
   F.blk='';try{tbDone(id,min,true)}catch(e){}
@@ -11651,7 +11708,7 @@ function pwAfterDone(id,b){
 }
 /* ---------- Home card (shrinks to an icon in the dock like Exam mode) ---------- */
 const pwEsc=s=>esc(String(s));
-function pwCard(){
+function pwCardOld(){
   const el=document.getElementById('wkcard');if(!el)return;
   const cfg=pwCfg();if(!cfg.card){el.style.display='none';return}
   if(!document.getElementById('pwcss2')){const o0=document.getElementById('pwcss');if(o0)o0.remove();const s=document.createElement('style');s.id='pwcss2';s.textContent='#wkcard .wkh{display:flex;align-items:baseline;justify-content:space-between;margin:16px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--line)}#wkcard .wkh b{font-size:13px;font-weight:700;letter-spacing:.01em}#wkcard .wkh span{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}#wkcard .wkr{display:grid;grid-template-columns:46px 10px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;padding:10px 2px;background:none;border:0;border-bottom:1px solid var(--line);color:inherit;text-align:left}#wkcard .wkr:last-child{border-bottom:0}#wkcard .wkr .tm{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}#wkcard .wkr i{width:9px;height:9px;border-radius:50%;background:var(--c)}#wkcard .wkr .tx{min-width:0}#wkcard .wkr .tt{display:block;font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#wkcard .wkr .sb{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}#wkcard .wkr .st{font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--muted)}#wkcard .wkr.p i{background:transparent;box-shadow:inset 0 0 0 2px var(--c)}#wkcard .wkr.p .st{background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c)}#wkcard .wkr.d{opacity:.45}#wkcard .wkr.d .tt{text-decoration:line-through}#wkcard .wkr.d .st{background:rgba(48,209,88,.18);color:#30d158}#wkcard .btn{white-space:nowrap;padding-left:10px;padding-right:10px}#wkcard .wkp{height:5px;border-radius:3px;background:#ffffff14;overflow:hidden;margin:8px 0}#wkcard .wkp i{display:block;height:100%;background:linear-gradient(90deg,#6b6df0,#30d158);border-radius:3px}';document.head.appendChild(s)}
@@ -11663,7 +11720,7 @@ function pwCard(){
   if(!L.length){el.innerHTML='<div class="cardhead"><div class="lbl">🗓 Week plan</div><button class="lnk" data-wk="set">Settings</button></div><div class="sub">You write your week every Sunday: subject, hours and start time for each day. Your calendar fills from it.</div><button class="btn primary" data-wk="plan" style="margin-top:10px">Plan my week</button>';return}
   const nowM=new Date().getHours()*60+new Date().getMinutes();
   const nx=L.filter(c=>c.date===td&&!o.blocks[c.id].done&&!o.blocks[c.id].prop&&hm(c.endTime||c.time)>nowM)[0];
-  const upc=L.filter(c=>{const b=o.blocks[c.id];return b&&!b.done&&(c.date>td||hm(c.endTime||c.time)>nowM)});
+  const upc=L.filter(c=>{const b=o.blocks[c.id];return b&&!b.done&&(c.date>td||(c.date===td&&hm(c.endTime||c.time)>nowM))});
   const hero=nx||upc[0],rest=upc.filter(c=>!hero||c.id!==hero.id);
   const when=c=>c.date===td?c.time:DAYN[pwWd(c.date)]+' '+(+c.date.slice(8))+' · '+c.time;
   const pct=wkL.length?Math.round(done/wkL.length*100):0;
@@ -11680,6 +11737,81 @@ function pwCard(){
   h+='<div class="wk-act">'+(prop.length?'<button class="wk-pill pri" data-wk="all">Accept all ('+prop.length+')</button>':'')+'<button class="wk-pill" data-wk="plan">Re-plan</button><button class="wk-pill" data-wk="flex">＋ Flex</button></div>';
   el.innerHTML=h;
 }
+(function(){try{const sh=window.show;if(typeof sh==='function'&&!sh.__pw){const w=function(v){const r=sh.apply(this,arguments);if(v==='home'){setTimeout(()=>{try{pwCard()}catch(e){}},30);setTimeout(()=>{try{pwCard()}catch(e){}},600)}return r};w.__pw=1;window.show=w}}catch(e){}document.addEventListener('visibilitychange',()=>{if(!document.hidden)try{pwCard()}catch(e){}});setTimeout(()=>{try{pwCard()}catch(e){}},1200)})();
+/* ---------- v208: clean week plan card, simple editor, placement popup ---------- */
+function pwCard(){
+  const el=document.getElementById('wkcard');if(!el)return;
+  const cfg=pwCfg();if(!cfg.card){el.style.display='none';return}
+  el.style.display='';
+  const o=tbLoad(),td=iso(),wk=pwMon(td),end=shiftD(wk,6);
+  try{pwArchive()}catch(e){}
+  const all=pwAll().map(x=>x.c).filter(c=>o.blocks[c.id]),bl=c=>o.blocks[c.id];
+  const wkL=all.filter(c=>c.date>=wk&&c.date<=end&&!bl(c).prop),done=wkL.filter(c=>bl(c).done).length,pct=wkL.length?Math.round(done/wkL.length*100):0;
+  const nowM=new Date().getHours()*60+new Date().getMinutes();
+  const srt=(a,b)=>(a.date+a.time).localeCompare(b.date+b.time);
+  const upc=all.filter(c=>!bl(c).done&&!bl(c).prop&&(c.date>td||(c.date===td&&hm(c.endTime||c.time)>nowM))).sort(srt);
+  const prop=all.filter(c=>bl(c).prop&&c.date>=td);
+  const open=localStorage.p_pwx==='1';
+  const sn=c=>{const s=SUBJ[c.subj];return s?s.n:''};
+  const dur=n=>n>=60?Math.floor(n/60)+'h'+(n%60?pad(n%60):''):n+'m';
+  let h='<div class="wkt"><b>Week plan</b>'+(wkL.length?'<span class="wks">'+done+'/'+wkL.length+'</span>':'')+'<span class="wkx"><button data-wk="add" aria-label="Add">＋</button><button data-wk="set" aria-label="Settings">⚙︎</button></span></div>';
+  if(wkL.length)h+='<div class="wkp"><i style="width:'+pct+'%"></i></div>';
+  if(!upc.length&&!prop.length){el.innerHTML=h+(wkL.length?'<div class="wke">Nothing left this week</div>':'<button class="wkb" data-wk="plan">Plan my week</button>');return}
+  const hero=upc.find(c=>c.date===td&&hm(c.time)<=nowM+5)||upc[0],rest=upc.filter(c=>c!==hero);
+  if(hero){const b=bl(hero),live=hero.date===td&&hm(hero.time)<=nowM+5;
+    h+='<div class="wkh2" style="--c:'+colorOf(hero)+'"><span class="tm"><b>'+hero.time+'</b><small>'+(hero.endTime||'')+'</small></span><i></i><span class="tx"><small>'+(live?'Now':hero.date===td?'Next':DAYN[pwWd(hero.date)]+' '+(+hero.date.slice(8)))+'</small><b>'+pwEsc(hero.title.replace(/^✓ /,''))+'</b><small>'+[sn(hero),dur(b.pl||30)].filter(Boolean).join(' · ')+'</small></span>'+(hero.date===td?'<button class="wkgo" data-wk="start" data-i="'+hero.id+'">Start</button>':'')+'</div>'}
+  const byDay={};rest.forEach(c=>(byDay[c.date]=byDay[c.date]||[]).push(c));
+  const days=Object.keys(byDay).sort(),shown=open?days.slice(0,14):days.slice(0,2);
+  shown.forEach(d=>{const L2=byDay[d],mins=L2.reduce((t,c)=>t+(+bl(c).pl||0),0);
+    h+='<div class="wkd"><b>'+(d===td?'Today':d===shiftD(td,1)?'Tomorrow':DAYN[pwWd(d)]+' '+(+d.slice(8)))+'</b><span>'+dur(mins)+'</span></div>'+L2.map(c=>{const b=bl(c);return '<button class="wkr2" data-wk="blk" data-i="'+c.id+'" style="--c:'+colorOf(c)+'"><span class="tm"><b>'+c.time+'</b><small>'+(c.endTime||'')+'</small></span><i></i><span class="tx"><b>'+pwEsc(c.title.replace(/^✓ /,''))+'</b><small>'+[sn(c),dur(b.pl||30)].filter(Boolean).join(' · ')+'</small></span><span class="ck" data-wk="chk" data-i="'+c.id+'" role="checkbox" aria-label="Done"></span></button>'}).join('')});
+  if(days.length>2)h+='<button class="wkm" data-wk="more">'+(open?'Less':'All · '+(days.length-2)+' more days')+'</button>';
+  if(prop.length)h+='<button class="wkpl" data-wk="place">'+prop.length+' new task'+(prop.length>1?'s':'')+' to place</button>';
+  el.innerHTML=h;
+}
+function pwAddCustom(p){
+  const a=hm(p.from),e=hm(p.to),len=Math.max(5,e-a),o=tbLoad();let id,t=a;
+  do{id='tb-'+p.ds+'-'+pad(Math.floor(t/60))+pad(t%60);if(cal.some(c=>c.id===id))t+=1}while(cal.some(c=>c.id===id));
+  const sj=p.subj&&SUBJ[p.subj]?p.subj:'',name=(p.text||'').trim()||(sj?SUBJ[sj].n:'Work'),m={id:'w:man:'+id,type:'task',subj:sj,min:len,why:'My plan',xp:pwXp('task',len),title:name,go:{k:'tab',id:'tasks'}};
+  cal.push({id,title:name,date:p.ds,time:hmS(a),endTime:hmS(a+len),kind:'work',subj:sj,color:pwSc(sj),prop:1,desc:pwDesc(m)});
+  o.blocks[id]={ms:[m],done:0,wk:'manual',pl:len,hr:a,xp:m.xp,prop:1,flex:1,snap:{title:name,date:p.ds,time:hmS(a),endTime:hmS(a+len),subj:sj,color:pwSc(sj)}};
+  tbSave(o);pwAccept([id]);sv();return id;
+}
+function pwSimple(ds,keep){
+  const td=iso();ds=ds||td;const o=tbLoad(),days=[];for(let i=0;i<14;i++)days.push(shiftD(td,i));
+  const now=new Date(),nm=Math.ceil((now.getHours()*60+now.getMinutes()+5)/30)*30,def=ds===td?Math.min(nm,22*60):18*60;
+  const S=Object.assign({a:hmS(def),b:hmS(def+60),s:'',t:''},keep||{});
+  const L=pwAll().map(x=>x.c).filter(c=>c.date===ds&&o.blocks[c.id]&&!o.blocks[c.id].prop).sort((a,b)=>a.time.localeCompare(b.time));
+  const ks=['maths','phys','chim','ang','fr','ipt'].filter(k=>SUBJ[k]);
+  openSheet('<h2 class="sh">Add to my week</h2><div class="pwdays">'+days.map(d=>'<button class="'+(d===ds?'on':'')+'" data-d="'+d+'"><small>'+(d===td?'Today':DAYN[pwWd(d)])+'</small><b>'+(+d.slice(8))+'</b></button>').join('')+'</div>'+
+   '<div class="pwlist">'+(L.length?L.map(c=>'<div class="pwli" style="--c:'+colorOf(c)+'"><span class="tm"><b>'+c.time+'</b><small>'+(c.endTime||'')+'</small></span><i></i><span class="tx"><b>'+pwEsc(c.title.replace(/^✓ /,''))+'</b><small>'+(SUBJ[c.subj]?SUBJ[c.subj].n:'')+'</small></span><button data-x="'+c.id+'" aria-label="Remove">✕</button></div>').join(''):'<div class="wke">Nothing planned</div>')+'</div>'+
+   '<div class="pwnew"><div class="pwtm"><input type="time" id="ps-a" value="'+S.a+'"><span>→</span><input type="time" id="ps-b" value="'+S.b+'"></div><div class="chips" id="ps-s" style="flex-wrap:wrap">'+ks.map(k=>'<button class="chip '+(S.s===k?'on':'')+'" data-v="'+k+'">'+SUBJ[k].n+'</button>').join('')+'</div><input id="ps-t" placeholder="Description (task)" maxlength="80" value="'+esc(S.t)+'"><button class="btn primary" id="ps-ok">Add</button></div>');
+  const g=i=>document.getElementById(i),cap=()=>({a:g('ps-a').value,b:g('ps-b').value,s:(document.querySelector('#ps-s .chip.on')||{dataset:{}}).dataset.v||'',t:g('ps-t').value});
+  document.querySelectorAll('.pwdays button').forEach(b=>b.onclick=()=>pwSimple(b.dataset.d,cap()));
+  document.querySelectorAll('.pwli button').forEach(b=>b.onclick=()=>{pwRemove(b.dataset.x);pwCard();try{if(cur==='calendar')rCal()}catch(e){}pwSimple(ds,cap())});
+  document.querySelectorAll('#ps-s .chip').forEach(b=>b.onclick=()=>{const on=b.classList.contains('on');document.querySelectorAll('#ps-s .chip').forEach(x=>x.classList.remove('on'));if(!on)b.classList.add('on')});
+  g('ps-a').onchange=()=>{const a=hm(g('ps-a').value),b=hm(g('ps-b').value);if(b<=a)g('ps-b').value=hmS(Math.min(1439,a+60))};
+  g('ps-ok').onclick=()=>{const c=cap();if(!c.a||!c.b||hm(c.b)<=hm(c.a)){toast('End time must be after start');return}
+    pwAddCustom({ds,from:c.a,to:c.b,subj:c.s,text:c.t});pwCard();try{rHomeTasks()}catch(e){}try{if(cur==='calendar')rCal()}catch(e){}toast('Added');pwSimple(ds,{a:c.b,b:hmS(Math.min(1439,hm(c.b)+60)),s:c.s,t:''})};
+}
+function pwPlaceUI(force){
+  const sh=document.getElementById('sheet');if(sh&&sh.classList.contains('show')&&sh.querySelector('#pwpl'))return;
+  if(!force&&typeof cur!=='undefined'&&cur==='focus')return;
+  const o=tbLoad(),dis=jl('p_pwpl',[]),td=iso();
+  const ids=Object.keys(o.blocks).filter(k=>{const b=o.blocks[k];return b.prop&&cal.some(c=>c.id===k)&&(force||!dis.includes(k))});
+  if(!ids.length)return;
+  const days=[];for(let i=0;i<14;i++)days.push(shiftD(td,i));
+  const rows=ids.map(id=>{const c=cal.find(x=>x.id===id),b=o.blocks[id],opt=days.map(d=>'<option value="'+d+'"'+(d===c.date?' selected':'')+'>'+(d===td?'Today':DAYN[pwWd(d)]+' '+(+d.slice(8)))+'</option>').join('');
+    const extra=c.date<td?'<option value="'+c.date+'" selected>'+c.date.slice(5)+'</option>':'';
+    return '<div class="plr" data-id="'+id+'" style="--c:'+colorOf(c)+'"><div class="plt"><i></i><span><b>'+pwEsc(c.title.replace(/^[^\p{L}\p{N}]+/u,''))+'</b><small>'+[SUBJ[c.subj]?SUBJ[c.subj].n:'',(b.pl||30)+' min'].filter(Boolean).join(' · ')+'</small></span><button data-x aria-label="Remove">✕</button></div><div class="plc"><select>'+extra+opt+'</select><input type="time" value="'+c.time+'"></div></div>'}).join('');
+  openSheet('<h2 class="sh" id="pwpl">Place your new tasks</h2><div class="pllist">'+rows+'</div><button class="btn primary" id="pl-ok">Add to my week</button><button class="btn" id="pl-no" style="margin-top:8px">Later</button>');
+  const root=document.querySelector('.pllist');
+  root.onclick=e=>{const x=e.target.closest('[data-x]');if(x){const r=x.closest('.plr');r.dataset.rm='1';r.style.display='none'}};
+  document.getElementById('pl-no').onclick=()=>{js('p_pwpl',dis.concat(ids));closeSheet();pwCard()};
+  document.getElementById('pl-ok').onclick=()=>{const keep=[];let n=0;
+    root.querySelectorAll('.plr').forEach(r=>{const id=r.dataset.id;if(r.dataset.rm==='1'){pwRemove(id);return}const c=cal.find(x=>x.id===id),b=tbLoad().blocks[id];if(!c)return;
+      const len=Math.max(5,hm(c.endTime||c.time)-hm(c.time)),d=r.querySelector('select').value,t=r.querySelector('input').value||c.time;c.date=d;c.time=t;c.endTime=hmS(Math.min(1439,hm(t)+len));keep.push(id);n++});
+    sv();pwAccept(keep);closeSheet();pwCard();try{rHomeTasks()}catch(e){}try{if(cur==='calendar')rCal()}catch(e){}toast(n?n+' added to your week':'Removed')};
+}
 function pwBlock(id){
   const o=tbLoad(),b=o.blocks[id],gg=pwGet(id),c=gg&&gg.c;if(!b||!c)return;
   const m=b.ms&&b.ms[0]||{};
@@ -11695,7 +11827,7 @@ function pwBlock(id){
 }
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-wk]');if(!b||!b.closest('#wkcard'))return;e.stopPropagation();hv();const a=b.dataset.wk;
   if(a==='set')pwOpen();else if(a==='flex')pwFlex();else if(a==='plan')pwRun();else if(a==='all'){const n=pwAccept('all');pwCard();toast(n+' blocks accepted · they are now tasks in “Generated”');try{rHomeTasks()}catch(_){}}
-  else if(a==='more'){localStorage.p_pwx=localStorage.p_pwx==='1'?'0':'1';pwCard()}
+  else if(a==='add')pwSimple();else if(a==='place')pwPlaceUI(true);else if(a==='more'){localStorage.p_pwx=localStorage.p_pwx==='1'?'0':'1';pwCard()}
   else if(a==='chk')pwTime(b.dataset.i);else if(a==='blk')pwBlock(b.dataset.i);else if(a==='start')pwPlayBlock(b.dataset.i)},true);
 const PWH='p_pwh';let pwNoH=false;
 const pwhGet=()=>{const d=jl(PWH,null)||{};return{hrs:Object.assign({maths:5,phys:4,chim:2,ang:2,fr:1,ipt:2},d.hrs||{}),xtra:d.xtra==null?2:d.xtra}};
@@ -11712,7 +11844,7 @@ function pwRun(){pwAsk()}
 function pwRun2(no){
   pwNoH=!!no;let r;try{r=pwPlan()}finally{pwNoH=false}
 try{render();if(typeof cur!=='undefined'&&cur==='calendar')rCal()}catch(e){}
-  pwCard();toast(r.n?r.n+' blocks in your timetable':'Your timetable is up to date');
+  pwCard();toast(r.n?r.n+' blocks in your timetable':'Your timetable is up to date');setTimeout(()=>{try{pwPlaceUI()}catch(e){}},450);
 }
 /* ---------- settings ---------- */
 const SLN={am:'Morning',lunch:'Lunch',pm:'Afternoon',ev:'Evening'},HRS=[0.5,1,1.5,2,3,4,5,6];
@@ -11886,7 +12018,7 @@ function pwAddFlex(name,len,ds,at){
   return{id,time:hmS(a),n};
 }
 
-window.PW={card:pwCard,sc:pwSc,sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
+window.PW={tb:{load:tbLoad,save:tbSave},simple:pwSimple,place:pwPlaceUI,addCustom:pwAddCustom,card:pwCard,sc:pwSc,sync:pwSync,tpl:pwTpl,flex:pwFlex,addFlex:pwAddFlex,dayIv:pwDayIv,playMin,play:pwPlayTask,playBlock:pwPlayBlock,focusDone:pwFocusDone,archive:pwArchive,get:pwGet,all:pwAll,playCfg:pwPlayCfg,cfg:pwCfg,jobs:pwJobs,plan:pwPlan,run:pwRun,accept:pwAccept,remove:pwRemove,open:pwOpen,rule:pwRule,card:pwCard,block:pwBlock,watch:pwWatch,addTask:pwAddTask,after:pwAfterDone,xp:pwXp};
 
 /* ================= v143: COACH + SCREEN BALANCE — only records and encourages, never blocks anything =================
    scroll  = minutes on apps you marked "Distracting" (appDay(d).dist)
@@ -12973,6 +13105,7 @@ coOpen=function(pre){
 };
 ME_Q.push(['Kick me','Secoue-moi. Pas de politesse : où est-ce que je me raconte des histoires en ce moment, et qu\'est-ce que je fais dans les 10 prochaines minutes ?'],['Dare me','Lance-moi un défi (dare) concret, mesurable, que je peux commencer aujourd\'hui, et propose de le transformer en promesse.'],['I failed','J\'ai échoué. Sans me blâmer : combien d\'échecs il me reste avant d\'y arriver, ce que celui-ci m\'apprend, et UN tout petit prochain pas.']);
 /* ================= v68: CALM HOME that adapts to the moment ================= */
+(function(){const o=window.openSheet;if(typeof o!=='function'||o.__calm)return;const f=function(html){const r=o.apply(this,arguments);try{const sh=document.getElementById('sheet'),t=String(html||'').slice(0,400);sh.classList.toggle('calm',/<h2[^>]*>[^<]*(settings|planner|customi|preferences|notification|theme|my hours|goals and|colles and|every evening|focus session|calendar clean|smart)/i.test(t)||/pv-btn|pwpage|pv-g/.test(String(html||'').slice(0,3000)))}catch(e){}return r};f.__calm=1;window.openSheet=f})();
 const PHK='p_hm';
 const HCARDS={hero:'Level & XP',balcard:'Alter Ego',hydcard:'Water',tpcard:'Tomorrow',hprepa:'Prépa summary',hhcard:'Happy Hour',motiv:'Week XP goal & focus',Today:'Today\'s events',Objectives:'Objectives','How was your day?':'Mood and hours','Daily review':'Daily review',Journal:'Journal',Stats:'Stats',lazycard:'Lazy day',wkcard:'Week plan',hauto:'Now',xmcard:'Exam mode',rxcard:'Relax'};
 const PERIODS=[['morning','Morning'],['day','Daytime'],['night','Evening']],ALWAYS=['hero','wkcard','balcard','hydcard','hauto','xmcard','rxcard'];
@@ -12994,7 +13127,8 @@ function hLayout(){
     if(hide)el.classList.add('ph-hide');
   });
   const K=cards.filter(el=>hKey(el));K.forEach(el=>{el.dataset.hold='hcard';el.dataset.hk=hKey(el)});
-  if(cfg.order.length||cfg.pin.length){const ix=k=>{const i=cfg.order.indexOf(k);return i<0?999:i},pw=k=>cfg.pin.includes(k)?0:1,S=K.map((el,i)=>[el,i]).sort((a,b)=>pw(hKey(a[0]))-pw(hKey(b[0]))||ix(hKey(a[0]))-ix(hKey(b[0]))||a[1]-b[1]).map(x=>x[0]);
+  cards.forEach(el=>{const k=hKey(el);el.classList.toggle('ph-today',k==='Today'||k==='Objectives')});
+  if(true){const ix=k=>{const i=cfg.order.indexOf(k);return i<0?999:i},pw=k=>cfg.pin.includes(k)?0:(k==='Today'||k==='Objectives')?1:2,S=K.map((el,i)=>[el,i]).sort((a,b)=>pw(hKey(a[0]))-pw(hKey(b[0]))||ix(hKey(a[0]))-ix(hKey(b[0]))||a[1]-b[1]).map(x=>x[0]);
     if(S.some((el,i)=>el!==K[i])){const M=K.map(el=>{const m=document.createComment('');el.before(m);return m});M.forEach((m,i)=>m.replaceWith(S[i]))}}
   let b=document.getElementById('ph-more');
   if(!b){b=document.createElement('div');b.id='ph-more';b.style.cssText='display:flex;gap:10px;justify-content:center;margin:6px 0 90px';b.innerHTML='<button class="btn" data-h="more" style="width:auto;margin:0;padding:10px 16px">Show everything</button><button class="btn primary" data-h="add" style="width:auto;margin:0;padding:10px 16px">＋ Block</button><button class="btn" data-h="cust" style="width:auto;margin:0;padding:10px 16px">Customise</button>';b.onclick=e=>{const x=e.target.closest('[data-h]');if(!x)return;if(x.dataset.h==='more'){home.classList.toggle('ph-more');hLayout()}else if(x.dataset.h==='add')hwLib();else hCustom()};}
