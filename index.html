@@ -1995,49 +1995,22 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
 
 #pv-theme.thmseg{grid-template-columns:repeat(5,1fr)!important;gap:4px!important}#pv-theme .chip{padding:10px 2px!important;font-size:11px!important;border-radius:14px!important}#pv-theme .chip b{font-size:20px!important}
 
-/* ===== v205 black & white (grayscale, layered contrast) ===== */
-:root[data-bw]{--bwf:#fff;--bwb:#000;--bg:#050505;--surf:#141414;--surf2:#202020;--inset:#080808;--line:rgba(255,255,255,.16);--line2:rgba(255,255,255,.3);--text:#fff;--muted:#bcbcbc;--dim:#808080;--lime:#fff;--ink:#000;--cyan:#e2e2e2;--red:#c6c6c6;--orange:#d2d2d2;--green:#ececec;--violet:#aaa;--pink:#b8b8b8;--accent:#fff;--focus:#c6c6c6;--break:#ececec;--glass:#141414;--border:rgba(255,255,255,.2);--c1:#1d1d1d;--c2:#0f0f0f;--k1:#2a2a2a;--k2:#171717;--bd:rgba(255,255,255,.2);--hi:rgba(255,255,255,.1);--sh:rgba(0,0,0,.9);color-scheme:dark;filter:grayscale(1) contrast(1.1)}
-:root[data-bw="light"]{--bwf:#0a0a0a;--bwb:#fff;--bg:#e9e9e9;--surf:#fff;--surf2:#f0f0f0;--inset:#e2e2e2;--line:rgba(0,0,0,.14);--line2:rgba(0,0,0,.3);--text:#0a0a0a;--muted:#3d3d3d;--dim:#6b6b6b;--lime:#0a0a0a;--ink:#fff;--cyan:#262626;--red:#3a3a3a;--orange:#303030;--green:#1a1a1a;--violet:#4a4a4a;--pink:#444;--accent:#0a0a0a;--focus:#3a3a3a;--break:#1a1a1a;--glass:#fff;--border:rgba(0,0,0,.2);--c1:#ffffff;--c2:#f3f3f3;--k1:#ffffff;--k2:#e6e6e6;--bd:rgba(0,0,0,.2);--hi:rgba(255,255,255,.95);--sh:rgba(0,0,0,.28);color-scheme:light}
-:root[data-bw],:root[data-bw] html,:root[data-bw] body{background:var(--bg)!important;color:var(--text)}
-:root[data-bw] #amb{background:radial-gradient(70% 38% at 50% 0%,rgba(255,255,255,.09),transparent 70%),var(--bg)!important}:root[data-bw] #amb i{display:none!important}
-:root[data-bw="light"] #amb{background:radial-gradient(70% 38% at 50% 0%,rgba(255,255,255,.9),transparent 70%),var(--bg)!important}
-:root[data-bw] *{text-shadow:none!important}
-:root[data-bw] .card,:root[data-bw] .pcard,:root[data-bw] .sbox,:root[data-bw] .pv-box,:root[data-bw] .dbox,:root[data-bw] .zctile,:root[data-bw] .zsc,:root[data-bw] .zmbest,:root[data-bw] .zmrg,:root[data-bw] .evrow,:root[data-bw] .wk2,:root[data-bw] .nxc,:root[data-bw] .lban,:root[data-bw] .pwh,:root[data-bw] .aibox,:root[data-bw] .zqrow,:root[data-bw] .zmtile{background:linear-gradient(180deg,var(--c1),var(--c2))!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi),0 16px 32px -20px var(--sh)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
-:root[data-bw] header,:root[data-bw] .nav,:root[data-bw] .ptabs{background:linear-gradient(180deg,var(--c1),var(--c2))!important;border-color:var(--bd)!important;box-shadow:none!important}
-:root[data-bw] #sheet>*,:root[data-bw] #pv-sheet>*{background:linear-gradient(180deg,var(--c1),var(--c2))!important;border-color:var(--bd)!important}
-:root[data-bw] .btn,:root[data-bw] .chip,:root[data-bw] .pmini,:root[data-bw] .addf,:root[data-bw] .add,:root[data-bw] .zmdur button,:root[data-bw] .zmseg,:root[data-bw] .zmseg button,:root[data-bw] header button,:root[data-bw] .vrow textarea{background:linear-gradient(180deg,var(--k1),var(--k2))!important;color:var(--text)!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi)!important}
-:root[data-bw] .btn.primary,:root[data-bw] .chip.on,:root[data-bw] .zmdur button.on,:root[data-bw] .zmseg button.on,:root[data-bw] .ptab.on,:root[data-bw] .zmtile.on,:root[data-bw] .zctile.sel,:root[data-bw] .zqrow.on,:root[data-bw] .nav .on{background:linear-gradient(180deg,var(--bwf),color-mix(in srgb,var(--bwf) 78%,var(--bwb)))!important;color:var(--bwb)!important;border-color:var(--bwf)!important;box-shadow:0 8px 22px -10px var(--sh)!important}
-:root[data-bw] .btn.primary *,:root[data-bw] .chip.on *,:root[data-bw] .zmtile.on *,:root[data-bw] .zctile.sel *,:root[data-bw] .zqrow.on *,:root[data-bw] .nav .on *,:root[data-bw] .ptab.on *,:root[data-bw] .zmdur button.on,:root[data-bw] .zmseg button.on{color:var(--bwb)!important}
-:root[data-bw] input,:root[data-bw] textarea,:root[data-bw] select{background:var(--inset)!important;color:var(--text)!important;border:1px solid var(--bd)!important;box-shadow:inset 0 2px 6px -3px var(--sh)!important}
-:root[data-bw] .fab{background:linear-gradient(180deg,var(--bwf),color-mix(in srgb,var(--bwf) 75%,var(--bwb)))!important;border:1px solid var(--bwf)!important;box-shadow:0 10px 26px -8px var(--sh)!important}:root[data-bw] .fab,:root[data-bw] .fab *{color:var(--bwb)!important;stroke:var(--bwb)!important}
-:root[data-bw] #toast{background:var(--bwf)!important;color:var(--bwb)!important}
-:root[data-bw] .zcconf{display:none}
-/* games */
-:root[data-bw] .zmrun,:root[data-bw] .skfs{background:radial-gradient(80% 50% at 50% 0%,rgba(255,255,255,.1),transparent 70%),var(--bg)!important;color:var(--text)!important}
-:root[data-bw="light"] .zmrun,:root[data-bw="light"] .skfs{background:radial-gradient(80% 50% at 50% 0%,#fff,transparent 70%),var(--bg)!important}
-:root[data-bw] .zmrun *,:root[data-bw] .skfs *{color:var(--text)}
-:root[data-bw] .zcbg{background:radial-gradient(60% 40% at 50% 6%,rgba(255,255,255,.14),transparent 70%)!important}:root[data-bw="light"] .zcbg{background:none!important}
-:root[data-bw="light"] .zcbg::after{background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px)}
-:root[data-bw] .zcqc{background:linear-gradient(160deg,var(--c1),var(--c2))!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi),0 24px 50px -26px var(--sh)!important}
-:root[data-bw] .zmin,:root[data-bw] .zcrow,:root[data-bw] .zmsl,:root[data-bw] .zmstat div,:root[data-bw] .zcchip,:root[data-bw] .zckind{background:var(--k2)!important;border:1px solid var(--bd)!important;box-shadow:none!important}
-:root[data-bw] .zcb,:root[data-bw] .zmk,:root[data-bw] .zmx,:root[data-bw] .zcskip,:root[data-bw] .skfx,:root[data-bw] .skfz button{background:linear-gradient(180deg,var(--k1),var(--k2))!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi),0 8px 18px -12px var(--sh)!important}
-:root[data-bw] .zcb b{background:var(--inset)!important;border:1px solid var(--bd)}
-:root[data-bw] .zcb.ok,:root[data-bw] .zmk.dn,:root[data-bw] .zmin.ok{background:linear-gradient(180deg,var(--bwf),color-mix(in srgb,var(--bwf) 78%,var(--bwb)))!important;border-color:var(--bwf)!important}
-:root[data-bw] .zcb.ok,:root[data-bw] .zcb.ok *,:root[data-bw] .zmk.dn,:root[data-bw] .zmin.ok{color:var(--bwb)!important}:root[data-bw] .zcb.ok b{background:var(--bwb)!important}:root[data-bw] .zcb.ok b{color:var(--bwf)!important}
-:root[data-bw] .zcqc.okf{border-color:var(--bwf)!important;box-shadow:0 0 0 2px var(--bwf)!important}
-:root[data-bw] .zcb.no{border:1px dashed var(--text)!important;opacity:.55}:root[data-bw] .zcqc.nof{border:1px dashed var(--text)!important}
-:root[data-bw] .zmt{background:var(--k2)!important;border:1px solid var(--bd)}:root[data-bw] .zmt i{background:linear-gradient(90deg,var(--dim),var(--bwf))!important;box-shadow:none!important}
-:root[data-bw] .zcgap{border-bottom-color:var(--bwf);background:var(--hi)}
-:root[data-bw] .zcrg .t{stroke:var(--line2)}:root[data-bw] .zcrg .p{stroke:var(--bwf)!important;filter:none}
-:root[data-bw] .zmnb{background:var(--bwf)!important;color:var(--bwb)!important}
-:root[data-bw] .zsb u,:root[data-bw] .zmh i{background:var(--dim)!important}:root[data-bw] .zsb .now u{background:var(--bwf)!important;box-shadow:none}
-:root[data-bw] .zctile u{background:var(--bwf);box-shadow:none}
-:root[data-bw] .zctile .zci{background:var(--inset);border:1px solid var(--bd)}
-:root[data-bw] .zmtile.on b,:root[data-bw] .zmtile.on span,:root[data-bw] .zmtile.on small{color:var(--bwb)!important}
-:root[data-bw] .sfn .sfh,:root[data-bw] .sfn.ok .sfh,:root[data-bw] .sfn.av .sfh{filter:none!important;animation:none}
-:root[data-bw] .sfn.lock{opacity:.55}:root[data-bw] .sfn .sfh{background:var(--dim)!important}:root[data-bw] .sfn.av .sfh{background:var(--bwf)!important}:root[data-bw] .sfn.ok .sfh{background:var(--bwf)!important;box-shadow:0 0 18px rgba(255,255,255,.4)}
-:root[data-bw] .sfe path.on{stroke:var(--bwf)}:root[data-bw] .sfe path.av,:root[data-bw] .sfe path.off,:root[data-bw] .sfe path.hub{stroke:var(--dim);filter:none}
-:root[data-bw] .sfc{background:radial-gradient(circle,var(--k1),var(--inset))!important;border:1px solid var(--bwf);box-shadow:0 0 30px rgba(255,255,255,.2)}
+/* ===== v206 black & white: the normal design, desaturated with true-contrast accents ===== */
+:root[data-bw]{filter:grayscale(1) contrast(1.1)}
+:root[data-bw="dark"]{--lime:#fff;--ink:#000;--accent:#fff;--cyan:#e6e6e6;--red:#d0d0d0;--orange:#dcdcdc;--green:#f0f0f0;--violet:#bdbdbd;--pink:#c8c8c8;--focus:#d0d0d0;--break:#f0f0f0;--muted:#b4b4b4;--dim:#838383;--line:rgba(255,255,255,.13);--line2:rgba(255,255,255,.26)}
+:root[data-bw="light"]{--lime:#101010;--ink:#fff;--accent:#101010;--cyan:#2a2a2a;--red:#333;--orange:#2e2e2e;--green:#1c1c1c;--violet:#444;--pink:#3c3c3c;--focus:#333;--break:#1c1c1c;--muted:#454545;--dim:#6a6a6a;--line:rgba(0,0,0,.14);--line2:rgba(0,0,0,.28)}
+:root[data-bw="light"] .ptabs .ptab.on{background:#101010!important;color:#fff!important}
+:root[data-bw="dark"] .ptabs .ptab.on{background:#fff!important;color:#000!important}
+
+:root[data-bw="dark"] :is(.btn.primary,.chip.on,.pill.on,.fab,.zmdur button.on,.zmseg button.on,.zmnb){background:#fff!important;color:#000!important;border-color:#fff!important;text-shadow:none!important;box-shadow:0 8px 22px -10px rgba(0,0,0,.9)!important}
+:root[data-bw="light"] :is(.btn.primary,.chip.on,.pill.on,.fab,.zmdur button.on,.zmseg button.on,.zmnb){background:#101010!important;color:#fff!important;border-color:#101010!important;text-shadow:none!important;box-shadow:0 8px 20px -10px rgba(0,0,0,.5)!important}
+:root[data-bw="dark"] :is(.btn.primary,.chip.on,.pill.on,.fab,.zmdur button.on,.zmseg button.on) *{color:#000!important;stroke:#000}
+:root[data-bw="light"] :is(.btn.primary,.chip.on,.pill.on,.fab,.zmdur button.on,.zmseg button.on) *{color:#fff!important;stroke:#fff}
+:root[data-bw="dark"] .fab svg{stroke:#000}:root[data-bw="light"] .fab svg{stroke:#fff}
+
+:root[data-bw="light"] header button,:root[data-bw="light"] .pv-gear{color:#101010!important;opacity:1!important}
+:root[data-bw="light"] .card :is(h2,h3,.big,b){color:#101010}
+:root[data-bw="light"] :is(.addf,.add,.pmini,.cardhead button){color:#101010!important;opacity:1!important;border-color:rgba(0,0,0,.3)!important}
 </style>
 </head>
 <body>
