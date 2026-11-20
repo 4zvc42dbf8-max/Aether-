@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <meta name="apple-mobile-web-app-title" content="Aether">
-<script>(function(){try{var m=localStorage.getItem('theme')||'dark',d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=d?'#06070b':'#eef0f5'}catch(e){}})();</script>
+<script>(function(){try{var m=localStorage.getItem('theme')||'dark',bw=m==='bw'||m==='bwl',d=m==='dark'||m==='bw'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');if(bw)document.documentElement.setAttribute('data-bw',m==='bw'?'dark':'light');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=d?'#06070b':'#eef0f5'}catch(e){}})();</script>
 <style>
 :root{
   --bg:#06070b; --surf:#15171d; --surf2:#1d2028; --inset:#0a0b0f;
@@ -1913,6 +1913,131 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
 .zmrg{padding:12px 14px;border-radius:16px;background:var(--surf2);margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}.zmrg>span.sub{flex:0 0 100%;margin-bottom:2px}
 .zmdur{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.zmdur button{height:56px;border-radius:16px;border:2px solid transparent;background:var(--surf2);color:var(--muted);font-weight:700;font-size:15px}.zmdur button.on{border-color:#5b8cff;color:#fff;background:linear-gradient(145deg,rgba(91,140,255,.25),rgba(150,100,255,.12))}
 .zmgo{height:64px;font-size:20px!important;border-radius:20px!important}
+
+/* v201 course mini-revisions */
+.zmseg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:18px;background:var(--surf2);margin-bottom:12px}.zmseg button{height:46px;border-radius:14px;border:0;background:none;color:var(--muted);font-weight:700;font-size:15px}.zmseg button.on{background:linear-gradient(145deg,#4a7bff,#6a5cff);color:#fff;box-shadow:0 6px 16px -8px rgba(90,110,255,.9)}
+.zcg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.zctile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px 14px;border-radius:20px;border:1px solid var(--line);background:var(--surf2);color:var(--text,#fff);text-align:left;min-height:112px}
+.zctile i{font-style:normal;font-size:28px;font-weight:700;color:#8fa6ff;line-height:1.1;font-family:ui-serif,Georgia,serif}.zctile span{font-weight:650;font-size:15px}.zctile small{color:var(--muted);font-size:12px;margin-top:auto}
+.zctile:first-child{grid-column:1/-1;min-height:84px;background:linear-gradient(135deg,rgba(91,140,255,.22),rgba(150,100,255,.14));border-color:rgba(130,150,255,.45)}
+.zcrun .zcq{font-size:clamp(22px,6.2vw,30px)!important;white-space:normal!important;text-align:center;line-height:1.3;margin-top:3vh!important;padding:0 6px;max-width:520px;letter-spacing:0}
+.zcans{width:100%;max-width:520px;margin-top:auto;display:flex;flex-direction:column;align-items:center}
+.zcrun .zmin{margin-top:0;height:64px;font-size:38px!important;margin-bottom:12px}.zcrun .zmin::after{height:36px}
+.zc4{grid-template-columns:repeat(4,1fr)!important;gap:10px!important}.zc4 .zmk{height:min(66px,8.4vh);font-size:26px;border-radius:18px}
+.zco{width:100%;display:grid;gap:12px;padding-bottom:calc(env(safe-area-inset-bottom) + 8px)}
+.zcb{min-height:min(84px,12vh);padding:10px 16px;border-radius:22px;border:1px solid rgba(150,170,255,.28);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));color:#fff;font-size:19px;font-weight:600;line-height:1.25;touch-action:manipulation;transition:transform .08s,background .12s,border-color .12s}
+.zcb.ok{background:rgba(91,230,138,.3);border-color:#5be68a;box-shadow:0 0 24px rgba(91,230,138,.5)}.zcb.no{background:rgba(255,91,107,.3);border-color:#ff5b6b;animation:zcsh .3s}
+@keyframes zcsh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.zcskip{margin:10px 0 calc(env(safe-area-inset-bottom) + 6px);background:none;border:0;color:#8ea0d6;font-size:14px;padding:8px 18px}
+.zmmiss{max-height:34vh;overflow:auto;text-align:left}.zcm{flex-wrap:wrap;gap:2px 10px}.zcm span{flex:1 1 60%}.zcm b{color:#7df0a4}.zcm small{flex:0 0 100%;color:#8ea0d6}
+
+/* v202 */
+.zcbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.zcbar .btn{margin:0;min-height:52px;font-size:14px}
+.zctile{position:relative}.zctile em{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:15px;color:#fff}
+.zctile.sel{border-color:#5b8cff;background:linear-gradient(145deg,rgba(91,140,255,.25),rgba(150,100,255,.14))}.zctile.sel em{background:#5b8cff;border-color:#5b8cff}
+.zqrow{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--surf2);margin-bottom:8px;border:2px solid transparent;min-height:56px}.zqrow.on{border-color:#5b8cff;background:rgba(91,140,255,.16)}
+.zqrow em{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:15px}.zqrow.on em{background:#5b8cff;border-color:#5b8cff;color:#fff}.zqrow span{flex:1;min-width:0;font-weight:600}.zqrow small{color:var(--muted)}
+
+/* v203 polish */
+.zcbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 40% at 50% 8%,hsl(var(--h,235) 80% 45%/.45),transparent 70%),radial-gradient(50% 35% at 85% 92%,hsl(calc(var(--h,235) + 50) 80% 45%/.25),transparent 70%);animation:zcb 9s ease-in-out infinite alternate}
+.zcbg::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent)}
+@keyframes zcb{to{transform:scale(1.08) translateY(6px)}}
+.zmrun>*{position:relative}.zmrun>.zcbg{position:absolute}
+.zcrun{--a:hsl(var(--h,235) 90% 68%)}
+.zcrun .zmt i{background:linear-gradient(90deg,var(--a),hsl(calc(var(--h,235) + 50) 90% 70%))}
+.zchud{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:520px;margin-top:16px}
+.zcsc small{display:block;font-size:10px;letter-spacing:.22em;color:#8ea0d6}.zcsc b{font-size:38px;line-height:1;font-variant-numeric:tabular-nums}.zcsc b.pop{animation:zcpop .35s}
+@keyframes zcpop{40%{transform:scale(1.3);color:var(--a)}}
+.zcchip{padding:6px 14px;border-radius:99px;background:hsl(var(--h,235) 70% 50%/.22);border:1px solid hsl(var(--h,235) 80% 65%/.5);color:hsl(var(--h,235) 100% 85%);font-size:12px;font-weight:700;letter-spacing:.04em;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zcfl{display:flex;align-items:center;gap:6px;min-width:70px;justify-content:flex-end;opacity:.35;transition:all .2s}.zcfl i{font-style:normal;font-size:22px;filter:grayscale(1)}.zcfl b{font-size:24px;font-variant-numeric:tabular-nums}
+.zcfl.on{opacity:1}.zcfl.on i{filter:none}.zcfl.hot{opacity:1;color:#ffb84a}.zcfl.hot i{filter:drop-shadow(0 0 8px #ff8a3a)}.zcfl.fire{opacity:1;color:#ff7a59}.zcfl.fire i{filter:drop-shadow(0 0 14px #ff4a2a);animation:zcfire .6s infinite alternate}
+@keyframes zcfire{to{transform:scale(1.18)}}
+.zcstage{flex:1;width:100%;max-width:520px;display:flex;align-items:center;justify-content:center;padding:10px 0;min-height:0}
+.zcqc{position:relative;width:100%;padding:26px 20px 22px;border-radius:28px;text-align:center;background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);box-shadow:0 20px 50px -24px hsl(var(--h,235) 90% 50%/.7),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(8px);transition:border-color .15s,box-shadow .15s,background .15s}
+.zcqc.okf{border-color:#5be68a;box-shadow:0 0 40px -6px rgba(91,230,138,.7);animation:zcok .35s}.zcqc.nof{border-color:#ff5b6b;box-shadow:0 0 40px -6px rgba(255,91,107,.7);animation:zcsh .35s}
+@keyframes zcok{40%{transform:scale(1.025)}}
+.zckind{display:inline-block;margin-bottom:14px;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.08);color:#a9b8e6;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.zcrun .zcq{margin:0!important;max-width:none;font-size:clamp(23px,6.6vw,32px)!important;font-weight:650;line-height:1.35;text-shadow:none;padding:0}
+.zcq sup,.zcq sub,.zcb sup,.zcb sub{font-size:.62em;line-height:0}
+.zcgap{display:inline-block;min-width:2.2em;height:1.05em;margin:0 .12em -.18em;border-bottom:3px solid var(--a);background:hsl(var(--h,235) 80% 60%/.16);border-radius:6px 6px 0 0}
+.zcexp{min-height:0;max-height:0;overflow:hidden;opacity:0;font-size:15px;color:#c8d4f5;transition:all .2s}.zcexp.on{max-height:120px;opacity:1;margin-top:14px;padding:10px 12px;border-radius:14px;background:rgba(255,91,107,.12);border:1px solid rgba(255,91,107,.35)}.zcexp b{color:#7df0a4}
+.zcplus{position:absolute;right:18px;top:8px;font-style:normal;font-weight:800;color:#5be68a;font-size:22px;animation:zcup .7s forwards;pointer-events:none}
+@keyframes zcup{to{transform:translateY(-26px);opacity:0}}
+.zco{display:grid;gap:10px;width:100%}.zco.tf{grid-template-columns:1fr 1fr}
+.zcb{display:flex;align-items:center;gap:14px;text-align:left;min-height:min(70px,9.5vh)!important;padding:10px 16px!important;border-radius:20px!important}
+.zcb b{flex:none;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.1);font-size:15px;color:#b9c6ee}
+.zcb span{flex:1;font-size:18px}.zco.tf .zcb{flex-direction:column;justify-content:center;text-align:center;gap:6px;min-height:min(92px,12vh)!important}.zco.tf .zcb b{width:auto;height:auto;background:none;font-size:26px}.zco.tf .zcb:first-child b{color:#7df0a4}.zco.tf .zcb:last-child b{color:#ff8a8a}
+.zcb.ok b{background:#5be68a;color:#06210f}.zcb.no b{background:#ff5b6b;color:#2a060b}
+.zcb:active{transform:scale(.97)}
+.zcrun .zmin{background:rgba(255,255,255,.05);border-color:hsl(var(--h,235) 80% 65%/.5)}
+.zcrun .zcans{margin-top:0}
+.zcres{position:relative;margin-top:2vh;overflow:auto;max-height:calc(100vh - 40px);padding-bottom:30px;-webkit-overflow-scrolling:touch}
+.zcres h2{font-size:84px;line-height:1;margin:6px 0 2px}
+.zcrow{display:flex;align-items:center;gap:16px;margin-top:18px;padding:14px;border-radius:20px;background:rgba(255,255,255,.06);text-align:left}
+.zcrg{position:relative;width:84px;height:84px;flex:none}.zcrg svg{width:100%;height:100%;transform:rotate(-90deg)}.zcrg .t{fill:none;stroke:rgba(255,255,255,.1);stroke-width:9}.zcrg .p{fill:none;stroke:var(--a,#7da0ff);stroke-width:9;stroke-linecap:round;filter:drop-shadow(0 0 6px var(--a,#7da0ff))}.zcrg b{position:absolute;inset:0;display:grid;place-items:center;font-size:20px}
+.zcrt b{display:block;font-size:20px}.zcrt span{color:#9fb0e0;font-size:13px}
+.zcbtns{display:grid;gap:10px;margin-top:18px}
+.zcconf{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:5}.zcconf i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:zcfall linear forwards}
+@keyframes zcfall{to{transform:translateY(105vh) rotate(720deg);opacity:.8}}
+/* home */
+.zsc{padding:16px!important;background:linear-gradient(140deg,rgba(91,140,255,.16),rgba(150,100,255,.08) 60%,transparent)!important}
+.zsh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.zsh small{display:block;font-size:10px;letter-spacing:.22em;color:var(--muted)}.zsh b{font-size:40px;line-height:1.1;font-variant-numeric:tabular-nums}.zsh span{display:block;font-size:13px;color:var(--muted)}
+.zss{text-align:right}.zss i{font-style:normal;font-size:22px}.zss b{font-size:30px;margin-left:4px}
+.zsb{display:flex;align-items:flex-end;gap:8px;margin-top:14px;height:64px}.zsb div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px}.zsb u{width:100%;border-radius:7px 7px 3px 3px;background:rgba(255,255,255,.16)}.zsb .now u{background:linear-gradient(#7da0ff,#5b6cff);box-shadow:0 0 14px rgba(110,130,255,.6)}.zsb small{font-size:10px;color:var(--muted)}
+.zctile{overflow:hidden;--c:hsl(var(--h,235) 85% 66%)}
+.zctile .zci{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:hsl(var(--h,235) 70% 50%/.2);border:1px solid hsl(var(--h,235) 80% 65%/.4);margin-bottom:6px}
+.zctile .zci i{font-size:22px;color:var(--c);line-height:1}
+.zctile u{position:absolute;left:0;bottom:0;height:3px;background:var(--c);border-radius:0 3px 3px 0;box-shadow:0 0 10px var(--c)}
+.zctile.sel{border-color:var(--c)}
+.zctile:first-child{background:linear-gradient(135deg,hsl(var(--h,235) 80% 50%/.28),rgba(150,100,255,.16))!important}
+.zmtile.on{border-color:hsl(var(--h,215) 90% 66%)!important;background:linear-gradient(145deg,hsl(var(--h,215) 80% 50%/.26),rgba(120,100,255,.1))!important;box-shadow:0 0 22px -6px hsl(var(--h,215) 90% 60%/.8)!important}
+.zmtile.on b{color:hsl(var(--h,215) 100% 80%)}
+
+#pv-theme.thmseg{grid-template-columns:repeat(5,1fr)!important;gap:4px!important}#pv-theme .chip{padding:10px 2px!important;font-size:11px!important;border-radius:14px!important}#pv-theme .chip b{font-size:20px!important}
+
+/* ===== v205 black & white (grayscale, layered contrast) ===== */
+:root[data-bw]{--bwf:#fff;--bwb:#000;--bg:#050505;--surf:#141414;--surf2:#202020;--inset:#080808;--line:rgba(255,255,255,.16);--line2:rgba(255,255,255,.3);--text:#fff;--muted:#bcbcbc;--dim:#808080;--lime:#fff;--ink:#000;--cyan:#e2e2e2;--red:#c6c6c6;--orange:#d2d2d2;--green:#ececec;--violet:#aaa;--pink:#b8b8b8;--accent:#fff;--focus:#c6c6c6;--break:#ececec;--glass:#141414;--border:rgba(255,255,255,.2);--c1:#1d1d1d;--c2:#0f0f0f;--k1:#2a2a2a;--k2:#171717;--bd:rgba(255,255,255,.2);--hi:rgba(255,255,255,.1);--sh:rgba(0,0,0,.9);color-scheme:dark;filter:grayscale(1) contrast(1.1)}
+:root[data-bw="light"]{--bwf:#0a0a0a;--bwb:#fff;--bg:#e9e9e9;--surf:#fff;--surf2:#f0f0f0;--inset:#e2e2e2;--line:rgba(0,0,0,.14);--line2:rgba(0,0,0,.3);--text:#0a0a0a;--muted:#3d3d3d;--dim:#6b6b6b;--lime:#0a0a0a;--ink:#fff;--cyan:#262626;--red:#3a3a3a;--orange:#303030;--green:#1a1a1a;--violet:#4a4a4a;--pink:#444;--accent:#0a0a0a;--focus:#3a3a3a;--break:#1a1a1a;--glass:#fff;--border:rgba(0,0,0,.2);--c1:#ffffff;--c2:#f3f3f3;--k1:#ffffff;--k2:#e6e6e6;--bd:rgba(0,0,0,.2);--hi:rgba(255,255,255,.95);--sh:rgba(0,0,0,.28);color-scheme:light}
+:root[data-bw],:root[data-bw] html,:root[data-bw] body{background:var(--bg)!important;color:var(--text)}
+:root[data-bw] #amb{background:radial-gradient(70% 38% at 50% 0%,rgba(255,255,255,.09),transparent 70%),var(--bg)!important}:root[data-bw] #amb i{display:none!important}
+:root[data-bw="light"] #amb{background:radial-gradient(70% 38% at 50% 0%,rgba(255,255,255,.9),transparent 70%),var(--bg)!important}
+:root[data-bw] *{text-shadow:none!important}
+:root[data-bw] .card,:root[data-bw] .pcard,:root[data-bw] .sbox,:root[data-bw] .pv-box,:root[data-bw] .dbox,:root[data-bw] .zctile,:root[data-bw] .zsc,:root[data-bw] .zmbest,:root[data-bw] .zmrg,:root[data-bw] .evrow,:root[data-bw] .wk2,:root[data-bw] .nxc,:root[data-bw] .lban,:root[data-bw] .pwh,:root[data-bw] .aibox,:root[data-bw] .zqrow,:root[data-bw] .zmtile{background:linear-gradient(180deg,var(--c1),var(--c2))!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi),0 16px 32px -20px var(--sh)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+:root[data-bw] header,:root[data-bw] .nav,:root[data-bw] .ptabs{background:linear-gradient(180deg,var(--c1),var(--c2))!important;border-color:var(--bd)!important;box-shadow:none!important}
+:root[data-bw] #sheet>*,:root[data-bw] #pv-sheet>*{background:linear-gradient(180deg,var(--c1),var(--c2))!important;border-color:var(--bd)!important}
+:root[data-bw] .btn,:root[data-bw] .chip,:root[data-bw] .pmini,:root[data-bw] .addf,:root[data-bw] .add,:root[data-bw] .zmdur button,:root[data-bw] .zmseg,:root[data-bw] .zmseg button,:root[data-bw] header button,:root[data-bw] .vrow textarea{background:linear-gradient(180deg,var(--k1),var(--k2))!important;color:var(--text)!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi)!important}
+:root[data-bw] .btn.primary,:root[data-bw] .chip.on,:root[data-bw] .zmdur button.on,:root[data-bw] .zmseg button.on,:root[data-bw] .ptab.on,:root[data-bw] .zmtile.on,:root[data-bw] .zctile.sel,:root[data-bw] .zqrow.on,:root[data-bw] .nav .on{background:linear-gradient(180deg,var(--bwf),color-mix(in srgb,var(--bwf) 78%,var(--bwb)))!important;color:var(--bwb)!important;border-color:var(--bwf)!important;box-shadow:0 8px 22px -10px var(--sh)!important}
+:root[data-bw] .btn.primary *,:root[data-bw] .chip.on *,:root[data-bw] .zmtile.on *,:root[data-bw] .zctile.sel *,:root[data-bw] .zqrow.on *,:root[data-bw] .nav .on *,:root[data-bw] .ptab.on *,:root[data-bw] .zmdur button.on,:root[data-bw] .zmseg button.on{color:var(--bwb)!important}
+:root[data-bw] input,:root[data-bw] textarea,:root[data-bw] select{background:var(--inset)!important;color:var(--text)!important;border:1px solid var(--bd)!important;box-shadow:inset 0 2px 6px -3px var(--sh)!important}
+:root[data-bw] .fab{background:linear-gradient(180deg,var(--bwf),color-mix(in srgb,var(--bwf) 75%,var(--bwb)))!important;border:1px solid var(--bwf)!important;box-shadow:0 10px 26px -8px var(--sh)!important}:root[data-bw] .fab,:root[data-bw] .fab *{color:var(--bwb)!important;stroke:var(--bwb)!important}
+:root[data-bw] #toast{background:var(--bwf)!important;color:var(--bwb)!important}
+:root[data-bw] .zcconf{display:none}
+/* games */
+:root[data-bw] .zmrun,:root[data-bw] .skfs{background:radial-gradient(80% 50% at 50% 0%,rgba(255,255,255,.1),transparent 70%),var(--bg)!important;color:var(--text)!important}
+:root[data-bw="light"] .zmrun,:root[data-bw="light"] .skfs{background:radial-gradient(80% 50% at 50% 0%,#fff,transparent 70%),var(--bg)!important}
+:root[data-bw] .zmrun *,:root[data-bw] .skfs *{color:var(--text)}
+:root[data-bw] .zcbg{background:radial-gradient(60% 40% at 50% 6%,rgba(255,255,255,.14),transparent 70%)!important}:root[data-bw="light"] .zcbg{background:none!important}
+:root[data-bw="light"] .zcbg::after{background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px)}
+:root[data-bw] .zcqc{background:linear-gradient(160deg,var(--c1),var(--c2))!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi),0 24px 50px -26px var(--sh)!important}
+:root[data-bw] .zmin,:root[data-bw] .zcrow,:root[data-bw] .zmsl,:root[data-bw] .zmstat div,:root[data-bw] .zcchip,:root[data-bw] .zckind{background:var(--k2)!important;border:1px solid var(--bd)!important;box-shadow:none!important}
+:root[data-bw] .zcb,:root[data-bw] .zmk,:root[data-bw] .zmx,:root[data-bw] .zcskip,:root[data-bw] .skfx,:root[data-bw] .skfz button{background:linear-gradient(180deg,var(--k1),var(--k2))!important;border:1px solid var(--bd)!important;box-shadow:inset 0 1px 0 var(--hi),0 8px 18px -12px var(--sh)!important}
+:root[data-bw] .zcb b{background:var(--inset)!important;border:1px solid var(--bd)}
+:root[data-bw] .zcb.ok,:root[data-bw] .zmk.dn,:root[data-bw] .zmin.ok{background:linear-gradient(180deg,var(--bwf),color-mix(in srgb,var(--bwf) 78%,var(--bwb)))!important;border-color:var(--bwf)!important}
+:root[data-bw] .zcb.ok,:root[data-bw] .zcb.ok *,:root[data-bw] .zmk.dn,:root[data-bw] .zmin.ok{color:var(--bwb)!important}:root[data-bw] .zcb.ok b{background:var(--bwb)!important}:root[data-bw] .zcb.ok b{color:var(--bwf)!important}
+:root[data-bw] .zcqc.okf{border-color:var(--bwf)!important;box-shadow:0 0 0 2px var(--bwf)!important}
+:root[data-bw] .zcb.no{border:1px dashed var(--text)!important;opacity:.55}:root[data-bw] .zcqc.nof{border:1px dashed var(--text)!important}
+:root[data-bw] .zmt{background:var(--k2)!important;border:1px solid var(--bd)}:root[data-bw] .zmt i{background:linear-gradient(90deg,var(--dim),var(--bwf))!important;box-shadow:none!important}
+:root[data-bw] .zcgap{border-bottom-color:var(--bwf);background:var(--hi)}
+:root[data-bw] .zcrg .t{stroke:var(--line2)}:root[data-bw] .zcrg .p{stroke:var(--bwf)!important;filter:none}
+:root[data-bw] .zmnb{background:var(--bwf)!important;color:var(--bwb)!important}
+:root[data-bw] .zsb u,:root[data-bw] .zmh i{background:var(--dim)!important}:root[data-bw] .zsb .now u{background:var(--bwf)!important;box-shadow:none}
+:root[data-bw] .zctile u{background:var(--bwf);box-shadow:none}
+:root[data-bw] .zctile .zci{background:var(--inset);border:1px solid var(--bd)}
+:root[data-bw] .zmtile.on b,:root[data-bw] .zmtile.on span,:root[data-bw] .zmtile.on small{color:var(--bwb)!important}
+:root[data-bw] .sfn .sfh,:root[data-bw] .sfn.ok .sfh,:root[data-bw] .sfn.av .sfh{filter:none!important;animation:none}
+:root[data-bw] .sfn.lock{opacity:.55}:root[data-bw] .sfn .sfh{background:var(--dim)!important}:root[data-bw] .sfn.av .sfh{background:var(--bwf)!important}:root[data-bw] .sfn.ok .sfh{background:var(--bwf)!important;box-shadow:0 0 18px rgba(255,255,255,.4)}
+:root[data-bw] .sfe path.on{stroke:var(--bwf)}:root[data-bw] .sfe path.av,:root[data-bw] .sfe path.off,:root[data-bw] .sfe path.hub{stroke:var(--dim);filter:none}
+:root[data-bw] .sfc{background:radial-gradient(circle,var(--k1),var(--inset))!important;border:1px solid var(--bwf);box-shadow:0 0 30px rgba(255,255,255,.2)}
 </style>
 </head>
 <body>
@@ -1935,7 +2060,7 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
   <div class="pv-box">
     <div class="pv-top"><b>Settings</b><button class="pv-x" id="pv-x" aria-label="Close">✕</button></div>
     <div class="pv-h">Appearance</div>
-    <div class="thmseg" id="pv-theme"><button class="chip" data-v="light"><b>☀️</b>Light</button><button class="chip" data-v="dark"><b>🌙</b>Dark</button><button class="chip" data-v="auto"><b>◐</b>Auto</button></div>
+    <div class="thmseg" id="pv-theme"><button class="chip" data-v="light"><b>☀️</b>Light</button><button class="chip" data-v="dark"><b>🌙</b>Dark</button><button class="chip" data-v="auto"><b>◐</b>Auto</button><button class="chip" data-v="bw"><b>●</b>B&amp;W</button><button class="chip" data-v="bwl"><b>○</b>B&amp;W light</button></div>
     <div id="pv-langhost"></div>
     <div class="pv-card"><div class="pv-note" style="margin-bottom:8px">Screen shape</div><div class="chips" id="pv-scr"><button class="chip" data-v="0">Square</button><button class="chip" data-v="47">iPhone 12–14</button><button class="chip" data-v="55">iPhone 15 / Pro</button><button class="chip" data-v="62">iPhone 16 Pro</button></div></div>
     <div class="pv-card"><div class="pv-note" style="margin-bottom:8px">Screen glow (the coloured frame around the screen during Happy Hour and boosts)</div><div class="chips" id="pv-glow"><button class="chip" data-v="on">On</button><button class="chip" data-v="off">Off</button></div></div>
@@ -10542,8 +10667,13 @@ function zmGen(c){const on=['add','sub','mul','div'].filter(k=>c[k].on),op=on[Ma
   if(op==='mul'){const a=ri(c.mul.a),b=ri(c.mul.b);return{q:a+' × '+b,a:a*b,op}}
   const a=ri(c.mul.a),b=ri(c.mul.b);return{q:(a*b)+' ÷ '+a,a:b,op}}
 function vCalc(){
+  const sg='<div class="zmseg"><button class="'+(st.calcm!=='cours'?'on':'')+'" data-a="calcm" data-i="calc">Calculation</button><button class="'+(st.calcm==='cours'?'on':'')+'" data-a="calcm" data-i="cours">Courses</button></div>';
+  if(st.calcm==='cours')return sg+zsCard()+zcView(zmCfg());
+  return sg+zsCard()+vCalcN();
+}
+function vCalcN(){
   const c=zmCfg(),key=zmKey(c),best=zmBest(key),hist=zmHist().filter(x=>x.k===key).slice(-8);
-  const tile=(k,sym,lab,sub)=>'<button class="zmtile '+(c[k].on?'on':'')+'" data-a="zmTog" data-i="'+k+'"><b>'+sym+'</b><span>'+lab+'</span><small>'+sub+'</small></button>';
+  const tile=(k,sym,lab,sub)=>'<button class="zmtile '+(c[k].on?'on':'')+'" style="--h:'+({add:215,sub:330,mul:160,div:28})[k]+'" data-a="zmTog" data-i="'+k+'"><b>'+sym+'</b><span>'+lab+'</span><small>'+sub+'</small></button>';
   const rng=(k,f,l)=>'<span class="zmr"><input type="number" inputmode="numeric" min="0" max="9999" value="'+c[k][f][0]+'" data-zm="'+k+'|'+f+'|0" aria-label="'+l+' min"><i>to</i><input type="number" inputmode="numeric" min="0" max="9999" value="'+c[k][f][1]+'" data-zm="'+k+'|'+f+'|1" aria-label="'+l+' max"></span>';
   let h='<div class="card zmc"><div class="cardhead"><div class="lbl">Mental maths</div><span class="sub">speed drill</span></div><div class="sub" style="margin:0 0 14px">Tap the answer on the big keypad, it moves on by itself as soon as it is right. Your score is how many you get in the time.</div>'+
    '<div class="zmopg">'+tile('add','+','Addition','2 to 100')+tile('sub','−','Subtraction','reverse of addition')+tile('mul','×','Multiplication','2–12 × 2–100')+tile('div','÷','Division','reverse of multiplication')+'</div>'+
@@ -10556,12 +10686,13 @@ function vCalc(){
   return h;
 }
 function zmSetup(){document.querySelectorAll('[data-zm]').forEach(i=>{i.onchange=()=>{const[k,f,j]=i.dataset.zm.split('|'),c=zmCfg();let v=Math.max(0,Math.min(9999,parseInt(i.value)||0));c[k][f][+j]=v;if(c[k][f][0]>c[k][f][1]){c[k][f]=[Math.min(...c[k][f]),Math.max(...c[k][f])]}zmSave(c);render()}})}
+A.calcm=m=>{st.calcm=m;render()};
 A.zmTog=k=>{const c=zmCfg();c[k].on=c[k].on?0:1;if(!['add','sub','mul','div'].some(x=>c[x].on))c[k].on=1;zmSave(c);render()};
 A.zmDur=d=>{const c=zmCfg();c.dur=+d;zmSave(c);render()};
 A.zmStart=()=>{
   const c=zmCfg(),key=zmKey(c);if(document.getElementById('zmrun'))return;
   const r=document.createElement('div');r.id='zmrun';r.className='zmrun';
-  r.innerHTML='<div class="zmtop"><button class="zmx" aria-label="Quit">✕</button><div class="zmt"><i></i></div><b class="zmtime"></b></div><div class="zmsc"><small>SCORE</small><b>0</b></div><div class="zmq"></div><div class="zmin" aria-live="polite"></div><div class="zmpad">'+[1,2,3,4,5,6,7,8,9,'skip',0,'del'].map(k=>'<button class="zmk '+(typeof k==='number'?'':'fn')+'" data-k="'+k+'" aria-label="'+k+'">'+(k==='del'?'⌫':k==='skip'?'Skip':k)+'</button>').join('')+'</div>';
+  r.innerHTML='<div class="zcbg"></div><div class="zmtop"><button class="zmx" aria-label="Quit">✕</button><div class="zmt"><i></i></div><b class="zmtime"></b></div><div class="zmsc"><small>SCORE</small><b>0</b></div><div class="zmq"></div><div class="zmin" aria-live="polite"></div><div class="zmpad">'+[1,2,3,4,5,6,7,8,9,'skip',0,'del'].map(k=>'<button class="zmk '+(typeof k==='number'?'':'fn')+'" data-k="'+k+'" aria-label="'+k+'">'+(k==='del'?'⌫':k==='skip'?'Skip':k)+'</button>').join('')+'</div>';
   document.body.appendChild(r);
   const q$=s=>r.querySelector(s),inp=q$('.zmin');inp.value='';let cur=zmGen(c),score=0,t0=performance.now(),tq=t0,log=[],done=false,tm;
   const show=()=>{q$('.zmq').textContent=cur.q+' =';inp.value='';inp.textContent='';q$('.zmsc b').textContent=score};
@@ -10569,13 +10700,168 @@ A.zmStart=()=>{
     r.innerHTML='<div class="zmres"><small>TIME</small><h2>'+score+'</h2><div class="sub">correct in '+(c.dur<120?c.dur+' s':c.dur/60+' min')+'</div>'+(score>=bst&&score>0?'<div class="zmnb">New best</div>':'<div class="sub">Best: '+bst+'</div>')+'<div class="zmstat"><div><b>'+(per?per.toFixed(1):'–')+' s</b><small>per question</small></div><div><b>'+Math.round(score*60/c.dur)+'</b><small>per minute</small></div></div>'+(slow.length?'<div class="lbl" style="margin:16px 0 6px">Slowest</div>'+slow.map(x=>'<div class="zmsl"><span>'+esc(x.q)+' = '+x.a+'</span><b>'+x.t.toFixed(1)+' s</b></div>').join(''):'')+'<button class="btn primary" id="zm-again" style="margin-top:18px">Go again</button><button class="btn" id="zm-done">Done</button></div>';
     q$('#zm-again').onclick=()=>{r.remove();A.zmStart()};q$('#zm-done').onclick=()=>{r.remove();render()}};
   const tick=()=>{const el=(performance.now()-t0)/1000,left=Math.max(0,c.dur-el);q$('.zmt i').style.width=(left/c.dur*100)+'%';q$('.zmtime').textContent=Math.ceil(left);r.classList.toggle('low',left<=10);if(left<=0)end()};
-  const check=()=>{const v=inp.value;inp.textContent=v;if(v!==''&&v===String(cur.a)){const now=performance.now();log.push({q:cur.q,a:cur.a,t:(now-tq)/1000});score++;tq=now;cur=zmGen(c);inp.classList.add('ok');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}setTimeout(()=>{inp.classList.remove('ok');show()},90);q$('.zmsc b').textContent=score}};
+  const check=()=>{const v=inp.value;inp.textContent=v;if(v!==''&&v===String(cur.a)){const now=performance.now();log.push({q:cur.q,a:cur.a,t:(now-tq)/1000});zsLog(true);score++;tq=now;cur=zmGen(c);inp.classList.add('ok');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}setTimeout(()=>{inp.classList.remove('ok');show()},90);q$('.zmsc b').textContent=score}};
   const press=k=>{if(done||inp.classList.contains('ok'))return;if(k==='del')inp.value=inp.value.slice(0,-1);else if(k==='skip'){cur=zmGen(c);tq=performance.now();show();return}else if(inp.value.length<7)inp.value+=k;check();inp.textContent=inp.value};
   r.querySelector('.zmpad').addEventListener('pointerdown',e=>{const b=e.target.closest('.zmk');if(!b)return;e.preventDefault();b.classList.add('dn');setTimeout(()=>b.classList.remove('dn'),90);press(b.dataset.k)});
   const kd=e=>{if(!document.getElementById('zmrun')){document.removeEventListener('keydown',kd);return}if(/^\d$/.test(e.key))press(e.key);else if(e.key==='Backspace')press('del')};document.addEventListener('keydown',kd);
   q$('.zmx').onclick=()=>{done=true;clearInterval(tm);r.remove();render()};
   show();tick();tm=setInterval(tick,100);
 };
+/* ===== v201 Course mini-revisions (rapid fire per course) ===== */
+const zcR=n=>Math.floor(Math.random()*n),zcPick=a=>a[zcR(a.length)],zcShuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=zcR(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const zcN=s=>String(s).replace(/\s+/g,'').replace(/[-–]/g,'−').toLowerCase();
+const TF=(q,t,e)=>({k:'ch',q,o:['True','False'],c:t?0:1,e:e||''});
+const CH=(q,ok,bad,e)=>{bad=[...new Set(bad)].filter(x=>x!==ok);const o=zcShuf([ok].concat(zcShuf(bad).slice(0,3)));return{k:'ch',q,o,c:o.indexOf(ok),e:e||''}};
+const NUM=(q,a,e)=>({k:'ty',q,a:[].concat(a).map(zcN),show:[].concat(a)[0],e:e||''});
+const zcPairs=(pairs,fmt,pool)=>{const p=zcPick(pairs),bad=(pool||pairs.map(x=>x[1])).filter(x=>x!==p[1]);return CH(fmt(p[0]),p[1],bad,p[0]+'  →  '+p[1])};
+const ZC_ANG=[['0',1,0,'0'],['π/6','√3/2','1/2','√3/3'],['π/4','√2/2','√2/2','1'],['π/3','1/2','√3/2','√3'],['π/2','0','1',null],['2π/3','−1/2','√3/2','−√3'],['3π/4','−√2/2','√2/2','−1'],['5π/6','−√3/2','1/2','−√3/3'],['π','−1','0','0']];
+const ZC_INV=[['arcsin(1/2)','π/6'],['arcsin(√2/2)','π/4'],['arcsin(√3/2)','π/3'],['arcsin(−1/2)','−π/6'],['arcsin(1)','π/2'],['arccos(1/2)','π/3'],['arccos(√2/2)','π/4'],['arccos(−1/2)','2π/3'],['arccos(0)','π/2'],['arccos(−1)','π'],['arctan(1)','π/4'],['arctan(√3)','π/3'],['arctan(0)','0'],['arctan(−1)','−π/4']];
+const ZC_DER=[['arctan x','1/(1+x²)'],['tan x','1+tan²x'],['ln|x|','1/x'],['arcsin x','1/√(1−x²)'],['arccos x','−1/√(1−x²)'],['ch x','sh x'],['sh x','ch x'],['th x','1/ch²x'],['xᵃ','a·xᵃ⁻¹'],['aˣ','ln(a)·aˣ'],['cos x','−sin x'],['1/x','−1/x²'],['√x','1/(2√x)']];
+const ZC_PRIM=[['1/(1+x²)','arctan x'],['1/√(1−x²)','arcsin x'],['tan x','−ln|cos x|'],['1/x','ln|x|'],['ln x','x ln x − x'],['sh x','ch x'],['1/cos²x','tan x'],['1/ch²x','th x']];
+const ZC={
+ fu:{n:'Usual functions',ic:'f',s:[
+  ()=>{const r=zcPick(ZC_ANG.filter(a=>a[3]!==null||0)),w=zcPick(['cos','sin','tan']);if(w==='tan'){const t=zcPick(ZC_ANG.filter(a=>a[3]));return NUM(w+'('+t[0]+') = ?',t[3],'Table of values')}const a=zcPick(ZC_ANG);return NUM(w+'('+a[0]+') = ?',w==='cos'?String(a[1]):String(a[2]),'Table of values')},
+  ()=>{const p=zcPick(ZC_INV);return NUM(p[0]+' = ?',p[1],'Remember the range of the inverse function')},
+  ()=>zcPairs(ZC_DER,f=>'Derivative of '+f),
+  ()=>zcPairs(ZC_PRIM,f=>'An antiderivative of '+f),
+  ()=>zcPick([NUM('ch²x − sh²x = ?','1'),NUM('cos²x + sin²x = ?','1'),NUM('cos(2x) = 2cos²x − ?','1'),CH('1 + tan²x = ___','1/cos²x',['1/sin²x','cos²x','tan 2x']),CH('sin(2x) = 2 sin x · ___','cos x',['sin x','cos 2x','tan x']),CH('ch x = (eˣ + ___)/2','e⁻ˣ',['eˣ','−eˣ','1/x']),CH('Domain of arcsin','[−1, 1]',['ℝ','[0, π]','] −1, 1 [']),CH('Domain of arctan','ℝ',['[−1, 1]',']0, +∞[','[−π/2, π/2]']),CH('Range of arccos','[0, π]',['[−π/2, π/2]','[0, 2π]','ℝ']),CH('Range of arctan',']−π/2, π/2[',['[0, π]','ℝ','[−1, 1]']),TF('arcsin(sin x) = x for every real x',0,'Only for x in [−π/2, π/2]'),TF('x ↦ ch x is even',1),TF('x ↦ sh x is odd',1),TF('tan is periodic of period π',1)])
+ ]},
+ cx:{n:'Complex numbers',ic:'ℂ',s:[
+  ()=>{const t=zcPick([[3,4,5],[5,12,13],[8,15,17],[6,8,10],[9,12,15]]),sg=zcPick(['+','−']);return NUM('|'+t[0]+(sg==='+'?' + ':' − ')+t[1]+'i| = ?',String(t[2]),'√('+t[0]+'² + '+t[1]+'²)')},
+  ()=>{const a=1+zcR(5),b=1+zcR(5),c=1+zcR(5),d=1+zcR(5),re=a*c-b*d,im=a*d+b*c,w=zcR(2);return NUM((w?'Im':'Re')+'(('+a+' + '+b+'i)('+c+' + '+d+'i)) = ?',String(w?im:re),'('+a+'+'+b+'i)('+c+'+'+d+'i) = '+re+' + '+im+'i')},
+  ()=>{const n=3+zcR(37),r=['1','i','−1','−i'][n%4];return CH('i^'+n+' = ?',r,['1','i','−1','−i'].filter(x=>x!==r),'n mod 4 = '+(n%4))},
+  ()=>{const a=1+zcR(6),b=1+zcR(6);return NUM('z = '+a+' + '+b+'i : z · z̄ = ?',String(a*a+b*b),'|z|² = a² + b²')},
+  ()=>{const p=zcPick([['arg(1 + i)','π/4'],['arg(i)','π/2'],['arg(−1)','π'],['arg(1 − i)','−π/4'],['arg(−i)','−π/2'],['arg(1 + i√3)','π/3'],['arg(√3 + i)','π/6']]);return NUM(p[0]+' = ?',p[1],'Mod 2π, in ]−π, π]')},
+  ()=>zcPick([NUM('e^(iπ) = ?','−1'),NUM('e^(iπ/2) = ?','i'),NUM('e^(2iπ) = ?','1'),NUM('Number of n-th roots of 1 for n = 7','7','There are exactly n of them'),NUM('Sum of the n-th roots of unity (n ≥ 2)','0'),CH('cos θ = ___','(e^(iθ) + e^(−iθ))/2',['(e^(iθ) − e^(−iθ))/2','(e^(iθ) + e^(−iθ))/2i','e^(iθ) + 1']),CH('sin θ = ___','(e^(iθ) − e^(−iθ))/2i',['(e^(iθ) + e^(−iθ))/2','(e^(iθ) − e^(−iθ))/2','e^(iθ) − 1']),CH('(e^(iθ))ⁿ = ?','e^(inθ)',['e^(iθⁿ)','n·e^(iθ)','e^(iθ + n)']),CH('Triangle inequality','|z₁ + z₂| ≤ |z₁| + |z₂|',['|z₁ + z₂| = |z₁| + |z₂|','|z₁ + z₂| ≥ |z₁| + |z₂|','|z₁z₂| ≤ |z₁| + |z₂|']),CH('Solutions of z² = −4','2i and −2i',['2 and −2','2i only','4i and −4i']),TF('The conjugate of z₁z₂ is z̄₁ · z̄₂',1),TF('|z₁ + z₂| = |z₁| + |z₂| for all complex numbers',0,'Only when aligned'),TF('z ∈ ℝ ⇔ z̄ = z',1),TF('z is purely imaginary ⇔ z̄ = −z (with z ≠ 0 or z = 0)',1)])
+ ]},
+ lo:{n:'Logic & sets',ic:'∀',s:[
+  ()=>zcPick([CH('not(∀x, P(x))','∃x, not P(x)',['∀x, not P(x)','∃x, P(x)','∀x, P(x)']),CH('not(∃x, P(x))','∀x, not P(x)',['∃x, not P(x)','∀x, P(x)','∃x, P(x)']),CH('not(P ⇒ Q)','P and not Q',['not P and Q','not P ⇒ not Q','P or not Q']),CH('not(P or Q)','not P and not Q',['not P or not Q','not P and Q','P and Q']),CH('not(P and Q)','not P or not Q',['not P and not Q','P or Q','not P and Q']),CH('not(∀x ∃y, x + y ≥ 0)','∃x ∀y, x + y < 0',['∀x ∃y, x + y < 0','∃x ∀y, x + y ≤ 0','∀x ∀y, x + y < 0']),CH('not(∃x ∀y, y² ≥ x)','∀x ∃y, y² < x',['∃x ∀y, y² < x','∀x ∀y, y² < x','∀x ∃y, y² ≤ x']),CH('Contrapositive of P ⇒ Q','not Q ⇒ not P',['Q ⇒ P','not P ⇒ not Q','P ⇒ not Q']),CH('Converse of P ⇒ Q','Q ⇒ P',['not Q ⇒ not P','not P ⇒ not Q','Q ⇒ not P']),CH('P ⇒ Q is equivalent to','not P or Q',['P or not Q','not P and Q','P and not Q'])]),
+  ()=>zcPick([TF('∀y ∈ ℝ, ∃x ∈ ℝ, x + y ≥ 0',1,'Take x = −y'),TF('∃x ∈ ℝ, ∀y ∈ ℝ, x + y ≥ 0',0,'Take y = −x − 1'),TF('∃x ∈ ℝ, ∀y ∈ ℝ, y² ≥ x',1,'x = 0 works'),TF('∀x ∈ ℝ, ∃y ∈ ℝ, y² < x',0,'x = −1'),TF('x ↦ x² from ℝ to ℝ is injective',0,'f(−1) = f(1)'),TF('x ↦ x² from ℝ to ℝ is surjective',0,'−1 has no preimage'),TF('x ↦ x³ from ℝ to ℝ is bijective',1),TF('x ↦ eˣ from ℝ to ℝ is surjective',0,'Image is ]0, +∞['),TF('x ↦ x² from ℝ₊ to ℝ₊ is bijective',1),TF('If g∘f is injective then f is injective',1),TF('If g∘f is surjective then g is surjective',1),TF('A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)',1),TF('A ∪ B = A ∩ B implies A = B',1),NUM('Number of subsets of a set with 4 elements','16','2ⁿ'),NUM('Number of subsets of a set with 5 elements','32','2ⁿ'),CH('f injective ⇔ ___','∀x, y: f(x) = f(y) ⇒ x = y',['∀y ∃x: f(x) = y','∀x, y: x = y ⇒ f(x) = f(y)','∃x, y: f(x) = f(y)']),CH('f surjective ⇔ ___','∀y ∃x: f(x) = y',['∀x ∃y: f(x) = y','∀x, y: f(x) = f(y) ⇒ x = y','∃y ∀x: f(x) = y'])])
+ ]},
+ an:{n:'Real analysis',ic:'∫',s:[
+  ()=>zcPick([NUM('⌊3.7⌋ = ?','3'),NUM('⌊−2.5⌋ = ?','−3','Floor goes down'),NUM('sup of [0, 1[ = ?','1'),CH('max of [0, 1[','does not exist',['0','1','1/2']),CH('|x| ≤ a  ⇔  ___','−a ≤ x ≤ a',['x ≤ a','x ≤ −a or x ≥ a','x ≥ −a']),CH('|x| ≥ a  ⇔  ___ (a > 0)','x ≤ −a or x ≥ a',['−a ≤ x ≤ a','x ≥ a','x ≥ −a']),CH('Integration by parts','∫u′v = [uv] − ∫uv′',['∫u′v = [uv] + ∫uv′','∫u′v = [u′v′] − ∫uv','∫u′v = uv′ − [uv]']),CH('(f⁻¹)′(y) = ?','1/f′(f⁻¹(y))',['1/f′(y)','f′(f⁻¹(y))','−1/f′(f⁻¹(y))']),TF('f differentiable ⇒ f continuous',1),TF('f continuous ⇒ f differentiable',0,'|x| at 0'),TF('x ↦ |x| is differentiable at 0',0),TF('A continuous function on [a, b] is bounded and attains its bounds',1),TF('A continuous function on [a, b] takes every value between f(a) and f(b) (IVT)',1),TF('Rolle: f(a) = f(b) ⇒ ∃c, f′(c) = 0 (f continuous on [a,b], differentiable on ]a,b[)',1),TF('A continuous strictly monotone function on an interval is a bijection onto its image',1),TF('Every bounded sequence of reals converges',0,'(−1)ⁿ'),TF('Every non-empty bounded above subset of ℝ has a supremum',1)]),
+  ()=>zcPairs(ZC_PRIM,f=>'∫ '+f+' dx = ?')
+ ]},
+ al:{n:'Algebra',ic:'Σ',s:[
+  ()=>{const n=5+zcR(16);return NUM('Σ k for k = 1 to '+n+' = ?',String(n*(n+1)/2),'n(n+1)/2')},
+  ()=>{const n=3+zcR(8);return NUM('Σ k² for k = 1 to '+n+' = ?',String(n*(n+1)*(2*n+1)/6),'n(n+1)(2n+1)/6')},
+  ()=>{const n=3+zcR(6);return NUM('Σ 2ᵏ for k = 0 to '+n+' = ?',String(Math.pow(2,n+1)-1),'2ⁿ⁺¹ − 1')},
+  ()=>{const f=[1,1,2,6,24,120,720,5040,40320],n=4+zcR(5),k=1+zcR(n-1);return NUM('C('+n+', '+k+') = ?',String(f[n]/f[k]/f[n-k]),'n! / (k!(n−k)!)')},
+  ()=>{const a=1+zcR(5),b=a+1+zcR(5),s=a+b,p=a*b,w=zcR(2);return NUM((w?'Product':'Sum')+' of the roots of X² − '+s+'X + '+p+' = ?',String(w?p:s),'Vieta')},
+  ()=>{const a=2+zcR(2),n=2+zcR(3);return NUM('Remainder of X'+['','','²','³','⁴'][n]+' divided by X − '+a+' = ?',String(Math.pow(a,n)),'P(a)')},
+  ()=>zcPick([CH('Roots of X² + 1 in ℂ','i and −i',['1 and −1','only i','none']),CH('uₙ₊₂ = uₙ₊₁ + uₙ: characteristic equation','r² = r + 1',['r² = r − 1','r = r + 1','r² + r = 1']),CH('Linear recurrence, Δ = 0 with double root r','uₙ = (λ + μn) rⁿ',['uₙ = λrⁿ','uₙ = λrⁿ + μ','uₙ = (λ + μ) rⁿ']),CH('Linear recurrence, complex roots ρe^(±iθ)','uₙ = ρⁿ(λ cos nθ + μ sin nθ)',['uₙ = ρ(λ cos θ + μ sin θ)ⁿ','uₙ = λρⁿ + μθⁿ','uₙ = ρ(λ cos nθ + μ sin nθ)']),CH('(a + b)ⁿ = ?','Σ C(n,k) aᵏ bⁿ⁻ᵏ',['Σ C(n,k) aⁿ bᵏ','aⁿ + bⁿ','Σ aᵏ bᵏ']),NUM('Degree of the product of a degree 3 and a degree 4 polynomial','7'),TF('A polynomial of degree n has at most n roots',1),TF('Euclidean division of A by B (B ≠ 0): the remainder has degree < deg B',1),TF('cos(a + b) = cos a cos b + sin a sin b',0,'Minus sign'),TF('sin(a + b) = sin a cos b + cos a sin b',1)])
+ ]},
+ ed:{n:'Differential equations',ic:'y′',s:[
+  ()=>{const a=zcPick([1,2,3,4]),sg=zcPick([1,-1]),k=sg*a,sol=x=>x;return CH('General solution of y′ '+(k>0?'− ':'+ ')+a+'y = 0',(k>0?'λe^('+a+'x)':'λe^(−'+a+'x)'),(k>0?['λe^(−'+a+'x)','λ + '+a+'x','λx e^('+a+'x)']:['λe^('+a+'x)','λ − '+a+'x','λx e^(−'+a+'x)']),'y′ = ay ⇒ y = λe^(ax)')},
+  ()=>{const r1=zcPick([-3,-2,-1,1,2,3]),r2=zcPick([-3,-2,-1,1,2,3,4]);if(r1===r2)return CH('Δ = 0 for y″ + by′ + cy = 0 gives solutions','(λ + μx) e^(rx)',['λe^(rx) + μ','λe^(r₁x) + μe^(r₂x)','e^(αx)(λcos βx + μ sin βx)']);const S=r1+r2,P=r1*r2,eq='r²'+(S===0?'':S===-1?' + r':S===1?' − r':S>0?' − '+S+'r':' + '+(-S)+'r')+(P>=0?' + '+P:' − '+(-P));const J=a=>a.sort((x,y)=>x-y).join(' and ').replace(/-/g,'−'),ok=J([r1,r2]);return CH('Roots of '+eq+' = 0',ok,[J([-r1,-r2]),J([r1+1,r2]),J([S,P]),J([r1,r2+1])],'Sum = '+S+', product = '+P)},
+  ()=>{const b=zcPick([-4,-2,0,2,3,4,5]),c=zcPick([1,2,4,5,6,9]),D=b*b-4*c,t=D>0?'Δ > 0: two real roots':D===0?'Δ = 0: one double root':'Δ < 0: two complex conjugate roots';return CH('y″ '+(b>=0?'+ ':'− ')+Math.abs(b)+'y′ + '+c+'y = 0  (Δ = '+(b*b)+' − '+4*c+')',t,['Δ > 0: two real roots','Δ = 0: one double root','Δ < 0: two complex conjugate roots'].filter(x=>x!==t),'Δ = '+D)},
+  ()=>zcPick([CH('Δ < 0, roots α ± iβ: real solutions','e^(αx)(λcos βx + μ sin βx)',['λe^(αx) + μe^(βx)','e^(αx)(λ + μx)','λcos αx + μ sin βx']),CH('Second member eˣ, 1 is a simple root of the characteristic equation: try','a x eˣ',['a eˣ','a x² eˣ','a + eˣ']),CH('Second member eˣ, 1 is not a root: try','a eˣ',['a x eˣ','a x² eˣ','a + x eˣ']),TF('Solutions of y″ + by′ + cy = 0 form a vector space of dimension 2',1),TF('Superposition: y₁ solves L(y) = f₁ and y₂ solves L(y) = f₂ ⇒ y₁ + y₂ solves L(y) = f₁ + f₂',1),TF('Cauchy–Lipschitz (order 2): with y(x₀) and y′(x₀) given, the solution is unique',1),TF('y′ = y, y(0) = 2: the solution is y(x) = 2eˣ',1),NUM('y′ = 3y, y(0) = 5: y(0) + y′(0) = ?','20','5 + 3·5')])
+ ]},
+ ev:{n:'Vector spaces',ic:'E',s:[
+  ()=>{const t=zcPick([['{(x,y,z) ∈ ℝ³ | x + 2y − z = 0}',1,'Linear homogeneous equation'],['{(x,y,z) ∈ ℝ³ | x + y + z = 1}',0,'0 is not in it'],['{(x,y) ∈ ℝ² | xy = 0}',0,'(1,0) + (0,1) is not in it'],['{f: ℝ → ℝ | f(0) = 2f(1)}',1,'Linear condition'],['The increasing sequences',0,'−u is decreasing'],['The solutions of y″ + y′ − 2y = 0',1,'Homogeneous linear equation'],['The polynomials of degree exactly n',0,'0 and sums can lower the degree'],['The polynomials of degree ≤ n',1,''],['{(x,y) ∈ ℝ² | x ≥ 0}',0,'(−1)·(1,0) leaves it'],['{(x,y) ∈ ℝ² | x = y}',1,''],['The continuous functions ℝ → ℝ',1,''],['The bounded real sequences',1,''],['The even functions ℝ → ℝ',1,''],['The non-negative functions ℝ → ℝ',0,'−f is negative'],['A line of ℝ² not passing through 0',0,'0 ∉ it']]);return TF('Is it a vector subspace?  '+t[0],t[1],t[2])},
+  ()=>zcPick([NUM('dim ℝ³ = ?','3'),NUM('dim ℝ₄[X] = ?','5','n + 1'),NUM('dim of ℂ as an ℝ-vector space','2'),NUM('dim(F + G) if dim F = 3, dim G = 2, dim(F ∩ G) = 1','4','3 + 2 − 1'),CH('ker f = {0_E} ⇔ f is ___','injective',['surjective','bijective','the zero map']),CH('To show F is a subspace: 0 ∈ F and F is stable under ___','linear combinations',['products','composition','inverses']),CH('F ∪ G is a subspace ⇔ ___','F ⊂ G or G ⊂ F',['F ∩ G = {0}','F = G','F + G = E']),CH('Vect(u, v) = ?','{λu + μv}',['{u, v}','{uv}','{λu}']),TF('f(G) is a subspace of F when G is a subspace of E and f is linear',1),TF('f⁻¹(H) is a subspace of E when H is a subspace of F and f is linear',1),TF('The composite of two linear maps is linear',1),TF('x ↦ x² is a linear map ℝ → ℝ',0),TF('In dimension n, a free family of n vectors is a basis',1),TF('The solution set of a homogeneous linear system is a subspace',1)])
+ ]}
+};
+function zcSplitMix(){const ks=Object.keys(ZC);return ks}
+function zcqAll(){try{return JSON.parse(localStorage.getItem('p_zcq'))||{}}catch(e){return{}}}
+function zcqSave(o){try{localStorage.setItem('p_zcq',JSON.stringify(o))}catch(e){toast('Storage full')}}
+function zcKeys(ch){if(Array.isArray(ch)&&ch.length)return ch;const own=Object.keys(zcqAll()).filter(k=>zcqAll()[k].qs.length).map(k=>'L:'+k);return ch==='mix'||!ch||Array.isArray(ch)?Object.keys(ZC).concat(own):[ch]}
+function zcCust(it){const q=JSON.parse(JSON.stringify(it));if(q.k==='ch'&&!q.fix){const ok=q.o[q.c];q.o=zcShuf(q.o);q.c=q.o.indexOf(ok)}return q}
+function zcOne(k){if(ZC[k])return zcPick(ZC[k].s)();const L=zcqAll()[String(k).slice(2)];return L&&L.qs.length?zcCust(zcPick(L.qs)):null}
+function zcQ(ch,seen){const keys=zcKeys(ch);for(let t=0;t<14;t++){const q=zcOne(zcPick(keys));if(q&&q.q&&!seen.has(q.q)){seen.add(q.q);return q}}seen.clear();for(let t=0;t<14;t++){const q=zcOne(zcPick(keys));if(q)return q}return zcPick(ZC.fu.s)()}
+function zcName(ch){if(Array.isArray(ch))return ch.length+' selected';if(ch==='mix')return 'All courses';if(ZC[ch])return ZC[ch].n;const L=zcqAll()[String(ch).slice(2)];return L?L.n:'Course'}
+window.ZCX={ZC,zcQ};
+function zcBestGet(k){try{return(JSON.parse(localStorage.getItem('p_zcb'))||{})[k]||0}catch(e){return 0}}
+function zcBestSet(k,v){try{const b=JSON.parse(localStorage.getItem('p_zcb'))||{};if(v>(b[k]||0))b[k]=v;localStorage.setItem('p_zcb',JSON.stringify(b))}catch(e){}}
+function zcView(c){
+  const d=c.dur,pick=!!st.zcpick,sel=st.zcsel||[],all=zcqAll();
+  const tile=(k,n,ic,sub)=>{const ac=zcAccGet(k+'|'+d);return '<button class="zctile'+(pick&&sel.includes(k)?' sel':'')+'" style="--h:'+zcHue(k)+'" data-a="'+(pick?'zcTog':'zcStart')+'" data-i="'+k+'">'+(pick?'<em>'+(sel.includes(k)?'✓':'')+'</em>':'')+'<div class="zci"><i>'+ic+'</i></div><span>'+esc(n)+'</span><small>'+(sub||'Best '+(zcBestGet(k+'|'+d)||'–')+(ac!=null?' · '+ac+'%':''))+'</small>'+(ac!=null?'<u style="width:'+ac+'%"></u>':'')+'</button>'};
+  let h='<div class="card zmc"><div class="cardhead"><div class="lbl">Course mini-revision</div><span class="sub">rapid fire</span></div><div class="sub" style="margin:0 0 14px">Quick questions from your courses: type the answer, pick the right one or complete the formula. As many right answers as possible in the time.</div><div class="zmdur">'+[30,60,120,300,600].map(x=>'<button class="'+(d===x?'on':'')+'" data-a="zmDur" data-i="'+x+'">'+(x<120?x+'s':x/60+'m')+'</button>').join('')+'</div>'+
+   '<div class="zcbar"><button class="btn'+(pick?' primary':'')+'" data-a="zcPick">'+(pick?'☑ Choosing…':'☑ Choose several')+'</button><button class="btn" data-a="zcGen">＋ Add questions from my lessons</button></div>'+
+   (pick?'<button class="btn primary zmgo" data-a="zcGoSel" '+(sel.length?'':'disabled style="opacity:.5"')+'>▶ Start with '+sel.length+' selected</button>':'')+'</div>'+liveBox('ZCQ')+errBox('ZCQ');
+  h+='<div class="zcg">'+tile('mix','All courses mixed','★',Object.keys(all).length?'Built-in + your lessons':'')+Object.keys(ZC).map(k=>tile(k,ZC[k].n,ZC[k].ic)).join('')+'</div>';
+  const subs={};Object.keys(all).forEach(id=>{const L=all[id];if(!L.qs.length)return;(subs[L.subj]=subs[L.subj]||[]).push([id,L])});
+  Object.keys(subs).forEach(sj=>{h+='<div class="lbl" style="margin:18px 4px 8px">'+esc((SUBJ[sj]||{n:sj}).n)+' · from your lessons</div><div class="zcg">'+subs[sj].map(([id,L])=>tile('L:'+id,L.n,'✎',L.qs.length+' questions · best '+(zcBestGet('L:'+id+'|'+d)||'–'))).join('')+'</div>'});
+  return h;
+}
+A.zcPick=()=>{st.zcpick=!st.zcpick;st.zcsel=[];render()};
+A.zcTog=k=>{const a=st.zcsel||(st.zcsel=[]),i=a.indexOf(k);if(i<0)a.push(k);else a.splice(i,1);render()};
+A.zcGoSel=()=>{if((st.zcsel||[]).length)A.zcStart(st.zcsel.slice())};
+const ZCQ_SYS=`Tu écris des questions de révision éclair (style quiz rapide) pour un étudiant de prépa MPSI, UNIQUEMENT à partir du cours fourni. Rien d'inventé, rien de hors-programme du cours.
+Réponds par UN SEUL objet JSON : {"questions":[{"type":"choix|vf|trou|saisie","q":"...","options":["..",".."],"bonne":0,"vrai":true,"reponse":["..."],"expl":"..."}]}
+- "choix" : QCM, 3 ou 4 options plausibles (pièges classiques), "bonne" = index de la bonne option.
+- "vf" : affirmation du cours, "vrai" = true/false (varie, environ moitié faux, piégeux : hypothèse retirée, signe faux, quantificateur inversé).
+- "trou" : "q" contient ___ à la place d'un mot, d'un symbole ou d'une formule clé d'un théorème / d'une définition / d'une formule ; 3 ou 4 options, "bonne" = index.
+- "saisie" : réponse COURTE à taper avec seulement les caractères 0-9 − / √ π i (ex: "−1/2", "√3/2", "π/4", "12"). "reponse" = liste des écritures acceptées. Seulement si le calcul est dans le cours.
+Mélange les types (environ 35% choix, 25% vf, 25% trou, 15% saisie). "q" : 160 caractères max, texte Unicode lisible (², ³, ₙ, √, π, ∀, ∃, ∈, ⇒, ≤, ℝ, ℂ), JAMAIS de LaTeX ni de $. "expl" : 1 phrase (≤ 120 car.) qui justifie la bonne réponse. Écris dans la langue du cours.`;
+function zcqConv(j){const out=[];(j.questions||[]).forEach(x=>{try{const q=String(x.q||'').trim().slice(0,200);if(q.length<8)return;const e=String(x.expl||'').slice(0,160);
+  if(x.type==='vf'){out.push({k:'ch',q,o:['True','False'],c:x.vrai?0:1,fix:1,e});return}
+  if(x.type==='saisie'){const a=(x.reponse||[]).map(v=>String(v).replace(/\s+/g,'').replace(/[-–]/g,'−')).filter(v=>/^[0-9−\/√πi]{1,9}$/.test(v));if(a.length)out.push({k:'ty',q,a:a.map(v=>v.toLowerCase()),show:a[0],e});return}
+  const o=(x.options||[]).map(v=>String(v).trim().slice(0,90)).filter(Boolean);const c=+x.bonne;if(o.length>=2&&o.length<=5&&c>=0&&c<o.length&&new Set(o).size===o.length)out.push({k:'ch',q,o,c,e})}catch(e){}});return out}
+async function zcqGen(l,n){
+  const t=(await C.getText('L'+l.id))||'';if(t.length<200)throw new C.AIError('“'+l.title+'” has no text yet.');
+  const cur=zcqAll()[l.id],prev=(cur?cur.qs:[]).slice(-30).map(x=>x.q).join(' | ');
+  const r=await C.ai({subj:l.subj,system:ZCQ_SYS,content:[{type:'text',text:'COURS : '+l.title+'\n\n'+t.slice(0,60000)+(prev?'\n\nQUESTIONS DÉJÀ POSÉES (ne pas répéter) : '+prev:'')+'\n\nÉcris '+n+' questions.'}],max:8000});
+  const m=r.text.match(/\{[\s\S]*\}/);let j;try{j=JSON.parse(m[0])}catch(e){throw new C.AIError('Unreadable answer for “'+l.title+'”, try again.')}
+  const qs=zcqConv(j);if(!qs.length)throw new C.AIError('No usable question for “'+l.title+'”.');
+  const all=zcqAll(),o=all[l.id]||{n:l.title,subj:l.subj,qs:[]},seen=new Set(o.qs.map(x=>x.q));qs.forEach(x=>{if(!seen.has(x.q)){o.qs.push(x);seen.add(x.q)}});
+  o.qs=o.qs.slice(-150);o.n=l.title;o.subj=l.subj;o.t=Date.now();all[l.id]=o;zcqSave(all);return qs.length}
+A.zcGen=()=>{
+  const ls=S.lessons.filter(l=>l.subj);if(!ls.length){toast('Add a lesson first');return}
+  const all=zcqAll(),sel=new Set(),subs=[...new Set(ls.map(l=>l.subj))];let nq=20;
+  const body=()=>subs.map(sj=>'<div class="lbl" style="margin:14px 0 6px;display:flex;justify-content:space-between"><span>'+esc((SUBJ[sj]||{n:sj}).n)+'</span><button class="pmini" data-zqs="'+sj+'" style="width:auto;padding:0 12px">All</button></div>'+ls.filter(l=>l.subj===sj).map(l=>'<div class="zqrow'+(sel.has(l.id)?' on':'')+'" data-zql="'+l.id+'"><em>'+(sel.has(l.id)?'✓':'')+'</em><span>'+esc(l.title)+'</span><small>'+(all[l.id]?all[l.id].qs.length+' q':'—')+'</small>'+(all[l.id]?'<button class="pmini" data-zqx="'+l.id+'" aria-label="Delete its questions">✕</button>':'')+'</div>').join('')).join('');
+  openSheet('<h2 class="sh">Questions from your lessons</h2><div class="sub" style="margin-bottom:8px">Choose lessons: the AI writes quiz questions (multiple choice, true/false, fill the gap, short answers) from their text. Run it again on the same lesson to get new ones.</div><div class="zmdur" id="zq-n" style="grid-template-columns:repeat(3,1fr);margin:10px 0">'+[10,20,30].map(x=>'<button class="'+(x===nq?'on':'')+'" data-n="'+x+'">'+x+' each</button>').join('')+'</div><div id="zq-l">'+body()+'</div><button class="btn primary zmgo" id="zq-go" style="margin-top:14px" disabled>Generate</button>');
+  const root=document.getElementById('zq-l'),go=document.getElementById('zq-go'),upd=()=>{root.innerHTML=body();go.disabled=!sel.size;go.textContent=sel.size?'Generate for '+sel.size+' lesson'+(sel.size>1?'s':''):'Generate';go.style.opacity=sel.size?1:.5};upd();
+  root.onclick=e=>{const x=e.target.closest('[data-zqx]');if(x){e.stopPropagation();const a=zcqAll();delete a[x.dataset.zqx];zcqSave(a);delete all[x.dataset.zqx];upd();return}
+    const sa=e.target.closest('[data-zqs]');if(sa){const m=ls.filter(l=>l.subj===sa.dataset.zqs);const every=m.every(l=>sel.has(l.id));m.forEach(l=>every?sel.delete(l.id):sel.add(l.id));upd();return}
+    const r=e.target.closest('[data-zql]');if(r){const i=r.dataset.zql;sel.has(i)?sel.delete(i):sel.add(i);upd()}};
+  document.getElementById('zq-n').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;nq=+b.dataset.n;document.querySelectorAll('#zq-n button').forEach(x=>x.classList.toggle('on',x===b))};
+  go.onclick=()=>{if(!sel.size||!needKey())return;const todo=ls.filter(l=>sel.has(l.id));closeSheet();
+    run('ZCQ','Writing questions…',async lab=>{let n=0,bad=0,tot=0;for(const l of todo){lab('Questions · '+l.title+' ('+(n+bad+1)+'/'+todo.length+')');try{tot+=await zcqGen(l,nq);n++}catch(e){bad++;errs.ZCQ=e.message}}if(n)toast(tot+' questions added ✓');if(!n)throw new C.AIError(errs.ZCQ||'Nothing generated.')})};
+};
+const ZCH={fu:215,cx:265,lo:170,an:28,al:140,ed:330,ev:195,mix:245};
+const zcHue=k=>Array.isArray(k)?245:ZCH[k]||(String(k).startsWith('L:')?(()=>{const L=zcqAll()[String(k).slice(2)];return 200+((L&&SUBJ[L.subj]?SUBJ[L.subj].c:0)*47)%160})():245);
+function zcFmt(t){return esc(String(t)).replace(/\^\(([^)]+)\)/g,'<sup>$1</sup>').replace(/\^(−?\d+|[a-zA-Zπ])/g,'<sup>$1</sup>').replace(/([^_])_([0-9nE])\b/g,'$1<sub>$2</sub>').replace(/___/g,'<span class="zcgap"></span>')}
+function zsAll(){try{return JSON.parse(localStorage.getItem('p_zst'))||{}}catch(e){return{}}}
+function zsLog(ok){try{const a=zsAll(),d=iso(),x=a[d]||[0,0];x[0]++;if(ok)x[1]++;a[d]=x;const o={};Object.keys(a).sort().slice(-21).forEach(k=>o[k]=a[k]);localStorage.setItem('p_zst',JSON.stringify(o))}catch(e){}}
+function zsCard(){
+  const a=zsAll(),t=a[iso()]||[0,0],days=[];for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*864e5),k=iso(d);days.push([k,(a[k]||[0,0]),'SMTWTFS'[d.getDay()]])}
+  let st=0;for(let i=0;i<21;i++){const k=iso(new Date(Date.now()-i*864e5)),n=(a[k]||[0])[0];if(n>0)st++;else if(i>0)break;else continue}
+  const mx=Math.max(10,...days.map(d=>d[1][0]));
+  return '<div class="card zsc"><div class="zsh"><div><small>TODAY</small><b>'+t[0]+'</b><span>answers'+(t[0]?' · '+Math.round(t[1]/t[0]*100)+'% correct':'')+'</span></div><div class="zss"><i>🔥</i><b>'+st+'</b><span>day'+(st===1?'':'s')+' in a row</span></div></div><div class="zsb">'+days.map((d,i)=>'<div class="'+(i===6?'now':'')+'"><u style="height:'+Math.max(4,d[1][0]/mx*46)+'px"></u><small>'+d[2]+'</small></div>').join('')+'</div></div>'}
+function zcAccGet(k){try{return(JSON.parse(localStorage.getItem('p_zca'))||{})[k]}catch(e){return undefined}}
+function zcAccSet(k,v){try{const b=JSON.parse(localStorage.getItem('p_zca'))||{};b[k]=v;localStorage.setItem('p_zca',JSON.stringify(b))}catch(e){}}
+function zcConfetti(r){const w=document.createElement('div');w.className='zcconf';for(let i=0;i<34;i++){const e=document.createElement('i');e.style.cssText='left:'+Math.random()*100+'%;background:hsl('+(Math.random()*360|0)+' 90% 62%);animation-delay:'+Math.random()*.5+'s;animation-duration:'+(1.6+Math.random()*1.4)+'s;transform:rotate('+Math.random()*360+'deg)';w.appendChild(e)}r.appendChild(w);setTimeout(()=>w.remove(),3500)}
+function zcCount(el,to){const t0=performance.now();const f=n=>{const k=Math.min(1,(n-t0)/700);el.textContent=Math.round(to*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+A.zcStart=ch=>{
+  const c=zmCfg();if(document.getElementById('zmrun'))return;
+  const r=document.createElement('div');r.id='zmrun';r.className='zmrun zcrun';r.style.setProperty('--h',zcHue(ch));
+  r.innerHTML='<div class="zcbg"></div><div class="zmtop"><button class="zmx" aria-label="Quit">✕</button><div class="zmt"><i></i></div><b class="zmtime"></b></div><div class="zchud"><div class="zcsc"><small>SCORE</small><b>0</b></div><div class="zcchip">'+esc(zcName(ch))+'</div><div class="zcfl"><i>🔥</i><b>0</b></div></div><div class="zcstage"><div class="zcqc"><div class="zckind"></div><div class="zcq"></div><div class="zcexp"></div></div></div><div class="zcans"></div><button class="zcskip">Skip</button>';
+  document.body.appendChild(r);
+  const q$=x=>r.querySelector(x),ans=q$('.zcans'),card=q$('.zcqc'),seen=new Set(),miss=[];let cur,score=0,streak=0,bestS=0,tot=0,t0=performance.now(),done=false,lock=false,val='',tm;
+  const key=(Array.isArray(ch)?'sel':ch)+'|'+c.dur,isTF=o=>o.length===2&&/^(True|False|Vrai|Faux)$/.test(o[0]);
+  const hud=()=>{const b=q$('.zcsc b');b.textContent=score;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');const f=q$('.zcfl');f.querySelector('b').textContent=streak;f.className='zcfl'+(streak>=10?' fire':streak>=5?' hot':streak>=2?' on':'')};
+  const flash=(cls,txt)=>{card.classList.remove('okf','nof');void card.offsetWidth;card.classList.add(cls);if(txt){const p=document.createElement('em');p.className='zcplus';p.textContent=txt;card.appendChild(p);setTimeout(()=>p.remove(),700)}};
+  const next=()=>{cur=zcQ(ch,seen);val='';lock=false;card.classList.remove('okf','nof');q$('.zcq').innerHTML=zcFmt(cur.q);q$('.zcexp').textContent='';q$('.zcexp').className='zcexp';
+    q$('.zckind').textContent=cur.k==='ty'?'Type the answer':isTF(cur.o)?'True or false':/___/.test(cur.q)?'Complete the gap':'Choose the right one';
+    if(cur.k==='ty'){ans.innerHTML='<div class="zmin" aria-live="polite"></div><div class="zmpad zc4">'+['7','8','9','del','4','5','6','−','1','2','3','/','0','√','π','i'].map(k=>'<button class="zmk '+(k==='del'?'fn':'')+'" data-k="'+k+'">'+(k==='del'?'⌫':k)+'</button>').join('')+'</div>'}
+    else{const tf=isTF(cur.o);ans.innerHTML='<div class="zco'+(tf?' tf':'')+'">'+cur.o.map((o,i)=>'<button class="zcb" data-o="'+i+'"><b>'+(tf?(i?'✗':'✓'):'ABCDE'[i])+'</b><span>'+zcFmt(o)+'</span></button>').join('')+'</div>'}};
+  const good=()=>{score++;streak++;bestS=Math.max(bestS,streak);tot++;zsLog(true);try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}hud();flash('okf','+1')};
+  const bad=(show)=>{streak=0;tot++;zsLog(false);const a=cur.k==='ty'?cur.show:cur.o[cur.c];miss.push({q:cur.q,a,e:cur.e});hud();if(show){flash('nof');const x=q$('.zcexp');x.className='zcexp on';x.innerHTML='<b>'+zcFmt(a)+'</b>'+(cur.e?' · '+esc(cur.e):'')}};
+  const end=()=>{if(done)return;done=true;clearInterval(tm);const prev=zcBestGet(key);zcBestSet(key,score);const acc=tot?Math.round(score/tot*100):0;zcAccSet(key,acc);const nb=score>prev&&score>0,lab=acc>=90?'Razor sharp':acc>=75?'Solid':acc>=50?'Getting there':'Keep going';
+    r.innerHTML='<div class="zcbg"></div><div class="zmres zcres"><small>'+esc(zcName(ch)).toUpperCase()+'</small><h2 id="zc-sc">0</h2><div class="sub">correct in '+(c.dur<120?c.dur+' s':c.dur/60+' min')+'</div>'+(nb?'<div class="zmnb">★ New best</div>':'<div class="sub">Best: '+Math.max(prev,score)+'</div>')+'<div class="zcrow"><div class="zcrg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="t"/><circle cx="50" cy="50" r="44" class="p" stroke-dasharray="276.5" stroke-dashoffset="'+(276.5*(1-acc/100)).toFixed(1)+'"/></svg><b>'+acc+'%</b></div><div class="zcrt"><b>'+lab+'</b><span>'+tot+' answered · best streak '+bestS+'</span></div></div>'+(miss.length?'<div class="lbl" style="margin:18px 0 8px;text-align:left">To review · '+miss.length+'</div><div class="zmmiss">'+miss.slice(0,15).map(m=>'<div class="zmsl zcm"><span>'+zcFmt(m.q)+'</span><b>'+zcFmt(m.a)+'</b>'+(m.e?'<small>'+esc(m.e)+'</small>':'')+'</div>').join('')+'</div>':'<div class="sub" style="margin-top:16px">Perfect run, nothing to review.</div>')+'<div class="zcbtns"><button class="btn primary" id="zc-again">Go again</button><button class="btn" id="zc-done">Done</button></div></div>';
+    zcCount(q$('#zc-sc'),score);if(nb)zcConfetti(r);q$('#zc-again').onclick=()=>{r.remove();A.zcStart(ch)};q$('#zc-done').onclick=()=>{r.remove();render()}};
+  const tick=()=>{const el=(performance.now()-t0)/1000,left=Math.max(0,c.dur-el);q$('.zmt i').style.width=(left/c.dur*100)+'%';q$('.zmtime').textContent=Math.ceil(left);r.classList.toggle('low',left<=10);if(left<=0)end()};
+  const press=k=>{if(done||lock||cur.k!=='ty')return;if(k==='del')val=val.slice(0,-1);else if(val.length<9)val+=k;const d=q$('.zmin');if(d)d.textContent=val;if(val&&cur.a.includes(zcN(val))){lock=true;d.classList.add('ok');good();setTimeout(next,260)}};
+  const pickO=i=>{if(done||lock||cur.k!=='ch')return;const o=ans.querySelector('[data-o="'+i+'"]');if(!o)return;lock=true;const ok=i===cur.c;o.classList.add(ok?'ok':'no');if(ok)good();else{const g=ans.querySelector('[data-o="'+cur.c+'"]');g&&g.classList.add('ok');bad(true)}setTimeout(next,ok?320:(cur.e?1700:1100))};
+  r.addEventListener('pointerdown',e=>{const b=e.target.closest('.zmk');if(b){e.preventDefault();b.classList.add('dn');setTimeout(()=>b.classList.remove('dn'),90);press(b.dataset.k);return}
+    const o=e.target.closest('.zcb');if(o){e.preventDefault();pickO(+o.dataset.o);return}
+    if(e.target.closest('.zcskip')&&!done&&!lock){e.preventDefault();bad(false);next()}});
+  const kd=e=>{if(!document.getElementById('zmrun')){document.removeEventListener('keydown',kd);return}if(!cur)return;if(cur.k==='ty'){if(/^[0-9/]$/.test(e.key))press(e.key);else if(e.key==='Backspace')press('del');else if(e.key==='-')press('−')}else{const i='abcde'.indexOf(e.key.toLowerCase());const n=parseInt(e.key);if(i>=0)pickO(i);else if(n>=1&&n<=5)pickO(n-1)}};document.addEventListener('keydown',kd);
+  q$('.zmx').onclick=()=>{done=true;clearInterval(tm);r.remove();render()};
+  next();tick();tm=setInterval(tick,100);
+};
+
 A.skt=id=>{const sj=st.skj;const b=S.lessons.find(l=>l.id===id);const cur=(id in SKC)?SKC[id]:null;SKC[id]=cur===null?false:!cur;skRender()};
 A.skj=sj=>{st.skj=sj;render()};A.mapv=v=>{st.mapv=v;render()};
 function skTree(){
@@ -14557,10 +14843,10 @@ P.boot();
 
   /* ---------- appearance ---------- */
   function themeMode(){return localStorage.getItem('theme')||'dark'}
-  function applyTheme(){var m=themeMode(),d=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=d?'#06070b':'#eef0f5';var cs=document.querySelector('meta[name=color-scheme]');if(cs)cs.content=d?'dark':'light'}
+  function applyTheme(){var m=themeMode(),d=m==='dark'||m==='bw'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');if(m==='bw'||m==='bwl')document.documentElement.setAttribute('data-bw',m==='bw'?'dark':'light');else document.documentElement.removeAttribute('data-bw');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=d?'#06070b':'#eef0f5';var cs=document.querySelector('meta[name=color-scheme]');if(cs)cs.content=d?'dark':'light'}
   window.setTheme=function(m){try{localStorage.setItem('theme',m)}catch(e){}applyTheme();drawTheme();try{show(cur)}catch(e){}try{window.P&&P.render&&P.render()}catch(e){}};
   function drawTheme(){var m=themeMode();document.querySelectorAll('#pv-theme .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===m)})}
-  $('thm').addEventListener('click',function(){var dark=document.documentElement.getAttribute('data-theme')!=='light';setTheme(dark?'light':'dark');try{vib(8)}catch(e){}});
+  $('thm').addEventListener('click',function(){var m=themeMode();setTheme(m==='bw'?'bwl':m==='bwl'?'bw':document.documentElement.getAttribute('data-theme')!=='light'?'light':'dark');try{vib(8)}catch(e){}});
   if(window.matchMedia)try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(themeMode()==='auto')applyTheme()})}catch(e){}
   document.querySelectorAll('#pv-theme .chip').forEach(function(c){c.addEventListener('click',function(){setTheme(c.dataset.v)})});
   (function(){function cur(){try{return localStorage.getItem('scr')||'55'}catch(e){return '55'}}function d(){document.querySelectorAll('#pv-scr .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===cur())})}d();document.querySelectorAll('#pv-scr .chip').forEach(function(c){c.addEventListener('click',function(){try{localStorage.setItem('scr',c.dataset.v)}catch(e){}document.documentElement.style.setProperty('--scr',c.dataset.v+'px');d()})})})();
