@@ -1878,6 +1878,41 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
 .origbar{margin:0 0 10px}.origbar .btn{width:100%;margin:0}
 .vrow.flip textarea[data-vin=a]{order:2}.vrow.flip textarea[data-vin=b]{order:1}.vrow.flip .pmini{order:3}
 .vrow.flip.ok textarea[data-vin=b]{border-color:rgba(91,230,138,.4)}
+
+/* v199 mental maths */
+.zmop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:14px}.zmop .chip{flex:0 0 100%;justify-content:center;min-height:42px;padding-block:8px;margin-bottom:4px}.zmop b{color:var(--muted)}
+.zmr{display:inline-flex;align-items:center;gap:6px}.zmr input{width:54px!important;flex:none;min-height:40px;padding:6px 2px!important;font-size:16px!important;text-align:center;font-variant-numeric:tabular-nums;border-radius:10px}.zmr i{font-style:normal;color:var(--muted);font-size:12px}
+.zmbest{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--surf2);color:var(--muted)}.zmbest b{font-size:22px;color:var(--text,#fff)}
+.zmh{display:flex;align-items:flex-end;gap:8px;height:104px}.zmh div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px}.zmh i{width:100%;border-radius:8px 8px 3px 3px;background:linear-gradient(#5b8cff,#3a5fd0)}.zmh small{color:var(--muted);font-size:11px}
+.zmrun{position:fixed;inset:0;z-index:9000;background:radial-gradient(ellipse at 50% 30%,#14204a 0%,#070a16 65%);color:#eaf0ff;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 14px) 18px 24px}
+.zmtop{display:flex;align-items:center;gap:12px;width:100%;max-width:520px}.zmx{width:44px;height:44px;border-radius:50%;border:1px solid rgba(160,180,255,.35);background:rgba(10,16,34,.8);color:#e6eeff;font-size:18px;flex:none}
+.zmt{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden}.zmt i{display:block;height:100%;background:linear-gradient(90deg,#5b8cff,#9a7bff);box-shadow:0 0 14px rgba(110,140,255,.7);transition:width .1s linear}
+.zmtime{min-width:38px;text-align:right;font-variant-numeric:tabular-nums;font-size:20px}.zmrun.low .zmt i{background:linear-gradient(90deg,#ff8a4a,#ff5b6b)}.zmrun.low .zmtime{color:#ff8a8a}
+.zmsc{margin-top:34px;text-align:center}.zmsc small{letter-spacing:.2em;color:#8ea0d6;font-size:11px}.zmsc b{display:block;font-size:34px;font-variant-numeric:tabular-nums}
+.zmq{margin-top:8vh;font-size:clamp(44px,15vw,76px);font-weight:700;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 0 28px rgba(110,140,255,.45)}
+.zmin{margin-top:20px;width:min(260px,70vw);text-align:center;font-size:44px;font-variant-numeric:tabular-nums;border-radius:18px;padding:10px;background:rgba(255,255,255,.06);border:2px solid rgba(130,150,255,.45);color:#fff;outline:none;transition:border-color .1s,background .1s}.zmin.ok{border-color:#5be68a;background:rgba(91,230,138,.18)}
+.zmhint{margin-top:14px;font-size:12px;color:#7f90bd}
+.zmres{width:100%;max-width:420px;text-align:center;margin-top:5vh}.zmres small{letter-spacing:.2em;color:#8ea0d6;font-size:11px}.zmres h2{font-size:96px;margin:4px 0;font-variant-numeric:tabular-nums;text-shadow:0 0 30px rgba(110,140,255,.6)}
+.zmnb{display:inline-block;margin:6px 0;padding:5px 14px;border-radius:99px;background:linear-gradient(135deg,#ffe58a,#ffb84a);color:#3a2a08;font-weight:700}
+.zmstat{display:flex;gap:12px;margin-top:16px}.zmstat div{flex:1;padding:12px;border-radius:14px;background:rgba(255,255,255,.06)}.zmstat b{font-size:22px;display:block}
+.zmsl{display:flex;justify-content:space-between;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.05);margin-bottom:6px}
+
+/* v200 big-button mental maths */
+.zmin{margin-top:18px;width:min(300px,80vw);height:84px;display:flex;align-items:center;justify-content:center;font-size:52px!important;font-variant-numeric:tabular-nums;border-radius:22px;background:rgba(255,255,255,.06);border:2px solid rgba(130,150,255,.45);color:#fff}
+.zmin::after{content:"";width:3px;height:48px;background:#8fa6ff;margin-left:4px;animation:zmb 1s steps(1) infinite}@keyframes zmb{50%{opacity:0}}
+.zmin.ok{border-color:#5be68a;background:rgba(91,230,138,.22);box-shadow:0 0 28px rgba(91,230,138,.45)}
+.zmpad{margin-top:auto;width:100%;max-width:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding-bottom:calc(env(safe-area-inset-bottom) + 6px)}
+.zmk{height:min(84px,10.5vh);border-radius:22px;border:1px solid rgba(150,170,255,.28);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));color:#fff;font-size:32px;font-weight:600;font-variant-numeric:tabular-nums;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .08s,background .08s}
+.zmk.fn{font-size:19px;color:#9fb0e0;background:rgba(255,255,255,.04)}
+.zmk.dn{transform:scale(.94);background:linear-gradient(180deg,#5b8cff,#3a5fd0);box-shadow:0 0 22px rgba(91,140,255,.7)}
+.zmq{margin-top:5vh!important}.zmsc{margin-top:18px!important}
+.zmopg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.zmtile{padding:16px 14px;border-radius:20px;background:var(--surf2);border:2px solid transparent;text-align:left;color:var(--muted);transition:all .15s}
+.zmtile.on{border-color:#5b8cff;background:linear-gradient(145deg,rgba(91,140,255,.22),rgba(150,100,255,.12));color:#fff;box-shadow:0 0 22px -6px rgba(91,140,255,.7)}
+.zmtile b{display:block;font-size:30px;line-height:1}.zmtile span{display:block;margin-top:8px;font-size:15px;font-weight:600}.zmtile small{display:block;font-size:12px;opacity:.75;margin-top:2px}
+.zmrg{padding:12px 14px;border-radius:16px;background:var(--surf2);margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}.zmrg>span.sub{flex:0 0 100%;margin-bottom:2px}
+.zmdur{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.zmdur button{height:56px;border-radius:16px;border:2px solid transparent;background:var(--surf2);color:var(--muted);font-weight:700;font-size:15px}.zmdur button.on{border-color:#5b8cff;color:#fff;background:linear-gradient(145deg,rgba(91,140,255,.25),rgba(150,100,255,.12))}
+.zmgo{height:64px;font-size:20px!important;border-radius:20px!important}
 </style>
 </head>
 <body>
@@ -6552,12 +6587,12 @@ function back(){st.stack.pop();render('pop');window.scrollTo(0,0)}
 function tab(t){st.tab=t;st.stack=[];render('tab');window.scrollTo(0,0)}
 
 /* ================= SCREENS ================= */
-const TICO={"oral":['#ff7a59','<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0012 0"/><path class="ac" d="M12 17v4"/>'],"lcs":['#34c759','<path d="M5 20l3-1 10-10-2-2L6 17z"/><path class="ac" d="M14 7l2 2"/>'],"vcs":['#64d2ff','<circle cx="12" cy="12" r="8"/><path class="ac" d="M15.5 8.5l-2 5-5 2 2-5z"/>'],"mths":['#bf5af2','<path d="M4 18L18 4"/><path d="M4 8h6M7 5v6"/><path class="ac" d="M13 16h6"/>'],"mists":['#ff453a','<path d="M6 4h10l3 3v13H6z"/><path class="ac" d="M9 12h7M9 16h5"/>'],"py":['#ffd60a','<path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/><path class="ac" d="M13.5 5l-3 14"/>'],"work":['#ff9f0a','<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6v3H9z"/><path class="ac" d="M9 12h6M9 16h4"/>'],"tp":['#2dd4bf','<path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 19l-5-10V3"/><path class="ac" d="M7.5 15h9"/>'],"home":["#4d8dff","<rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"13.5\" y=\"3.5\" width=\"7\" height=\"5\" rx=\"2\"/><rect x=\"13.5\" y=\"11.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"3.5\" y=\"15.5\" width=\"7\" height=\"5\" rx=\"2\"/>"],"map":["#2ec4b6","<path d=\"M3.5 6.5l5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2z\"/><path d=\"M9 4.5v13M15 6.5v13\"/><circle class=\"ac\" cx=\"12\" cy=\"11\" r=\"2\"/>"],"lessons":["#ffb703","<path d=\"M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5c-3.5-.5-6.5 0-8.5 1.5z\"/><path d=\"M12 6.5v13\"/><path class=\"as\" d=\"M6 9h3M6 12h3M15 9h3M15 12h3\"/>"],"exams":["#ef476f","<path d=\"M6 3.5h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1z\"/><path d=\"M15 3.5v4h4\"/><path class=\"as\" d=\"M8.5 14.5l2.3 2.3 4.7-4.8\"/>"],"tests":["#f78c40","<circle cx=\"12\" cy=\"13.5\" r=\"7.5\"/><path d=\"M9.5 3h5M12 3v3\"/><path class=\"ac\" d=\"M12 13.5V8.3a5.2 5.2 0 0 1 5.2 5.2z\"/>"],"colles":["#b57bff","<rect class=\"ac\" x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6\"/>"],"td":["#4cc9f0","<rect x=\"5\" y=\"4.5\" width=\"14\" height=\"17\" rx=\"2.5\"/><rect class=\"ac\" x=\"9\" y=\"2.5\" width=\"6\" height=\"3.5\" rx=\"1.2\"/><path d=\"M8.5 11h7M8.5 14.5h7M8.5 18h4\"/>"],"exos":["#ff6b6b","<path d=\"M3.5 10v4M20.5 10v4M8 12h8\"/><rect class=\"ac\" x=\"5\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/><rect class=\"ac\" x=\"16\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/>"],"teach":["#7bd88f","<path class=\"ac\" d=\"M2.5 9.5L12 5l9.5 4.5L12 14z\"/><path d=\"M6.5 11.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2M21.5 9.5V15\"/>"],"grades":["#ffd166","<path d=\"M3.5 20.5h17\"/><rect class=\"ac\" x=\"5\" y=\"12.5\" width=\"3.5\" height=\"8\" rx=\"1\"/><rect class=\"ac\" x=\"10.2\" y=\"8.5\" width=\"3.5\" height=\"12\" rx=\"1\"/><rect class=\"ac\" x=\"15.5\" y=\"4.5\" width=\"3.5\" height=\"16\" rx=\"1\"/>"],"boards":["#5ee0b0","<rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 20.5l2-4.5M16 20.5l-2-4.5\"/><path class=\"as\" d=\"M6.5 12.5l3-4 2.5 3 2.5-4 3 3\"/>"],"cards":["#e56bff","<rect x=\"8.5\" y=\"3.5\" width=\"12\" height=\"15\" rx=\"2\" transform=\"rotate(9 14.5 11)\"/><rect class=\"ac\" x=\"3.5\" y=\"6\" width=\"12\" height=\"15\" rx=\"2\"/><path d=\"M7 11h5M7 14.5h3\"/>"]};
+const TICO={"calc":['#5b8cff','<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/>'],"oral":['#ff7a59','<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0012 0"/><path class="ac" d="M12 17v4"/>'],"lcs":['#34c759','<path d="M5 20l3-1 10-10-2-2L6 17z"/><path class="ac" d="M14 7l2 2"/>'],"vcs":['#64d2ff','<circle cx="12" cy="12" r="8"/><path class="ac" d="M15.5 8.5l-2 5-5 2 2-5z"/>'],"mths":['#bf5af2','<path d="M4 18L18 4"/><path d="M4 8h6M7 5v6"/><path class="ac" d="M13 16h6"/>'],"mists":['#ff453a','<path d="M6 4h10l3 3v13H6z"/><path class="ac" d="M9 12h7M9 16h5"/>'],"py":['#ffd60a','<path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/><path class="ac" d="M13.5 5l-3 14"/>'],"work":['#ff9f0a','<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6v3H9z"/><path class="ac" d="M9 12h6M9 16h4"/>'],"tp":['#2dd4bf','<path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 19l-5-10V3"/><path class="ac" d="M7.5 15h9"/>'],"home":["#4d8dff","<rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"13.5\" y=\"3.5\" width=\"7\" height=\"5\" rx=\"2\"/><rect x=\"13.5\" y=\"11.5\" width=\"7\" height=\"9\" rx=\"2\"/><rect class=\"ac\" x=\"3.5\" y=\"15.5\" width=\"7\" height=\"5\" rx=\"2\"/>"],"map":["#2ec4b6","<path d=\"M3.5 6.5l5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2z\"/><path d=\"M9 4.5v13M15 6.5v13\"/><circle class=\"ac\" cx=\"12\" cy=\"11\" r=\"2\"/>"],"lessons":["#ffb703","<path d=\"M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5c-3.5-.5-6.5 0-8.5 1.5z\"/><path d=\"M12 6.5v13\"/><path class=\"as\" d=\"M6 9h3M6 12h3M15 9h3M15 12h3\"/>"],"exams":["#ef476f","<path d=\"M6 3.5h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1z\"/><path d=\"M15 3.5v4h4\"/><path class=\"as\" d=\"M8.5 14.5l2.3 2.3 4.7-4.8\"/>"],"tests":["#f78c40","<circle cx=\"12\" cy=\"13.5\" r=\"7.5\"/><path d=\"M9.5 3h5M12 3v3\"/><path class=\"ac\" d=\"M12 13.5V8.3a5.2 5.2 0 0 1 5.2 5.2z\"/>"],"colles":["#b57bff","<rect class=\"ac\" x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6\"/>"],"td":["#4cc9f0","<rect x=\"5\" y=\"4.5\" width=\"14\" height=\"17\" rx=\"2.5\"/><rect class=\"ac\" x=\"9\" y=\"2.5\" width=\"6\" height=\"3.5\" rx=\"1.2\"/><path d=\"M8.5 11h7M8.5 14.5h7M8.5 18h4\"/>"],"exos":["#ff6b6b","<path d=\"M3.5 10v4M20.5 10v4M8 12h8\"/><rect class=\"ac\" x=\"5\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/><rect class=\"ac\" x=\"16\" y=\"7\" width=\"3\" height=\"10\" rx=\"1.2\"/>"],"teach":["#7bd88f","<path class=\"ac\" d=\"M2.5 9.5L12 5l9.5 4.5L12 14z\"/><path d=\"M6.5 11.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2M21.5 9.5V15\"/>"],"grades":["#ffd166","<path d=\"M3.5 20.5h17\"/><rect class=\"ac\" x=\"5\" y=\"12.5\" width=\"3.5\" height=\"8\" rx=\"1\"/><rect class=\"ac\" x=\"10.2\" y=\"8.5\" width=\"3.5\" height=\"12\" rx=\"1\"/><rect class=\"ac\" x=\"15.5\" y=\"4.5\" width=\"3.5\" height=\"16\" rx=\"1\"/>"],"boards":["#5ee0b0","<rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 20.5l2-4.5M16 20.5l-2-4.5\"/><path class=\"as\" d=\"M6.5 12.5l3-4 2.5 3 2.5-4 3 3\"/>"],"cards":["#e56bff","<rect x=\"8.5\" y=\"3.5\" width=\"12\" height=\"15\" rx=\"2\" transform=\"rotate(9 14.5 11)\"/><rect class=\"ac\" x=\"3.5\" y=\"6\" width=\"12\" height=\"15\" rx=\"2\"/><path d=\"M7 11h5M7 14.5h3\"/>"]};
 const tabIco=k=>{const t=TICO[k];return t?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+t[1]+'</svg>':''};
-const TABS=[['home','Overview'],['map','Map'],['lessons','Lessons'],['lcs','Completed'],['vcs','Visual'],['mths','Methods'],['mists','Mistakes'],['cards','Cards'],['py','Python'],['work','Exos & TD'],['tp','TP'],['oral','Oral'],['tests','Tests'],['exams','Exams'],['colles','Colles'],['grades','Grades'],['boards','Boards'],['teach','Teach']];
+const TABS=[['home','Overview'],['map','Map'],['lessons','Lessons'],['lcs','Completed'],['vcs','Visual'],['mths','Methods'],['mists','Mistakes'],['cards','Cards'],['py','Python'],['calc','Mental'],['work','Exos & TD'],['tp','TP'],['oral','Oral'],['tests','Tests'],['exams','Exams'],['colles','Colles'],['grades','Grades'],['boards','Boards'],['teach','Teach']];
 
-const TGR=[['start','Start',['home','map','boards']],['learn','Learn',['lessons','lcs','vcs','mths','mists','cards','teach']],['prac','Practice',['py','work','tp','oral','tests']],['eval','Assess',['exams','colles','grades']]];
-const TLAB={home:'Overview',map:'Map',boards:'Boards',lessons:'Lessons',lcs:'Done',vcs:'Visual',mths:'Methods',mists:'Mistakes',cards:'Cards',teach:'Teach',py:'Python',work:'Exos',tp:'TP',oral:'Oral',tests:'Tests',exams:'Exams',colles:'Colles',grades:'Grades'};
+const TGR=[['start','Start',['home','map','boards']],['learn','Learn',['lessons','lcs','vcs','mths','mists','cards','teach']],['prac','Practice',['py','calc','work','tp','oral','tests']],['eval','Assess',['exams','colles','grades']]];
+const TLAB={home:'Overview',map:'Map',boards:'Boards',lessons:'Lessons',lcs:'Done',vcs:'Visual',mths:'Methods',mists:'Mistakes',cards:'Cards',teach:'Teach',py:'Python',calc:'Mental',work:'Exos',tp:'TP',oral:'Oral',tests:'Tests',exams:'Exams',colles:'Colles',grades:'Grades'};
 function tabLayout(){
   let sv;try{sv=JSON.parse(localStorage.getItem('p_tabord')||'null')}catch(e){sv=null}
   const all=TABS.map(t=>t[0]),seen=new Set(),out=[];
@@ -7560,13 +7595,14 @@ function render(kind){
   if(top){
     const v=top.v;
     h=v==='lesson'?vLesson(top.id):v==='rec'?vRec(top.id.split('|')[0],top.id.split('|')[1]):v==='prog'?vProg(top.id):v==='sheet'?vSheet(top.id):v==='mock'?vMock(top.id):v==='fiche'?vFiche(top.id):v==='td'?vTDpage(top.id):v==='tdco'?vTDco(top.id):v==='meth'?vMeth(top.id):v==='lc'?vLC(top.id):v==='vc'?vVC(top.id):v==='dd'?vDD(top.id):v==='mb'?vMB():v==='mbook'?vMBook(top.id):v==='eng'?vEng():v==='vlist'?vList(top.id):v==='vstudy'?vStudy():v==='subj'?vSubj(top.id):v==='search'?vSearch():v==='week'?vWeek():v==='colleurs'?vColleurs():v==='formu'?vFormu(top.id):v==='exo'?PE.page(top.id):v==='exsol'?PE.sol(top.id):v==='tp'?PTP.page(top.id):'';
-  }else h=st.tab==='home'?vOver():st.tab==='map'?vMap():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='tests'?vTests():st.tab==='colles'?vColles():st.tab==='work'?vWork():st.tab==='tp'?PTP.list():st.tab==='grades'?vGrades():st.tab==='boards'?vBoards():st.tab==='py'?vPy():st.tab==='lcs'||st.tab==='vcs'||st.tab==='mths'?vCat(st.tab):st.tab==='mists'?vMistCat():st.tab==='teach'?PTC.list():st.tab==='oral'?vOral():vCards();
+  }else h=st.tab==='home'?vOver():st.tab==='map'?vMap():st.tab==='lessons'?vLessons():st.tab==='exams'?vExams():st.tab==='tests'?vTests():st.tab==='colles'?vColles():st.tab==='work'?vWork():st.tab==='tp'?PTP.list():st.tab==='grades'?vGrades():st.tab==='boards'?vBoards():st.tab==='calc'?vCalc():st.tab==='py'?vPy():st.tab==='lcs'||st.tab==='vcs'||st.tab==='mths'?vCat(st.tab):st.tab==='mists'?vMistCat():st.tab==='teach'?PTC.list():st.tab==='oral'?vOral():vCards();
   b.innerHTML=h;
   if(kind!=='card')anim(kind);
   post(top);
   if(top&&top.v==='vstudy')bindDeck();
+  if(!top&&st.tab==='calc')zmSetup();
   if(top&&top.v==='vlist'&&$('v-dir'))bindChips('v-dir',v=>{vopt.dir=v});
-  if(top&&top.v==='vlist'&&$('v-flip'))$('v-flip').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;const l=S.vocab.find(x=>x.id===top.id);if(!l)return;l.flip=b.dataset.f==='1';save.vocab();render()};
+  if(top&&top.v==='vlist'&&$('v-flip'))$('v-flip').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;const l=S.vocab.find(x=>x.id===top.id);if(!l)return;l.flip=b.dataset.f==='1';vopt.dir=null;save.vocab();render()};
   fillBars();
   if(kind==='card')return;
   if((kind==='push'||kind==='pop'||kind==='tab')&&!_same)window.scrollTo(0,0);else if(y)window.scrollTo(0,y);
@@ -8905,7 +8941,7 @@ function speak(text,langName){
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const vopt={dir:null,only:false};
 const vIsFr=x=>/fran[cç]|french/i.test(x||'');
-const vdef=l=>vIsFr(l.lb)&&!vIsFr(l.la)?'ba':'ab';   // French on the question side, English as the answer
+const vdef=l=>l.flip===true?'ba':l.flip===false?'ab':vIsFr(l.lb)&&!vIsFr(l.la)?'ba':'ab';   // French on the question side, English as the answer
 const vdir=l=>vopt.dir||vdef(l);
 const vKnown=l=>l.items.filter(i=>i.k>0&&!i.u).length;
 const vRank=i=>i.u?1:(i.k>0?2:0);   // 2 learnt · 1 unsure · 0 to learn
@@ -10490,6 +10526,56 @@ function skfOpen(){
   skfDraw();
 }
 A.skfs=()=>skfOpen();
+
+/* ===== v199 Mental maths (Zetamac-style speed arithmetic) ===== */
+const ZMD={add:{on:1,a:[2,100],b:[2,100]},sub:{on:1},mul:{on:1,a:[2,12],b:[2,100]},div:{on:1},dur:120};
+const ZMN={add:'Addition',sub:'Subtraction',mul:'Multiplication',div:'Division'};
+function zmCfg(){let c=null;try{c=JSON.parse(localStorage.getItem('p_zm'))}catch(e){}c=c||{};const o=JSON.parse(JSON.stringify(ZMD));['add','sub','mul','div'].forEach(k=>{if(c[k]&&'on'in c[k])o[k].on=c[k].on?1:0});['add','mul'].forEach(k=>{if(c[k]){['a','b'].forEach(f=>{if(Array.isArray(c[k][f])&&c[k][f].length==2)o[k][f]=c[k][f].map(Number)})}});if([30,60,120,300,600].includes(+c.dur))o.dur=+c.dur;return o}
+function zmSave(c){try{localStorage.setItem('p_zm',JSON.stringify(c))}catch(e){}}
+function zmKey(c){return ['add','sub','mul','div'].filter(k=>c[k].on).map(k=>k[0]).join('')+'|'+c.add.a+'|'+c.add.b+'|'+c.mul.a+'|'+c.mul.b+'|'+c.dur}
+function zmHist(){try{return JSON.parse(localStorage.getItem('p_zmh'))||[]}catch(e){return[]}}
+function zmBest(k){try{return(JSON.parse(localStorage.getItem('p_zmb'))||{})[k]||0}catch(e){return 0}}
+function zmLog(k,sc,c){try{const h=zmHist();h.push({t:Date.now(),s:sc,k,d:c.dur});localStorage.setItem('p_zmh',JSON.stringify(h.slice(-40)));const b=JSON.parse(localStorage.getItem('p_zmb'))||{};if(sc>(b[k]||0))b[k]=sc;localStorage.setItem('p_zmb',JSON.stringify(b))}catch(e){}}
+function zmGen(c){const on=['add','sub','mul','div'].filter(k=>c[k].on),op=on[Math.floor(Math.random()*on.length)],ri=r=>{const lo=Math.min(r[0],r[1]),hi=Math.max(r[0],r[1]);return lo+Math.floor(Math.random()*(hi-lo+1))};
+  if(op==='add'){const a=ri(c.add.a),b=ri(c.add.b);return{q:a+' + '+b,a:a+b,op}}
+  if(op==='sub'){const a=ri(c.add.a),b=ri(c.add.b);return{q:(a+b)+' − '+a,a:b,op}}
+  if(op==='mul'){const a=ri(c.mul.a),b=ri(c.mul.b);return{q:a+' × '+b,a:a*b,op}}
+  const a=ri(c.mul.a),b=ri(c.mul.b);return{q:(a*b)+' ÷ '+a,a:b,op}}
+function vCalc(){
+  const c=zmCfg(),key=zmKey(c),best=zmBest(key),hist=zmHist().filter(x=>x.k===key).slice(-8);
+  const tile=(k,sym,lab,sub)=>'<button class="zmtile '+(c[k].on?'on':'')+'" data-a="zmTog" data-i="'+k+'"><b>'+sym+'</b><span>'+lab+'</span><small>'+sub+'</small></button>';
+  const rng=(k,f,l)=>'<span class="zmr"><input type="number" inputmode="numeric" min="0" max="9999" value="'+c[k][f][0]+'" data-zm="'+k+'|'+f+'|0" aria-label="'+l+' min"><i>to</i><input type="number" inputmode="numeric" min="0" max="9999" value="'+c[k][f][1]+'" data-zm="'+k+'|'+f+'|1" aria-label="'+l+' max"></span>';
+  let h='<div class="card zmc"><div class="cardhead"><div class="lbl">Mental maths</div><span class="sub">speed drill</span></div><div class="sub" style="margin:0 0 14px">Tap the answer on the big keypad, it moves on by itself as soon as it is right. Your score is how many you get in the time.</div>'+
+   '<div class="zmopg">'+tile('add','+','Addition','2 to 100')+tile('sub','−','Subtraction','reverse of addition')+tile('mul','×','Multiplication','2–12 × 2–100')+tile('div','÷','Division','reverse of multiplication')+'</div>'+
+   (c.add.on||c.sub.on?'<div class="zmrg"><span class="sub">Addition / subtraction numbers</span>'+rng('add','a','First number')+'<b>+</b>'+rng('add','b','Second number')+'</div>':'')+
+   (c.mul.on||c.div.on?'<div class="zmrg"><span class="sub">Multiplication / division numbers</span>'+rng('mul','a','First factor')+'<b>×</b>'+rng('mul','b','Second factor')+'</div>':'')+
+   '<div class="field" style="margin-top:14px"><label>Duration</label><div class="zmdur">'+[30,60,120,300,600].map(d=>'<button class="'+(c.dur===d?'on':'')+'" data-a="zmDur" data-i="'+d+'">'+(d<120?d+'s':d/60+'m')+'</button>').join('')+'</div></div>'+
+   '<button class="btn primary zmgo" data-a="zmStart" style="margin-top:16px">▶ Start</button>'+
+   '<div class="zmbest"><span>Best with these settings</span><b>'+(best||'–')+'</b></div></div>';
+  if(hist.length){const mx=Math.max(...hist.map(x=>x.s),1);h+='<div class="card"><div class="lbl" style="margin-bottom:10px">Last runs · same settings</div><div class="zmh">'+hist.map(x=>'<div title="'+x.s+'"><i style="height:'+Math.max(6,x.s/mx*80)+'px"></i><small>'+x.s+'</small></div>').join('')+'</div></div>'}
+  return h;
+}
+function zmSetup(){document.querySelectorAll('[data-zm]').forEach(i=>{i.onchange=()=>{const[k,f,j]=i.dataset.zm.split('|'),c=zmCfg();let v=Math.max(0,Math.min(9999,parseInt(i.value)||0));c[k][f][+j]=v;if(c[k][f][0]>c[k][f][1]){c[k][f]=[Math.min(...c[k][f]),Math.max(...c[k][f])]}zmSave(c);render()}})}
+A.zmTog=k=>{const c=zmCfg();c[k].on=c[k].on?0:1;if(!['add','sub','mul','div'].some(x=>c[x].on))c[k].on=1;zmSave(c);render()};
+A.zmDur=d=>{const c=zmCfg();c.dur=+d;zmSave(c);render()};
+A.zmStart=()=>{
+  const c=zmCfg(),key=zmKey(c);if(document.getElementById('zmrun'))return;
+  const r=document.createElement('div');r.id='zmrun';r.className='zmrun';
+  r.innerHTML='<div class="zmtop"><button class="zmx" aria-label="Quit">✕</button><div class="zmt"><i></i></div><b class="zmtime"></b></div><div class="zmsc"><small>SCORE</small><b>0</b></div><div class="zmq"></div><div class="zmin" aria-live="polite"></div><div class="zmpad">'+[1,2,3,4,5,6,7,8,9,'skip',0,'del'].map(k=>'<button class="zmk '+(typeof k==='number'?'':'fn')+'" data-k="'+k+'" aria-label="'+k+'">'+(k==='del'?'⌫':k==='skip'?'Skip':k)+'</button>').join('')+'</div>';
+  document.body.appendChild(r);
+  const q$=s=>r.querySelector(s),inp=q$('.zmin');inp.value='';let cur=zmGen(c),score=0,t0=performance.now(),tq=t0,log=[],done=false,tm;
+  const show=()=>{q$('.zmq').textContent=cur.q+' =';inp.value='';inp.textContent='';q$('.zmsc b').textContent=score};
+  const end=()=>{if(done)return;done=true;clearInterval(tm);zmLog(key,score,c);const bst=zmBest(key),per=log.length?log.reduce((a,x)=>a+x.t,0)/log.length:0,slow=log.slice().sort((a,b)=>b.t-a.t).slice(0,3);
+    r.innerHTML='<div class="zmres"><small>TIME</small><h2>'+score+'</h2><div class="sub">correct in '+(c.dur<120?c.dur+' s':c.dur/60+' min')+'</div>'+(score>=bst&&score>0?'<div class="zmnb">New best</div>':'<div class="sub">Best: '+bst+'</div>')+'<div class="zmstat"><div><b>'+(per?per.toFixed(1):'–')+' s</b><small>per question</small></div><div><b>'+Math.round(score*60/c.dur)+'</b><small>per minute</small></div></div>'+(slow.length?'<div class="lbl" style="margin:16px 0 6px">Slowest</div>'+slow.map(x=>'<div class="zmsl"><span>'+esc(x.q)+' = '+x.a+'</span><b>'+x.t.toFixed(1)+' s</b></div>').join(''):'')+'<button class="btn primary" id="zm-again" style="margin-top:18px">Go again</button><button class="btn" id="zm-done">Done</button></div>';
+    q$('#zm-again').onclick=()=>{r.remove();A.zmStart()};q$('#zm-done').onclick=()=>{r.remove();render()}};
+  const tick=()=>{const el=(performance.now()-t0)/1000,left=Math.max(0,c.dur-el);q$('.zmt i').style.width=(left/c.dur*100)+'%';q$('.zmtime').textContent=Math.ceil(left);r.classList.toggle('low',left<=10);if(left<=0)end()};
+  const check=()=>{const v=inp.value;inp.textContent=v;if(v!==''&&v===String(cur.a)){const now=performance.now();log.push({q:cur.q,a:cur.a,t:(now-tq)/1000});score++;tq=now;cur=zmGen(c);inp.classList.add('ok');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}setTimeout(()=>{inp.classList.remove('ok');show()},90);q$('.zmsc b').textContent=score}};
+  const press=k=>{if(done||inp.classList.contains('ok'))return;if(k==='del')inp.value=inp.value.slice(0,-1);else if(k==='skip'){cur=zmGen(c);tq=performance.now();show();return}else if(inp.value.length<7)inp.value+=k;check();inp.textContent=inp.value};
+  r.querySelector('.zmpad').addEventListener('pointerdown',e=>{const b=e.target.closest('.zmk');if(!b)return;e.preventDefault();b.classList.add('dn');setTimeout(()=>b.classList.remove('dn'),90);press(b.dataset.k)});
+  const kd=e=>{if(!document.getElementById('zmrun')){document.removeEventListener('keydown',kd);return}if(/^\d$/.test(e.key))press(e.key);else if(e.key==='Backspace')press('del')};document.addEventListener('keydown',kd);
+  q$('.zmx').onclick=()=>{done=true;clearInterval(tm);r.remove();render()};
+  show();tick();tm=setInterval(tick,100);
+};
 A.skt=id=>{const sj=st.skj;const b=S.lessons.find(l=>l.id===id);const cur=(id in SKC)?SKC[id]:null;SKC[id]=cur===null?false:!cur;skRender()};
 A.skj=sj=>{st.skj=sj;render()};A.mapv=v=>{st.mapv=v;render()};
 function skTree(){
