@@ -1876,6 +1876,8 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
 .skfz{position:absolute;right:14px;bottom:calc(env(safe-area-inset-bottom) + 18px);display:flex;flex-direction:column;gap:10px}
 .ph-pin{position:relative}.ph-pin::after{content:"📌";position:absolute;top:8px;right:12px;font-size:14px;opacity:.9;pointer-events:none;filter:drop-shadow(0 1px 2px #000)}
 .origbar{margin:0 0 10px}.origbar .btn{width:100%;margin:0}
+.vrow.flip textarea[data-vin=a]{order:2}.vrow.flip textarea[data-vin=b]{order:1}.vrow.flip .pmini{order:3}
+.vrow.flip.ok textarea[data-vin=b]{border-color:rgba(91,230,138,.4)}
 </style>
 </head>
 <body>
@@ -7564,6 +7566,7 @@ function render(kind){
   post(top);
   if(top&&top.v==='vstudy')bindDeck();
   if(top&&top.v==='vlist'&&$('v-dir'))bindChips('v-dir',v=>{vopt.dir=v});
+  if(top&&top.v==='vlist'&&$('v-flip'))$('v-flip').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;const l=S.vocab.find(x=>x.id===top.id);if(!l)return;l.flip=b.dataset.f==='1';save.vocab();render()};
   fillBars();
   if(kind==='card')return;
   if((kind==='push'||kind==='pop'||kind==='tab')&&!_same)window.scrollTo(0,0);else if(y)window.scrollTo(0,y);
@@ -8955,8 +8958,8 @@ function vList(id){
   h+='</div>';
   if(l.fresh)h+='<div class="warnbox">The AI read this from your photo. Check the words below and fix or delete anything wrong.</div>';
   h+=liveBox('VOC')+errBox('VOC');
-  h+='<div class="card"><div class="cardhead"><div class="lbl">Words</div><button class="addf" data-a="vsort" style="margin-left:auto;margin-right:8px">⇅ '+VSORTS.find(x=>x[0]===vsort)[1]+'</button>'+(l.fav?'':'<button class="addf" data-a="vaddPhoto" data-i="'+id+'">+ More photos</button>')+'</div><div class="vhead"><span>'+esc(l.la)+'</span><span>'+esc(l.lb)+'</span><span></span></div>';
-  h+=vSorted(l).map(it=>'<div class="vrow'+(it.u?' uns':it.k>0?' ok':'')+'"><textarea rows="1" data-vin="a" data-k="'+id+'|'+it.id+'" autocapitalize="off" autocomplete="off" spellcheck="false">'+esc(it.a)+'</textarea><textarea rows="1" data-vin="b" data-k="'+id+'|'+it.id+'" autocapitalize="off" autocomplete="off" spellcheck="false">'+esc(it.b)+'</textarea><button class="pmini vst" data-a="vcyc" data-i="'+id+'|'+it.id+'" aria-label="'+VST[vRank(it)]+'" style="color:'+VCOL[vRank(it)]+'"><i style="display:block;width:14px;height:14px;border-radius:50%;background:currentColor;margin:auto"></i></button><button class="pmini star '+((l.fav||it.star)?'on':'')+'" data-a="vstar" data-i="'+id+'|'+it.id+'" aria-label="Favorite">'+starSvg(l.fav||it.star)+'</button><button class="pmini" data-a="vdelItem" data-i="'+id+'|'+it.id+'" aria-label="Delete word">'+ico.x+'</button></div>').join('');
+  h+='<div class="card"><div class="cardhead"><div class="lbl">Words</div><button class="addf" data-a="vsort" style="margin-left:auto;margin-right:8px">⇅ '+VSORTS.find(x=>x[0]===vsort)[1]+'</button>'+(l.fav?'':'<button class="addf" data-a="vaddPhoto" data-i="'+id+'">+ More photos</button>')+'</div><div class="field" style="margin:0 0 10px"><label>Left column</label><div class="chips" id="v-flip"><button class="chip '+(!l.flip?'on':'')+'" data-f="0">'+esc(l.la)+'</button><button class="chip '+(l.flip?'on':'')+'" data-f="1">'+esc(l.lb)+'</button></div></div><div class="vhead">'+(l.flip?'<span>'+esc(l.lb)+'</span><span>'+esc(l.la)+'</span>':'<span>'+esc(l.la)+'</span><span>'+esc(l.lb)+'</span>')+'<span></span></div>';
+  h+=vSorted(l).map(it=>'<div class="vrow'+(it.u?' uns':it.k>0?' ok':'')+(l.flip?' flip':'')+'"><textarea rows="1" data-vin="a" data-k="'+id+'|'+it.id+'" autocapitalize="off" autocomplete="off" spellcheck="false">'+esc(it.a)+'</textarea><textarea rows="1" data-vin="b" data-k="'+id+'|'+it.id+'" autocapitalize="off" autocomplete="off" spellcheck="false">'+esc(it.b)+'</textarea><button class="pmini vst" data-a="vcyc" data-i="'+id+'|'+it.id+'" aria-label="'+VST[vRank(it)]+'" style="color:'+VCOL[vRank(it)]+'"><i style="display:block;width:14px;height:14px;border-radius:50%;background:currentColor;margin:auto"></i></button><button class="pmini star '+((l.fav||it.star)?'on':'')+'" data-a="vstar" data-i="'+id+'|'+it.id+'" aria-label="Favorite">'+starSvg(l.fav||it.star)+'</button><button class="pmini" data-a="vdelItem" data-i="'+id+'|'+it.id+'" aria-label="Delete word">'+ico.x+'</button></div>').join('');
   if(!l.fav)h+='<button class="add" style="margin-top:10px" data-a="vaddItem" data-i="'+id+'">+ Add a word</button>';
   if(k)h+='<button class="btn" data-a="vreset" data-i="'+id+'">All unknown</button>';
   return h+'</div>';
