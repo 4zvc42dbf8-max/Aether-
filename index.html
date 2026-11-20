@@ -1875,6 +1875,7 @@ body .pwh{background:var(--surf);border:1px solid var(--line)}
 .skfch{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top) + 64px);display:flex;gap:8px;overflow-x:auto;padding:0 14px}
 .skfz{position:absolute;right:14px;bottom:calc(env(safe-area-inset-bottom) + 18px);display:flex;flex-direction:column;gap:10px}
 .ph-pin{position:relative}.ph-pin::after{content:"📌";position:absolute;top:8px;right:12px;font-size:14px;opacity:.9;pointer-events:none;filter:drop-shadow(0 1px 2px #000)}
+.origbar{margin:0 0 10px}.origbar .btn{width:100%;margin:0}
 </style>
 </head>
 <body>
@@ -6150,6 +6151,7 @@ async function load(o){if(o&&Array.isArray(o.texts))for(const t of o.texts)if(t&
 
 window.PC={loadMissing,isTextual,fileText,guessType,unzip,hooks,gateOn,claudeLast,estTokens,HOUSE,subjCtx,SYS_DRILL,SYS_COMPLETE,SYS_LEARN,provs,SUBJ,LSUBJ,sc,sn,TAGS,SCHED,S,put,save,db,dbPut,dbGet,dbDel,dbAll,getText,setText,addFiles,putFile,dbKeys,delFile,pickFiles,kb,loadKatex,pdfjs,openPdf,pdfText,withTimeout,AIError,ai,hasKey,b64,imgBlock,isPdf,filesToParts,
   SYS_TRANSCRIBE,SYS_VOCAB,SYS_PROGRAMME,SYS_SHEET,SYS_AUDIT,SYS_VISUAL,SYS_FORMULAIRE,SYS_DEBRIEF,SYS_TD,SYS_TDCORR,SYS_MOCK,SYS_METHODS,SYS_METHODS_T,SYS_DEFS,SYS_RESUME,SYS_VOCAB_TEXT,SYS_DIGEST,SYS_CARDS,SYS_ENGLISH,SYS_FEEDBACK,md,mdAsync,parseJson,syncSched,removed,dump,load};
+window.PC.storeFile=storeFile;
 })();
 
 /* ================= PRÉPA: screens ================= */
@@ -6937,7 +6939,7 @@ function vMock(id){
     {const T=tl(id);h+=(m.at?'':'<button class="btn primary" style="margin-top:12px" data-a="mkMock" data-i="'+id+'">Write the exam</button>')+tiles([T('fiche','📘',m.fiAt?'Open the résumé':'Résumé','what to know','','m|'+id),m.at?T('mkMock','🔄','New version','rewrite the exam'):'',T('delMock','🗑','Delete this mock exam','','danger wide')])+folderPill('mocks',id);}
   }
   h+='</div>';
-  if(m.at&&!live[k])h+='<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Sujet</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrigé</button></div><div class="card"><div class="doc" id="mockdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  if(m.at&&!live[k])h+=origBar(m.orig,'mock',id)+'<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Sujet</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrigé</button></div><div class="card"><div class="doc" id="mockdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
   return h;
 }
 async function styleModels(subj){
@@ -7441,10 +7443,11 @@ function vProg(id){
   }
   return h;
 }
+function origBar(o,kind,id){return '<div class="origbar">'+(o?'<button class="btn sm" data-a="origopen" data-i="'+o+'">📄 View the original PDF (exact layout, zoom)</button>':'<button class="btn sm" data-a="origadd" data-i="'+kind+':'+id+'">📎 Attach the original PDF to read it as printed</button>')+'</div>'}
 function vSheet(id){
   const p=S.progs.find(x=>x.id===id);if(!p){st.stack.pop();return ''}
   return backBar('Prep sheet','<button class="pmini" data-a="printSheet" data-i="'+id+'" aria-label="Print">⎙</button>')+
-  '<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Exercises</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrections</button></div><div class="card"><div class="doc" id="sheetdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
+  origBar(p.orig,'sheet',id)+'<div class="docseg '+(st.seg==='co'?'b':'')+'"><i></i><button class="'+(st.seg==='ex'?'on':'')+'" data-a="seg" data-i="ex">Exercises</button><button class="'+(st.seg==='co'?'on':'')+'" data-a="seg" data-i="co">Corrections</button></div><div class="card"><div class="doc" id="sheetdoc"><div class="shimmer" style="height:200px;border-radius:14px"></div></div></div>';
 }
 
 /* ----- v193 import normaliser: math-italic -> plain, headings, paragraphs, exercise/correction marker ----- */
@@ -7697,6 +7700,8 @@ window.PV={studio:studioSheet,open:view,docs:docsSheet,all:allDocs,peek,print:pr
 A.docs=()=>docsSheet();
 A.view=id=>view(id);
 A.seg=i=>{st.seg=i;render()};
+A.origopen=i=>window.PV.open(i);
+A.origadd=i=>{const [kind,id]=i.split(':');pickFile('application/pdf,image/*',async f=>{try{const key=(kind==='mock'?'MO':'SO')+id;await C.storeFile(key,f);const o=kind==='mock'?S.mocks.find(x=>x.id===id):S.progs.find(x=>x.id===id);o.orig=key;kind==='mock'?save.mocks():save.progs();toast('Original attached ✓');render()}catch(e){toast(e.message||'Could not attach')}})};
 
 /* --- lessons --- */
 A.lesson=id=>go('lesson',id);
@@ -8188,12 +8193,12 @@ async function impText(f){
 const IMP_ACC='application/pdf,.md,.markdown,.txt,text/plain';
 A.impSheet=id=>pickFile(IMP_ACC,async f=>{
   try{const t=await impText(f);if(t.length<200)throw new Error('The file is almost empty.');
-    await C.setText('S'+id,t);const p=S.progs.find(x=>x.id===id);p.sheetAt=Date.now();p.noCourse=false;p.used=['imported: '+f.name];save.progs();toast('Sheet imported ✓');render()}catch(e){toast(e.message||'Import failed')}});
+    await C.setText('S'+id,t);const p=S.progs.find(x=>x.id===id);p.sheetAt=Date.now();p.noCourse=false;p.used=['imported: '+f.name];if(C.isPdf(f)||/^image\//.test(f.type||'')){try{await C.storeFile('SO'+id,f);p.orig='SO'+id}catch(e){}}save.progs();toast('Sheet imported ✓');render()}catch(e){toast(e.message||'Import failed')}});
 A.impMock=()=>{
   let subj='maths',title='';
   const draw=()=>{$('sbody').innerHTML='<h2 class="sh">Import a mock exam</h2><div class="field"><label>Subject</label>'+subjChips(subj,C.LSUBJ.filter(s=>s!=='ang'),'im-s')+'</div><div class="field"><label>Title</label><input id="im-t" value="'+esc(title)+'" maxlength="80" placeholder="e.g. DS blanc — Complexes"></div><div class="hint" style="text-align:left">A PDF with text, .md or .txt. If the file has a corrigé (a “Corrections” heading), it is hidden until you ask for it.</div><button class="btn primary" id="im-go">Choose the file</button>';
     bindChips('im-s',v=>{subj=v;title=$('im-t').value;draw()});$('im-t').oninput=e=>title=e.target.value;
-    $('im-go').onclick=()=>pickFile(IMP_ACC,async f=>{try{const t=await impText(f);if(t.length<200)throw new Error('The file is almost empty.');const id='m-'+uid();S.mocks.push({id,subj,title:$('im-t').value.trim()||f.name.replace(/\.[a-z0-9]+$/i,''),main:[],comp:[],dur:'—',calc:false,at:Date.now(),imported:true});save.mocks();await C.setText('M'+id,t);closeSheet();st.seg='ex';go('mock',id);toast('Mock exam imported ✓')}catch(e){toast(e.message||'Import failed')}});
+    $('im-go').onclick=()=>pickFile(IMP_ACC,async f=>{try{const t=await impText(f);if(t.length<200)throw new Error('The file is almost empty.');const id='m-'+uid();S.mocks.push({id,subj,title:$('im-t').value.trim()||f.name.replace(/\.[a-z0-9]+$/i,''),main:[],comp:[],dur:'—',calc:false,at:Date.now(),imported:true});if(C.isPdf(f)||/^image\//.test(f.type||'')){try{await C.storeFile('MO'+id,f);S.mocks[S.mocks.length-1].orig='MO'+id}catch(e){}}save.mocks();await C.setText('M'+id,t);closeSheet();st.seg='ex';go('mock',id);toast('Mock exam imported ✓')}catch(e){toast(e.message||'Import failed')}});
   };
   openSheet('');draw();
 };
@@ -12376,11 +12381,15 @@ const inD=()=>{const d=jl(HY.I,null),o=d&&Array.isArray(d.idols)?d:{idols:IDOLS0
   return o};
 const FA={el:null,id:null,u:{}};
 function fuFmt(t){t=Math.max(0,Math.round(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')}
+function fuSpeak(v){
+  try{const ss=window.speechSynthesis;if(ss){if(ss.speaking){ss.cancel();return}const t=[v.t,v.n].filter(Boolean).join('. ');const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.95;ss.speak(u);toast('Audio file missing on your site · reading it aloud instead. Upload the “audio” folder next to index.html.');return}}catch(e){}
+  toast('Audio file missing: upload the “audio” folder next to index.html on GitHub.');
+}
 async function fuPlay(id){
   const d=inD(),v=d.vids.find(x=>x.id===id);if(!v||!v.a)return;
   if(FA.id===id&&FA.el){if(FA.el.paused)FA.el.play().catch(()=>{});else FA.el.pause();fuMark();return}
   let u=FA.u[v.a];
-  if(!u){try{const r=await fetch(v.a);if(!r.ok)throw new Error('x');u=URL.createObjectURL(await r.blob());FA.u[v.a]=u}catch(e){toast('Audio not available yet. Open the app online once.');return}}
+  if(!u){try{const r=await fetch(v.a);if(!r.ok)throw new Error('x');u=URL.createObjectURL(await r.blob());FA.u[v.a]=u}catch(e){fuSpeak(v);return}}
   if(FA.el){try{FA.el.pause()}catch(e){}}
   const a=new Audio(u);FA.el=a;FA.id=id;
   a.onended=()=>{FA.id=null;fuMark()};a.onpause=fuMark;a.onplay=fuMark;
