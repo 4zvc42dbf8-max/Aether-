@@ -2069,6 +2069,67 @@ html[data-theme="dark"]:not([data-bw]){--lime:#e9ecf5;--ink:#0a0b0f;--accent:#e9
 html[data-theme="light"]:not([data-bw]){--lime:#16181f;--ink:#fff;--accent:#16181f}
 html body .lnk,html body .cardhead .pill,html body .cardhead button:not(.wkx button),html body #home .card .lnk{background:transparent!important;color:var(--muted)!important;border:1px solid var(--line)!important;box-shadow:none!important}
 #toast{max-width:calc(100vw - 32px);white-space:normal!important;text-align:center;line-height:1.3;border-radius:22px!important}
+
+/* v210 layout: no orphan wraps */
+#ck-m{display:grid!important;grid-template-columns:repeat(5,1fr);gap:8px}#ck-m .chip{padding:10px 0!important;text-align:center;justify-content:center}
+.sat{display:grid!important;grid-template-columns:repeat(5,1fr);gap:6px}.sat button{min-width:0}
+.hrs{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px 10px!important}.hrs>*{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.hs{flex-wrap:nowrap}.hs button{flex:none}.hs b{min-width:28px}
+#ph-more{flex-wrap:nowrap!important;gap:8px}#ph-more .btn{flex:1 1 0;min-width:0;padding:10px 6px;font-size:13px;white-space:nowrap}
+.atiles>:last-child:nth-child(odd){grid-column:1/-1}
+.moods{gap:4px}.moods button{flex:1;padding:4px 0}
+
+@media(max-width:380px){header{gap:6px!important;padding-left:14px!important;padding-right:14px!important}header button{width:36px!important;height:36px!important;min-width:0!important;flex:none}header h1,header .ttl{font-size:21px!important;min-width:0}.cal-top{flex-wrap:nowrap!important;gap:6px!important}.cal-top *{min-width:0}.cal-top button{padding-left:10px;padding-right:10px}}
+.cal-top{flex-wrap:nowrap}
+
+/* focus tab: selected segment readable with the neutral accent */
+.fseg button.on{background:var(--surf2)!important;color:var(--text)!important;box-shadow:inset 0 0 0 1px var(--line2)!important}
+
+/* ===== v213 header focus indicator: calm pill that matches the app ===== */
+html body #isl{height:36px;padding:0 14px 0 8px;gap:8px;border-radius:99px;background:var(--surf2)!important;border:1px solid var(--line2);box-shadow:none!important;color:var(--text);font-weight:650;letter-spacing:0;backdrop-filter:none}
+html body #isl .ir{width:22px;height:22px;background:conic-gradient(var(--ic,var(--text)) calc(var(--p,1)*360deg),var(--line) 0);-webkit-mask:radial-gradient(circle,transparent 8px,#000 9px);mask:radial-gradient(circle,transparent 8px,#000 9px);filter:none}
+html body #isl .it{color:var(--text)!important;font-size:15px}
+html body #isl.warn{border-color:var(--line2)}html body #isl.warn .ir{animation:none}
+html body #isl.pz .it{opacity:.6}
+html body #isl.dn{background:var(--surf2)!important;box-shadow:none!important}
+html body #isl.dn .ir{background:var(--text);color:var(--bg);width:20px;height:20px}
+
+/* ===== v214 expanded focus island: same calm surfaces as the app ===== */
+html body #islbd{background:rgba(5,6,10,.5)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+html[data-theme="light"] body #islbd{background:rgba(255,255,255,.45)!important}
+html body #islbig{background:var(--surf)!important;color:var(--text)!important;box-shadow:0 0 0 1px var(--line2),0 30px 60px -22px rgba(0,0,0,.65)!important;border-radius:32px}
+html body #islbig .ik-badge{background:var(--surf2)!important;box-shadow:0 0 0 1px var(--line)!important;border-radius:14px}
+html body #islbig .ik-t span{color:var(--muted)!important}
+html body #islbig .ik-x{background:var(--surf2)!important;color:var(--muted)!important;box-shadow:0 0 0 1px var(--line)!important}
+html body #islbig .ik-clock{background:var(--inset)!important;box-shadow:0 0 0 1px var(--line)!important;border-radius:22px}
+html body #islbig .ik-clock polygon,html body #islbig .ik-clock circle{fill:var(--text)!important;filter:none!important}
+html body #islbig .ik-led i{background:var(--line)!important;box-shadow:none!important}
+html body #islbig .ik-led i.on{background:var(--text)!important;opacity:.85;box-shadow:none!important}
+html body #islbig .ik-b,html body #islbig .isl-dn button{background:var(--surf2)!important;color:var(--text)!important;box-shadow:0 0 0 1px var(--line)!important;text-shadow:none!important}
+html body #islbig .ik-b svg{fill:currentColor!important;stroke:none!important}html body #islbig .ik-b[data-ia="add"] svg{fill:none!important;stroke:currentColor!important}
+html body #islbig .ik-b.t,html body #islbig .isl-add,html body #islbig .isl-dn button.p{background:var(--text)!important;color:var(--bg)!important;box-shadow:none!important;text-shadow:none!important}
+html body #islbig .isl-rt i{background:var(--text)!important}html body #islbig .isl-rt b{color:var(--muted)!important}
+html body #islbig .isl-tri{border-bottom-color:var(--text)!important}
+html body #islbig .isl-big{color:var(--text);text-shadow:none!important}
+html body #islbig .isl-dn .ck{background:var(--text)!important;color:var(--bg)!important;box-shadow:none!important}
+
+/* ===== v215 expanded focus island: new layout ===== */
+html body #islbig{height:268px;border-radius:30px;outline:0;border:0}
+html body #islbig.add{height:224px}html body #islbig.dn{height:228px}
+html body #islbig .ik-top{top:16px;left:18px;right:18px;gap:12px}
+html body #islbig .ik-badge{width:36px;height:36px;border-radius:50%!important;font-size:17px}
+html body #islbig .ik-t b{font-size:16px}
+html body #islbig .ik-clock{top:62px;height:92px;left:18px;right:18px;background:none!important;box-shadow:none!important;display:flex;align-items:center;justify-content:center}
+html body #islbig .ik-clock svg{display:none!important}
+html body #islbig .ik-time{font:300 78px/1 -apple-system,Inter,system-ui;letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:var(--text)}
+html body #islbig .ik-led{display:none!important}
+.ik-bar{position:absolute;left:22px;right:22px;top:164px;height:5px;border-radius:5px;background:var(--line);overflow:hidden;transition:opacity .25s}
+.ik-bar i{display:block;height:100%;width:0;border-radius:5px;background:var(--text);opacity:.85;transition:width .9s linear}
+#islbig.add .ik-bar,#islbig.dn .ik-bar{opacity:0}
+html body #islbig .ik-ctl{left:18px;right:18px;bottom:18px;grid-template-columns:1fr 1.5fr 54px;gap:8px}
+html body #islbig .ik-b{height:54px;border-radius:99px}
+html body #islbig.add{box-shadow:0 0 0 1px var(--line2),0 30px 60px -22px rgba(0,0,0,.65)!important}
+html body #islbig.add{border:0!important;background:var(--surf)!important;color:var(--text)!important}
 </style>
 </head>
 <body>
@@ -14759,7 +14820,7 @@ header h1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   const w=document.createElement('div');w.id='islw';
   const ic=(d)=>'<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">'+d+'</svg>';
   w.innerHTML='<div id="islbig"><div class="ik-top"><div class="ik-badge" id="islbadge">⏱</div><div class="ik-t"><b id="islsub">Focus</b><span id="islsb2"></span></div><button class="ik-x" data-ia="shut" aria-label="Close">✕</button></div>'+
-   '<div class="ik-clock"><svg viewBox="0 0 210 84"></svg></div><div class="ik-led">'+'<i></i>'.repeat(NLED)+'</div>'+
+   '<div class="ik-clock"><svg viewBox="0 0 210 84"></svg><div class="ik-time" id="iktime">--:--</div></div><div class="ik-bar"><i id="ikbar"></i></div><div class="ik-led">'+'<i></i>'.repeat(NLED)+'</div>'+
    '<div class="ik-ctl"><button class="ik-b" data-ia="add" aria-label="Add time">'+'<svg width="18" height="18" viewBox="0 0 26 26" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><path d="M13 4v18M4 13h18"/></svg>Add time</button>'+
    '<button class="ik-b t" data-ia="pause" aria-label="Pause"><span id="islpb"></span><span id="islpl">Pause</span></button>'+
    '<button class="ik-b" data-ia="stop" aria-label="Stop"><svg width="18" height="18" viewBox="0 0 22 22" fill="#fff"><rect x="3" y="3" width="16" height="16" rx="4.5"/></svg></button></div>'+
@@ -14774,6 +14835,7 @@ const ISEG={a:[[3,1],[23,1],[20,4],[6,4]],b:[[24,2],[24,22],[21,20],[21,5]],c:[[
 const IDIG={'0':'abcdef','1':'bc','2':'abdeg','3':'abcdg','4':'bcfg','5':'acdfg','6':'acdefg','7':'abc','8':'abcdefg','9':'abcdfg'};
 function islPaint(inf){
   const w=document.getElementById('islw'),svg=w.querySelector('.ik-clock svg');
+  try{const t=document.getElementById('iktime'),tx=islTxt(inf.rem);if(t&&t.textContent!==tx)t.textContent=tx;const bb=document.getElementById('ikbar');if(bb)bb.style.width=(Math.max(0,Math.min(1,inf.frac))*100).toFixed(2)+'%'}catch(e){}
   const leds=w.querySelectorAll('.ik-led i'),lit=Math.round(inf.frac*NLED);
   if(ISL.lit!==lit){ISL.lit=lit;leds.forEach((e,i)=>e.classList.toggle('on',i<lit))}
   const g=svg,s=islTxt(inf.rem),n=s.length-1,key=s+'|'+inf.hue;
