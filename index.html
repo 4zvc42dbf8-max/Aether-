@@ -2149,6 +2149,20 @@ html body #islbig.add{border:0!important;background:var(--surf)!important;color:
 .doc .co-DEF,.doc .co-THM{--c:var(--ink-r)}.doc .co-METH{--c:var(--ink-b)}.doc .co-TRAP{--c:var(--ink-o)}.doc .co-EX{--c:var(--ink-g)}.doc .co-KEY{--c:var(--ink-r)}.doc .co-USE{--c:var(--ink-b)}
 .doc .co-KEY .cot::before{content:'★ '}.doc .co-TRAP .cot::before{content:'⚠ '}
 .doc .co-KEY .kd,.doc .co-THM .kd{border:1.5px solid var(--ink-r);border-radius:4px;padding:6px 10px;margin:10px 0;width:fit-content;max-width:100%;overflow-x:auto}
+
+/* ===== v218 light constellation map: no animated filters, no blur shadows, level of detail ===== */
+.skfs .sfn.av .sfh,.skfs .sfn.ok .sfh{filter:none!important;animation:none!important}
+.skfs .sfn.av::before,.skfs .sfn.ok::before{content:"";position:absolute;left:50%;top:33px;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;background:radial-gradient(circle,hsl(var(--h,215) 95% 62%/.5) 0%,transparent 68%);pointer-events:none}
+.skfs .sfn.ok::before{background:radial-gradient(circle,rgba(255,196,80,.55) 0%,transparent 68%)}
+.skfs .sfe path.on{filter:none!important;stroke-width:4;stroke:hsl(var(--h,215) 95% 68%)}
+.skfs .sfe path.av{stroke-dasharray:none!important;stroke:hsl(var(--h,215) 70% 55%/.4);stroke-width:2.5}
+.skfs .sfe path.off{stroke-dasharray:none!important;stroke:rgba(150,165,200,.14);stroke-width:2.5}
+.skfs .sfn small,.skfs .sfl{text-shadow:none!important}
+.skfs .sfn small{color:#dfe8ff}
+.skfs.lod .sfn small,.skfs.lod .sfl,.skfs.lod .sfh b{display:none}
+.skfs.lod .sfn{width:60px;margin-left:-30px}
+.skfs .sfc{box-shadow:0 0 18px hsl(var(--h,215) 90% 55%/.5)}
+.skfs .sst{display:none}.skfs.hi .sst{display:inline}
 </style>
 </head>
 <body>
@@ -10743,7 +10757,7 @@ async function skfDraw(){
   root.querySelector('.skft').innerHTML='<b>'+skRank(pct)+'</b> · '+ok+'/'+g.nodes.length+' mastered · '+g.nodes.filter(n=>n.st==='av').length+' ready';
   SKF={sz,half,maxR,tx:0,ty:0,k:1,vp,wd,sj};skfFit();
 }
-let skfRaf=0;function skfApply(){const f=SKF;if(!f||skfRaf)return;skfRaf=requestAnimationFrame(()=>{skfRaf=0;const g=SKF;if(g)g.wd.style.transform='translate3d('+g.tx+'px,'+g.ty+'px,0) scale('+g.k+')'})}
+let skfRaf=0;function skfApply(){const f=SKF;if(!f||skfRaf)return;skfRaf=requestAnimationFrame(()=>{skfRaf=0;const g=SKF;if(g)g.wd.style.transform='translate3d('+g.tx+'px,'+g.ty+'px,0) scale('+g.k+')';const rt=document.getElementById('skfs');if(rt){const lo=g.k<.5;if(rt._lo!==lo){rt._lo=lo;rt.classList.toggle('lod',lo)}}})}
 function skfFit(){const f=SKF;if(!f)return;const W=f.vp.clientWidth,H=f.vp.clientHeight;f.k=Math.max(.05,Math.min(1,Math.min(W,H)/(2*(f.maxR+170))));f.tx=W/2-f.half*f.k;f.ty=H/2-f.half*f.k;skfApply()}
 function skfZoom(m,cx,cy){const f=SKF;if(!f)return;const k=Math.max(.04,Math.min(2.6,f.k*m)),r=k/f.k;f.tx=cx-(cx-f.tx)*r;f.ty=cy-(cy-f.ty)*r;f.k=k;skfApply()}
 function skfOpen(){
